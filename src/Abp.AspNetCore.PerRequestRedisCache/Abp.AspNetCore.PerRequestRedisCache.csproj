@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
     </ItemGroup>
 
     <ItemGroup>

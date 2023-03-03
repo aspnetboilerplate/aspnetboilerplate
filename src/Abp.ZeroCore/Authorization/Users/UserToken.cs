@@ -74,5 +74,18 @@ namespace Abp.Authorization.Users
             Value = value;
             ExpireDate = expireDate;
         }
+        
+        protected internal UserToken(UserIdentifier user, [NotNull] string loginProvider, [NotNull] string name, string value, DateTime? expireDate = null)
+        {
+            Check.NotNull(loginProvider, nameof(loginProvider));
+            Check.NotNull(name, nameof(name));
+
+            TenantId = user.TenantId;
+            UserId = user.UserId;
+            LoginProvider = loginProvider;
+            Name = name;
+            Value = value;
+            ExpireDate = expireDate;
+        }
     }
 }

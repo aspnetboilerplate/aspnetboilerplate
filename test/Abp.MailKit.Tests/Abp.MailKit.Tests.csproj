@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="xunit" Version="2.4.2-pre.12" />
+    <PackageReference Include="xunit" Version="2.4.2" />
     <ProjectReference Include="..\..\src\Abp.MailKit\Abp.MailKit.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
   </ItemGroup>

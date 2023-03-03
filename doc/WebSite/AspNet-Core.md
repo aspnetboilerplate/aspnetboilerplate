@@ -211,10 +211,72 @@ Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilte
 
 This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
 
+#### Html Sanitizer Action Filter
+
+To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. The **AbpHtmlSanitizerActionFilter** is a useful **tool** for this purpose.
+
+To get started, you'll need to **add** the [Abp.HtmlSanitizer](https://www.nuget.org/packages/Abp.HtmlSanitizer) NuGet package to your project. Then, you can enable **HTML sanitizer** by adding the following code to your **Startup.cs** file:
+
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    .
+    .
+
+    services.AddMvc(options =>
+    {
+        .
+        .
+
+        options.AddAbpHtmlSanitizer();
+    });
+}
+```
+
+You can use the **SanitizeHtmlAttribute** on methods, classes, properties or parameters to sanitize HTML input. This attribute has two parameters:
+
+* **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. The **default** value is **false**.
+
+* **KeepChildNodes**: If set to true, HTML sanitizer **keeps child nodes** of the sanitized HTML. The **default** value is **false**.
+
+Example usage: 
+
+```csharp
+[SanitizeHtml]
+[HttpPost("sanitizerTest/sanitizeHtmlTest")]
+public MyModel SanitizeHtml(MyModel myModel)
+{
+    return myModel;
+}
+```
+
+> More examples can be found in the [ASP.NET Core Demo](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/test/aspnet-core-demo/AbpAspNetCoreDemo/Controllers/SanitizerTestController.cs):
+
 ### Model Binders
 
 **AbpDateTimeModelBinder** is used to normalize DateTime (and
 Nullable&lt;DateTime&gt;) inputs using the **Clock.Normalize** method.
+
+#### JSON Converters
+
+ASP.NET Boilerplate provides two JsonConverter for Newtonsoft. 
+
+* **CultureInvariantDecimalConverter**: Used to convert a string value to a decimal value when converting JSON string to a object.
+* **CultureInvariantDoubleConverter**: Used to convert a string value to a double value when converting JSON string to a object.
+
+If you want to use one of these converters in your project, you can use them as shown below:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+	services.AddNewtonsoftJson(options =>
+	{
+		options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
+		options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
+	});
+}
+```
 
 ### Views
 

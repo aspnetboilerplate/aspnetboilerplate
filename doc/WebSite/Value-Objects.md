@@ -18,7 +18,7 @@ domain.
 
 ### Value Object Base Classes
 
-ABP has a class for value objects: **ValueObject** . The class overrides the equality operator (and other related operator and methods) to compare the two value objects and assume that they are identical if all the properties are the same. For example, all of these tests pass:
+ABP has a class for value objects: **ValueObject** . For example, all of these tests pass:
 
 ```
 var address1 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);

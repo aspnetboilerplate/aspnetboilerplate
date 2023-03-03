@@ -20,5 +20,7 @@ namespace Abp.Zero.Ldap.Configuration
         Task<string> GetUserName(int? tenantId);
 
         Task<string> GetPassword(int? tenantId);
+        
+        Task<bool> GetUseSsl(int? tenantId);
     }
 }

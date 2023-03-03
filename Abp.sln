@@ -181,6 +181,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore.PerRequestRe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.NHibernate", "src\Abp.ZeroCore.NHibernate\Abp.ZeroCore.NHibernate.csproj", "{01F71E3D-5010-43AA-870A-ADED860FF73B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.HtmlSanitizer", "src\Abp.HtmlSanitizer\Abp.HtmlSanitizer.csproj", "{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -505,6 +507,10 @@ Global
 		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01F71E3D-5010-43AA-870A-ADED860FF73B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -591,6 +597,7 @@ Global
 		{5779DD70-E43D-4429-8D8D-1DD429392F0D} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{DE3D4F5B-70A2-488B-A478-2C73FFE36D46} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 		{01F71E3D-5010-43AA-870A-ADED860FF73B} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
+		{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD} = {DFF0464B-5402-4DD6-86F5-2AEC1163B232}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A1CB38E-F77D-4A40-B3A9-9A70C3F3BC6D}

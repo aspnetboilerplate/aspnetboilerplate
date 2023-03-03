@@ -60,5 +60,12 @@ namespace Abp.Zero.Ldap.Configuration
                 ? SettingManager.GetSettingValueForTenantAsync(LdapSettingNames.Password, tenantId.Value)
                 : SettingManager.GetSettingValueForApplicationAsync(LdapSettingNames.Password);
         }
+
+        public Task<bool> GetUseSsl(int? tenantId)
+        {
+            return tenantId.HasValue
+                ? SettingManager.GetSettingValueForTenantAsync<bool>(LdapSettingNames.UseSsl, tenantId.Value)
+                : SettingManager.GetSettingValueForApplicationAsync<bool>(LdapSettingNames.UseSsl);
+        }
     }
 }

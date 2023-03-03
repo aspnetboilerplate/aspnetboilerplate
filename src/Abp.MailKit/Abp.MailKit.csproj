@@ -27,6 +27,7 @@
   <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="MailKit" Version="3.4.3" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>

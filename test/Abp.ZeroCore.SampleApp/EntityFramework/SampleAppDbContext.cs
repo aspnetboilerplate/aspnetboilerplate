@@ -46,6 +46,8 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
         
         public DbSet<Employee> Employees { get; set; }
 
+        public DbSet<Restaurant> Restaurants { get; set; }
+        
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {

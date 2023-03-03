@@ -31,21 +31,28 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return base.TryGetValue(key, out value);
             }
-            
-            var localizedKey = GetPerRequestRedisCacheKey(key);
 
-            if (httpContext.Items.ContainsKey(localizedKey))
+            try
             {
-                var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
-                value = conditionalValue.HasValue ? conditionalValue.Value : null;
+                var localizedKey = GetPerRequestRedisCacheKey(key);
 
-                return conditionalValue.HasValue;
+                if (httpContext.Items.ContainsKey(localizedKey))
+                {
+                    var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
+                    value = conditionalValue.HasValue ? conditionalValue.Value : null;
+
+                    return conditionalValue.HasValue;
+                }
+
+                var hasValue = base.TryGetValue(key, out value);
+                httpContext.Items[localizedKey] = new ConditionalValue<object>(hasValue, hasValue ? value : null);
+                return hasValue;
             }
-
-            var hasValue = base.TryGetValue(key, out value);
-            httpContext.Items[localizedKey] = new ConditionalValue<object>(hasValue, hasValue ? value : null);
-            return hasValue;
-
+            catch (ObjectDisposedException exception)
+            {
+                Logger.Warn(exception.Message, exception);
+                return base.TryGetValue(key, out value);
+            }
         }
 
         public override ConditionalValue<object>[] TryGetValues(string[] keys)
@@ -56,22 +63,30 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return base.TryGetValues(keys);
             }
-            
-            var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
 
-            var missingKeys = localizedKeys
-                .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
-                .Select(kv => kv.Value)
-                .ToArray();
-
-            var missingValues = base.TryGetValues(missingKeys);
-
-            for (var i = 0; i < missingKeys.Length; i++)
+            try
             {
-                httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
-            }
+                var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
 
-            return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+                var missingKeys = localizedKeys
+                    .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
+                    .Select(kv => kv.Value)
+                    .ToArray();
+
+                var missingValues = base.TryGetValues(missingKeys);
+
+                for (var i = 0; i < missingKeys.Length; i++)
+                {
+                    httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
+                }
+
+                return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+            }
+            catch (ObjectDisposedException exception)
+            {
+                Logger.Warn(exception.Message, exception);
+                return base.TryGetValues(keys);
+            }
         }
 
         public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
@@ -85,18 +100,25 @@ namespace Abp.Runtime.Caching.Redis
             
             var localizedKey = GetPerRequestRedisCacheKey(key);
 
-            if (httpContext.Items.ContainsKey(localizedKey))
+            try
             {
-                var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
-                return conditionalValue;
-            }
-            else
+                if (httpContext.Items.ContainsKey(localizedKey))
+                {
+                    var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
+                    return conditionalValue;
+                }
+                else
+                {
+                    var conditionalValue = await base.TryGetValueAsync(key);
+                    httpContext.Items[localizedKey] = conditionalValue;
+                    return conditionalValue;
+                }
+            }   
+            catch (ObjectDisposedException exception)
             {
-                var conditionalValue = await base.TryGetValueAsync(key);
-                httpContext.Items[localizedKey] = conditionalValue;
-                return conditionalValue;
+                Logger.Warn(exception.Message, exception);
+                return await base.TryGetValueAsync(key);
             }
-
         }
 
         public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
@@ -107,22 +129,30 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return await base.TryGetValuesAsync(keys);
             }
-            
-            var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
 
-            var missingKeys = localizedKeys
-                .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
-                .Select(kv => kv.Value)
-                .ToArray();
-
-            var missingValues = await base.TryGetValuesAsync(missingKeys);
-
-            for (var i = 0; i < missingKeys.Length; i++)
+            try
             {
-                httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
-            }
+                var localizedKeys = keys.ToDictionary(GetPerRequestRedisCacheKey);
 
-            return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+                var missingKeys = localizedKeys
+                    .Where(kv => !httpContext.Items.ContainsKey(kv.Key))
+                    .Select(kv => kv.Value)
+                    .ToArray();
+
+                var missingValues = await base.TryGetValuesAsync(missingKeys);
+
+                for (var i = 0; i < missingKeys.Length; i++)
+                {
+                    httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
+                }
+
+                return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+            }
+            catch (ObjectDisposedException exception)
+            {
+                Logger.Warn(exception.Message, exception);
+                return await base.TryGetValuesAsync(keys);
+            }
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
