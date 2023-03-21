@@ -1,7 +1,4 @@
-using System;
 using System.Reflection;
-using Abp.Reflection;
-using Abp.Timing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -20,12 +17,7 @@ namespace Abp.Json
 
         protected virtual void ModifyProperty(MemberInfo member, JsonProperty property)
         {
-            if (property.PropertyType != typeof(DateTime) && property.PropertyType != typeof(DateTime?))
-            {
-                return;
-            }
-
-            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) == null)
+            if (AbpDateTimeConverter.ShouldNormalize(member, property))
             {
                 property.Converter = new AbpDateTimeConverter();
             }

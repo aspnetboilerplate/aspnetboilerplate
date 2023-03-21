@@ -58,7 +58,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var responseBody = await response.Content.ReadAsStringAsync();
-            responseBody.ShouldBe("[{\"name\":\"Test product\",\"price\":100.0,\"id\":1}]");
+            responseBody.ShouldBe("[{\"name\":\"Test product\",\"price\":100,\"id\":1}]");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var responseBody = await response.Content.ReadAsStringAsync();
-            responseBody.ShouldBe("{\"name\":\"Test product\",\"price\":100.0,\"id\":1}");
+            responseBody.ShouldBe("{\"name\":\"Test product\",\"price\":100,\"id\":1}");
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             var createResponse = await client.GetAsync("/odata/ProductsDto(2)");
             createResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
             var responseBody = await createResponse.Content.ReadAsStringAsync();
-            responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":0.0,\"id\":2}");
+            responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":0,\"id\":2}");
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
                 Name = "Test product2",
                 Price = 150
             });
-            
+
             var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Patch, "/odata/ProductsDto(1)")
             {
                 Content = new StringContent(content, Encoding.UTF8, "application/json")
@@ -121,7 +121,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             var createResponse = await client.GetAsync("/odata/ProductsDto(1)");
             createResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
             var responseBody = await createResponse.Content.ReadAsStringAsync();
-            responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":150.0,\"id\":1}");
+            responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":150,\"id\":1}");
         }
 
         [Fact]
@@ -135,12 +135,12 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Assert
             deleteResponse.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-            
+
             var response = await client.GetAsync("/odata/ProductsDto");
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             var responseBody = await response.Content.ReadAsStringAsync();
             responseBody.ShouldBe("[]");
-            
+
         }
     }
 }

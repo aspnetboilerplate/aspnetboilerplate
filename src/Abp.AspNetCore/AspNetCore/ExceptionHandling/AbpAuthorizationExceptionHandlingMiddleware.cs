@@ -4,12 +4,12 @@ using Abp.Authorization;
 using Abp.Dependency;
 using Abp.Events.Bus;
 using Abp.Events.Bus.Exceptions;
+using Abp.Json;
 using Abp.Localization;
 using Abp.Web;
 using Abp.Web.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Abp.AspNetCore.ExceptionHandling
 {
@@ -44,12 +44,10 @@ namespace Abp.AspNetCore.ExceptionHandling
                 Logger.Error(exception.Message);
 
                 await context.Response.WriteAsync(
-                    JsonConvert.SerializeObject(
-                        new AjaxResponse(
-                            _errorInfoBuilder.BuildForException(exception),
-                            true
-                        )
-                    )
+                    new AjaxResponse(
+                        _errorInfoBuilder.BuildForException(exception),
+                        true
+                    ).ToJsonString()
                 );
 
                 await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
