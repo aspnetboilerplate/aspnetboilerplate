@@ -15,7 +15,7 @@ namespace Abp.Json
 {
     public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
     {
-        private readonly string _dateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
+        private const string DefaultDateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
         private readonly DateTimeStyles _dateTimeStyles = DateTimeStyles.RoundtripKind;
         private readonly CultureInfo _culture = CultureInfo.InvariantCulture;
 
@@ -74,9 +74,7 @@ namespace Abp.Json
                 }
             }
 
-            var date = !_dateTimeFormat.IsNullOrEmpty() ?
-                DateTime.ParseExact(dateText, _dateTimeFormat, _culture, _dateTimeStyles) :
-                DateTime.Parse(dateText, _culture, _dateTimeStyles);
+            var date = DateTime.Parse(dateText, _culture, _dateTimeStyles);
 
             return Clock.Normalize(date);
         }
@@ -97,7 +95,7 @@ namespace Abp.Json
                 }
 
                 writer.WriteValue(OutputDateTimeFormat.IsNullOrWhiteSpace()
-                    ? dateTime.ToString(_dateTimeFormat, _culture)
+                    ? dateTime.ToString(DefaultDateTimeFormat, _culture)
                     : dateTime.ToString(OutputDateTimeFormat, _culture));
             }
             else

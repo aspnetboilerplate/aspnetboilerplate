@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Abp.Json;
 using Abp.Webhooks;
 using Abp.Zero.SampleApp.Application;
-using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
 
@@ -14,7 +14,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
     public class WebhookManager_Tests : WebhookTestBase
     {
         private readonly IWebhookManager _webhookManager;
-        
+
         public WebhookManager_Tests()
         {
             _webhookManager = Resolve<IWebhookManager>();
@@ -33,7 +33,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             });
 
             payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
+            ((string)JsonSerializer.Serialize(payload.Data)).ShouldBe(data);
             payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
         }
 
@@ -50,10 +50,10 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
             });
 
             payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
+            ((string)JsonSerializer.Serialize(payload.Data)).ShouldBe(data);
             payload.Attempt.ShouldBe(1);
         }
-        
+
         [Fact]
         public async Task SignWebhookRequest_Tests()
         {
@@ -136,7 +136,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
             serializedBody.ShouldBe(data); // serializedBody must be equal to data
         }
-        
+
         [Fact]
         public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
         {
