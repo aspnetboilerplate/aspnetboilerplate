@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Abp.Json.SystemTextJson;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -23,7 +24,6 @@ namespace Abp.Json
             JsonSerializerOptionsCache = new ConcurrentDictionary<object, JsonSerializerOptions>();
             UseNewtonsoft = false;
         }
-
 
         /// <summary>
         /// Converts given object to JSON string.
@@ -66,17 +66,6 @@ namespace Abp.Json
         private static string ToJsonStringWithSystemTextJson(this object obj, bool camelCase = false, bool indented = false)
         {
             var options = CreateJsonSerializerOptions(camelCase, indented);
-
-            if (camelCase)
-            {
-                options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            }
-
-            if (indented)
-            {
-                options.WriteIndented = true;
-            }
-
             return ToJsonString(obj, options);
         }
 
@@ -91,13 +80,15 @@ namespace Abp.Json
                 var options = new JsonSerializerOptions
                 {
                     ReadCommentHandling = JsonCommentHandling.Skip,
-                    AllowTrailingCommas = true
+                    AllowTrailingCommas = true,
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString
                 };
 
                 options.Converters.Add(new AbpStringToEnumFactory());
                 options.Converters.Add(new AbpStringToBooleanConverter());
                 options.Converters.Add(new AbpStringToGuidConverter());
                 options.Converters.Add(new AbpNullableStringToGuidConverter());
+                options.Converters.Add(new AbpNullableFromEmptyStringConverterFactory());
                 options.Converters.Add(new ObjectToInferredTypesConverter());
 
                 options.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver();

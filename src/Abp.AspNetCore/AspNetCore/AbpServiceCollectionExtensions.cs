@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Mvc;
@@ -15,14 +14,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
 using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Extensions;
-using Abp.Json;
 using Abp.Json.SystemTextJson;
 using Abp.Modules;
 using Abp.Runtime.Validation;
-using Abp.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -30,7 +25,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 
 namespace Abp.AspNetCore
@@ -120,6 +114,7 @@ namespace Abp.AspNetCore
                 options.JsonSerializerOptions.Converters.Add(new AbpStringToBooleanConverter());
                 options.JsonSerializerOptions.Converters.Add(new AbpStringToGuidConverter());
                 options.JsonSerializerOptions.Converters.Add(new AbpNullableStringToGuidConverter());
+                options.JsonSerializerOptions.Converters.Add(new AbpNullableFromEmptyStringConverterFactory());
                 options.JsonSerializerOptions.Converters.Add(new ObjectToInferredTypesConverter());
 
                 var aspNetCoreConfiguration = rootServiceProvider.GetRequiredService<IAbpAspNetCoreConfiguration>();
