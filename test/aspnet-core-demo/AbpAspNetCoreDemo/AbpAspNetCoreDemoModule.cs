@@ -8,7 +8,7 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.EntityFrameworkCore;
-using Abp.HtmlSanitizer.HtmlSanitizer;
+using Abp.HtmlSanitizer;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using AbpAspNetCoreDemo.Core;

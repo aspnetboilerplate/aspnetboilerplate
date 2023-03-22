@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Abp.HtmlSanitizer.HtmlSanitizer
+namespace Abp.HtmlSanitizer
 {
     /// <summary>
     /// Can be added to a method to enable auto sanitize html.

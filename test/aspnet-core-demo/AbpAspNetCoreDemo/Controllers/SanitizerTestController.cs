@@ -1,4 +1,4 @@
-﻿using Abp.HtmlSanitizer.HtmlSanitizer;
+﻿using Abp.HtmlSanitizer;
 using Abp.Web.Models;
 using AbpAspNetCoreDemo.Model;
 using Microsoft.AspNetCore.Mvc;

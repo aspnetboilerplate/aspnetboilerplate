@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Abp.HtmlSanitizer.HtmlSanitizer;
 using AbpAspNetCoreDemo.IntegrationTests.Data;
 using AbpAspNetCoreDemo.Model;
 using Microsoft.AspNetCore.Mvc.Testing;

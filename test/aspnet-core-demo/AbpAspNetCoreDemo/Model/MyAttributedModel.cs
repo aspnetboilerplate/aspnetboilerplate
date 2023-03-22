@@ -1,4 +1,4 @@
-﻿using Abp.HtmlSanitizer.HtmlSanitizer;
+﻿using Abp.HtmlSanitizer;
 
 namespace AbpAspNetCoreDemo.Model;
 

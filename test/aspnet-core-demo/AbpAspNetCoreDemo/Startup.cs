@@ -8,7 +8,7 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
-using Abp.HtmlSanitizer.HtmlSanitizer;
+using Abp.HtmlSanitizer;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
@@ -87,21 +87,21 @@ namespace AbpAspNetCoreDemo
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 options.IocManager = IocManager.Value ?? new IocManager();
-
-                string plugDllInPath = "";
-#if DEBUG
-                plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
-#else
-                plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
-#endif
-                if (!File.Exists(plugDllInPath))
-                {
-                    throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
-                }
-
-                options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
+//
+//                 string plugDllInPath = "";
+// #if DEBUG
+//                 plugDllInPath = Path.Combine(_env.ContentRootPath,
+//                     @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
+// #else
+//                 plugDllInPath = Path.Combine(_env.ContentRootPath,
+//                     @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
+// #endif
+//                 if (!File.Exists(plugDllInPath))
+//                 {
+//                     throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
+//                 }
+//
+//                 options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
 
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(

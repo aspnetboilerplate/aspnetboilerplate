@@ -3,7 +3,7 @@ using Abp.Dependency;
 using Abp.Modules;
 using Ganss.Xss;
 
-namespace Abp.HtmlSanitizer.HtmlSanitizer;
+namespace Abp.HtmlSanitizer;
 
 [DependsOn(typeof(AbpKernelModule))]    
 public class AbpHtmlSanitizerModule : AbpModule
