@@ -27,9 +27,6 @@ public static class AbpMvcBuilderExtensions
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 };
-
-                options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
-                options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
             });
 
         return mvcBuilder;
