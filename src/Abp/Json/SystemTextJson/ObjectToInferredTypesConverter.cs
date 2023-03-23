@@ -28,7 +28,7 @@ namespace Abp.Json.SystemTextJson
                         return l;
                     }
                     return reader.GetDouble();
-                case    JsonTokenType.String:
+                case JsonTokenType.String:
                     if (reader.TryGetDateTime(out var datetime))
                     {
                         return datetime;

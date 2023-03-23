@@ -39,9 +39,12 @@ namespace Abp.Json.SystemTextJson
                     x.GetType() == typeof(AbpNullableFromEmptyStringConverterFactory));
             }
 
-            if (reader.GetString().IsNullOrWhiteSpace())
+            if (reader.TokenType == JsonTokenType.String)
             {
-                return default;
+                if (reader.GetString().IsNullOrWhiteSpace())
+                {
+                    return default;
+                }
             }
 
             return JsonSerializer.Deserialize<TNullableType>(ref reader, _readJsonSerializerOptions);

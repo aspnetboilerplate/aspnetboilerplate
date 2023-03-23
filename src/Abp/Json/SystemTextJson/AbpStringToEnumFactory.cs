@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Abp.Extensions;
 
 namespace Abp.Json.SystemTextJson
 {
@@ -90,7 +91,16 @@ namespace Abp.Json.SystemTextJson
 
         public override T ReadAsPropertyName(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return (T)Enum.Parse(typeToConvert, reader.GetString());
+            if (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.PropertyName)
+            {
+                var str = reader.GetString();
+                if (!str.IsNullOrWhiteSpace())
+                {
+                    return (T)Enum.Parse(typeToConvert, str);
+                }
+            }
+
+            return base.ReadAsPropertyName(ref reader, typeToConvert, options);
         }
 
         public override void WriteAsPropertyName(Utf8JsonWriter writer, T value, JsonSerializerOptions options)

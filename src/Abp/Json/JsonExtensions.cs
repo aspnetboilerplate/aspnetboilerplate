@@ -80,8 +80,7 @@ namespace Abp.Json
                 var options = new JsonSerializerOptions
                 {
                     ReadCommentHandling = JsonCommentHandling.Skip,
-                    AllowTrailingCommas = true,
-                    NumberHandling = JsonNumberHandling.AllowReadingFromString
+                    AllowTrailingCommas = true
                 };
 
                 options.Converters.Add(new AbpStringToEnumFactory());
