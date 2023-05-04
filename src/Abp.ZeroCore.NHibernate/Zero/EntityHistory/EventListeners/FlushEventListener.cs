@@ -22,7 +22,7 @@ public class FlushEventListener : DefaultFlushEventListener
 
     public override Task OnFlushAsync(FlushEvent @event, CancellationToken cancellationToken)
     {
-        _entityHistoryHelper.SaveChangeSetAsync(@event.Session.SessionId);
+        _entityHistoryHelper.SaveChangeSet(@event.Session.SessionId);
         return base.OnFlushAsync(@event, cancellationToken);
     }
 }

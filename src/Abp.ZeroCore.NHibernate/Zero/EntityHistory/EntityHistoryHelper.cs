@@ -12,7 +12,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Abp.EntityHistory;
@@ -23,7 +22,6 @@ public interface IEntityHistoryHelper
     void AddUpdateEntityToChangeSet(PreUpdateEvent @event);
     void AddDeleteEntityToChangeSet(PreDeleteEvent @event);
     void SaveChangeSet(Guid sessionId);
-    Task SaveChangeSetAsync(Guid sessionId);
 }
 
 public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper, ITransientDependency
@@ -190,32 +188,7 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
             uow.Complete();
         }
     }
-    public virtual async Task SaveChangeSetAsync(Guid sessionId)
-    {
-        SetProperInstances();
 
-        if (!IsEntityHistoryEnabled)
-        {
-            return;
-        }
-
-        if (!_entityChangeSets.TryGetValue(sessionId, out var changeSet)) return;
-
-        UpdateChangeSet(changeSet);
-
-        _entityChangeSets.TryRemove(sessionId, out _);
-
-        if (changeSet.EntityChanges.Count == 0)
-        {
-            return;
-        }
-
-        using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
-        {
-            await EntityHistoryStore.SaveAsync(changeSet);
-            await uow.CompleteAsync();
-        }
-    }
     protected virtual EntityChangeSet CreateOrGetEntityChangeSet(Guid sessionId)
     {
         var entityChangeSet = _entityChangeSets.GetOrAdd(sessionId, guid => new EntityChangeSet
@@ -247,7 +220,7 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
             return false;
         }
 
-        if (!IsTypeOfEntity(typeOfEntity) /*&& !entityEntry.Metadata.IsOwned()*/)
+        if (!IsTypeOfEntity(typeOfEntity))
         {
             return false;
         }
@@ -258,29 +231,7 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
             return false;
         }
 
-        //bool? shouldAuditOwnerEntity = null;
-        //bool? shouldAuditOwnerProperty = null;
-        //if (!shouldAuditEntity.HasValue && entityEntry.Metadata.IsOwned())
-        //{
-        //    // Check if owner entity has auditing attribute
-        //    var ownerForeignKey = entityEntry.Metadata.GetForeignKeys().First(fk => fk.IsOwnership);
-        //    var ownerEntityType = ownerForeignKey.PrincipalEntityType.ClrType;
-
-        //    shouldAuditOwnerEntity = IsTypeOfAuditedEntity(ownerEntityType);
-        //    if (shouldAuditOwnerEntity.HasValue && !shouldAuditOwnerEntity.Value)
-        //    {
-        //        return false;
-        //    }
-
-        //    var ownerPropertyInfo = ownerForeignKey.PrincipalToDependent.PropertyInfo;
-        //    shouldAuditOwnerProperty = IsAuditedPropertyInfo(ownerEntityType, ownerPropertyInfo);
-        //    if (shouldAuditOwnerProperty.HasValue && !shouldAuditOwnerProperty.Value)
-        //    {
-        //        return false;
-        //    }
-        //}
-
-        return shouldAuditEntity /*?? shouldAuditOwnerEntity ?? shouldAuditOwnerProperty*/ ?? shouldTrackEntity;
+        return shouldAuditEntity ?? shouldTrackEntity;
     }
     protected virtual string GetEntityId(AbstractPreDatabaseOperationEvent @event)
     {
