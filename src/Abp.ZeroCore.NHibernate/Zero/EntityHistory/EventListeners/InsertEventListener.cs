@@ -1,0 +1,27 @@
+﻿using NHibernate.Event;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Abp.EntityHistory.EventListeners;
+
+public class InsertEventListener : IPreInsertEventListener
+{
+    private readonly IEntityHistoryHelper _entityHistoryHelper;
+
+    public InsertEventListener(IEntityHistoryHelper entityHistoryHelper)
+    {
+        _entityHistoryHelper = entityHistoryHelper;
+    }
+
+    public async Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
+    {
+        _entityHistoryHelper.AddInsertEntityToChangeSet(@event);
+        return false;
+    }
+
+    public bool OnPreInsert(PreInsertEvent @event)
+    {
+        _entityHistoryHelper.AddInsertEntityToChangeSet(@event);
+        return false;
+    }
+}

@@ -1,0 +1,26 @@
+﻿using NHibernate.Event;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Abp.EntityHistory.EventListeners;
+
+public class DeleteEventListener : IPreDeleteEventListener
+{
+    private readonly IEntityHistoryHelper _entityHistoryHelper;
+
+    public DeleteEventListener(IEntityHistoryHelper entityHistoryHelper)
+    {
+        _entityHistoryHelper = entityHistoryHelper;
+    }
+    public async Task<bool> OnPreDeleteAsync(PreDeleteEvent @event, CancellationToken cancellationToken)
+    {
+        _entityHistoryHelper.AddDeleteEntityToChangeSet(@event);
+        return false;
+    }
+
+    public bool OnPreDelete(PreDeleteEvent @event)
+    {
+        _entityHistoryHelper.AddDeleteEntityToChangeSet(@event);
+        return false;
+    }
+}
