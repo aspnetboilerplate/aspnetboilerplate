@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
       <PackageReference Update="Fody" Version="6.7.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
