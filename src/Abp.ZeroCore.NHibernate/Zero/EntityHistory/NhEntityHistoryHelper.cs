@@ -11,6 +11,7 @@ using NHibernate.Event;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Transactions;
 
@@ -24,48 +25,47 @@ public interface IEntityHistoryHelper
     void SaveChangeSet(Guid sessionId);
 }
 
-public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper, ITransientDependency
+[UsedImplicitly]
+public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper, ITransientDependency
 {
-    private readonly IIocManager _iocManager;
     private readonly Lazy<IEntityHistoryStore> _entityHistoryStore;
     private readonly Lazy<IAbpSession> _abpSession;
     private readonly Lazy<IClientInfoProvider> _clientInfoProvider;
     private readonly Lazy<IEntityChangeSetReasonProvider> _entityChangeSetReasonProvider;
 
-    private static ConcurrentDictionary<Guid, EntityChangeSet> _entityChangeSets = new ConcurrentDictionary<Guid, EntityChangeSet>();
+    private static readonly ConcurrentDictionary<Guid, EntityChangeSet> EntityChangeSets = new();
 
-    public EntityHistoryHelper(
+    public NhEntityHistoryHelper(
         IEntityHistoryConfiguration configuration,
         IUnitOfWorkManager unitOfWorkManager,
         IIocManager iocManager)
         : base(configuration, unitOfWorkManager)
     {
-        _iocManager = iocManager;
         _entityHistoryStore =
             new Lazy<IEntityHistoryStore>(
-                () => _iocManager.IsRegistered(typeof(IEntityHistoryStore))
-                    ? _iocManager.Resolve<IEntityHistoryStore>()
+                () => iocManager.IsRegistered(typeof(IEntityHistoryStore))
+                    ? iocManager.Resolve<IEntityHistoryStore>()
                     : NullEntityHistoryStore.Instance,
                 isThreadSafe: true
             );
         _abpSession =
             new Lazy<IAbpSession>(
-                () => _iocManager.IsRegistered(typeof(IAbpSession))
-                    ? _iocManager.Resolve<IAbpSession>()
+                () => iocManager.IsRegistered(typeof(IAbpSession))
+                    ? iocManager.Resolve<IAbpSession>()
                     : NullAbpSession.Instance,
                 isThreadSafe: true
             );
         _clientInfoProvider =
             new Lazy<IClientInfoProvider>(
-                () => _iocManager.IsRegistered(typeof(IClientInfoProvider))
-                    ? _iocManager.Resolve<IClientInfoProvider>()
+                () => iocManager.IsRegistered(typeof(IClientInfoProvider))
+                    ? iocManager.Resolve<IClientInfoProvider>()
                     : NullClientInfoProvider.Instance,
                 isThreadSafe: true
             );
         _entityChangeSetReasonProvider =
             new Lazy<IEntityChangeSetReasonProvider>(
-                () => _iocManager.IsRegistered(typeof(IEntityChangeSetReasonProvider))
-                    ? _iocManager.Resolve<IEntityChangeSetReasonProvider>()
+                () => iocManager.IsRegistered(typeof(IEntityChangeSetReasonProvider))
+                    ? iocManager.Resolve<IEntityChangeSetReasonProvider>()
                     : NullEntityChangeSetReasonProvider.Instance,
                 isThreadSafe: true
             );
@@ -171,27 +171,25 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
             return;
         }
 
-        if (!_entityChangeSets.TryGetValue(sessionId, out var changeSet)) return;
+        if (!EntityChangeSets.TryGetValue(sessionId, out var changeSet)) return;
 
         UpdateChangeSet(changeSet);
 
-        _entityChangeSets.TryRemove(sessionId, out _);
+        EntityChangeSets.TryRemove(sessionId, out _);
 
         if (changeSet.EntityChanges.Count == 0)
         {
             return;
         }
 
-        using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
-        {
-            EntityHistoryStore.Save(changeSet);
-            uow.Complete();
-        }
+        using var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress);
+        EntityHistoryStore.Save(changeSet);
+        uow.Complete();
     }
 
     protected virtual EntityChangeSet CreateOrGetEntityChangeSet(Guid sessionId)
     {
-        var entityChangeSet = _entityChangeSets.GetOrAdd(sessionId, guid => new EntityChangeSet
+        var entityChangeSet = EntityChangeSets.GetOrAdd(sessionId, _ => new EntityChangeSet
         {
             Reason = EntityChangeSetReasonProvider.Reason.TruncateWithPostfix(EntityChangeSet
                 .MaxReasonLength), // todo: add HTTP METHOD to the beginning of the URI string
@@ -329,13 +327,31 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
 
             var propertyIndex = @event.Persister.EntityMetamodel.GetPropertyIndex(property.Name);
             var propertyInfo = @event.Entity.GetType().GetProperty(@event.Persister.PropertyNames[propertyIndex]);
+
+            var newValue = @event.State[propertyIndex];
+            var propertyName = property.Name;
+
+            if (@event.State[propertyIndex] != null && Convert.GetTypeCode(@event.State[propertyIndex]) == TypeCode.Object)
+            {
+                var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties().FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[propertyIndex]);
+                var dirtyFieldClassType = dirtyFieldProperty?.PropertyType;
+                var identityProperty = dirtyFieldClassType?.GetProperty("Id");
+                if (identityProperty != null)
+                {
+                    newValue = identityProperty.GetValue(@event.State[propertyIndex]);
+                    propertyName = $"{propertyName}{identityProperty.Name}";
+                    propertyInfo = identityProperty;
+                }
+
+            }
+
             if (ShouldSavePropertyHistory(propertyInfo, !auditedPropertiesOnly))
             {
                 propertyChanges.Add(
                     CreateEntityPropertyChange(
                         null,
-                        @event.State[propertyIndex],
-                        property.Name,
+                        newValue,
+                        propertyName,
                         propertyInfo
                     )
                 );
@@ -361,13 +377,46 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
 
             var propertyIndex = @event.Persister.EntityMetamodel.GetPropertyIndex(property.Name);
             var propertyInfo = @event.Entity.GetType().GetProperty(@event.Persister.PropertyNames[propertyIndex]);
+
+            var newValue = @event.State[propertyIndex];
+            var oldValue = @event.OldState[propertyIndex];
+            var propertyName = property.Name;
+
+            if (@event.State[propertyIndex] != null && Convert.GetTypeCode(@event.State[propertyIndex]) == TypeCode.Object)
+            {
+                var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
+                    .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[propertyIndex]);
+                var dirtyFieldClassType = dirtyFieldProperty?.PropertyType;
+                var identityProperty = dirtyFieldClassType?.GetProperty("Id");
+                if (identityProperty != null)
+                {
+                    newValue = identityProperty.GetValue(@event.State[propertyIndex]);
+                    propertyName = $"{propertyName}{identityProperty.Name}";
+                    propertyInfo = identityProperty;
+                }
+
+            }
+
+            if (@event.OldState[propertyIndex] != null && Convert.GetTypeCode(@event.OldState[propertyIndex]) == TypeCode.Object)
+            {
+                var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
+                    .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[propertyIndex]);
+                var dirtyFieldClassType = dirtyFieldProperty?.PropertyType;
+                var identityProperty = dirtyFieldClassType?.GetProperty("Id");
+                if (identityProperty != null)
+                {
+                    oldValue = identityProperty.GetValue(@event.OldState[propertyIndex]);
+                }
+
+            }
+
             if (ShouldSavePropertyHistory(propertyInfo, !auditedPropertiesOnly))
             {
                 propertyChanges.Add(
                     CreateEntityPropertyChange(
-                        @event.OldState[propertyIndex],
-                        @event.State[propertyIndex],
-                        property.Name,
+                        oldValue,
+                        newValue,
+                        propertyName,
                         propertyInfo
                     )
                 );
@@ -393,13 +442,33 @@ public class EntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper
 
             var propertyIndex = @event.Persister.EntityMetamodel.GetPropertyIndex(property.Name);
             var propertyInfo = @event.Entity.GetType().GetProperty(@event.Persister.PropertyNames[propertyIndex]);
+
+            var oldValue = @event.DeletedState[propertyIndex];
+            var propertyName = property.Name;
+
+            if (@event.DeletedState[propertyIndex] != null &&
+                Convert.GetTypeCode(@event.DeletedState[propertyIndex]) == TypeCode.Object)
+            {
+                var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
+                    .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[propertyIndex]);
+                var dirtyFieldClassType = dirtyFieldProperty?.PropertyType;
+                var identityProperty = dirtyFieldClassType?.GetProperty("Id");
+                if (identityProperty != null)
+                {
+                    oldValue = identityProperty.GetValue(@event.DeletedState[propertyIndex]);
+                    propertyName = $"{propertyName}{identityProperty.Name}";
+                    propertyInfo = identityProperty;
+                }
+
+            }
+
             if (ShouldSavePropertyHistory(propertyInfo, !auditedPropertiesOnly))
             {
                 propertyChanges.Add(
                     CreateEntityPropertyChange(
-                        @event.DeletedState[propertyIndex],
+                        oldValue,
                         null,
-                        property.Name,
+                        propertyName,
                         propertyInfo
                     )
                 );

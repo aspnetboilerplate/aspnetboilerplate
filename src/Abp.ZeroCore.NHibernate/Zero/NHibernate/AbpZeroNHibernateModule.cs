@@ -22,7 +22,7 @@ public class AbpZeroCoreNHibernateModule : AbpModule
     {
         Configuration.ReplaceService<IEntityHistoryStore, NhEntityHistoryStore>(DependencyLifeStyle.Transient);
 
-        IocManager.Register<IEntityHistoryHelper, EntityHistoryHelper>(DependencyLifeStyle.Transient);
+        IocManager.Register<IEntityHistoryHelper, NhEntityHistoryHelper>(DependencyLifeStyle.Transient);
         IocManager.Register<IPreInsertEventListener, InsertEventListener>(DependencyLifeStyle.Transient);
         IocManager.Register<IPreUpdateEventListener, UpdateEventListener>(DependencyLifeStyle.Transient);
         IocManager.Register<IPreDeleteEventListener, DeleteEventListener>(DependencyLifeStyle.Transient);
