@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Abp.BlobStoring;
 using Abp.Dependency;
 using Abp.Runtime.Session;
 
@@ -7,11 +6,11 @@ namespace Abp.BlobStoring.FileSystem
 {
     public class DefaultBlobFilePathCalculator : IBlobFilePathCalculator, ITransientDependency
     {
-        protected IAbpSession CurrentTenant { get; }
+        protected IAbpSession AbpSession { get; }
 
-        public DefaultBlobFilePathCalculator(IAbpSession currentTenant)
+        public DefaultBlobFilePathCalculator(IAbpSession session)
         {
-            CurrentTenant = currentTenant;
+            AbpSession = session;
         }
 
         public virtual string Calculate(BlobProviderArgs args)
@@ -19,9 +18,9 @@ namespace Abp.BlobStoring.FileSystem
             var fileSystemConfiguration = args.Configuration.GetFileSystemConfiguration();
             var blobPath = fileSystemConfiguration.BasePath;
 
-            blobPath = CurrentTenant.TenantId == null
+            blobPath = AbpSession.TenantId == null
                 ? Path.Combine(blobPath, "host")
-                : Path.Combine(blobPath, "tenants", CurrentTenant.TenantId.Value.ToString("D"));
+                : Path.Combine(blobPath, "tenants", AbpSession.TenantId.Value.ToString("D"));
 
             if (fileSystemConfiguration.AppendContainerNameToBasePath)
             {
