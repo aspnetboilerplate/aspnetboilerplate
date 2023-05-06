@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\common.props" />
 	<Import Project="..\..\configureawait.props" />
 
@@ -25,7 +25,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.15.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.16.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="Fody" Version="6.6.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 	</ItemGroup>
 
 </Project>
