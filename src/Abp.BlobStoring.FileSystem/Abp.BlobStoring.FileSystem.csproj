@@ -29,11 +29,4 @@
 		<PackageReference Include="Polly" Version="7.2.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Update="Fody" Version="6.6.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>
-		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-	</ItemGroup>
 </Project>
