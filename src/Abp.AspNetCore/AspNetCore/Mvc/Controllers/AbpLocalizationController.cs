@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Auditing;
+using Abp.Configuration;
 using Abp.Localization;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.Web.Models;
@@ -15,10 +18,18 @@ namespace Abp.AspNetCore.Mvc.Controllers
     public class AbpLocalizationController : AbpController
     {
         protected IUrlHelper UrlHelper;
-
-        public AbpLocalizationController(IUrlHelper urlHelper)
+        private readonly ISettingStore _settingStore;
+        
+        private readonly ITypedCache<string, Dictionary<string, SettingInfo>> _userSettingCache;
+        
+        public AbpLocalizationController(
+            IUrlHelper urlHelper, 
+            ISettingStore settingStore,
+            ICacheManager cacheManager)
         {
             UrlHelper = urlHelper;
+            _settingStore = settingStore;
+            _userSettingCache = cacheManager.GetUserSettingsCache();
         }
 
         [DisableAuditing]
@@ -43,11 +54,7 @@ namespace Abp.AspNetCore.Mvc.Controllers
 
             if (AbpSession.UserId.HasValue)
             {
-                SettingManager.ChangeSettingForUser(
-                    AbpSession.ToUserIdentifier(),
-                    LocalizationSettingNames.DefaultLanguage,
-                    cultureName
-                );
+                ChangeCultureForUser(cultureName);
             }
 
             if (Request.IsAjaxRequest())
@@ -69,7 +76,37 @@ namespace Abp.AspNetCore.Mvc.Controllers
                 }
             }
 
-            return LocalRedirect("/"); //TODO: Go to app root
+            return LocalRedirect("/");
+        }
+
+        protected virtual void ChangeCultureForUser(string cultureName)
+        {
+            var languageSetting = _settingStore.GetSettingOrNull(
+                AbpSession.TenantId,
+                AbpSession.GetUserId(),
+                LocalizationSettingNames.DefaultLanguage
+            );
+
+            if (languageSetting == null)
+            {
+                _settingStore.Create(new SettingInfo(
+                    AbpSession.TenantId,
+                    AbpSession.UserId,
+                    LocalizationSettingNames.DefaultLanguage,
+                    cultureName
+                ));
+            }
+            else
+            {
+                _settingStore.Update(new SettingInfo(
+                    AbpSession.TenantId,
+                    AbpSession.UserId,
+                    LocalizationSettingNames.DefaultLanguage,
+                    cultureName
+                ));
+            }
+            
+            _userSettingCache.Remove(AbpSession.ToUserIdentifier().ToString());
         }
     }
 }
