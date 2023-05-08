@@ -73,11 +73,11 @@ namespace Abp.Notifications
 
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
-                //Directly get from UserIds
+                // Directly get from UserIds
                 userIds = notificationInfo
                     .UserIds
                     .Split(",")
-                    .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
+                    .Select(UserIdentifier.Parse)
                     .Where(uid =>
                         SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
                             uid.TenantId, uid.UserId))
@@ -85,8 +85,9 @@ namespace Abp.Notifications
             }
             else
             {
-                //Get subscribed users
-
+                // Get subscribed users
+                // TODO@6618 -> allow filtering by NotificationSubscription.TargetNotifiers here...
+                
                 var tenantIds = GetTenantIds(notificationInfo);
 
                 List<NotificationSubscriptionInfo> subscriptions;
@@ -94,7 +95,7 @@ namespace Abp.Notifications
                 if (tenantIds.IsNullOrEmpty() ||
                     (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
                 {
-                    //Get all subscribed users of all tenants
+                    // Get all subscribed users of all tenants
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
@@ -103,7 +104,7 @@ namespace Abp.Notifications
                 }
                 else
                 {
-                    //Get all subscribed users of specified tenant(s)
+                    // Get all subscribed users of specified tenant(s)
                     subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         tenantIds,
                         notificationInfo.NotificationName,
@@ -112,10 +113,10 @@ namespace Abp.Notifications
                     );
                 }
 
-                //Remove invalid subscriptions
+                // Remove invalid subscriptions
                 var invalidSubscriptions = new Dictionary<Guid, NotificationSubscriptionInfo>();
 
-                //TODO: Group subscriptions per tenant for potential performance improvement
+                // TODO: Group subscriptions per tenant for potential performance improvement
                 foreach (var subscription in subscriptions)
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
@@ -350,7 +351,7 @@ namespace Abp.Notifications
                     using (var notifier = _iocResolver.ResolveAsDisposable<IRealTimeNotifier>(notifierType))
                     {
                         UserNotification[] notificationsToSendWithThatNotifier;
-                        
+
                         // if UseOnlyIfRequestedAsTarget is true, then we should send notifications which requests this notifier
                         if (notifier.Object.UseOnlyIfRequestedAsTarget)
                         {
@@ -363,15 +364,18 @@ namespace Abp.Notifications
                             // notifier allows to send any notifications 
                             // we can send all notifications which does not have TargetNotifiersList(since there is no target, we can send it with any notifier)
                             // or current notifier is in TargetNotifiersList
-                            
+
                             notificationsToSendWithThatNotifier = userNotifications
                                 .Where(n =>
-                                        n.TargetNotifiersList == null || n.TargetNotifiersList.Count == 0 ||// if there is no target notifiers, send it to all of them
-                                        n.TargetNotifiersList.Contains(notifierType.FullName)// if there is target notifiers, check if current notifier is in it
+                                        n.TargetNotifiersList == null ||
+                                        n.TargetNotifiersList.Count ==
+                                        0 || // if there is no target notifiers, send it to all of them
+                                        n.TargetNotifiersList.Contains(notifierType
+                                            .FullName) // if there is target notifiers, check if current notifier is in it
                                 )
                                 .ToArray();
                         }
-                        
+
                         if (notificationsToSendWithThatNotifier.Length == 0)
                         {
                             continue;
