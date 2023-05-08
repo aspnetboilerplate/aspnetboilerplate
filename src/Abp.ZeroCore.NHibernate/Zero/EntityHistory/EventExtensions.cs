@@ -1,4 +1,5 @@
 ﻿using NHibernate.Event;
+using System;
 using System.Linq;
 
 namespace Abp.EntityHistory;
@@ -14,12 +15,12 @@ public static class EventExtensions
             var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
                 .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[dirtyFieldIndex]);
 
-            if (dirtyFieldProperty != null && dirtyFieldProperty.Name == "IsDeleted")
+            if (dirtyFieldProperty != null && dirtyFieldProperty.Name.Equals("IsDeleted", StringComparison.InvariantCultureIgnoreCase))
             {
                 var newValue = @event.State[dirtyFieldIndex]?.ToString() ?? string.Empty;
                 var oldValue = @event.OldState[dirtyFieldIndex]?.ToString() ?? string.Empty;
 
-                if (oldValue.ToLowerInvariant() != newValue.ToLowerInvariant() && newValue.ToLowerInvariant() == bool.FalseString.ToLowerInvariant())
+                if (!oldValue.Equals(newValue, StringComparison.InvariantCultureIgnoreCase) && newValue.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
                 }

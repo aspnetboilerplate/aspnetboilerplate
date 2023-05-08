@@ -14,13 +14,13 @@ public class DeleteEventListener : IPreDeleteEventListener
     }
     public async Task<bool> OnPreDeleteAsync(PreDeleteEvent @event, CancellationToken cancellationToken)
     {
-        _entityHistoryHelper.AddDeleteEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 
     public bool OnPreDelete(PreDeleteEvent @event)
     {
-        _entityHistoryHelper.AddDeleteEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 }

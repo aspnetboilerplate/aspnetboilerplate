@@ -19,9 +19,7 @@ namespace Abp.EntityHistory;
 
 public interface IEntityHistoryHelper
 {
-    void AddInsertEntityToChangeSet(PreInsertEvent @event);
-    void AddUpdateEntityToChangeSet(PreUpdateEvent @event);
-    void AddDeleteEntityToChangeSet(PreDeleteEvent @event);
+    void AddEntityToChangeSet(AbstractPreDatabaseOperationEvent @event);
     void SaveChangeSet(Guid sessionId);
 }
 
@@ -71,16 +69,29 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
             );
     }
 
-    public virtual void AddInsertEntityToChangeSet(PreInsertEvent @event)
+    public virtual void AddEntityToChangeSet(AbstractPreDatabaseOperationEvent @event)
     {
         SetProperInstances();
 
         var sessionId = @event.Session.SessionId;
 
-        var changeSet = CreateOrGetEntityChangeSet(sessionId);
-
         var shouldSaveEntityHistory = ShouldSaveEntityHistory(@event.Entity);
         if (shouldSaveEntityHistory.HasValue && !shouldSaveEntityHistory.Value)
+        {
+            return;
+        }
+
+        var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
+
+        var propertyChanges = @event switch
+        {
+            PreInsertEvent insert => GetPropertyChanges(insert, shouldSaveAuditedPropertiesOnly),
+            PreUpdateEvent update => GetPropertyChanges(update, shouldSaveAuditedPropertiesOnly),
+            PreDeleteEvent delete => GetPropertyChanges(delete, shouldSaveAuditedPropertiesOnly),
+            _ => throw new ArgumentOutOfRangeException(nameof(@event))
+        };
+
+        if (propertyChanges.Count == 0)
         {
             return;
         }
@@ -92,74 +103,9 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
             return;
         }
 
-        var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
-        var propertyChanges = GetPropertyChanges(@event, shouldSaveAuditedPropertiesOnly);
-        if (propertyChanges.Count == 0)
-        {
-            return;
-        }
-
         entityChange.PropertyChanges = propertyChanges;
-        changeSet.EntityChanges.Add(entityChange);
-    }
-    public virtual void AddUpdateEntityToChangeSet(PreUpdateEvent @event)
-    {
-        SetProperInstances();
-
-        var sessionId = @event.Session.SessionId;
 
         var changeSet = CreateOrGetEntityChangeSet(sessionId);
-
-        var shouldSaveEntityHistory = ShouldSaveEntityHistory(@event.Entity);
-        if (shouldSaveEntityHistory.HasValue && !shouldSaveEntityHistory.Value)
-        {
-            return;
-        }
-
-        var entityChange = CreateEntityChange(@event);
-
-        if (entityChange == null)
-        {
-            return;
-        }
-
-        var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
-        var propertyChanges = GetPropertyChanges(@event, shouldSaveAuditedPropertiesOnly);
-        if (propertyChanges.Count == 0)
-        {
-            return;
-        }
-
-        entityChange.PropertyChanges = propertyChanges;
-        changeSet.EntityChanges.Add(entityChange);
-    }
-    public virtual void AddDeleteEntityToChangeSet(PreDeleteEvent @event)
-    {
-        var sessionId = @event.Session.SessionId;
-
-        var changeSet = CreateOrGetEntityChangeSet(sessionId);
-
-        var shouldSaveEntityHistory = ShouldSaveEntityHistory(@event.Entity);
-        if (shouldSaveEntityHistory.HasValue && !shouldSaveEntityHistory.Value)
-        {
-            return;
-        }
-
-        var entityChange = CreateEntityChange(@event);
-
-        if (entityChange == null)
-        {
-            return;
-        }
-
-        var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
-        var propertyChanges = GetPropertyChanges(@event, shouldSaveAuditedPropertiesOnly);
-        if (propertyChanges.Count == 0)
-        {
-            return;
-        }
-
-        entityChange.PropertyChanges = propertyChanges;
         changeSet.EntityChanges.Add(entityChange);
     }
     public virtual void SaveChangeSet(Guid sessionId)
@@ -186,7 +132,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
         EntityHistoryStore.Save(changeSet);
         uow.Complete();
     }
-
     protected virtual EntityChangeSet CreateOrGetEntityChangeSet(Guid sessionId)
     {
         var entityChangeSet = EntityChangeSets.GetOrAdd(sessionId, _ => new EntityChangeSet
@@ -245,12 +190,17 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
 
         return IsAuditedPropertyInfo(propertyInfo) ?? defaultValue;
     }
-    [CanBeNull]
-    private EntityChange CreateEntityChange(PreInsertEvent @event)
+    private EntityChange CreateEntityChange(AbstractPreDatabaseOperationEvent @event)
     {
         var entityId = GetEntityId(@event);
         var entityTypeFullName = ProxyHelper.GetUnproxiedType(@event.Entity).FullName;
-        var changeType = EntityChangeType.Created;
+        var changeType = @event switch
+        {
+            PreInsertEvent => EntityChangeType.Created,
+            PreUpdateEvent update => update.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated,
+            PreDeleteEvent => EntityChangeType.Deleted,
+            _ => throw new ArgumentOutOfRangeException(nameof(@event))
+        };
 
         if (entityId == null)
         {
@@ -264,50 +214,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
             EntityEntry = @event, // [NotMapped]
             EntityTypeFullName = entityTypeFullName,
             TenantId = AbpSession.TenantId,
-        };
-    }
-    [CanBeNull]
-    private EntityChange CreateEntityChange(PreUpdateEvent @event)
-    {
-        var entityId = @event.Persister.GetIdentifier(@event.Entity).ToJsonString();
-        var entityTypeFullName = ProxyHelper.GetUnproxiedType(@event.Entity).FullName;
-        var changeType = @event.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated;
-
-        if (entityId == null)
-        {
-            Logger.ErrorFormat("EntityChangeType {0} must have non-empty entity id", changeType);
-            return null;
-        }
-
-        return new EntityChange
-        {
-            ChangeType = changeType,
-            EntityEntry = @event, // [NotMapped]
-            EntityId = entityId,
-            EntityTypeFullName = entityTypeFullName,
-            TenantId = AbpSession.TenantId
-        };
-    }
-    [CanBeNull]
-    private EntityChange CreateEntityChange(PreDeleteEvent @event)
-    {
-        var entityId = @event.Persister.GetIdentifier(@event.Entity).ToJsonString();
-        var entityTypeFullName = ProxyHelper.GetUnproxiedType(@event.Entity).FullName;
-        var changeType = EntityChangeType.Deleted;
-
-        if (entityId == null)
-        {
-            Logger.ErrorFormat("EntityChangeType {0} must have non-empty entity id", changeType);
-            return null;
-        }
-
-        return new EntityChange
-        {
-            ChangeType = changeType,
-            EntityEntry = @event, // [NotMapped]
-            EntityId = entityId,
-            EntityTypeFullName = entityTypeFullName,
-            TenantId = AbpSession.TenantId
         };
     }
     private ICollection<EntityPropertyChange> GetPropertyChanges(PreInsertEvent @event, bool auditedPropertiesOnly)
@@ -522,7 +428,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
             changeSet.EntityChanges.Remove(entityChange);
         }
     }
-
     private void SetProperInstances()
     {
         if (AbpSession == NullAbpSession.Instance)

@@ -15,13 +15,13 @@ public class InsertEventListener : IPreInsertEventListener
 
     public async Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
     {
-        _entityHistoryHelper.AddInsertEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 
     public bool OnPreInsert(PreInsertEvent @event)
     {
-        _entityHistoryHelper.AddInsertEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 }

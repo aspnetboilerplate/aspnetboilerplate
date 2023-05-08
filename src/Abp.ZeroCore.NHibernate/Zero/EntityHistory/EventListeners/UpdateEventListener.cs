@@ -14,13 +14,13 @@ public class UpdateEventListener : IPreUpdateEventListener
     }
     public async Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
     {
-        _entityHistoryHelper.AddUpdateEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 
     public bool OnPreUpdate(PreUpdateEvent @event)
     {
-        _entityHistoryHelper.AddUpdateEntityToChangeSet(@event);
+        _entityHistoryHelper.AddEntityToChangeSet(@event);
         return false;
     }
 }
