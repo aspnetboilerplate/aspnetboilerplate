@@ -17,12 +17,6 @@ using System.Transactions;
 
 namespace Abp.EntityHistory;
 
-public interface IEntityHistoryHelper
-{
-    void AddEntityToChangeSet(AbstractPreDatabaseOperationEvent @event);
-    void SaveChangeSet(Guid sessionId);
-}
-
 [UsedImplicitly]
 public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelper, ITransientDependency
 {
