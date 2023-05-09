@@ -7,18 +7,17 @@ namespace AbpAspNetCoreDemo.Controllers;
 
 [ApiController]
 [DontWrapResult]
+[HtmlSanitizer]
 public class SanitizerTestController : DemoControllerBase
 {
-    [SanitizeHtml]
     [HttpPost("sanitizerTest/sanitizeHtmlTest")]
-    public MyModel SanitizeHtml(MyModel myModel)
+    public MyModel HtmlSanitizer(MyModel myModel)
     {
         return myModel;
     }
 
-    [SanitizeHtml]
     [HttpPost("sanitizerTest/sanitizeHtmlPropertyTest")]
-    public object SanitizeHtmlWithProperty([FromForm] string firstInput, [FromForm] string secondInput)
+    public object HtmlSanitizerWithProperty([FromForm] string firstInput, [FromForm] string secondInput)
     {
         return new
         {
@@ -26,29 +25,16 @@ public class SanitizerTestController : DemoControllerBase
         };
     }
 
-    [SanitizeHtml(KeepChildNodes = true)]
-    [HttpPost("sanitizerTest/sanitizeHtmlKeepChildNodesTest")]
-    public MyModel SanitizeHtmlKeepChildNodes(MyModel myModel)
-    {
-        return myModel;
-    }
-    
-    [SanitizeHtml]
     [HttpPost("sanitizerTest/sanitizeInnerModelTest")]
     public MyModel SanitizeInnerModel(MyModel myModel)
     {
         return myModel;
     }
-    
-    [HttpPost("sanitizerTest/sanitizeAttributedModelTest")]
-    public MyAttributedModel SanitizeAttributedModel([SanitizeHtml(IsDisabled = true)]MyAttributedModel myModel)
-    {
-        return myModel;
-    }
-    
+
     [HttpPost("sanitizerTest/sanitizeAttributedPropertyModelTest")]
     public MyAttributedPropertyModel SanitizeAttributedPropertyModel(MyAttributedPropertyModel myModel)
     {
         return myModel;
     }
+    
 }

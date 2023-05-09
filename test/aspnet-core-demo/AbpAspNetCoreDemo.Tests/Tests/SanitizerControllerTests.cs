@@ -68,32 +68,6 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
-
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestKeepChildNodesData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Html_Keep_Child_Nodes_Test(MyModel myInputModel, MyModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        var content = JsonContent.Create(new
-        {
-            myInputModel.HtmlInput,
-            myInputModel.SecondInput
-        });
-
-        // Act
-        var response = await client.PostAsync(BaseUrl + "sanitizeHtmlKeepChildNodesTest", content);
-
-        // Assert
-
-        var json = await response.Content.ReadAsStringAsync();
-
-        var myResult = JsonConvert.DeserializeObject<MyModel>(json);
-
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
     
     [Theory]
     [MemberData(nameof(SanitizerControllerData.SanitizerTestInnerModelData),
@@ -111,26 +85,6 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
         var json = await response.Content.ReadAsStringAsync();
 
         var myResult = JsonConvert.DeserializeObject<MyModel>(json);
-
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
-    
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedModelData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Attributed_Model_Test(MyAttributedModel myInputModel, MyAttributedModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeAttributedModelTest", myInputModel);
-
-        // Assert
-
-        var json = await response.Content.ReadAsStringAsync();
-
-        var myResult = JsonConvert.DeserializeObject<MyAttributedModel>(json);
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
