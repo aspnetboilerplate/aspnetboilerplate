@@ -239,8 +239,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
                 if (identityProperty != null)
                 {
                     newValue = identityProperty.GetValue(@event.State[propertyIndex]);
-                    propertyName = $"{propertyName}{identityProperty.Name}";
-                    propertyInfo = identityProperty;
                 }
 
             }
@@ -291,8 +289,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
                 if (identityProperty != null)
                 {
                     newValue = identityProperty.GetValue(@event.State[propertyIndex]);
-                    propertyName = $"{propertyName}{identityProperty.Name}";
-                    propertyInfo = identityProperty;
                 }
 
             }
@@ -356,8 +352,6 @@ public class NhEntityHistoryHelper : EntityHistoryHelperBase, IEntityHistoryHelp
                 if (identityProperty != null)
                 {
                     oldValue = identityProperty.GetValue(@event.DeletedState[propertyIndex]);
-                    propertyName = $"{propertyName}{identityProperty.Name}";
-                    propertyInfo = identityProperty;
                 }
 
             }
