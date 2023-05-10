@@ -3,179 +3,182 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using Abp.AspNetCore.Mvc.Extensions;
+using Abp.HtmlSanitizer.Configuration;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.HtmlSanitizer;
-
-public class HtmlSanitizerHelper : IHtmlSanitizerHelper
+namespace Abp.HtmlSanitizer
 {
-    private readonly IHtmlSanitizerConfiguration _configuration;
-    private readonly IHtmlSanitizer _htmlSanitizer;
-
-    public HtmlSanitizerHelper(IHtmlSanitizerConfiguration configuration, IHtmlSanitizer htmlSanitizer)
+    public class HtmlSanitizerHelper : IHtmlSanitizerHelper
     {
-        _configuration = configuration;
-        _htmlSanitizer = htmlSanitizer;
-    }
+        private readonly IHtmlSanitizerConfiguration _configuration;
+        private readonly IHtmlSanitizer _htmlSanitizer;
 
-    public bool ShouldSanitizeContext(ActionExecutingContext context)
-    {
-        if (_configuration is null)
+        public HtmlSanitizerHelper(IHtmlSanitizerConfiguration configuration, IHtmlSanitizer htmlSanitizer)
         {
-            return false;
+            _configuration = configuration;
+            _htmlSanitizer = htmlSanitizer;
         }
 
-        if (!_configuration.IsEnabledForGetRequests && context.HttpContext.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+        public bool ShouldSanitizeContext(ActionExecutingContext context)
         {
-            return false;
-        }
-
-        var methodInfo = context.ActionDescriptor.GetMethodInfo();
-        
-        if (methodInfo == null)
-        {
-            return false;
-        }
-        
-        if (!methodInfo.IsPublic)
-        {
-            return false;
-        }
-        
-        var classType = methodInfo.DeclaringType;
-        
-        if (methodInfo.IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
-        {
-            return false;
-        }
-        
-        if (classType != null)
-        {
-            if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
+            if (_configuration is null)
             {
                 return false;
             }
-            
-            if (classType.GetTypeInfo().IsDefined(typeof(HtmlSanitizerAttribute), true))
+
+            if (!_configuration.IsEnabledForGetRequests &&
+                context.HttpContext.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
             {
-                return true;
+                return false;
             }
 
-            if (_configuration.Selectors.Any(selector => selector.Invoke(methodInfo)))
-            {
-                return true;
-            }
-        }
-        
-        return methodInfo.IsDefined(typeof(HtmlSanitizerAttribute), true);
-    }
+            var methodInfo = context.ActionDescriptor.GetMethodInfo();
 
-    public void SanitizeContext(ActionExecutingContext context)
-    {
-        foreach (var item in context.ActionDescriptor.Parameters)
-        {
-            if (!context.ActionArguments.ContainsKey(item.Name))
+            if (methodInfo == null)
             {
-                // This parameter was not provided in the request.
-                continue;
+                return false;
             }
 
-            var argumentItem = context.ActionArguments[item.Name];
-            
-            if (argumentItem is null)
+            if (!methodInfo.IsPublic)
             {
-                continue;
+                return false;
             }
-            
-            if (argumentItem is string)
+
+            var classType = methodInfo.DeclaringType;
+
+            if (methodInfo.IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
             {
-                context.ActionArguments[item.Name] = SanitizeHtml(argumentItem.ToString());
-                continue;
+                return false;
             }
-            
-            
-            SanitizeObject(argumentItem);
-        }
-    }
-    
-    private void SanitizeObject(object item)
-    {
-        var classType = item.GetType();
 
-        if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
-        {
-            return;
-        }
-
-        switch (item)
-        {
-            case IDictionary dictionary:
+            if (classType != null)
             {
-                foreach (var value in dictionary.Values)
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
                 {
-                    SanitizeObject(value);
+                    return false;
                 }
 
-                break;
-            }
-            case IEnumerable enumerable:
-            {
-                foreach (var listItem in enumerable)
+                if (classType.GetTypeInfo().IsDefined(typeof(HtmlSanitizerAttribute), true))
                 {
-                    SanitizeObject(listItem);
+                    return true;
                 }
 
-                break;
-            }
-
-            case DateTime _:
-            {
-                break;
-            }
-
-            default:
-            {
-                var properties = classType.GetProperties();
-                
-                foreach (var property in properties)
+                if (_configuration.Selectors.Any(selector => selector.Invoke(methodInfo)))
                 {
-                    SanitizeProperty(item, property);
+                    return true;
+                }
+            }
+
+            return methodInfo.IsDefined(typeof(HtmlSanitizerAttribute), true);
+        }
+
+        public void SanitizeContext(ActionExecutingContext context)
+        {
+            foreach (var item in context.ActionDescriptor.Parameters)
+            {
+                if (!context.ActionArguments.ContainsKey(item.Name))
+                {
+                    // This parameter was not provided in the request.
+                    continue;
                 }
 
-                break;
+                var argumentItem = context.ActionArguments[item.Name];
+
+                if (argumentItem is null)
+                {
+                    continue;
+                }
+
+                if (argumentItem is string)
+                {
+                    context.ActionArguments[item.Name] = SanitizeHtml(argumentItem.ToString());
+                    continue;
+                }
+
+
+                SanitizeObject(argumentItem);
             }
         }
-    }
-    
-    private void SanitizeProperty(object item, PropertyInfo property)
-    {
-        var value = property.GetValue(item);
 
-        if (value is string)
+        private void SanitizeObject(object item)
         {
-            if (property.IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
+            var classType = item.GetType();
+
+            if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
             {
                 return;
             }
-            
-            var sanitizedText = SanitizeHtml(value.ToString());
-            property.SetValue(item, sanitizedText);
-            return;
+
+            switch (item)
+            {
+                case IDictionary dictionary:
+                {
+                    foreach (var value in dictionary.Values)
+                    {
+                        SanitizeObject(value);
+                    }
+
+                    break;
+                }
+                case IEnumerable enumerable:
+                {
+                    foreach (var listItem in enumerable)
+                    {
+                        SanitizeObject(listItem);
+                    }
+
+                    break;
+                }
+
+                case DateTime _:
+                {
+                    break;
+                }
+
+                default:
+                {
+                    var properties = classType.GetProperties();
+
+                    foreach (var property in properties)
+                    {
+                        SanitizeProperty(item, property);
+                    }
+
+                    break;
+                }
+            }
         }
 
-        if (value is null)
+        private void SanitizeProperty(object item, PropertyInfo property)
         {
-            return;
+            var value = property.GetValue(item);
+
+            if (value is string)
+            {
+                if (property.IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
+                {
+                    return;
+                }
+
+                var sanitizedText = SanitizeHtml(value.ToString());
+                property.SetValue(item, sanitizedText);
+                return;
+            }
+
+            if (value is null)
+            {
+                return;
+            }
+
+            SanitizeObject(property.GetValue(item));
         }
 
-        SanitizeObject(property.GetValue(item));
-    }
-    
-    private string SanitizeHtml(string html)
-    {
-        _htmlSanitizer.KeepChildNodes = _configuration.KeepChildNodes;
+        private string SanitizeHtml(string html)
+        {
+            _htmlSanitizer.KeepChildNodes = _configuration.KeepChildNodes;
 
-        return _htmlSanitizer.Sanitize(html);
+            return _htmlSanitizer.Sanitize(html);
+        }
     }
 }

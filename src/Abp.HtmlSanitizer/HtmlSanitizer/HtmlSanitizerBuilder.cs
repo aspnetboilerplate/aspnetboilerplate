@@ -1,70 +1,63 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Abp.Dependency;
+using Abp.HtmlSanitizer.Configuration;
 
-namespace Abp.HtmlSanitizer;
-
-public class HtmlSanitizerBuilder
+namespace Abp.HtmlSanitizer
 {
-    protected IHtmlSanitizerConfiguration HtmlSanitizerConfiguration { get; }
-
-    public HtmlSanitizerBuilder()
+    public static class HtmlSanitizerBuilder
     {
-        HtmlSanitizerConfiguration = IocManager.Instance.Resolve<IHtmlSanitizerConfiguration>();
-    }
-
-    public HtmlSanitizerBuilder AddSelector<T>()
-    {
-        var updatedSelector = new Func<MethodInfo, bool>(methodInfo =>
+        public static IHtmlSanitizerConfiguration AddSelector<T>(this IHtmlSanitizerConfiguration configuration)
         {
-            var type = methodInfo.DeclaringType;
-            return typeof(T).IsAssignableFrom(type) && type.IsClass;
-        });
+            var updatedSelector = new Func<MethodInfo, bool>(methodInfo =>
+            {
+                var type = methodInfo.DeclaringType;
+                return typeof(T).IsAssignableFrom(type) && type.IsClass;
+            });
 
-        HtmlSanitizerConfiguration.Selectors.Add(updatedSelector);
-        return this;
-    }
-    
-    public HtmlSanitizerBuilder AddSelector<T>(Func<T, string> selector)
-    {
-        var updatedSelector = new Func<MethodInfo, bool>(methodInfo =>
+            configuration.Selectors.Add(updatedSelector);
+            return configuration;
+        }
+
+        public static IHtmlSanitizerConfiguration AddSelector<T>(this IHtmlSanitizerConfiguration configuration, Func<T, string> selector)
         {
-            var type = methodInfo.DeclaringType;
-
-            if (!typeof(T).IsAssignableFrom(type) || !type.IsClass) return false;
-            
-            var instance = (T)FormatterServices.GetUninitializedObject(type);
-                
-            var param = selector(instance);
-
-            if (param.Equals(methodInfo.Name))
+            var updatedSelector = new Func<MethodInfo, bool>(methodInfo =>
             {
-                return true;
-            }
-                
-            if (typeof(T).GetProperty(param) is {} propertyInfo)
-            {
-                return param.Equals(propertyInfo.Name);
-            }
+                var type = methodInfo.DeclaringType;
 
-            return false;
-        });
+                if (!typeof(T).IsAssignableFrom(type) || !type.IsClass) return false;
 
-        HtmlSanitizerConfiguration.Selectors.Add(updatedSelector);
-        return this;
-    }
-    
-    public HtmlSanitizerBuilder EnableForGetRequests(bool enableForGetRequests = true)
-    {
-        HtmlSanitizerConfiguration.IsEnabledForGetRequests = enableForGetRequests;
-        return this;
-    }
-    
-    public HtmlSanitizerBuilder KeepChildNodes(bool keepChildNodes = true)
-    {
-        HtmlSanitizerConfiguration.KeepChildNodes = keepChildNodes;
-        return this;
+                var instance = (T) FormatterServices.GetUninitializedObject(type);
+
+                var param = selector(instance);
+
+                if (param.Equals(methodInfo.Name))
+                {
+                    return true;
+                }
+
+                if (typeof(T).GetProperty(param) is { } propertyInfo)
+                {
+                    return param.Equals(propertyInfo.Name);
+                }
+
+                return false;
+            });
+
+            configuration.Selectors.Add(updatedSelector);
+            return configuration;
+        }
+
+        public static IHtmlSanitizerConfiguration EnableForGetRequests(this IHtmlSanitizerConfiguration configuration, bool enableForGetRequests = true)
+        {
+            configuration.IsEnabledForGetRequests = enableForGetRequests;
+            return configuration;
+        }
+
+        public static IHtmlSanitizerConfiguration KeepChildNodes(this IHtmlSanitizerConfiguration configuration, bool keepChildNodes = true)
+        {
+            configuration.KeepChildNodes = keepChildNodes;
+            return configuration;
+        }
     }
 }
-

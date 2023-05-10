@@ -2,27 +2,28 @@
 using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.HtmlSanitizer;
-
-public class AbpHtmlSanitizerActionFilter : IAsyncActionFilter, ISingletonDependency
+namespace Abp.HtmlSanitizer
 {
-    private readonly IHtmlSanitizerHelper _htmlSanitizerHelper;
-
-    public AbpHtmlSanitizerActionFilter(IHtmlSanitizerHelper htmlSanitizerHelper)
+    public class AbpHtmlSanitizerActionFilter : IAsyncActionFilter, ISingletonDependency
     {
-        _htmlSanitizerHelper = htmlSanitizerHelper;
-    }
+        private readonly IHtmlSanitizerHelper _htmlSanitizerHelper;
 
-    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-    {
-        if (!_htmlSanitizerHelper.ShouldSanitizeContext(context))
+        public AbpHtmlSanitizerActionFilter(IHtmlSanitizerHelper htmlSanitizerHelper)
         {
-            await next();
-            return;
+            _htmlSanitizerHelper = htmlSanitizerHelper;
         }
 
-        _htmlSanitizerHelper.SanitizeContext(context);
-        await next();
-    }
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
+            if (!_htmlSanitizerHelper.ShouldSanitizeContext(context))
+            {
+                await next();
+                return;
+            }
+
+            _htmlSanitizerHelper.SanitizeContext(context);
+            await next();
+        }
     
+    }
 }

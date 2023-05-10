@@ -1,11 +1,12 @@
 ﻿using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.HtmlSanitizer;
-
-public interface IHtmlSanitizerHelper : ISingletonDependency
+namespace Abp.HtmlSanitizer
 {
-    bool ShouldSanitizeContext(ActionExecutingContext actionExecutingContext);
+    public interface IHtmlSanitizerHelper : ISingletonDependency
+    {
+        bool ShouldSanitizeContext(ActionExecutingContext actionExecutingContext);
     
-    void SanitizeContext(ActionExecutingContext context);
+        void SanitizeContext(ActionExecutingContext context);
+    }
 }

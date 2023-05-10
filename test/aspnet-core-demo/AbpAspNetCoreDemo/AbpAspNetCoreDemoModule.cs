@@ -9,6 +9,7 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.EntityFrameworkCore;
 using Abp.HtmlSanitizer;
+using Abp.HtmlSanitizer.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using AbpAspNetCoreDemo.Core;
@@ -59,6 +60,8 @@ namespace AbpAspNetCoreDemo
             };
             
             ConfigurationAction.Value?.Invoke(Configuration);
+
+            Configuration.Modules.AbpHtmlSanitizer().EnableForGetRequests();
         }
 
         public override void Initialize()
