@@ -62,6 +62,7 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+                options.AddAbpHtmlSanitizer();
             }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
@@ -81,12 +82,11 @@ namespace AbpAspNetCoreDemo
                 opts.AddRouteComponents("odata", edmModel);
             });
             
-            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
             
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
-                options.IocManager = IocManager.Value ?? new IocManager();
+//                options.IocManager = IocManager.Value ?? new IocManager();
 //
 //                 string plugDllInPath = "";
 // #if DEBUG
