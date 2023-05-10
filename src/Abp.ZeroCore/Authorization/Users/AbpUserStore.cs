@@ -2442,7 +2442,7 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public void RemoveToken(
+        public virtual void RemoveToken(
             TUser user,
             string loginProvider,
             string name,
@@ -2485,7 +2485,7 @@ namespace Abp.Authorization.Users
         /// <param name="name">The name of the token.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public string GetToken(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        public virtual string GetToken(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
@@ -2677,7 +2677,7 @@ namespace Abp.Authorization.Users
             }
         }
 
-        public string GetUserNameFromDatabase(long userId)
+        public virtual string GetUserNameFromDatabase(long userId)
         {
             using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
                    {

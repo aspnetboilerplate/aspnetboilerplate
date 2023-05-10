@@ -71,6 +71,7 @@ namespace AbpAspNetCoreDemo
                 
                 options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
                 options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
+                options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();

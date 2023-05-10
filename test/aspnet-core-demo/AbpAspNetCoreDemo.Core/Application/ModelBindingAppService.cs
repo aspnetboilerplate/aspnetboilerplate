@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Abp.Application.Services;
 
@@ -11,7 +12,8 @@ namespace AbpAspNetCoreDemo.Core.Application
             return new CalculatePriceOutput
             {
                 Culture = culture,
-                Price = input.Price.ToString()
+                Price = input.Price.ToString(),
+                OrderDate = input.OrderDate.ToString(),
             };
         }
     }
@@ -19,11 +21,14 @@ namespace AbpAspNetCoreDemo.Core.Application
     public class CalculatePriceDto
     {
         public double Price { get; set; }
+        public DateOnly OrderDate { get; set; }
     }
 
     public class CalculatePriceOutput
     {
         public string Price { get; set; }
+
+        public string OrderDate { get; set; }
 
         public string Culture { get; set; }
     }
