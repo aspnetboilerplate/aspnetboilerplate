@@ -19,7 +19,6 @@ public class HtmlSanitizerBuilder
         var updatedSelector = new Func<MethodInfo, bool>(methodInfo =>
         {
             var type = methodInfo.DeclaringType;
-            
             return typeof(T).IsAssignableFrom(type) && type.IsClass;
         });
 
