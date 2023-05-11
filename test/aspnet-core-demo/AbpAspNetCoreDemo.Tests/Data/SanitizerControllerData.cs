@@ -21,12 +21,7 @@ public class SanitizerControllerData
             new object[] { null, "3", new { firstInput = (string) null, secondInput = "3" }},
             new object[] { "Normal text", null, new { firstInput = "Normal text", secondInput = (string) null }},
         };
-    
-    public static IEnumerable<object[]> SanitizerTestKeepChildNodesData =>
-        new List<object[]>
-        {
-            new object[] { new MyModel{HtmlInput = "<script>alert('hello')</script>"}, new MyModel{HtmlInput = "alert('hello')"}},
-        };
+        
     
     public static IEnumerable<object[]> SanitizerTestInnerModelData =>
         new List<object[]>
@@ -65,12 +60,12 @@ public class SanitizerControllerData
         {
             new object[]
             {
-                new MyAttributedPropertyModel{KeepChildNodesInput = "<script>alert('hello')</script>hello", 
-                    DontSanitizeInput = "<script>alert('hello')</script>hello", 
-                    DontKeepChildNodesInput = "<script>alert('hello')</script>hello"},
-                new MyAttributedPropertyModel{KeepChildNodesInput = "alert('hello')hello", 
-                    DontSanitizeInput = "<script>alert('hello')</script>hello", 
-                    DontKeepChildNodesInput = "hello"}
+                new MyAttributedPropertyModel{KeepChildNodesInput = "<script>alert('hello')</script>", 
+                    DontSanitizeInput = "<script>alert('hello')</script>", 
+                    DontKeepChildNodesInput = "<script>alert('hello')</script>"},
+                new MyAttributedPropertyModel{KeepChildNodesInput = "", 
+                    DontSanitizeInput = "<script>alert('hello')</script>", 
+                    DontKeepChildNodesInput = ""}
             },
         };
 }
