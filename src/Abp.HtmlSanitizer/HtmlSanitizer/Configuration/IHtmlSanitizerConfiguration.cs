@@ -5,7 +5,7 @@ using Abp.Dependency;
 
 namespace Abp.HtmlSanitizer.Configuration
 {
-    public interface IHtmlSanitizerConfiguration : ISingletonDependency
+    public interface IHtmlSanitizerConfiguration
     {
         bool IsEnabledForGetRequests { get; set; }
 

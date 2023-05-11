@@ -2,6 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Abp.Web.Models;
+using AbpAspNetCoreDemo.Core.Application.Account;
 using AbpAspNetCoreDemo.IntegrationTests.Data;
 using AbpAspNetCoreDemo.Model;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -107,5 +109,28 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
         var myResult = JsonConvert.DeserializeObject<MyAttributedPropertyModel>(json);
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
+    }
+    
+    [Theory]
+    [InlineData("<a href='://malicioussite'>Please verify your email address</a>", "<a>Please verify your email address</a>")]
+    [InlineData("<script>alert('test')</script>", "")]
+    public async Task Sanitize_Html_For_AppServices_Test(string htmlInput, string expectedInput)
+    {
+        // Arrange
+        var client = _factory.CreateClient();
+
+        var content = JsonContent.Create(new
+        {
+            FullName = htmlInput
+        });
+
+        // Act
+        var response = await client.PostAsync("/api/services/app/Account/Register", content);
+
+        // Assert
+        var json = await response.Content.ReadAsStringAsync();
+
+        var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<RegisterOutput>>(json);
+        ajaxResponse.Result.FullName.ShouldBe(expectedInput);
     }
 }

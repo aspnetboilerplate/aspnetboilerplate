@@ -24,6 +24,5 @@ namespace Abp.HtmlSanitizer
             _htmlSanitizerHelper.SanitizeContext(context);
             await next();
         }
-    
     }
 }
