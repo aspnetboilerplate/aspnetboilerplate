@@ -6,6 +6,7 @@ using Abp.Modules;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.Mocks;
 using Abp.Auditing;
+using Abp.Configuration;
 using Abp.FluentValidation;
 using Abp.Localization;
 using Abp.MultiTenancy;
@@ -24,6 +25,7 @@ namespace Abp.AspNetCore.App
 
             Configuration.ReplaceService<IAuditingStore, MockAuditingStore>();
             Configuration.ReplaceService<ITenantStore, TestTenantStore>();
+            Configuration.ReplaceService<ISettingStore, MockSettingStore>();
 
             Configuration
                 .Modules.AbpAspNetCore()

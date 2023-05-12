@@ -20,14 +20,12 @@ domain.
 
 ABP has a class for value objects: **ValueObject** . For example, all of these tests pass:
 
-```
+```csharp
 var address1 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
 var address2 = new Address(new Guid("21C67A65-ED5A-4512-AA29-66308FAAB5AF"), "Baris Manco Street", 42);
 
-Assert.Equal(address1, address2);
-Assert.Equal(address1.GetHashCode(), address2.GetHashCode());
-Assert.True(address1 == address2);
-Assert.False(address1 != address2);
+Assert.True(address1.ValueEquals(address2));
+Assert.True(address2.ValueEquals(address1));
 ```
 
 Even if they are different objects in memory, they are identical for our domain.
