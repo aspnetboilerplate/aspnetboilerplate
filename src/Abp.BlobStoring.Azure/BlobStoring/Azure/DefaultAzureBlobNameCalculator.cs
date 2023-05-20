@@ -5,18 +5,18 @@ namespace Abp.BlobStoring.Azure
 {
     public class DefaultAzureBlobNameCalculator : IAzureBlobNameCalculator, ITransientDependency
     {
-        protected IAbpSession CurrentTenant { get; }
+        protected IAbpSession AbpSession { get; }
 
-        public DefaultAzureBlobNameCalculator(IAbpSession currentTenant)
+        public DefaultAzureBlobNameCalculator(IAbpSession session)
         {
-            CurrentTenant = currentTenant;
+            AbpSession = session;
         }
 
         public virtual string Calculate(BlobProviderArgs args)
         {
-            return CurrentTenant.TenantId == null
+            return AbpSession.TenantId == null
                 ? $"host/{args.BlobName}"
-                : $"tenants/{CurrentTenant.TenantId.Value:D}/{args.BlobName}";
+                : $"tenants/{AbpSession.TenantId.Value:D}/{args.BlobName}";
         }
     }
 }
