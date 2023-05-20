@@ -12,7 +12,7 @@
     <text name="DefaultFromSenderDisplayName" value="از نام پیش فرض به عنوان فرستنده استفاده شود." />
     <text name="DefaultLanguage" value="زبان پیش فرض سامانه!" />
     <text name="ReceiveNotifications" value="دریافت اطلاعیه از طرف سامانه!" />
-    <text name="CurrentUserDidNotLoginToTheApplication" value="کاربر جاری اجازه ورود مجدد به سامانه را نداشته باشد." />
+    <text name="CurrentUserDidNotLoginToTheApplication" value="ورود کابر جاری منقضی شده است" />
     <text name="TimeZone" value="موقعیت زمانی" />
     <text name="AllOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. تمام این حق دسترسی ها باید برای کاربر تعریف شود: {0}" />
     <text name="AtLeastOneOfThesePermissionsMustBeGranted" value="دسترسی مورد نیاز کاربر تعریف نشده است. حداقل یکی از این دسترسی ها باید برای کاربر تعیین شود : {0}" />

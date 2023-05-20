@@ -8,7 +8,7 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
-using Abp.HtmlSanitizer.HtmlSanitizer;
+using Abp.HtmlSanitizer;
 using Abp.Json;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
@@ -62,6 +62,7 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+                options.AddAbpHtmlSanitizer();
             }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
@@ -71,6 +72,7 @@ namespace AbpAspNetCoreDemo
                 
                 options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
                 options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
+                options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
@@ -81,7 +83,6 @@ namespace AbpAspNetCoreDemo
                 opts.AddRouteComponents("odata", edmModel);
             });
             
-            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
             
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
