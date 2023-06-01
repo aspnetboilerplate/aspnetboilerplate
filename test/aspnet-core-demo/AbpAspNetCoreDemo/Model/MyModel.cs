@@ -1,4 +1,6 @@
-﻿namespace AbpAspNetCoreDemo.Model;
+﻿using Abp.HtmlSanitizer;
+
+namespace AbpAspNetCoreDemo.Model;
 
 public class MyModel
 {

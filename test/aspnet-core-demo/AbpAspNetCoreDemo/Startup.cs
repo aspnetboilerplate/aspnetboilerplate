@@ -9,7 +9,7 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
-using Abp.HtmlSanitizer.HtmlSanitizer;
+using Abp.HtmlSanitizer;
 using Abp.Json;
 using Abp.Json.SystemTextJson;
 using Abp.PlugIns;
@@ -64,6 +64,7 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+                options.AddAbpHtmlSanitizer();
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
