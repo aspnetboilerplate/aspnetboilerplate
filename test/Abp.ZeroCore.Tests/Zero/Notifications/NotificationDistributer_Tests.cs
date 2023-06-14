@@ -29,5 +29,18 @@ namespace Abp.Zero.Notifications
             //Assert
             _fakeNotificationDistributer.IsDistributeCalled.ShouldBeTrue();
         }
+        
+        [Fact]
+        public async Task Should_Distribute_Notification_Using_Custom_Distributer2()
+        {
+            //Arrange
+            var notificationData = new NotificationData();
+
+            //Act
+            await _publisher.PublishAsync("TestNotification", notificationData, severity: NotificationSeverity.Success, userIds: new[] { AbpSession.ToUserIdentifier() });
+
+            //Assert
+            _fakeNotificationDistributer.IsDistributeCalled.ShouldBeTrue();
+        }
     }
 }
