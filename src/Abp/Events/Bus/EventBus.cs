@@ -235,7 +235,7 @@ namespace Abp.Events.Bus
 
             foreach (var handlerFactories in GetHandlerFactories(eventType))
             {
-                foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
+                foreach (var handlerFactory in handlerFactories.EventHandlerFactories.ToList())
                 {
                     var handlerType = handlerFactory.GetHandlerType();
 
