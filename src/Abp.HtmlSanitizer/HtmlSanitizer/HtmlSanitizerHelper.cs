@@ -118,40 +118,38 @@ namespace Abp.HtmlSanitizer
             switch (item)
             {
                 case IDictionary dictionary:
+                {
+                    foreach (var value in dictionary.Values)
                     {
-                        foreach (var value in dictionary.Values)
-                        {
-                            SanitizeObject(value);
-                        }
-
-                        break;
+                        SanitizeObject(value);
                     }
+
+                    break;
+                }
                 case IEnumerable enumerable:
+                {
+                    foreach (var listItem in enumerable)
                     {
-                        foreach (var listItem in enumerable)
-                        {
-                            SanitizeObject(listItem);
-                        }
-
-                        break;
+                        SanitizeObject(listItem);
                     }
 
+                    break;
+                }
                 case DateTime _:
-                    {
-                        break;
-                    }
-
+                {
+                    break;
+                }
                 default:
+                {
+                    var properties = classType.GetProperties();
+
+                    foreach (var property in properties)
                     {
-                        var properties = classType.GetProperties();
-
-                        foreach (var property in properties)
-                        {
-                            SanitizeProperty(item, property);
-                        }
-
-                        break;
+                        SanitizeProperty(item, property);
                     }
+
+                    break;
+                }
             }
         }
 
