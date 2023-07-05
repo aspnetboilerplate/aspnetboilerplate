@@ -261,8 +261,11 @@ namespace Abp.Events.Bus
                 typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
             {
                 var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.GetTypeInfo().BaseType;
-                if (baseArg != null)
+                var baseArgs = genericArg.GetInterfaces().ToList();
+                var baseType = genericArg.GetTypeInfo().BaseType;
+                if (baseType != null)
+                    baseArgs.Add(baseType);
+                foreach (var baseArg in baseArgs)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
                     var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
@@ -338,8 +341,11 @@ namespace Abp.Events.Bus
                 typeof(IEventDataWithInheritableGenericArgument).IsAssignableFrom(eventType))
             {
                 var genericArg = eventType.GetGenericArguments()[0];
-                var baseArg = genericArg.GetTypeInfo().BaseType;
-                if (baseArg != null)
+                var baseArgs = genericArg.GetInterfaces().ToList();
+                var baseType = genericArg.GetTypeInfo().BaseType;
+                if (baseType != null)
+                    baseArgs.Add(baseType);
+                foreach (var baseArg in baseArgs)
                 {
                     var baseEventType = eventType.GetGenericTypeDefinition().MakeGenericType(baseArg);
                     var constructorArgs = ((IEventDataWithInheritableGenericArgument)eventData).GetConstructorArgs();
