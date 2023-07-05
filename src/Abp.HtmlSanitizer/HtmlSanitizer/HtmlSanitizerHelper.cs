@@ -103,6 +103,11 @@ namespace Abp.HtmlSanitizer
 
         private void SanitizeObject(object item)
         {
+            if (item is null)
+            {
+                return;
+            }
+
             var classType = item.GetType();
 
             if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
@@ -113,40 +118,40 @@ namespace Abp.HtmlSanitizer
             switch (item)
             {
                 case IDictionary dictionary:
-                {
-                    foreach (var value in dictionary.Values)
                     {
-                        SanitizeObject(value);
-                    }
+                        foreach (var value in dictionary.Values)
+                        {
+                            SanitizeObject(value);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case IEnumerable enumerable:
-                {
-                    foreach (var listItem in enumerable)
                     {
-                        SanitizeObject(listItem);
-                    }
+                        foreach (var listItem in enumerable)
+                        {
+                            SanitizeObject(listItem);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
 
                 case DateTime _:
-                {
-                    break;
-                }
-
-                default:
-                {
-                    var properties = classType.GetProperties();
-
-                    foreach (var property in properties)
                     {
-                        SanitizeProperty(item, property);
+                        break;
                     }
 
-                    break;
-                }
+                default:
+                    {
+                        var properties = classType.GetProperties();
+
+                        foreach (var property in properties)
+                        {
+                            SanitizeProperty(item, property);
+                        }
+
+                        break;
+                    }
             }
         }
 
