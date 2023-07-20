@@ -103,6 +103,11 @@ namespace Abp.HtmlSanitizer
 
         private void SanitizeObject(object item)
         {
+            if (item is null)
+            {
+                return;
+            }
+
             var classType = item.GetType();
 
             if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
@@ -130,12 +135,10 @@ namespace Abp.HtmlSanitizer
 
                     break;
                 }
-
                 case DateTime _:
                 {
                     break;
                 }
-
                 default:
                 {
                     var properties = classType.GetProperties();
