@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />
+<!--    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />-->
+    <ProjectReference Include="..\..\..\castle-windsor-ms-adapter\src\Castle.Windsor.MsDependencyInjection\Castle.Windsor.MsDependencyInjection.csproj" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />

@@ -14,7 +14,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />
+<!--    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />-->
+    <ProjectReference Include="..\..\..\castle-windsor-ms-adapter\src\Castle.Windsor.MsDependencyInjection\Castle.Windsor.MsDependencyInjection.csproj" />
   </ItemGroup>
 
   <ItemGroup>
