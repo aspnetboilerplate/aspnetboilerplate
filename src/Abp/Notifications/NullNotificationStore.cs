@@ -34,12 +34,12 @@ namespace Abp.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName = null, string entityId = null)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName = null, string entityId = null, string targetNotifiers = null)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId, string targetNotifiers = null)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
@@ -49,7 +49,7 @@ namespace Abp.Notifications
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        public Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId, string targetNotifiers = null)
         {
             return Task.FromResult(false);
         }
@@ -125,12 +125,12 @@ namespace Abp.Notifications
         {
         }
 
-        public List<NotificationSubscriptionInfo> GetSubscriptions(string notificationName, string entityTypeName, string entityId)
+        public List<NotificationSubscriptionInfo> GetSubscriptions(string notificationName, string entityTypeName, string entityId, string targetNotifiers = null)
         {
             return new List<NotificationSubscriptionInfo>();
         }
 
-        public List<NotificationSubscriptionInfo> GetSubscriptions(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        public List<NotificationSubscriptionInfo> GetSubscriptions(int?[] tenantIds, string notificationName, string entityTypeName, string entityId, string targetNotifiers = null)
         {
             return new List<NotificationSubscriptionInfo>();
         }
@@ -140,7 +140,7 @@ namespace Abp.Notifications
             return new List<NotificationSubscriptionInfo>();
         }
 
-        public bool IsSubscribed(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        public bool IsSubscribed(UserIdentifier user, string notificationName, string entityTypeName, string entityId, string targetNotifiers = null)
         {
             return false;
         }

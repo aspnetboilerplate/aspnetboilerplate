@@ -31,7 +31,6 @@ namespace Abp.Zero.Notifications
         [Fact]
         public async Task Should_Get_All_Notifications()
         {
-
             var userIdentifier = AbpSession.ToUserIdentifier();
 
             await _notificationPublisher.PublishAsync("Test", userIds: new[] { userIdentifier });
@@ -41,6 +40,7 @@ namespace Abp.Zero.Notifications
 
             allNotifications.Count.ShouldBe(1);
         }
+        
         [Fact]
         public async Task Should_Get_All_Notifications_Between_StartDate_EndDate()
         {
