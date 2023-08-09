@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="7.0.0" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="7.0.0" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="7.0.1" />
     <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
