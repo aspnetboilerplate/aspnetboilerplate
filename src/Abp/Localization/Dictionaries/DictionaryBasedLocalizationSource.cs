@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
@@ -166,7 +167,7 @@ namespace Abp.Localization.Dictionaries
             if (dictionaries.TryGetValue(cultureName, out originalDictionary))
             {
                 var strOriginal = originalDictionary.GetStringsOrNull(names);
-                if (!strOriginal.IsNullOrEmpty())
+                if (!(strOriginal.IsNullOrEmpty()))
                 {
                     return strOriginal.Select(x => new NameValue(x.Name, x.Value)).ToList();
                 }
