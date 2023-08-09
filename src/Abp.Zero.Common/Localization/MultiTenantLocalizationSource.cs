@@ -7,7 +7,6 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Localization.Dictionaries;
-using Castle.Core.Internal;
 using Castle.Core.Logging;
 
 namespace Abp.Localization
