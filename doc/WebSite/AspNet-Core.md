@@ -213,7 +213,7 @@ This approach can be useful if you don't have access the source code of the Cont
 
 #### Html Sanitizer Action Filter
 
-To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. The **AbpHtmlSanitizerActionFilter** is a useful **tool** for this purpose.
+To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. ASP.NET Boilerplate provides provides **AbpHtmlSanitizerActionFilter** for this purpose.
 
 To get started, you'll need to **add** the [Abp.HtmlSanitizer](https://www.nuget.org/packages/Abp.HtmlSanitizer) NuGet package to your project. Then, you can enable **HTML sanitizer** by adding the following code to your **Startup.cs** file:
 
@@ -239,6 +239,12 @@ You can use the **SanitizeHtmlAttribute** on methods, classes, properties or par
 * **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. The **default** value is **false**.
 
 * **KeepChildNodes**: If set to true, HTML sanitizer **keeps child nodes** of the sanitized HTML. The **default** value is **false**.
+
+* **Selectors**: You can add any method of any class to Selectors list to sanitize this method's parameters. This is mostly used for Application Service methods. For example, configuration below enables HTML sanitization for Register method of IAccountAppService.
+
+```csharp
+Configuration.Modules.AbpHtmlSanitizer().AddSelector<IAccountAppService>(x => nameof(x.Register));
+```
 
 Example usage: 
 

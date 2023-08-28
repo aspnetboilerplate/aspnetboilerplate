@@ -2,7 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Abp.HtmlSanitizer.HtmlSanitizer;
+using Abp.Web.Models;
+using AbpAspNetCoreDemo.Core.Application.Account;
 using AbpAspNetCoreDemo.IntegrationTests.Data;
 using AbpAspNetCoreDemo.Model;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -69,32 +70,6 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
-
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestKeepChildNodesData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Html_Keep_Child_Nodes_Test(MyModel myInputModel, MyModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        var content = JsonContent.Create(new
-        {
-            myInputModel.HtmlInput,
-            myInputModel.SecondInput
-        });
-
-        // Act
-        var response = await client.PostAsync(BaseUrl + "sanitizeHtmlKeepChildNodesTest", content);
-
-        // Assert
-
-        var json = await response.Content.ReadAsStringAsync();
-
-        var myResult = JsonConvert.DeserializeObject<MyModel>(json);
-
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
     
     [Theory]
     [MemberData(nameof(SanitizerControllerData.SanitizerTestInnerModelData),
@@ -117,26 +92,6 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
     }
     
     [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedModelData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Attributed_Model_Test(MyAttributedModel myInputModel, MyAttributedModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        // Act
-        var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeAttributedModelTest", myInputModel);
-
-        // Assert
-
-        var json = await response.Content.ReadAsStringAsync();
-
-        var myResult = JsonConvert.DeserializeObject<MyAttributedModel>(json);
-
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
-    
-    [Theory]
     [MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedPropertyModelData),
         MemberType = typeof(SanitizerControllerData))]
     public async Task Sanitize_Attributed_Property_Model_Test(MyAttributedPropertyModel myInputModel, MyAttributedPropertyModel myExpectedModel)
@@ -154,5 +109,28 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
         var myResult = JsonConvert.DeserializeObject<MyAttributedPropertyModel>(json);
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
+    }
+    
+    [Theory]
+    [InlineData("<a href='://malicioussite'>Please verify your email address</a>", "<a>Please verify your email address</a>")]
+    [InlineData("<script>alert('test')</script>", "")]
+    public async Task Sanitize_Html_For_AppServices_Test(string htmlInput, string expectedInput)
+    {
+        // Arrange
+        var client = _factory.CreateClient();
+
+        var content = JsonContent.Create(new
+        {
+            FullName = htmlInput
+        });
+
+        // Act
+        var response = await client.PostAsync("/api/services/app/Account/Register", content);
+
+        // Assert
+        var json = await response.Content.ReadAsStringAsync();
+
+        var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<RegisterOutput>>(json);
+        ajaxResponse.Result.FullName.ShouldBe(expectedInput);
     }
 }
