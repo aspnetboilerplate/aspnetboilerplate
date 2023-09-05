@@ -41,6 +41,8 @@ var abp = abp || {};
             messageContent.title = title;
         }
 
+        options.reverseButtons = true;
+
         messageContent.text = message;
 
         var opts = $.extend(
