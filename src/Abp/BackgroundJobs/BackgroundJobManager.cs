@@ -177,11 +177,11 @@ namespace Abp.BackgroundJobs
 
 						if (jobExecuteMethod.Name == nameof(IAsyncBackgroundJob<object>.ExecuteAsync))
 						{
-							await ((Task) jobExecuteMethod.Invoke(job.Object, new[] {argsObj}));
+							await ((Task)jobExecuteMethod.Invoke(job.Object, new[] { argsObj }));
 						}
 						else
 						{
-							jobExecuteMethod.Invoke(job.Object, new[] {argsObj});
+							jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
 						}
 
 						await _store.DeleteAsync(jobInfo);

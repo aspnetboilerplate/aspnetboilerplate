@@ -18,7 +18,7 @@ namespace Abp.Zero.Configuration
 					throw new ArgumentNullException(nameof(value));
 				}
 
-				if (!typeof (AbpUserBase).IsAssignableFrom(value))
+				if (!typeof(AbpUserBase).IsAssignableFrom(value))
 				{
 					throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpUserBase).AssemblyQualifiedName);
 				}

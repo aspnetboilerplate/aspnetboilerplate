@@ -32,7 +32,8 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
 		var content = JsonContent.Create(new
 		{
-			myInputModel.HtmlInput, myInputModel.SecondInput,
+			myInputModel.HtmlInput,
+			myInputModel.SecondInput,
 		});
 
 		// Act
@@ -66,7 +67,7 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
 		var json = await response.Content.ReadAsStringAsync();
 
-		var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" } );
+		var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" });
 
 		myResult.ShouldBeEquivalentTo(myExpectedModel);
 	}

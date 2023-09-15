@@ -883,9 +883,9 @@ namespace Abp.Authorization.Users
 			var result = _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from uou in _userOrganizationUnitRepository.GetAll()
-					join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-					where uou.UserId == user.Id
-					select ou;
+							join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+							where uou.UserId == user.Id
+							select ou;
 
 				return query.ToList();
 			});
@@ -898,9 +898,9 @@ namespace Abp.Authorization.Users
 			return _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from uou in _userOrganizationUnitRepository.GetAll()
-					join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-					where uou.UserId == user.Id
-					select ou;
+							join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+							where uou.UserId == user.Id
+							select ou;
 
 				return query.ToList();
 			});
@@ -915,19 +915,19 @@ namespace Abp.Authorization.Users
 				if (!includeChildren)
 				{
 					var query = from uou in _userOrganizationUnitRepository.GetAll()
-						join user in Users on uou.UserId equals user.Id
-						where uou.OrganizationUnitId == organizationUnit.Id
-						select user;
+								join user in Users on uou.UserId equals user.Id
+								where uou.OrganizationUnitId == organizationUnit.Id
+								select user;
 
 					return query.ToList();
 				}
 				else
 				{
 					var query = from uou in _userOrganizationUnitRepository.GetAll()
-						join user in Users on uou.UserId equals user.Id
-						join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-						where ou.Code.StartsWith(organizationUnit.Code)
-						select user;
+								join user in Users on uou.UserId equals user.Id
+								join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+								where ou.Code.StartsWith(organizationUnit.Code)
+								select user;
 
 					return query.ToList();
 				}
@@ -945,19 +945,19 @@ namespace Abp.Authorization.Users
 				if (!includeChildren)
 				{
 					var query = from uou in _userOrganizationUnitRepository.GetAll()
-						join user in Users on uou.UserId equals user.Id
-						where uou.OrganizationUnitId == organizationUnit.Id
-						select user;
+								join user in Users on uou.UserId equals user.Id
+								where uou.OrganizationUnitId == organizationUnit.Id
+								select user;
 
 					return query.ToList();
 				}
 				else
 				{
 					var query = from uou in _userOrganizationUnitRepository.GetAll()
-						join user in Users on uou.UserId equals user.Id
-						join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
-						where ou.Code.StartsWith(organizationUnit.Code)
-						select user;
+								join user in Users on uou.UserId equals user.Id
+								join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+								where ou.Code.StartsWith(organizationUnit.Code)
+								select user;
 
 					return query.ToList();
 				}

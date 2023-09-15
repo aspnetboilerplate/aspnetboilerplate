@@ -101,7 +101,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
 			script.AppendLine("     }");
 
-			script.AppendLine("angular.module('abp').service('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." + _controllerInfo.ServiceName.Replace("/", ".")+");");
+			script.AppendLine("angular.module('abp').service('abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', abp.services." + _controllerInfo.ServiceName.Replace("/", ".") + ");");
 
 
 			while (_typesToBeDone != null && _typesToBeDone.Count > 0)

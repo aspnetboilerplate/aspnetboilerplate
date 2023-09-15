@@ -96,7 +96,7 @@ namespace Abp.Application.Services
 		public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
 		protected AsyncCrudAppService(IRepository<TEntity, TPrimaryKey> repository)
-			:base(repository)
+			: base(repository)
 		{
 			AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 		}

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Abp.Zero.Redis.PerRequestRedisCache
 {
-	public class AbpPerRequestRedisCache_Test :  PerRequestRedisCacheTestsBase<AbpPerRequestRedisCacheTestModule>
+	public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPerRequestRedisCacheTestModule>
 	{
 		private ITypedCache<string, MyCacheItem> _perRequestRedisCache;
 		private ITypedCache<string, MyCacheItem> _normalRedisCache;
@@ -81,12 +81,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			MyCacheItem GetCacheValue()
 			{
 				counter++;
-				return new MyCacheItem {Value = cacheValue};
+				return new MyCacheItem { Value = cacheValue };
 			}
 
 			RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
 			var item = _normalRedisCache.Get(cacheKey, GetCacheValue);
 			RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>()); //redis cache tries to get value two times if value not exists see AbpCacheBase<TKey, TValue>.Get(TKey key, Func<TKey, TValue> factory)
@@ -119,12 +119,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 		[InlineData("B", 43)]
 		public void Simple_Get_Set_Test(string cacheKey, int cacheValue)
 		{
-			var item = _perRequestRedisCache.Get(cacheKey, () => new MyCacheItem {Value = cacheValue});
+			var item = _perRequestRedisCache.Get(cacheKey, () => new MyCacheItem { Value = cacheValue });
 
 			item.ShouldNotBe(null);
 			item.Value.ShouldBe(cacheValue);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 			RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 			RedisDatabase.Received().StringGet(Arg.Any<RedisKey>());
 
@@ -144,7 +144,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			MyCacheItem GetCacheValue()
 			{
 				counter++;
-				return new MyCacheItem {Value = cacheValue};
+				return new MyCacheItem { Value = cacheValue };
 			}
 
 			var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
@@ -161,7 +161,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
 			RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 			RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
 			_perRequestRedisCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
@@ -180,12 +180,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			MyCacheItem GetCacheValue()
 			{
 				counter++;
-				return new MyCacheItem {Value = cacheValue};
+				return new MyCacheItem { Value = cacheValue };
 			}
 
 			RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
 			ChangeHttpContext();
 
@@ -229,12 +229,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			MyCacheItem GetCacheValue()
 			{
 				counter++;
-				return new MyCacheItem {Value = cacheValue};
+				return new MyCacheItem { Value = cacheValue };
 			}
 
 			RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
 			var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
 			RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
@@ -267,12 +267,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 		[InlineData("B", 43)]
 		public async Task Simple_Get_Set_Test_Async(string cacheKey, int cacheValue)
 		{
-			var item = await _perRequestRedisCache.GetAsync(cacheKey, () => Task.FromResult(new MyCacheItem {Value = cacheValue}));
+			var item = await _perRequestRedisCache.GetAsync(cacheKey, () => Task.FromResult(new MyCacheItem { Value = cacheValue }));
 
 			item.ShouldNotBe(null);
 			item.Value.ShouldBe(cacheValue);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 			RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 			await RedisDatabase.Received().StringGetAsync(Arg.Any<RedisKey>());
 
@@ -292,7 +292,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			Task<MyCacheItem> GetCacheValue()
 			{
 				counter++;
-				return Task.FromResult(new MyCacheItem {Value = cacheValue});
+				return Task.FromResult(new MyCacheItem { Value = cacheValue });
 			}
 
 			var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
@@ -309,7 +309,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
 			await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 			await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
 
 			(await _perRequestRedisCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
@@ -328,12 +328,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			Task<MyCacheItem> GetCacheValue()
 			{
 				counter++;
-				return Task.FromResult(new MyCacheItem {Value = cacheValue});
+				return Task.FromResult(new MyCacheItem { Value = cacheValue });
 			}
 
 			RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
 			ChangeHttpContext();
 
@@ -377,12 +377,12 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 			Task<MyCacheItem> GetCacheValue()
 			{
 				counter++;
-				return Task.FromResult(new MyCacheItem {Value = cacheValue});
+				return Task.FromResult(new MyCacheItem { Value = cacheValue });
 			}
 
 			RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
 
-			var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
+			var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
 			var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
 			await RedisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());

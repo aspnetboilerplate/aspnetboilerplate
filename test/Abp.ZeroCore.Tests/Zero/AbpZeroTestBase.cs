@@ -50,28 +50,31 @@ namespace Abp.Zero
 				context =>
 				{
 					var blog1 = new Blog("test-blog-1", "http://testblog1.myblogs.com", "blogger-1");
-					var blog2 = new Blog {Name = "test-blog-2"};
+					var blog2 = new Blog { Name = "test-blog-2" };
 
 					context.Blogs.AddRange(blog1, blog2);
 					context.SaveChanges();
 
-					var post1 = new Post {Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body"};
-					var post2 = new Post {Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body"};
+					var post1 = new Post { Blog = blog1, Title = "test-post-1-title", Body = "test-post-1-body" };
+					var post2 = new Post { Blog = blog1, Title = "test-post-2-title", Body = "test-post-2-body" };
 					var post3 = new Post
 					{
-						Blog = blog1, Title = "test-post-3-title", Body = "test-post-3-body-deleted", IsDeleted = true
+						Blog = blog1,
+						Title = "test-post-3-title",
+						Body = "test-post-3-body-deleted",
+						IsDeleted = true
 					};
 					var post4 = new Post
-						{Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42};
+					{ Blog = blog1, Title = "test-post-4-title", Body = "test-post-4-body", TenantId = 42 };
 
 					context.Posts.AddRange(post1, post2, post3, post4);
 
-					var comment1 = new Comment {Post = post1, Content = "test-comment-1-content"};
+					var comment1 = new Comment { Post = post1, Content = "test-comment-1-content" };
 
 					context.Comments.Add(comment1);
 
-					var advertisement1 = new Advertisement {Banner = "test-advertisement-1"};
-					var advertisement2 = new Advertisement {Banner = "test-advertisement-2"};
+					var advertisement1 = new Advertisement { Banner = "test-advertisement-1" };
+					var advertisement2 = new Advertisement { Banner = "test-advertisement-2" };
 
 					context.Advertisements.AddRange(advertisement1, advertisement2);
 				});
@@ -106,22 +109,22 @@ namespace Abp.Zero
 					context.SaveChanges();
 
 					//Product1 translations (Watch)
-					var product1_en = new ProductTranslation {CoreId = product1.Id, Language = "en", Name = "Watch"};
-					var product1_tr = new ProductTranslation {CoreId = product1.Id, Language = "tr", Name = "Saat"};
+					var product1_en = new ProductTranslation { CoreId = product1.Id, Language = "en", Name = "Watch" };
+					var product1_tr = new ProductTranslation { CoreId = product1.Id, Language = "tr", Name = "Saat" };
 
 					context.ProductTranslations.Add(product1_en);
 					context.ProductTranslations.Add(product1_tr);
 
 					//Product2 translations (Bike)
-					var product2_en = new ProductTranslation {CoreId = product2.Id, Language = "en", Name = "Bike"};
+					var product2_en = new ProductTranslation { CoreId = product2.Id, Language = "en", Name = "Bike" };
 					var product2_fr = new ProductTranslation
-						{CoreId = product2.Id, Language = "fr", Name = "Bicyclette"};
+					{ CoreId = product2.Id, Language = "fr", Name = "Bicyclette" };
 
 					context.ProductTranslations.Add(product2_en);
 					context.ProductTranslations.Add(product2_fr);
 
 					//Product3 translations (Newspaper)
-					var product3_it = new ProductTranslation {CoreId = product3.Id, Language = "it", Name = "Giornale"};
+					var product3_it = new ProductTranslation { CoreId = product3.Id, Language = "it", Name = "Giornale" };
 
 					context.ProductTranslations.Add(product3_it);
 
@@ -140,8 +143,8 @@ namespace Abp.Zero
 				context.Orders.Add(order);
 				context.SaveChanges();
 
-				var order_en = new OrderTranslation {CoreId = order.Id, Language = "en", Name = "Test"};
-				var order_fr = new OrderTranslation {CoreId = order.Id, Language = "fr", Name = "Tester"};
+				var order_en = new OrderTranslation { CoreId = order.Id, Language = "en", Name = "Test" };
+				var order_fr = new OrderTranslation { CoreId = order.Id, Language = "fr", Name = "Tester" };
 
 				context.OrderTranslations.Add(order_en);
 				context.OrderTranslations.Add(order_fr);
@@ -150,16 +153,16 @@ namespace Abp.Zero
 
 			UsingDbContext(context =>
 			{
-				var office = new Office {Capacity = 100};
+				var office = new Office { Capacity = 100 };
 				context.Offices.Add(office);
 				context.SaveChanges();
 
 				context.OfficeTranslations.Add(new OfficeTranslation
-					{CoreId = office.Id, Language = "en", Name = "Volosoft Office"}
+				{ CoreId = office.Id, Language = "en", Name = "Volosoft Office" }
 				);
 
 				context.OfficeTranslations.Add(new OfficeTranslation
-					{CoreId = office.Id, Language = "tr", Name = "Volosoft Ofisi"}
+				{ CoreId = office.Id, Language = "tr", Name = "Volosoft Ofisi" }
 				);
 
 				context.SaveChanges();

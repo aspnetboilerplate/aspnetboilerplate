@@ -83,7 +83,7 @@ namespace Abp.Authorization
 											loginResult.Tenant.Id.ToString()));
 									}
 
-									AuthenticationManager.SignIn(new AuthenticationProperties {IsPersistent = true},
+									AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true },
 										claimsIdentity);
 									return SignInStatus.RequiresVerification;
 								}

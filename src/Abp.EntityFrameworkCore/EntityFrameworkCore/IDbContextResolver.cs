@@ -7,5 +7,5 @@ namespace Abp.EntityFrameworkCore
 	{
 		TDbContext Resolve<TDbContext>(string connectionString, DbConnection existingConnection)
 			where TDbContext : DbContext;
-  }
+	}
 }

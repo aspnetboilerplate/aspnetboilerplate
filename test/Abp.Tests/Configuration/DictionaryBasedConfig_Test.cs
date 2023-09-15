@@ -17,7 +17,7 @@ namespace Abp.Tests.Configuration
 		[Fact]
 		public void Should_Get_Value()
 		{
-			var testObject = new TestClass {Value = 42};
+			var testObject = new TestClass { Value = 42 };
 
 			_config["IntValue"] = 42;
 			_config["StringValue"] = "Test string";

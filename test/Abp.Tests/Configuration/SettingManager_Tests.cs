@@ -390,7 +390,7 @@ namespace Abp.Tests.Configuration
 		private static TestAbpSession CreateTestAbpSession(bool multiTenancyIsEnabled = true)
 		{
 			return new TestAbpSession(
-				new MultiTenancyConfig {IsEnabled = multiTenancyIsEnabled},
+				new MultiTenancyConfig { IsEnabled = multiTenancyIsEnabled },
 				new DataContextAmbientScopeProvider<SessionOverride>(
 					new AsyncLocalAmbientDataContext()
 				),

@@ -323,7 +323,7 @@ namespace Abp.MultiTenancy
 		{
 			UnitOfWorkManager.WithUnitOfWork(() =>
 			{
-				 //No need to change if it's already equals to the current value
+				//No need to change if it's already equals to the current value
 				if (GetFeatureValueOrNull(tenant.Id, featureName) == value)
 				{
 					return;

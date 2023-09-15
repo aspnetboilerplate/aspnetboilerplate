@@ -52,13 +52,13 @@ namespace Abp.Tests.Reflection
 		{
 			var model = new MyParentObject
 			{
-			  Child  = new MyChildObject
-			  {
-				  InnerChild = new MyInnerChildObject
-				  {
-					  Age = 42
-				  }
-			  }
+				Child = new MyChildObject
+				{
+					InnerChild = new MyInnerChildObject
+					{
+						Age = 42
+					}
+				}
 			};
 
 			var property = ReflectionHelper.GetPropertyByPath(model, typeof(MyParentObject), "Child.InnerChild.Age");

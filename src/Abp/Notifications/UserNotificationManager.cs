@@ -31,7 +31,7 @@ namespace Abp.Notifications
 
 		public List<UserNotification> GetUserNotifications(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue, DateTime? startDate = null, DateTime? endDate = null)
 		{
-			var userNotifications =  _store.GetUserNotificationsWithNotifications(user, state, skipCount, maxResultCount, startDate, endDate);
+			var userNotifications = _store.GetUserNotificationsWithNotifications(user, state, skipCount, maxResultCount, startDate, endDate);
 			return userNotifications
 				.Select(un => un.ToUserNotification())
 				.ToList();
@@ -60,7 +60,7 @@ namespace Abp.Notifications
 
 		public UserNotification GetUserNotification(int? tenantId, Guid userNotificationId)
 		{
-			var userNotification =  _store.GetUserNotificationWithNotificationOrNull(tenantId, userNotificationId);
+			var userNotification = _store.GetUserNotificationWithNotificationOrNull(tenantId, userNotificationId);
 			if (userNotification == null)
 			{
 				return null;

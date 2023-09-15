@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using Abp.Dependency;
-using  Abp.Extensions;
+using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {

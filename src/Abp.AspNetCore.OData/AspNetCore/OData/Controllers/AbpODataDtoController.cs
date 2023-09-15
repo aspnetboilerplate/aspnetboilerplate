@@ -17,11 +17,11 @@ namespace Abp.AspNetCore.OData.Controllers
 {
 	public abstract class AbpODataDtoController<TEntity, TOutputDto, TInputDto> : AbpODataDtoController<TEntity, TOutputDto, TInputDto, int>
 		where TEntity : class, IEntity<int>
-		where TInputDto  : class
-		where TOutputDto  : class, IEntityDto<int>
+		where TInputDto : class
+		where TOutputDto : class, IEntityDto<int>
 	{
 		protected AbpODataDtoController(IRepository<TEntity> repository, IObjectMapper objectMapper)
-			: base(repository,objectMapper)
+			: base(repository, objectMapper)
 		{
 		}
 	}
@@ -91,16 +91,18 @@ namespace Abp.AspNetCore.OData.Controllers
 		{
 			CheckUpdatePermission();
 
-			if (!ModelState.IsValid) {
+			if (!ModelState.IsValid)
+			{
 				return BadRequest(ModelState);
 			}
 
 			var entity = await Repository.GetAsync(key);
-			if (entity == null) {
+			if (entity == null)
+			{
 				return NotFound();
 			}
 
-			ObjectMapper.Map(inputDto,entity);
+			ObjectMapper.Map(inputDto, entity);
 			await Repository.UpdateAsync(entity);
 
 			return Updated(entity);
@@ -138,7 +140,7 @@ namespace Abp.AspNetCore.OData.Controllers
 
 			await Repository.DeleteAsync(key);
 
-			return StatusCode((int) HttpStatusCode.NoContent);
+			return StatusCode((int)HttpStatusCode.NoContent);
 		}
 
 		protected virtual void CheckPermission(string permissionName)

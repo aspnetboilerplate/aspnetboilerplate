@@ -113,10 +113,10 @@ namespace Abp.Zero
 
 			using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
 			{
-				var implType = typeof (TenantCache<,>)
+				var implType = typeof(TenantCache<,>)
 					.MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
 
-				IocManager.Register(typeof (ITenantCache), implType, DependencyLifeStyle.Transient);
+				IocManager.Register(typeof(ITenantCache), implType, DependencyLifeStyle.Transient);
 			}
 		}
 	}

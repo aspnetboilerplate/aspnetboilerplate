@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
-	public class ResponseNoCacheTestAppService_Tests: AppTestBase
+	public class ResponseNoCacheTestAppService_Tests : AppTestBase
 	{
 		[Fact]
 		public async Task ResponseNoCacheAppService_Get_Test()

@@ -39,7 +39,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 			blog4.IsTransient().ShouldBeTrue();
 
 			_blogRepository.InsertRange(blog1, blog2);
-			_blogRepository.InsertRange(new List<Blog>{blog3, blog4});
+			_blogRepository.InsertRange(new List<Blog> { blog3, blog4 });
 
 			await uow.CompleteAsync();
 
@@ -64,7 +64,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 			blog4.IsTransient().ShouldBeTrue();
 
 			await _blogRepository.InsertRangeAsync(blog1, blog2);
-			await _blogRepository.InsertRangeAsync(new List<Blog>{blog3, blog4});
+			await _blogRepository.InsertRangeAsync(new List<Blog> { blog3, blog4 });
 
 			await uow.CompleteAsync();
 
@@ -100,7 +100,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 			using (var uow = _uowManager.Begin())
 			{
 				_blogRepository.RemoveRange(blogs[0], blogs[1]);
-				_blogRepository.RemoveRange(new List<Blog>{blogs[2], blogs[3]});
+				_blogRepository.RemoveRange(new List<Blog> { blogs[2], blogs[3] });
 
 				await uow.CompleteAsync();
 

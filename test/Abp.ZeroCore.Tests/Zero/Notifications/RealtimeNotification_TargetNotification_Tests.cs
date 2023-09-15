@@ -90,7 +90,7 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 		await _publisher.PublishAsync("TestNotification",
 			notificationData,
 			severity: NotificationSeverity.Success,
-			userIds: new[] {AbpSession.ToUserIdentifier()}
+			userIds: new[] { AbpSession.ToUserIdentifier() }
 		);
 
 		Assert.True(_realTimeNotifier1.IsSendNotificationCalled);
@@ -108,8 +108,8 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 		await _publisher.PublishAsync("TestNotification",
 			notificationData,
 			severity: NotificationSeverity.Success,
-			userIds: new[] {AbpSession.ToUserIdentifier()},
-			targetNotifiers: new[] {_realTimeNotifier1.GetType(), _realTimeNotifier2.GetType()}
+			userIds: new[] { AbpSession.ToUserIdentifier() },
+			targetNotifiers: new[] { _realTimeNotifier1.GetType(), _realTimeNotifier2.GetType() }
 		);
 
 		Assert.True(_realTimeNotifier1.IsSendNotificationCalled);
@@ -127,8 +127,8 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 		await _publisher.PublishAsync("TestNotification",
 			notificationData,
 			severity: NotificationSeverity.Success,
-			userIds: new[] {AbpSession.ToUserIdentifier()},
-			targetNotifiers: new[] {_realTimeNotifier2.GetType()}
+			userIds: new[] { AbpSession.ToUserIdentifier() },
+			targetNotifiers: new[] { _realTimeNotifier2.GetType() }
 		);
 
 		Assert.False(_realTimeNotifier1.IsSendNotificationCalled);
@@ -140,8 +140,8 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 		await _publisher.PublishAsync("TestNotification",
 			notificationData,
 			severity: NotificationSeverity.Success,
-			userIds: new[] {AbpSession.ToUserIdentifier()},
-			targetNotifiers: new[] {_realTimeNotifier1.GetType()}
+			userIds: new[] { AbpSession.ToUserIdentifier() },
+			targetNotifiers: new[] { _realTimeNotifier1.GetType() }
 		);
 
 		Assert.True(_realTimeNotifier1.IsSendNotificationCalled);
@@ -162,8 +162,8 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 			await _publisher.PublishAsync("TestNotification",
 				notificationData,
 				severity: NotificationSeverity.Success,
-				userIds: new[] {AbpSession.ToUserIdentifier()},
-				targetNotifiers: new[] {typeof(NotificationData)}
+				userIds: new[] { AbpSession.ToUserIdentifier() },
+				targetNotifiers: new[] { typeof(NotificationData) }
 			);
 		});
 
@@ -179,8 +179,8 @@ public class RealtimeNotification_TargetNotification_Tests : AbpZeroTestBase
 			await _publisher.PublishAsync("TestNotification",
 				notificationData,
 				severity: NotificationSeverity.Success,
-				userIds: new[] {AbpSession.ToUserIdentifier()},
-				targetNotifiers: new[] {notifierSubstitute.GetType()}
+				userIds: new[] { AbpSession.ToUserIdentifier() },
+				targetNotifiers: new[] { notifierSubstitute.GetType() }
 			);
 		});
 

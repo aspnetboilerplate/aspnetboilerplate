@@ -44,7 +44,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			bool Predicate(WebhookSenderArgs w)
 			{
@@ -168,7 +168,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				AppWebhookDefinitionNames.Users.Created,
 				new
 				{
-					Name = "Musa", Surname = "Demir"
+					Name = "Musa",
+					Surname = "Demir"
 				}
 			);
 
@@ -315,7 +316,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				TenantId = null,
 				Secret = "secret",
 				WebhookUri = "www.mywebhook.com",
-				Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
+				Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
 				Headers = new Dictionary<string, string>
 				{
 					{"Key", "Value"}
@@ -327,7 +328,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			await webhookSubscriptionManager.AddOrUpdateSubscriptionAsync(subscription);
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -429,7 +430,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -496,7 +497,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -561,9 +562,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
 				w.Headers.Count.ShouldBe(3);
-				w.Headers.ShouldContainKeyAndValue("Key","Value");
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
-				w.Headers.ShouldContainKeyAndValue("Key3","Value3");
+				w.Headers.ShouldContainKeyAndValue("Key", "Value");
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
+				w.Headers.ShouldContainKeyAndValue("Key3", "Value3");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -585,7 +586,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
 			await _webhookPublisher.PublishAsync(
-				tenantIds: new[] {subscription.TenantId},
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders
@@ -622,8 +623,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
 				w.Headers.Count.ShouldBe(2);
-				w.Headers.ShouldContainKeyAndValue("Key","ValueNew");//existing header should be replaced
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+				w.Headers.ShouldContainKeyAndValue("Key", "ValueNew");//existing header should be replaced
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -645,7 +646,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
 			await _webhookPublisher.PublishAsync(
-				tenantIds: new[] {subscription.TenantId},
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders
@@ -683,8 +684,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.Headers.Count.ShouldBe(2);
 				w.Headers.ShouldNotContainKey("Key");//existing header should be removed
 				//only the new headers should be used.
-				w.Headers.ShouldContainKeyAndValue("Key1","Value1");
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+				w.Headers.ShouldContainKeyAndValue("Key1", "Value1");
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -706,7 +707,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
 			await _webhookPublisher.PublishAsync(
-				tenantIds: new[] {subscription.TenantId},
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders
@@ -821,7 +822,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			AbpSession.TenantId = subscription.TenantId;
 
-			_webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new {Name = "Musa", Surname = "Demir"});
+			_webhookPublisher.Publish(AppWebhookDefinitionNames.Users.Created, new { Name = "Musa", Surname = "Demir" });
 
 			//should not try to send
 			_backgroundJobManagerSubstitute.DidNotReceive()
@@ -931,7 +932,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
 				new
 				{
-					Name = "Musa", Surname = "Demir"
+					Name = "Musa",
+					Surname = "Demir"
 				}, subscription.TenantId
 			);
 
@@ -965,7 +967,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
 				new
 				{
-					Name = "Musa", Surname = "Demir"
+					Name = "Musa",
+					Surname = "Demir"
 				},
 				AbpSession.TenantId
 			);
@@ -983,7 +986,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				TenantId = null,
 				Secret = "secret",
 				WebhookUri = "www.mywebhook.com",
-				Webhooks = new List<string>() {AppWebhookDefinitionNames.Users.Created},
+				Webhooks = new List<string>() { AppWebhookDefinitionNames.Users.Created },
 				Headers = new Dictionary<string, string>
 				{
 					{"Key", "Value"}
@@ -995,7 +998,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			webhookSubscriptionManager.AddOrUpdateSubscription(subscription);
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -1048,7 +1051,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -1115,7 +1118,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			var webhooksConfiguration = Resolve<IWebhooksConfiguration>();
 
-			var data = new {Name = "Musa", Surname = "Demir"};
+			var data = new { Name = "Musa", Surname = "Demir" };
 
 			Predicate<WebhookSenderArgs> predicate = w =>
 			{
@@ -1181,9 +1184,9 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
 				w.Headers.Count.ShouldBe(3);
-				w.Headers.ShouldContainKeyAndValue("Key","Value");
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
-				w.Headers.ShouldContainKeyAndValue("Key3","Value3");
+				w.Headers.ShouldContainKeyAndValue("Key", "Value");
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
+				w.Headers.ShouldContainKeyAndValue("Key3", "Value3");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -1204,8 +1207,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				.Enqueue<WebhookSenderJob, WebhookSenderArgs>(Arg.Is<WebhookSenderArgs>(w => predicate(w)));
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
-			 _webhookPublisher.Publish(
-				tenantIds: new[] {subscription.TenantId},
+			_webhookPublisher.Publish(
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders
@@ -1242,8 +1245,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.WebhookName.ShouldContain(AppWebhookDefinitionNames.Users.Created);
 
 				w.Headers.Count.ShouldBe(2);
-				w.Headers.ShouldContainKeyAndValue("Key","ValueNew");//existing header should be replaced
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+				w.Headers.ShouldContainKeyAndValue("Key", "ValueNew");//existing header should be replaced
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -1265,7 +1268,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
 			_webhookPublisher.Publish(
-				tenantIds: new[] {subscription.TenantId},
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders
@@ -1303,8 +1306,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 				w.Headers.Count.ShouldBe(2);
 				w.Headers.ShouldNotContainKey("Key");//existing header should be removed
 				//only the new headers should be used.
-				w.Headers.ShouldContainKeyAndValue("Key1","Value1");
-				w.Headers.ShouldContainKeyAndValue("Key2","Value2");
+				w.Headers.ShouldContainKeyAndValue("Key1", "Value1");
+				w.Headers.ShouldContainKeyAndValue("Key2", "Value2");
 
 				w.WebhookSubscriptionId.ShouldBe(subscription.Id);
 				return true;
@@ -1326,7 +1329,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
 			_backgroundJobManagerSubstitute.ClearReceivedCalls();
 			_webhookPublisher.Publish(
-				tenantIds: new[] {subscription.TenantId},
+				tenantIds: new[] { subscription.TenantId },
 				AppWebhookDefinitionNames.Users.Created,
 				data,
 				headers: newHeaders

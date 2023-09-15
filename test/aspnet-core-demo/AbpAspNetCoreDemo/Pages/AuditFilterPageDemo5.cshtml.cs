@@ -8,7 +8,7 @@ namespace AbpAspNetCoreDemo.Pages
 	{
 		public JsonResult OnPostJson()
 		{
-			return new JsonResult(new {StrValue = "Forty Two", IntValue = 42});
+			return new JsonResult(new { StrValue = "Forty Two", IntValue = 42 });
 		}
 
 		public ObjectResult OnPostObject()

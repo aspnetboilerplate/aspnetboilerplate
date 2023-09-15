@@ -66,7 +66,7 @@ namespace Abp.WebApi.ExceptionHandling
 				if (context.Exception is HttpException)
 				{
 					var httpException = context.Exception as HttpException;
-					var httpStatusCode = (HttpStatusCode) httpException.GetHttpCode();
+					var httpStatusCode = (HttpStatusCode)httpException.GetHttpCode();
 
 					context.Response = context.Request.CreateResponse(
 						httpStatusCode,

@@ -44,7 +44,7 @@ namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 
 			Name = name;
 			Url = url;
-			More = new BlogEx {BloggerName = bloggerName};
+			More = new BlogEx { BloggerName = bloggerName };
 		}
 
 		public void ChangeUrl(string url)

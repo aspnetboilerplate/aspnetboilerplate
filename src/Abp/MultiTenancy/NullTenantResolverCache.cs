@@ -5,7 +5,7 @@ namespace Abp.MultiTenancy
 		public TenantResolverCacheItem Value
 		{
 			get { return null; }
-			set {  }
+			set { }
 		}
 	}
 }

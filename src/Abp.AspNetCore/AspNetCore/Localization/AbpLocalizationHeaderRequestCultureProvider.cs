@@ -44,7 +44,7 @@ namespace Abp.AspNetCore.Localization
 
 			if (localizationHeader.Count == 0)
 			{
-				return Task.FromResult((ProviderCultureResult) null);
+				return Task.FromResult((ProviderCultureResult)null);
 			}
 
 			var cultureResult = ParseHeaderValue(localizationHeader);

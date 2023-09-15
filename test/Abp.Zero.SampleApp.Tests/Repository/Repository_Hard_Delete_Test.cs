@@ -131,7 +131,7 @@ namespace Abp.Zero.SampleApp.Tests.Repository
 
 				UsingDbContext(context =>
 				{
-					var category = context.Categories.Single(e=> e.DisplayName == "Soft Drinks");
+					var category = context.Categories.Single(e => e.DisplayName == "Soft Drinks");
 					context.Categories.Remove(category);
 				});
 

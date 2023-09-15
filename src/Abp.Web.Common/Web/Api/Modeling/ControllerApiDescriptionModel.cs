@@ -9,7 +9,7 @@ namespace Abp.Web.Api.Modeling
 	{
 		public string Name { get; }
 
-		public IDictionary<string,  ActionApiDescriptionModel> Actions { get; }
+		public IDictionary<string, ActionApiDescriptionModel> Actions { get; }
 
 		private ControllerApiDescriptionModel()
 		{

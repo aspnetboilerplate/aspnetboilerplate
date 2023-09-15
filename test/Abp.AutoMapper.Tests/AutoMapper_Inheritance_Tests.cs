@@ -110,7 +110,7 @@ namespace Abp.AutoMapper.Tests
 
 		private class MyDualKeyEntity
 		{
-		   public int Id { get; set; }
+			public int Id { get; set; }
 
 			public int SecondId { get; set; }
 		}

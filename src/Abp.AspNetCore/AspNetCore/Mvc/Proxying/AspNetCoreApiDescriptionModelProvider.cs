@@ -111,7 +111,7 @@ namespace Abp.AspNetCore.Mvc.Proxying
 				   ?? apiDescription.ActionDescriptor.AsControllerActionDescriptor().ControllerName;
 		}
 
-		   private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method,
+		private void AddParameterDescriptionsToModel(ActionApiDescriptionModel actionModel, MethodInfo method,
 			ApiDescription apiDescription)
 		{
 			if (!apiDescription.ParameterDescriptions.Any())
@@ -154,10 +154,10 @@ namespace Abp.AspNetCore.Mvc.Proxying
 			}
 		}
 
-		 private static bool IsNotFromServicesParameter(ParameterInfo parameterInfo)
-		 {
-			 return !parameterInfo.IsDefined(typeof(FromServicesAttribute), true);
-		 }
+		private static bool IsNotFromServicesParameter(ParameterInfo parameterInfo)
+		{
+			return !parameterInfo.IsDefined(typeof(FromServicesAttribute), true);
+		}
 
 		public string GetMethodParamName(ParameterInfo parameterInfo)
 		{

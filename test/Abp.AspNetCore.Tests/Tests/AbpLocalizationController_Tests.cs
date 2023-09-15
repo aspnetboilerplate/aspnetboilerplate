@@ -38,7 +38,8 @@ namespace Abp.AspNetCore.Tests
 		public async Task Should_Throw_Invalid_Culture_Name(string cultureName)
 		{
 			// Act
-			var exception = await Should.ThrowAsync<AbpException>(async () => {
+			var exception = await Should.ThrowAsync<AbpException>(async () =>
+			{
 				await GetResponseAsync(
 					GetUrl<AbpLocalizationController>(
 						nameof(AbpLocalizationController.ChangeCulture),

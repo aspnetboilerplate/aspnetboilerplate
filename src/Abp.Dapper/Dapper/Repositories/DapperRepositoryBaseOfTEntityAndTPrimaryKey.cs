@@ -60,13 +60,13 @@ namespace Abp.Dapper.Repositories
 		{
 			var connection =
 				await _activeTransactionProvider.GetActiveTransactionAsync(ActiveTransactionProviderArgs.Empty);
-			return (DbTransaction) connection;
+			return (DbTransaction)connection;
 		}
 
 		public virtual DbTransaction GetActiveTransaction()
 		{
 			var connection = _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty);
-			return (DbTransaction) connection;
+			return (DbTransaction)connection;
 		}
 
 		public virtual int? Timeout => null;
@@ -156,7 +156,7 @@ namespace Abp.Dapper.Repositories
 
 			return GetConnection().GetPage<TEntity>(
 				filteredPredicate,
-				new List<ISort> {new Sort {Ascending = ascending, PropertyName = sortingProperty}},
+				new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
 				pageNumber,
 				itemsPerPage,
 				GetActiveTransaction(),
@@ -175,7 +175,7 @@ namespace Abp.Dapper.Repositories
 			IPredicate filteredPredicate = DapperQueryFilterExecuter.ExecuteFilter<TEntity, TPrimaryKey>(predicate);
 			return GetConnection().GetSet<TEntity>(
 				filteredPredicate,
-				new List<ISort> {new Sort {Ascending = ascending, PropertyName = sortingProperty}},
+				new List<ISort> { new Sort { Ascending = ascending, PropertyName = sortingProperty } },
 				firstResult,
 				maxResults,
 				GetActiveTransaction(),

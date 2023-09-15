@@ -128,7 +128,7 @@ namespace Abp.Notifications
 				{
 					featureDependencyContext.Object.TenantId = user.TenantId;
 
-					if (! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+					if (!notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
 					{
 						return false;
 					}
@@ -141,7 +141,7 @@ namespace Abp.Notifications
 				{
 					permissionDependencyContext.Object.User = user;
 
-					if (! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+					if (!notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
 					{
 						return false;
 					}
@@ -201,14 +201,14 @@ namespace Abp.Notifications
 					foreach (var notificationDefinition in GetAll())
 					{
 						if (notificationDefinition.PermissionDependency != null &&
-							! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+							!notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
 						{
 							continue;
 						}
 
 						if (user.TenantId.HasValue &&
 							notificationDefinition.FeatureDependency != null &&
-							! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+							!notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
 						{
 							continue;
 						}

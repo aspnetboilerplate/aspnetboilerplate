@@ -78,7 +78,7 @@ namespace Abp.AspNetCore
 
 		private static void RemoveConventionalInterceptionSelectors()
 		{
-			UnitOfWorkDefaultOptions.ConventionalUowSelectorList  = new List<Func<Type, bool>>();
+			UnitOfWorkDefaultOptions.ConventionalUowSelectorList = new List<Func<Type, bool>>();
 			AbpAuditingDefaultOptions.ConventionalAuditingSelectorList = new List<Func<Type, bool>>();
 			AbpValidationDefaultOptions.ConventionalValidationSelectorList = new List<Func<Type, bool>>();
 		}

@@ -56,12 +56,12 @@ namespace Abp.Reflection
 				return true;
 			}
 
-			return type == typeof (string) ||
-				   type == typeof (decimal) ||
-				   type == typeof (DateTime) ||
-				   type == typeof (DateTimeOffset) ||
-				   type == typeof (TimeSpan) ||
-				   type == typeof (Guid);
+			return type == typeof(string) ||
+				   type == typeof(decimal) ||
+				   type == typeof(DateTime) ||
+				   type == typeof(DateTimeOffset) ||
+				   type == typeof(TimeSpan) ||
+				   type == typeof(Guid);
 		}
 	}
 }

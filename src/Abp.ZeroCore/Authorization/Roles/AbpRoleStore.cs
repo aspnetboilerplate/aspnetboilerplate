@@ -223,7 +223,7 @@ namespace Abp.Authorization.Roles
 		public virtual async Task<TRole> FindByIdAsync(string id,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
+			return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 				return await _roleRepository.FirstOrDefaultAsync(id.To<int>());

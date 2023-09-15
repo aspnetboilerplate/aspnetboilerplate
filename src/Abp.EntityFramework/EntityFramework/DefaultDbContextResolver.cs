@@ -20,7 +20,7 @@ namespace Abp.EntityFramework
 			where TDbContext : DbContext
 		{
 			var dbContextType = GetConcreteType<TDbContext>();
-			return (TDbContext) _iocResolver.Resolve(dbContextType, new
+			return (TDbContext)_iocResolver.Resolve(dbContextType, new
 			{
 				nameOrConnectionString = connectionString
 			});

@@ -172,7 +172,7 @@ namespace Abp.Application.Features
 		/// <param name="featureName">Unique feature name</param>
 		public static async Task CheckEnabledAsync(this IFeatureChecker featureChecker, string featureName)
 		{
-			var localizedFeatureNames = LocalizeFeatureNames(featureChecker, new []{ featureName });
+			var localizedFeatureNames = LocalizeFeatureNames(featureChecker, new[] { featureName });
 
 			if (!(await featureChecker.IsEnabledAsync(featureName)))
 			{

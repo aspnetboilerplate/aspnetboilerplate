@@ -9,10 +9,10 @@ using Abp.MultiTenancy;
 namespace Abp.Zero.EntityFramework
 {
 	[MultiTenancySide(MultiTenancySides.Tenant)]
-	public abstract class AbpZeroTenantDbContext<TRole, TUser,TSelf> : AbpZeroCommonDbContext<TRole, TUser,TSelf>
+	public abstract class AbpZeroTenantDbContext<TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>
 		where TRole : AbpRole<TUser>
 		where TUser : AbpUser<TUser>
-		where TSelf: AbpZeroTenantDbContext<TRole, TUser, TSelf>
+		where TSelf : AbpZeroTenantDbContext<TRole, TUser, TSelf>
 	{
 
 		/// <summary>

@@ -186,7 +186,7 @@ namespace Abp.Domain.Repositories
 				throw new ArgumentException($"Given {nameof(repository)} is not inherited from {typeof(IRepository<TEntity, TPrimaryKey>).AssemblyQualifiedName}");
 			}
 
-			var currentUnitOfWork = ((IUnitOfWorkManagerAccessor) repo).UnitOfWorkManager.Current;
+			var currentUnitOfWork = ((IUnitOfWorkManagerAccessor)repo).UnitOfWorkManager.Current;
 			if (currentUnitOfWork == null)
 			{
 				throw new AbpException($"There is no unit of work in the current context, The hard delete function can only be used in a unit of work.");

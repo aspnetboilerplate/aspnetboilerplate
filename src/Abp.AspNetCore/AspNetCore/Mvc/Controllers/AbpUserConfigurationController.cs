@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Abp.AspNetCore.Mvc.Controllers
 {
-	public class AbpUserConfigurationController: AbpController
+	public class AbpUserConfigurationController : AbpController
 	{
 		private readonly AbpUserConfigurationBuilder _abpUserConfigurationBuilder;
 

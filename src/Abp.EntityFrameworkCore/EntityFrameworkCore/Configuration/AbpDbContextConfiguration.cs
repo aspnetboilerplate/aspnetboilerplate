@@ -8,7 +8,7 @@ namespace Abp.EntityFrameworkCore.Configuration
 	public class AbpDbContextConfiguration<TDbContext>
 		where TDbContext : DbContext
 	{
-		public string ConnectionString {get; internal set; }
+		public string ConnectionString { get; internal set; }
 
 		public DbConnection ExistingConnection { get; internal set; }
 

@@ -18,7 +18,7 @@ namespace Abp.Localization
 				return;
 			}
 
-			var localizableString = (ILocalizableString) value;
+			var localizableString = (ILocalizableString)value;
 			writer.WriteValue(localizableString.Localize(new LocalizationContext(LocalizationHelper.Manager)));
 		}
 
@@ -29,7 +29,7 @@ namespace Abp.Localization
 
 		public override bool CanConvert(Type objectType)
 		{
-			return typeof (ILocalizableString).GetTypeInfo().IsAssignableFrom(objectType);
+			return typeof(ILocalizableString).GetTypeInfo().IsAssignableFrom(objectType);
 		}
 	}
 }

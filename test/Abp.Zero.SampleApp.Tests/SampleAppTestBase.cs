@@ -121,11 +121,11 @@ namespace Abp.Zero.SampleApp.Tests
 
 			RoleManager.Create(role).Succeeded.ShouldBe(true);
 
-			UsingDbContext( context =>
-			{
-				var createdRole = context.Roles.FirstOrDefault(r => r.Name == name);
-				createdRole.ShouldNotBe(null);
-			});
+			UsingDbContext(context =>
+		   {
+			   var createdRole = context.Roles.FirstOrDefault(r => r.Name == name);
+			   createdRole.ShouldNotBe(null);
+		   });
 
 			return role;
 		}
@@ -144,7 +144,7 @@ namespace Abp.Zero.SampleApp.Tests
 			};
 
 
-			WithUnitOfWork(()=> UserManager.Create(user).CheckErrors());
+			WithUnitOfWork(() => UserManager.Create(user).CheckErrors());
 
 			UsingDbContext(context =>
 			{

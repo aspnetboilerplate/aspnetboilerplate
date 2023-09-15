@@ -28,7 +28,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 		//[Fact]
 		public async Task Should_Login_From_Ldap_Without_Any_Configuration()
 		{
-			var result = await _logInManager.LoginAsync("-","-", Tenant.DefaultTenantName);
+			var result = await _logInManager.LoginAsync("-", "-", Tenant.DefaultTenantName);
 			result.Result.ShouldBe(AbpLoginResultType.Success);
 		}
 
@@ -76,7 +76,7 @@ namespace Abp.Zero.SampleApp.Tests.Ldap
 		{
 			public override void PreInitialize()
 			{
-				Configuration.Modules.ZeroLdap().Enable(typeof (MyLdapAuthenticationSource));
+				Configuration.Modules.ZeroLdap().Enable(typeof(MyLdapAuthenticationSource));
 			}
 
 			public override void Initialize()

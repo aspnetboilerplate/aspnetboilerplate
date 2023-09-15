@@ -101,7 +101,7 @@ namespace Abp.NHibernate.Tests
 		{
 			var userBefore = UsingSession(session => session.Query<Person>().Single(p => p.Name == "emre"));
 
-			var updatedUser =await _personRepository.UpdateAsync(userBefore.Id, user =>
+			var updatedUser = await _personRepository.UpdateAsync(userBefore.Id, user =>
 			{
 				user.Name = "yunus";
 				return Task.FromResult(user);

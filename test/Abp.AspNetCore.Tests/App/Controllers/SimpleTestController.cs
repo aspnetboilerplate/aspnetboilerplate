@@ -132,7 +132,7 @@ namespace Abp.AspNetCore.App.Controllers
 		}
 
 		[HttpGet]
-		public SimpleDateModel4 GetNotNormalizedDateTimeKindProperty4([DisableDateTimeNormalization]DateTime date)
+		public SimpleDateModel4 GetNotNormalizedDateTimeKindProperty4([DisableDateTimeNormalization] DateTime date)
 		{
 			return new SimpleDateModel4
 			{
@@ -153,7 +153,7 @@ namespace Abp.AspNetCore.App.Controllers
 		}
 
 		[HttpGet]
-		public string GetNotNormalizedSimpleTypeKind([DisableDateTimeNormalization]DateTime date)
+		public string GetNotNormalizedSimpleTypeKind([DisableDateTimeNormalization] DateTime date)
 		{
 			return date.Date.Kind.ToString().ToLower();
 		}
@@ -165,7 +165,7 @@ namespace Abp.AspNetCore.App.Controllers
 		}
 
 		[HttpGet]
-		public string GetNotNormalizedNullableSimpleTypeDateTimeKind([DisableDateTimeNormalization]DateTime? date)
+		public string GetNotNormalizedNullableSimpleTypeDateTimeKind([DisableDateTimeNormalization] DateTime? date)
 		{
 			return date.Value.Date.Kind.ToString().ToLower();
 		}

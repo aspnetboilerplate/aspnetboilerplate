@@ -24,7 +24,7 @@ namespace Abp.EntityFramework.Tests
 			fakeCurrentUowProvider.Current.Returns(fakeUow);
 
 			matcher = new DbContextTypeMatcher(fakeCurrentUowProvider);
-			matcher.Populate(new []
+			matcher.Populate(new[]
 			{
 				typeof(MyDerivedDbContext1),
 				typeof(MyDerivedDbContext2),

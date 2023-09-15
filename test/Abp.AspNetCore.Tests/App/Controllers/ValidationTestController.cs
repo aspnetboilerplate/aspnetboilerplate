@@ -86,7 +86,7 @@ namespace Abp.AspNetCore.App.Controllers
 
 				if (Value <= 0)
 				{
-					results.Add(new ValidationResult("Value must be higher than 0", new [] {"value"}));
+					results.Add(new ValidationResult("Value must be higher than 0", new[] { "value" }));
 				}
 
 				return results;
@@ -101,7 +101,7 @@ namespace Abp.AspNetCore.App.Controllers
 			{
 				if (Value != "abp")
 				{
-					context.Results.Add(new ValidationResult("Value must be \"abp\"", new [] {"value"}));
+					context.Results.Add(new ValidationResult("Value must be \"abp\"", new[] { "value" }));
 				}
 			}
 		}

@@ -14,7 +14,7 @@ namespace Abp.AspNetCore.Dependency
 		/// <param name="hostBuilder"></param>
 		/// <param name="windsorContainer"></param>
 		/// <returns></returns>
-		public static IHostBuilder UseCastleWindsor(this IHostBuilder hostBuilder, [NotNull]IWindsorContainer windsorContainer)
+		public static IHostBuilder UseCastleWindsor(this IHostBuilder hostBuilder, [NotNull] IWindsorContainer windsorContainer)
 		{
 			Check.NotNull(windsorContainer, nameof(windsorContainer));
 

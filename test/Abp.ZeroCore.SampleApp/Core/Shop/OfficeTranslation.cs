@@ -2,7 +2,7 @@ using Abp.Domain.Entities;
 
 namespace Abp.ZeroCore.SampleApp.Core.Shop
 {
-	public class OfficeTranslation: Entity<long>, IEntityTranslation<Office>
+	public class OfficeTranslation : Entity<long>, IEntityTranslation<Office>
 	{
 		public virtual string Name { get; set; }
 

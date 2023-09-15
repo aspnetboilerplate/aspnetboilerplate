@@ -74,7 +74,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Builders
 			_iocResolver = iocResolver;
 
 			ServiceName = serviceName;
-			ServiceInterfaceType = typeof (T);
+			ServiceInterfaceType = typeof(T);
 
 			_actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
 

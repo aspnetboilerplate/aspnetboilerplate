@@ -786,9 +786,9 @@ namespace Abp.Authorization.Users
 				Check.NotNull(user, nameof(user));
 
 				var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-					join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-					where userRole.UserId == user.Id
-					select role.Name);
+								join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+								where userRole.UserId == user.Id
+								select role.Name);
 
 				var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
 					from userOu in _userOrganizationUnitRepository.GetAll()
@@ -1299,11 +1299,11 @@ namespace Abp.Authorization.Users
 				Check.NotNull(providerKey, nameof(providerKey));
 
 				var query = from userLogin in _userLoginRepository.GetAll()
-					join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-					where userLogin.LoginProvider == loginProvider &&
-						  userLogin.ProviderKey == providerKey &&
-						  userLogin.TenantId == AbpSession.TenantId
-					select user;
+							join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+							where userLogin.LoginProvider == loginProvider &&
+								  userLogin.ProviderKey == providerKey &&
+								  userLogin.TenantId == AbpSession.TenantId
+							select user;
 
 				return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
 			});
@@ -1331,11 +1331,11 @@ namespace Abp.Authorization.Users
 				Check.NotNull(providerKey, nameof(providerKey));
 
 				var query = from userLogin in _userLoginRepository.GetAll()
-					join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-					where userLogin.LoginProvider == loginProvider &&
-						  userLogin.ProviderKey == providerKey &&
-						  userLogin.TenantId == AbpSession.TenantId
-					select user;
+							join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+							where userLogin.LoginProvider == loginProvider &&
+								  userLogin.ProviderKey == providerKey &&
+								  userLogin.TenantId == AbpSession.TenantId
+							select user;
 
 				return query.FirstOrDefault();
 			});
@@ -1661,7 +1661,7 @@ namespace Abp.Authorization.Users
 
 			if (!user.LockoutEndDateUtc.HasValue)
 			{
-				return (DateTimeOffset?) null;
+				return (DateTimeOffset?)null;
 			}
 
 			var lockoutEndDate = DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc);
@@ -2228,10 +2228,10 @@ namespace Abp.Authorization.Users
 				Check.NotNull(claim, nameof(claim));
 
 				var query = from userclaims in _userClaimRepository.GetAll()
-					join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
-					where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type &&
-						  userclaims.TenantId == AbpSession.TenantId
-					select user;
+							join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
+							where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type &&
+								  userclaims.TenantId == AbpSession.TenantId
+							select user;
 
 				return await AsyncQueryableExecuter.ToListAsync(query);
 			});
@@ -2256,10 +2256,10 @@ namespace Abp.Authorization.Users
 				Check.NotNull(claim, nameof(claim));
 
 				var query = from userclaims in _userClaimRepository.GetAll()
-					join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
-					where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type &&
-						  userclaims.TenantId == AbpSession.TenantId
-					select user;
+							join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
+							where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type &&
+								  userclaims.TenantId == AbpSession.TenantId
+							select user;
 
 				return query.ToList();
 			});
@@ -2294,9 +2294,9 @@ namespace Abp.Authorization.Users
 				}
 
 				var query = from userrole in _userRoleRepository.GetAll()
-					join user in UserRepository.GetAll() on userrole.UserId equals user.Id
-					where userrole.RoleId.Equals(role.Id)
-					select user;
+							join user in UserRepository.GetAll() on userrole.UserId equals user.Id
+							where userrole.RoleId.Equals(role.Id)
+							select user;
 
 				return await AsyncQueryableExecuter.ToListAsync(query);
 			});
@@ -2331,9 +2331,9 @@ namespace Abp.Authorization.Users
 				}
 
 				var query = from userrole in _userRoleRepository.GetAll()
-					join user in UserRepository.GetAll() on userrole.UserId equals user.Id
-					where userrole.RoleId.Equals(role.Id)
-					select user;
+							join user in UserRepository.GetAll() on userrole.UserId equals user.Id
+							where userrole.RoleId.Equals(role.Id)
+							select user;
 
 				return query.ToList();
 			});
@@ -2605,9 +2605,9 @@ namespace Abp.Authorization.Users
 			var result = _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from userLogin in _userLoginRepository.GetAll()
-					join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-					where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-					select user;
+							join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+							where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+							select user;
 
 				return query.ToList();
 			});
@@ -2620,9 +2620,9 @@ namespace Abp.Authorization.Users
 			return _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from userLogin in _userLoginRepository.GetAll()
-					join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-					where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-					select user;
+							join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+							where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+							select user;
 
 				return query.ToList();
 			});
@@ -2635,10 +2635,10 @@ namespace Abp.Authorization.Users
 				using (_unitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var query = from userLogin in _userLoginRepository.GetAll()
-						join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-						where userLogin.LoginProvider == login.LoginProvider &&
-							  userLogin.ProviderKey == login.ProviderKey
-						select user;
+								join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+								where userLogin.LoginProvider == login.LoginProvider &&
+									  userLogin.ProviderKey == login.ProviderKey
+								select user;
 
 					return query.FirstOrDefault();
 				}
@@ -2654,10 +2654,10 @@ namespace Abp.Authorization.Users
 				using (_unitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var query = from userLogin in _userLoginRepository.GetAll()
-						join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
-						where userLogin.LoginProvider == login.LoginProvider &&
-							  userLogin.ProviderKey == login.ProviderKey
-						select user;
+								join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+								where userLogin.LoginProvider == login.LoginProvider &&
+									  userLogin.ProviderKey == login.ProviderKey
+								select user;
 
 					return query.FirstOrDefault();
 				}

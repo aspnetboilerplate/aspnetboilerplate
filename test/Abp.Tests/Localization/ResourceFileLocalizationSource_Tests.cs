@@ -76,30 +76,30 @@ namespace Abp.Tests.Localization
 		public void Test_GetStrings()
 		{
 			//Defined in English
-			var enStrings = _resourceFileLocalizationSource.GetStrings(new List<string>{"Hello", "World"}, CultureInfo.GetCultureInfo("en"));
+			var enStrings = _resourceFileLocalizationSource.GetStrings(new List<string> { "Hello", "World" }, CultureInfo.GetCultureInfo("en"));
 			enStrings.ShouldContain(x => x == "Hello!");
 			enStrings.ShouldContain(x => x == "World!");
 
 			//en-US and en-GB fallbacks to en
-			var enUsStrings = _resourceFileLocalizationSource.GetStrings(new List<string>{"Hello", "World"}, CultureInfo.GetCultureInfo("en-US"));
+			var enUsStrings = _resourceFileLocalizationSource.GetStrings(new List<string> { "Hello", "World" }, CultureInfo.GetCultureInfo("en-US"));
 			enUsStrings.ShouldContain(x => x == "Hello!");
 			enUsStrings.ShouldContain(x => x == "World!");
 
-			var enGBStrings = _resourceFileLocalizationSource.GetStrings(new List<string>{"Hello", "World"}, CultureInfo.GetCultureInfo("en-GB"));
+			var enGBStrings = _resourceFileLocalizationSource.GetStrings(new List<string> { "Hello", "World" }, CultureInfo.GetCultureInfo("en-GB"));
 			enGBStrings.ShouldContain(x => x == "Hello!");
 			enGBStrings.ShouldContain(x => x == "World!");
 
 			//Defined in Turkish
-			_resourceFileLocalizationSource.GetStrings(new List<string>{"Hello"}, CultureInfo.GetCultureInfo("tr")).ShouldContain(x => x == "Merhaba!");
+			_resourceFileLocalizationSource.GetStrings(new List<string> { "Hello" }, CultureInfo.GetCultureInfo("tr")).ShouldContain(x => x == "Merhaba!");
 
 			//tr-TR fallbacks to tr
-			_resourceFileLocalizationSource.GetStrings(new List<string>{"Hello"}, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "Merhaba!");
+			_resourceFileLocalizationSource.GetStrings(new List<string> { "Hello" }, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "Merhaba!");
 
 			//Undefined for Turkish, fallbacks to default language
-			_resourceFileLocalizationSource.GetStrings(new List<string>{"World"}, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "World!");
+			_resourceFileLocalizationSource.GetStrings(new List<string> { "World" }, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "World!");
 
 			//Undefined at all, fallback to given text
-			_resourceFileLocalizationSource.GetStrings(new List<string>{"Apple"}, CultureInfo.GetCultureInfo("en-US")).ShouldContain(x => x == "[Apple]");
+			_resourceFileLocalizationSource.GetStrings(new List<string> { "Apple" }, CultureInfo.GetCultureInfo("en-US")).ShouldContain(x => x == "[Apple]");
 		}
 
 		[Fact]
@@ -109,29 +109,29 @@ namespace Abp.Tests.Localization
 			_resourceFileLocalizationSource.GetStringOrNull("Hello", CultureInfo.GetCultureInfo("en")).ShouldBe("Hello!");
 
 			//en-US and en-GB fallbacks to en
-			var enUsStrings = _resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello", "World"}, CultureInfo.GetCultureInfo("en-US"));
+			var enUsStrings = _resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Hello", "World" }, CultureInfo.GetCultureInfo("en-US"));
 			enUsStrings.ShouldContain(x => x == "Hello!");
 			enUsStrings.ShouldContain(x => x == "World!");
 
-			_resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello"},  CultureInfo.GetCultureInfo("en-GB")).ShouldContain(x => x == "Hello!");
+			_resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Hello" }, CultureInfo.GetCultureInfo("en-GB")).ShouldContain(x => x == "Hello!");
 
 			//Defined in Turkish
-			_resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello"}, CultureInfo.GetCultureInfo("tr")).ShouldContain(x => x == "Merhaba!");
+			_resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Hello" }, CultureInfo.GetCultureInfo("tr")).ShouldContain(x => x == "Merhaba!");
 
 			//tr-TR fallbacks to tr
-			_resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello"},  CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "Merhaba!");
+			_resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Hello" }, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "Merhaba!");
 
 			//Undefined for Turkish, fallbacks to default language
-			_resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"World"}, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "World!");
+			_resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "World" }, CultureInfo.GetCultureInfo("tr-TR")).ShouldContain(x => x == "World!");
 
 			//Undefined at all, returns null
-			_resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Apple"}, CultureInfo.GetCultureInfo("en-US")).ShouldContain(x => x == null);
+			_resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Apple" }, CultureInfo.GetCultureInfo("en-US")).ShouldContain(x => x == null);
 		}
 
 		[Fact]
 		public void Test_GetStringsOrNull_When_Name_Not_Exist()
 		{
-			var enStrings = _resourceFileLocalizationSource.GetStringsOrNull(new List<string>{"Hello", "World", "NotExist"}, CultureInfo.GetCultureInfo("en"));
+			var enStrings = _resourceFileLocalizationSource.GetStringsOrNull(new List<string> { "Hello", "World", "NotExist" }, CultureInfo.GetCultureInfo("en"));
 			enStrings.ShouldContain(x => x == "Hello!");
 			enStrings.ShouldContain(x => x == "World!");
 			enStrings.ShouldContain(x => x == null);

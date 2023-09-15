@@ -255,7 +255,7 @@ namespace Abp.Notifications
 			return notificationInfo
 				.TenantIds
 				.Split(",")
-				.Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?) null : (int?) tenantIdAsStr.To<int>())
+				.Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?)null : (int?)tenantIdAsStr.To<int>())
 				.ToArray();
 		}
 

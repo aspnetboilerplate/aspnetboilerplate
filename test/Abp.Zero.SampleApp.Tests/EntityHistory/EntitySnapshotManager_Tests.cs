@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.EntityHistory
 {
- public class EntitySnapshotManager_Tests : SampleAppTestBase
+	public class EntitySnapshotManager_Tests : SampleAppTestBase
 	{
 		private readonly IRepository<UserTestEntity> _userRepository;
 		private readonly IEntitySnapshotManager _entitySnapshotManager;

@@ -58,7 +58,7 @@ namespace Abp.EntityFrameworkCore.EFPlus
 		/// <returns></returns>
 		public static async Task<int> BatchDeleteAsync<TEntity>(
 			[NotNull] this IRepository<TEntity> repository,
-			[NotNull]Expression<Func<TEntity, bool>> predicate,
+			[NotNull] Expression<Func<TEntity, bool>> predicate,
 			Action<BatchDelete> batchDeleteBuilder = null)
 			where TEntity : Entity<int>
 		{
@@ -76,9 +76,9 @@ namespace Abp.EntityFrameworkCore.EFPlus
 		/// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
 		/// <returns></returns>
 		public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>(
-			[NotNull]this IRepository<TEntity, TPrimaryKey> repository,
-			[NotNull]Expression<Func<TEntity, TEntity>> updateExpression,
-			[NotNull]Expression<Func<TEntity, bool>> predicate,
+			[NotNull] this IRepository<TEntity, TPrimaryKey> repository,
+			[NotNull] Expression<Func<TEntity, TEntity>> updateExpression,
+			[NotNull] Expression<Func<TEntity, bool>> predicate,
 			Action<BatchUpdate> batchUpdateBuilder = null)
 			where TEntity : Entity<TPrimaryKey>
 		{
@@ -106,8 +106,8 @@ namespace Abp.EntityFrameworkCore.EFPlus
 		/// <param name="batchUpdateBuilder">The batch delete builder to change default configuration.</param>
 		/// <returns></returns>
 		public static async Task<int> BatchUpdateAsync<TEntity>(
-			[NotNull]this IRepository<TEntity> repository, [NotNull]Expression<Func<TEntity, TEntity>> updateExpression,
-			[NotNull]Expression<Func<TEntity, bool>> predicate,
+			[NotNull] this IRepository<TEntity> repository, [NotNull] Expression<Func<TEntity, TEntity>> updateExpression,
+			[NotNull] Expression<Func<TEntity, bool>> predicate,
 			Action<BatchUpdate> batchUpdateBuilder = null)
 			where TEntity : Entity<int>
 		{

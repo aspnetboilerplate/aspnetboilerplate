@@ -86,7 +86,7 @@ namespace Abp.IdentityServer4vNext
 				return null;
 			}
 
-			return new[] {new Claim(AbpClaimTypes.TenantId, user.TenantId?.ToString())};
+			return new[] { new Claim(AbpClaimTypes.TenantId, user.TenantId?.ToString()) };
 		}
 	}
 }

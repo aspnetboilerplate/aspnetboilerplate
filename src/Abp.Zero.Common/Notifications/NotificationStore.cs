@@ -608,15 +608,15 @@ namespace Abp.Notifications
 				using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
 				{
 					var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-						join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
-							.TenantNotificationId equals tenantNotificationInfo.Id
-						where userNotificationInfo.UserId == user.UserId
-						orderby tenantNotificationInfo.CreationTime descending
-						select new
-						{
-							userNotificationInfo,
-							tenantNotificationInfo
-						};
+								join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+									.TenantNotificationId equals tenantNotificationInfo.Id
+								where userNotificationInfo.UserId == user.UserId
+								orderby tenantNotificationInfo.CreationTime descending
+								select new
+								{
+									userNotificationInfo,
+									tenantNotificationInfo
+								};
 
 					if (state.HasValue)
 					{
@@ -662,15 +662,15 @@ namespace Abp.Notifications
 				using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
 				{
 					var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-						join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
-							.TenantNotificationId equals tenantNotificationInfo.Id
-						where userNotificationInfo.UserId == user.UserId
-						orderby tenantNotificationInfo.CreationTime descending
-						select new
-						{
-							userNotificationInfo,
-							tenantNotificationInfo
-						};
+								join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+									.TenantNotificationId equals tenantNotificationInfo.Id
+								where userNotificationInfo.UserId == user.UserId
+								orderby tenantNotificationInfo.CreationTime descending
+								select new
+								{
+									userNotificationInfo,
+									tenantNotificationInfo
+								};
 
 					if (state.HasValue)
 					{
@@ -743,14 +743,14 @@ namespace Abp.Notifications
 				using (_unitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-						join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
-							.TenantNotificationId equals tenantNotificationInfo.Id
-						where userNotificationInfo.Id == userNotificationId
-						select new
-						{
-							userNotificationInfo,
-							tenantNotificationInfo
-						};
+								join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+									.TenantNotificationId equals tenantNotificationInfo.Id
+								where userNotificationInfo.Id == userNotificationId
+								select new
+								{
+									userNotificationInfo,
+									tenantNotificationInfo
+								};
 
 					var item = query.FirstOrDefault();
 					if (item == null)
@@ -777,14 +777,14 @@ namespace Abp.Notifications
 				using (_unitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-						join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
-							.TenantNotificationId equals tenantNotificationInfo.Id
-						where userNotificationInfo.Id == userNotificationId
-						select new
-						{
-							userNotificationInfo,
-							tenantNotificationInfo
-						};
+								join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+									.TenantNotificationId equals tenantNotificationInfo.Id
+								where userNotificationInfo.Id == userNotificationId
+								select new
+								{
+									userNotificationInfo,
+									tenantNotificationInfo
+								};
 
 					var item = query.FirstOrDefault();
 					if (item == null)

@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
-	public class WrapResultTestController_Tests: AppTestBase
+	public class WrapResultTestController_Tests : AppTestBase
 	{
 		[Fact]
 		public async Task WrapResultTestControllerTests_Wrap_Test()

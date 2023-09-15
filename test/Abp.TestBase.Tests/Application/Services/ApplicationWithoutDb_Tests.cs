@@ -20,7 +20,7 @@ namespace Abp.TestBase.Tests.Application.Services
 		[Fact]
 		public void Test1()
 		{
-			var output = _myAppService.MyMethod(new MyMethodInput {MyStringValue = "test"});
+			var output = _myAppService.MyMethod(new MyMethodInput { MyStringValue = "test" });
 			output.Result.ShouldBe(42);
 		}
 

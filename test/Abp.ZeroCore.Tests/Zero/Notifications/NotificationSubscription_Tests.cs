@@ -113,7 +113,7 @@ namespace Abp.Zero.Notifications
 				"TestNotification",
 				notificationData,
 				severity: NotificationSeverity.Success,
-				userIds: new[] {AbpSession.ToUserIdentifier()}
+				userIds: new[] { AbpSession.ToUserIdentifier() }
 			);
 
 			//Assert

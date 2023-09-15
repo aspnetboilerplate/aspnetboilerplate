@@ -34,7 +34,7 @@ namespace Abp.Web.MultiTenancy
 				return null;
 			}
 
-			return int.TryParse(tenantIdHeader, out var tenantId) ? tenantId : (int?) null;
+			return int.TryParse(tenantIdHeader, out var tenantId) ? tenantId : (int?)null;
 		}
 	}
 }

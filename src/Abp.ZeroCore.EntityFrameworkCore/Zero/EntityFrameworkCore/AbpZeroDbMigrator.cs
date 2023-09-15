@@ -55,7 +55,7 @@ namespace Abp.Zero.EntityFrameworkCore
 		protected virtual void CreateOrMigrate(AbpTenantBase tenant, Action<TDbContext> seedAction)
 		{
 			var args = new DbPerTenantConnectionStringResolveArgs(
-				tenant == null ? (int?) null : (int?) tenant.Id,
+				tenant == null ? (int?)null : (int?)tenant.Id,
 				tenant == null ? MultiTenancySides.Host : MultiTenancySides.Tenant
 			);
 

@@ -14,9 +14,9 @@ namespace Abp.Web.Api.Modeling
 
 		public string TypeAsString { get; }
 
-		public bool IsOptional { get;  }
+		public bool IsOptional { get; }
 
-		public object DefaultValue { get;  }
+		public object DefaultValue { get; }
 
 		public string[] ConstraintTypes { get; }
 

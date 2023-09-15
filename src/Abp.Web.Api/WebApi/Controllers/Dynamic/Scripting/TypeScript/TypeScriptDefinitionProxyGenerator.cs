@@ -70,7 +70,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 			List<Type> newTypes = new List<Type>();
 			foreach (var parameter in methodInfo.GetParameters())
 			{
-				script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(parameter.ParameterType,newTypes)));
+				script.Append(string.Format("{0} : {1},", parameter.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(parameter.ParameterType, newTypes)));
 			}
 			this.AddNewTypesIfRequired(newTypes.ToArray());
 			script.Append("httpParams?: any");
@@ -111,11 +111,11 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
 			var myscript = new StringBuilder();
 			List<Type> newTypes = new List<Type>();
-			myscript.AppendLine("     interface " + TypeScriptHelper.GetTypeContractName(type,newTypes));
+			myscript.AppendLine("     interface " + TypeScriptHelper.GetTypeContractName(type, newTypes));
 			myscript.AppendLine("         {");
 			foreach (var property in type.GetProperties())
 			{
-				myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(),TypeScriptHelper.GetTypeContractName(property.PropertyType,newTypes)));
+				myscript.AppendLine(string.Format("{0} : {1} ;", property.Name.ToCamelCase(), TypeScriptHelper.GetTypeContractName(property.PropertyType, newTypes)));
 			}
 			this.AddNewTypesIfRequired(newTypes.ToArray());
 			myscript.AppendLine("         }");

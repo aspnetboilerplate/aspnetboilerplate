@@ -131,7 +131,7 @@ namespace Abp.Threading.Timers
 			{
 				await Elapsed(this);
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 
 			}

@@ -32,7 +32,7 @@ namespace Abp.Localization
 
 			if (Logger is NullLogger && iocResolver.IsRegistered(typeof(ILoggerFactory)))
 			{
-				Logger = iocResolver.Resolve<ILoggerFactory>().Create(typeof (MultiTenantLocalizationSource));
+				Logger = iocResolver.Resolve<ILoggerFactory>().Create(typeof(MultiTenantLocalizationSource));
 			}
 		}
 

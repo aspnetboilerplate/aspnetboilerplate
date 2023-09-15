@@ -147,7 +147,7 @@ namespace Abp.EntityFramework
 
 		private void RegisterToChanges()
 		{
-			((IObjectContextAdapter) this)
+			((IObjectContextAdapter)this)
 				.ObjectContext
 				.ObjectStateManager
 				.ObjectStateManagerChanged += ObjectStateManager_ObjectStateManagerChanged;
@@ -155,7 +155,7 @@ namespace Abp.EntityFramework
 
 		protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender, CollectionChangeEventArgs e)
 		{
-			var contextAdapter = (IObjectContextAdapter) this;
+			var contextAdapter = (IObjectContextAdapter)this;
 			if (e.Action != CollectionChangeAction.Add)
 			{
 				return;
@@ -204,7 +204,7 @@ namespace Abp.EntityFramework
 			modelBuilder.Filter(AbpDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
 			modelBuilder.Filter(AbpDataFilters.MustHaveTenant,
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
-				(IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+				(IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?)t.TenantId == null,
 #pragma warning restore CS0472 // While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
 				0);
 			modelBuilder.Filter(AbpDataFilters.MayHaveTenant,
@@ -267,18 +267,18 @@ namespace Abp.EntityFramework
 
 			if (Clock.SupportsMultipleTimezone)
 			{
-				((IObjectContextAdapter) this).ObjectContext.ObjectMaterialized += (sender, args) =>
-				{
-					var entityType = ObjectContext.GetObjectType(args.Entity.GetType());
+				((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += (sender, args) =>
+			   {
+				   var entityType = ObjectContext.GetObjectType(args.Entity.GetType());
 
-					Configuration.AutoDetectChangesEnabled = false;
-					var previousState = Entry(args.Entity).State;
+				   Configuration.AutoDetectChangesEnabled = false;
+				   var previousState = Entry(args.Entity).State;
 
-					DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(args.Entity, entityType);
+				   DateTimePropertyInfoHelper.NormalizeDatePropertyKinds(args.Entity, entityType);
 
-					Entry(args.Entity).State = previousState;
-					Configuration.AutoDetectChangesEnabled = true;
-				};
+				   Entry(args.Entity).State = previousState;
+				   Configuration.AutoDetectChangesEnabled = true;
+			   };
 			}
 		}
 
@@ -406,9 +406,9 @@ namespace Abp.EntityFramework
 
 		EdmProperty GetEdmProperty(Type type, string propertyName)
 		{
-			var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
+			var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
 
-			var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
+			var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
 
 			var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
 				.Single(t => objectItemCollection.GetClrType(t) == type);
@@ -422,9 +422,9 @@ namespace Abp.EntityFramework
 
 		string GetIdPropertyName(Type type)
 		{
-			var metadata = ((IObjectContextAdapter) this).ObjectContext.MetadataWorkspace;
+			var metadata = ((IObjectContextAdapter)this).ObjectContext.MetadataWorkspace;
 
-			var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));
+			var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
 
 			var entityType = metadata.GetItems<EntityType>(DataSpace.OSpace)
 				.Single(t => objectItemCollection.GetClrType(t) == type);

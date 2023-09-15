@@ -181,7 +181,8 @@ namespace Abp.Runtime.Caching.Redis
 				throw new AbpException("Can not insert null values to the cache!");
 			}
 
-			var redisPairs = pairs.Select(p => {
+			var redisPairs = pairs.Select(p =>
+			{
 				var redisKey = GetLocalizedRedisKey(p.Key);
 				var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
 				return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
@@ -256,7 +257,8 @@ namespace Abp.Runtime.Caching.Redis
 				throw new AbpException("Can not insert null values to the cache!");
 			}
 
-			var redisPairs = pairs.Select(p => {
+			var redisPairs = pairs.Select(p =>
+			{
 				var redisKey = GetLocalizedRedisKey(p.Key);
 				var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
 				return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);

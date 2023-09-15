@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace Abp.Zero.Redis.PerRequestRedisCache
 {
-	public abstract class PerRequestRedisCacheTestsBase<TStartupModule>: AbpIntegratedTestBase<TStartupModule>
+	public abstract class PerRequestRedisCacheTestsBase<TStartupModule> : AbpIntegratedTestBase<TStartupModule>
 	where TStartupModule : AbpModule
 	{
 		protected IDatabase RedisDatabase;

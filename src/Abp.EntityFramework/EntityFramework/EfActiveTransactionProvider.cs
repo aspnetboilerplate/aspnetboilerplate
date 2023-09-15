@@ -50,10 +50,10 @@ namespace Abp.EntityFramework
 				var method = dbContextProviderWrapper.Object.GetType()
 					.GetMethod(
 						nameof(IDbContextProvider<AbpDbContext>.GetDbContext),
-						new[] {typeof(MultiTenancySides)}
+						new[] { typeof(MultiTenancySides) }
 					);
 
-				return (DbContext) method.Invoke(
+				return (DbContext)method.Invoke(
 					dbContextProviderWrapper.Object,
 					new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
 				);
@@ -62,18 +62,18 @@ namespace Abp.EntityFramework
 
 		private async Task<DbContext> GetDbContextAsync(ActiveTransactionProviderArgs args)
 		{
-			var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
+			var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
 
 			using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
 			{
 				var method = dbContextProviderWrapper.Object.GetType()
 					.GetMethod(
 						nameof(IDbContextProvider<AbpDbContext>.GetDbContextAsync),
-						new[] {typeof(MultiTenancySides)}
+						new[] { typeof(MultiTenancySides) }
 					);
 
 				var result = await ReflectionHelper.InvokeAsync(method, dbContextProviderWrapper.Object,
-					new object[] {(MultiTenancySides?) args["MultiTenancySide"]});
+					new object[] { (MultiTenancySides?)args["MultiTenancySide"] });
 
 				return result as DbContext;
 			}

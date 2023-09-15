@@ -67,8 +67,8 @@ namespace Abp.AspNetCore.Mvc.Authorization
 					context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
 					{
 						StatusCode = context.HttpContext.User.Identity.IsAuthenticated
-							? (int) System.Net.HttpStatusCode.Forbidden
-							: (int) System.Net.HttpStatusCode.Unauthorized
+							? (int)System.Net.HttpStatusCode.Forbidden
+							: (int)System.Net.HttpStatusCode.Unauthorized
 					};
 				}
 				else
@@ -86,7 +86,7 @@ namespace Abp.AspNetCore.Mvc.Authorization
 				{
 					context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex)))
 					{
-						StatusCode = (int) System.Net.HttpStatusCode.InternalServerError
+						StatusCode = (int)System.Net.HttpStatusCode.InternalServerError
 					};
 				}
 				else

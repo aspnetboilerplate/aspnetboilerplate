@@ -4,7 +4,7 @@
 	{
 		public UserIdentifier User { get; }
 
-		public OnlineUserEventArgs(UserIdentifier user,IOnlineClient client)
+		public OnlineUserEventArgs(UserIdentifier user, IOnlineClient client)
 			: base(client)
 		{
 			User = user;

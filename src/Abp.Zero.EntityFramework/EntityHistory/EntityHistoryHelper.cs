@@ -204,7 +204,7 @@ namespace Abp.EntityHistory
 			{
 				/* Get the mapping between Clr types in OSpace */
 				var objectItemCollection =
-					((ObjectItemCollection) metadataWorkspace.GetItemCollection(DataSpace.OSpace));
+					((ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace));
 				return metadataWorkspace
 					.GetItems<EntityType>(DataSpace.OSpace)
 					.Single(e => objectItemCollection.GetClrType(e) == entityType);
@@ -452,7 +452,7 @@ namespace Abp.EntityHistory
 		private EntityPropertyChange CreateEntityPropertyChange(object oldValue, object newValue,
 			PropertyInfo propertyInfo)
 		{
-			var entityPropertyChange= new EntityPropertyChange()
+			var entityPropertyChange = new EntityPropertyChange()
 			{
 				PropertyName = propertyInfo.Name.TruncateWithPostfix(EntityPropertyChange.MaxPropertyNameLength),
 				PropertyTypeFullName =

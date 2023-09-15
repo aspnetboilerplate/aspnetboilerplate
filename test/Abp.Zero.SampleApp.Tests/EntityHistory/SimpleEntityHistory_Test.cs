@@ -75,7 +75,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			int? advertisementId = null;
 			WithUnitOfWork(() =>
 			{
-				var advertisement = new Advertisement {Banner = "tracked-advertisement"};
+				var advertisement = new Advertisement { Banner = "tracked-advertisement" };
 				advertisementId = _advertisementRepository.InsertAndGetId(advertisement);
 			});
 
@@ -132,7 +132,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 
 			WithUnitOfWork(() =>
 			{
-				_advertisementRepository.InsertAndGetId(new Advertisement {Banner = "tracked-advertisement"});
+				_advertisementRepository.InsertAndGetId(new Advertisement { Banner = "tracked-advertisement" });
 			});
 
 			UsingDbContext((context) =>
@@ -427,7 +427,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			/* Blog has Audited attribute. */
 
 			int blog1Id = 0;
-			var newValue = new BlogEx {BloggerName = "blogger-2"};
+			var newValue = new BlogEx { BloggerName = "blogger-2" };
 			BlogEx originalValue = null;
 
 			WithUnitOfWork(() =>
@@ -435,7 +435,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 				var blog1 = _blogRepository.Single(b => b.More.BloggerName == "blogger-1");
 				blog1Id = blog1.Id;
 
-				originalValue = new BlogEx {BloggerName = blog1.More.BloggerName};
+				originalValue = new BlogEx { BloggerName = blog1.More.BloggerName };
 				blog1.More.BloggerName = newValue.BloggerName;
 				_blogRepository.Update(blog1);
 			});
@@ -507,7 +507,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			WithUnitOfWork(() =>
 			{
 				var blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-				var post10 = new Post {Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body"};
+				var post10 = new Post { Blog = blog1, Title = "test-post-10-title", Body = "test-post-10-body" };
 
 				// Change navigation property by adding into collection
 				blog1.Posts.Add(post10);
@@ -751,7 +751,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 					ec => ec.EntityTypeFullName == typeof(Employee).FullName
 				);
 
-				((DateTime?) entityChange.ChangeTime).ShouldNotBe(null);
+				((DateTime?)entityChange.ChangeTime).ShouldNotBe(null);
 				entityChange.ChangeType.ShouldBe(EntityChangeType.Created);
 				entityChange.EntityId.ShouldBe(employeeId.ToJsonString());
 				entityChange.PropertyChanges.Count.ShouldBe(5);
@@ -855,7 +855,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 				.Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
 
 			StringBuilder stringBuilder = new StringBuilder();
-			for (int i = 0; i <= EntityPropertyChange.MaxValueLength+1; i++)
+			for (int i = 0; i <= EntityPropertyChange.MaxValueLength + 1; i++)
 			{
 				stringBuilder.Append("a");
 			}
@@ -992,7 +992,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			//Act
 			UsingDbContext((context) =>
 			{
-				context.Categories.Add(new Category {DisplayName = "My Category"});
+				context.Categories.Add(new Category { DisplayName = "My Category" });
 				context.SaveChanges();
 			});
 
@@ -1006,7 +1006,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			//Arrange
 			UsingDbContext((context) =>
 			{
-				context.Categories.Add(new Category {DisplayName = "My Category"});
+				context.Categories.Add(new Category { DisplayName = "My Category" });
 				context.SaveChanges();
 			});
 			_entityHistoryStore.ClearReceivedCalls();
@@ -1029,7 +1029,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			//Arrange
 			UsingDbContext((context) =>
 			{
-				context.Categories.Add(new Category {DisplayName = "My Category"});
+				context.Categories.Add(new Category { DisplayName = "My Category" });
 				context.SaveChanges();
 			});
 			_entityHistoryStore.ClearReceivedCalls();
@@ -1052,7 +1052,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
 			//Arrange
 			UsingDbContext((context) =>
 			{
-				context.Countries.Add(new Country {CountryCode = "My Country"});
+				context.Countries.Add(new Country { CountryCode = "My Country" });
 				context.SaveChanges();
 			});
 

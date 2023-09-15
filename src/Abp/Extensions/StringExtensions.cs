@@ -444,7 +444,7 @@ namespace Abp.Extensions
 
 			if (str.Length == 1)
 			{
-				return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
+				return invariantCulture ? str.ToUpperInvariant() : str.ToUpper();
 			}
 
 			return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);

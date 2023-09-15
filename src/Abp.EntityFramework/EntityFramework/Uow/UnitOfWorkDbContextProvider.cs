@@ -13,7 +13,7 @@ namespace Abp.EntityFramework.Uow
 	public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
 		where TDbContext : DbContext
 	{
-	   private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+		private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
 		/// <summary>
 		/// Creates a new <see cref="UnitOfWorkDbContextProvider{TDbContext}"/>.

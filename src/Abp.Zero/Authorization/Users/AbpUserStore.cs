@@ -291,9 +291,9 @@ namespace Abp.Authorization.Users
 			var result = _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from userLogin in _userLoginRepository.GetAll()
-					join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-					where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
-					select user;
+							join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+							where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
+							select user;
 
 				return query.ToList();
 			});
@@ -308,10 +308,10 @@ namespace Abp.Authorization.Users
 				using (_unitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var query = from userLogin in _userLoginRepository.GetAll()
-						join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
-						where userLogin.LoginProvider == login.LoginProvider &&
-							  userLogin.ProviderKey == login.ProviderKey
-						select user;
+								join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+								where userLogin.LoginProvider == login.LoginProvider &&
+									  userLogin.ProviderKey == login.ProviderKey
+								select user;
 
 					return query.FirstOrDefault();
 				}
@@ -356,9 +356,9 @@ namespace Abp.Authorization.Users
 			return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
 			{
 				var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-					join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
-					where userRole.UserId == user.Id
-					select role.Name);
+																		 join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+																		 where userRole.UserId == user.Id
+																		 select role.Name);
 
 				var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
 					from userOu in _userOrganizationUnitRepository.GetAll()

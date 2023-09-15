@@ -52,7 +52,7 @@ namespace Abp.Domain.Entities
 				name,
 				value,
 				handleType
-					? new JsonSerializer {TypeNameHandling = TypeNameHandling.All}
+					? new JsonSerializer { TypeNameHandling = TypeNameHandling.All }
 					: JsonSerializer.CreateDefault()
 			);
 		}

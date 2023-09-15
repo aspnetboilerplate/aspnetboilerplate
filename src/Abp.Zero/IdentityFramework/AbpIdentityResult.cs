@@ -17,7 +17,7 @@ namespace Abp.IdentityFramework
 		}
 
 		public AbpIdentityResult(params string[] errors)
-			:base(errors)
+			: base(errors)
 		{
 
 		}

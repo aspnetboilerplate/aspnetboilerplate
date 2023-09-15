@@ -11,7 +11,7 @@ public class SanitizerControllerData
 			new object[] { new MyModel{HtmlInput = "<script>alert('hello')</script>hello"}, new MyModel{HtmlInput = "hello"}},
 		};
 
-		public static IEnumerable<object[]> SanitizerTestPropertyData =>
+	public static IEnumerable<object[]> SanitizerTestPropertyData =>
 		new List<object[]>
 		{
 			new object[] { "<script>alert('hello')</script>hello", null, new { firstInput = "hello", secondInput = (string) null } },

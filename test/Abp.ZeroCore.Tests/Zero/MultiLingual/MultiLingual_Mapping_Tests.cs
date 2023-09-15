@@ -18,7 +18,7 @@ namespace Abp.Zero.MultiLingual
 		{
 			_productAppService = Resolve<IProductAppService>();
 			_orderAppService = Resolve<IOrderAppService>();
-			_officeAppService= Resolve<IOfficeAppService>();
+			_officeAppService = Resolve<IOfficeAppService>();
 			Resolve<IMultiTenancyConfig>().IsEnabled = true;
 		}
 

@@ -12,8 +12,8 @@ namespace Abp.Web.Mvc.Resources.Embedded
 
 		public ComponentsEmbeddedResourceVirtualDirectory(string virtualPath, IEnumerable<EmbeddedResourceItem> embeddedResourceItems) : base(virtualPath)
 		{
-			var virtualPathPart = string.Copy(virtualPath).TrimStart(new[] { '/', '~' }).Replace('/','.');
-			var realPathPart = string.Copy(virtualPath).TrimStart(new[] {'/', '~'});
+			var virtualPathPart = string.Copy(virtualPath).TrimStart(new[] { '/', '~' }).Replace('/', '.');
+			var realPathPart = string.Copy(virtualPath).TrimStart(new[] { '/', '~' });
 
 			foreach (var embeddedResourceItem in embeddedResourceItems)
 			{

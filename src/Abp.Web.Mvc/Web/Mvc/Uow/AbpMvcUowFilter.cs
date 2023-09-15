@@ -7,7 +7,7 @@ using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Uow
 {
-	public class AbpMvcUowFilter: IActionFilter, ITransientDependency
+	public class AbpMvcUowFilter : IActionFilter, ITransientDependency
 	{
 		public const string UowHttpContextKey = "__AbpUnitOfWork";
 

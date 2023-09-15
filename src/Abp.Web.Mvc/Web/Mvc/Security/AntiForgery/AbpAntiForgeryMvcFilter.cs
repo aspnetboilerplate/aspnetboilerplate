@@ -12,7 +12,7 @@ using Castle.Core.Logging;
 
 namespace Abp.Web.Mvc.Security.AntiForgery
 {
-	public class AbpAntiForgeryMvcFilter: IAuthorizationFilter, ITransientDependency
+	public class AbpAntiForgeryMvcFilter : IAuthorizationFilter, ITransientDependency
 	{
 		public ILogger Logger { get; set; }
 

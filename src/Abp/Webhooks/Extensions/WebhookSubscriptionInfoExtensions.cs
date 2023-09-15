@@ -109,7 +109,7 @@ namespace Abp.Webhooks
 		/// </summary>
 		public static void AddWebhookHeader(this WebhookSubscriptionInfo webhookSubscription, string key, string value)
 		{
-			if (key.IsNullOrWhiteSpace() )
+			if (key.IsNullOrWhiteSpace())
 			{
 				throw new ArgumentNullException(nameof(key), $"{nameof(key)} can not be null, empty or whitespace!");
 			}

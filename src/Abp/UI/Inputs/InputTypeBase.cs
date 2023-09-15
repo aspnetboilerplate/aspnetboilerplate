@@ -55,6 +55,6 @@ namespace Abp.UI.Inputs
 		}
 
 		public static string GetName<TInputType>() where TInputType : IInputType =>
-			((IInputType) Activator.CreateInstance(typeof(TInputType))).Name;
+			((IInputType)Activator.CreateInstance(typeof(TInputType))).Name;
 	}
 }

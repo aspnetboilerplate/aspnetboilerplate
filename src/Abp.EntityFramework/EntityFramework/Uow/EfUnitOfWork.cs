@@ -122,7 +122,7 @@ namespace Abp.EntityFramework.Uow
 
 			if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
 			{
-				return (TDbContext) dbContext;
+				return (TDbContext)dbContext;
 			}
 
 			if (Options.IsTransactional == true)
@@ -143,7 +143,7 @@ namespace Abp.EntityFramework.Uow
 
 			ActiveDbContexts[dbContextKey] = dbContext;
 
-			return (TDbContext) dbContext;
+			return (TDbContext)dbContext;
 		}
 
 		public virtual async Task<TDbContext> GetOrCreateDbContextAsync<TDbContext>(
@@ -168,7 +168,7 @@ namespace Abp.EntityFramework.Uow
 
 			if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
 			{
-				return (TDbContext) dbContext;
+				return (TDbContext)dbContext;
 			}
 
 			if (Options.IsTransactional == true)
@@ -190,7 +190,7 @@ namespace Abp.EntityFramework.Uow
 
 			ActiveDbContexts[dbContextKey] = dbContext;
 
-			return (TDbContext) dbContext;
+			return (TDbContext)dbContext;
 		}
 
 		protected override void DisposeUow()

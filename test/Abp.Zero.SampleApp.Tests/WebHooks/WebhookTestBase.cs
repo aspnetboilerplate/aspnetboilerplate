@@ -68,7 +68,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 			string tenantFeatureKey = null, string tenantFeatureValue = null)
 		{
 			return CreateTenantAndSubscribeToWebhook(
-				new List<string> {webhookDefinitionName},
+				new List<string> { webhookDefinitionName },
 				new Dictionary<string, string>
 				{
 					{

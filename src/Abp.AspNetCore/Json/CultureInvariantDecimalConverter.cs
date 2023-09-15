@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Abp.Json
 {
-	public class CultureInvariantDecimalConverter: JsonConverter
+	public class CultureInvariantDecimalConverter : JsonConverter
 	{
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 		{

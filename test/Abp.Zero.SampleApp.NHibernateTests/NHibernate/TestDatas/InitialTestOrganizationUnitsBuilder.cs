@@ -46,7 +46,7 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
 
 		private OrganizationUnit CreateOU(string displayName, string code, long? parentId = null)
 		{
-			var ou = new OrganizationUnit(_defaultTenant.Id, displayName, parentId) {Code = code};
+			var ou = new OrganizationUnit(_defaultTenant.Id, displayName, parentId) { Code = code };
 			_session.Save(ou);
 			return ou;
 		}

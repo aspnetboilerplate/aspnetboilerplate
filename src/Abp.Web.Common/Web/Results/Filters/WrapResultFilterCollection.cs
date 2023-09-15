@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Abp.Web.Results.Filters
 {
-	public class WrapResultFilterCollection: Collection<IWrapResultFilter>
+	public class WrapResultFilterCollection : Collection<IWrapResultFilter>
 	{
 		/// <summary>
 		/// Returns whether to apply the filter. Stores filter result on <paramref name="wrapOnSuccess"/>. Checks the filters in the list sequentially.

@@ -15,7 +15,7 @@ namespace Abp.Tests.Dependency
 		[Fact]
 		public void Should_Get_First_Registered_Class_If_Registered_Multiple_Class_For_Same_Interface()
 		{
-			LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof (EmptyImplOne));
+			LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof(EmptyImplOne));
 		}
 
 		[Fact]

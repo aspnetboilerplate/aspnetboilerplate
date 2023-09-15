@@ -133,7 +133,7 @@ namespace Abp.Notifications
 			{
 				if (!allNotificationNotifiers.Contains(targetNotifier.FullName))
 				{
-					throw new ApplicationException("Given target notifier is not registered before: " + targetNotifier.FullName+" You must register it to the INotificationConfiguration.Notifiers!");
+					throw new ApplicationException("Given target notifier is not registered before: " + targetNotifier.FullName + " You must register it to the INotificationConfiguration.Notifiers!");
 				}
 			}
 

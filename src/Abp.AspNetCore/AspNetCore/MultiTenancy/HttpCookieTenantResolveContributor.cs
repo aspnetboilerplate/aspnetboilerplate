@@ -33,7 +33,7 @@ namespace Abp.AspNetCore.MultiTenancy
 				return null;
 			}
 
-			return int.TryParse(tenantIdValue, out var tenantId) ? tenantId : (int?) null;
+			return int.TryParse(tenantIdValue, out var tenantId) ? tenantId : (int?)null;
 		}
 	}
 }

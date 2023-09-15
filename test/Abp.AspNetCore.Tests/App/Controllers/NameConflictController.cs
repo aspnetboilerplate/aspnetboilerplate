@@ -13,7 +13,7 @@ namespace Abp.AspNetCore.App.Controllers
 		public string GetAppServiceActionUrlWithArea()
 		{
 			//Gets URL of NameConflictAppService.GetConstantString action
-			return Url.Action("GetConstantString", "NameConflict", new { area = "app"});
+			return Url.Action("GetConstantString", "NameConflict", new { area = "app" });
 		}
 	}
 }

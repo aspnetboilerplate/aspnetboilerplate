@@ -40,7 +40,7 @@ namespace Abp.Zero.Tenants
 			using (var uow = _unitOfWorkManager.Begin())
 			{
 				_tenantFeatureRepository.Insert(new TenantFeatureSetting(tenant.Id, AppFeatures.SimpleBooleanFeature, "true"));
-			   _unitOfWorkManager.Current.SaveChanges();
+				_unitOfWorkManager.Current.SaveChanges();
 
 				// Assert (before disable filter)
 				_featureValueStore.GetValueOrNull(tenant.Id, AppFeatures.SimpleBooleanFeature).ShouldBe("true");

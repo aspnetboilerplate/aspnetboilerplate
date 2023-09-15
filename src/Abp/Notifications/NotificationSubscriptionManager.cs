@@ -163,7 +163,7 @@ namespace Abp.Notifications
 			string targetNotifiers = null)
 		{
 			var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
-				new[] {tenantId},
+				new[] { tenantId },
 				notificationName,
 				entityIdentifier == null ? null : entityIdentifier.Type.FullName,
 				entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),
@@ -182,7 +182,7 @@ namespace Abp.Notifications
 			string targetNotifiers = null)
 		{
 			var notificationSubscriptionInfos = _store.GetSubscriptions(
-				new[] {tenantId},
+				new[] { tenantId },
 				notificationName,
 				entityIdentifier == null ? null : entityIdentifier.Type.FullName,
 				entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString(),

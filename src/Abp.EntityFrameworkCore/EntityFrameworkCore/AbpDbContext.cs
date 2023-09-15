@@ -166,7 +166,7 @@ namespace Abp.EntityFrameworkCore
 
 			if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
 			{
-				Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
+				Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete)e).IsDeleted;
 				expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
 			}
 

@@ -6,7 +6,7 @@ namespace Abp.Web.Models
 	/// This class is used to create standard responses for AJAX requests.
 	/// </summary>
 	[Serializable]
-	public class AjaxResponse<TResult>: AjaxResponseBase
+	public class AjaxResponse<TResult> : AjaxResponseBase
 	{
 		/// <summary>
 		/// The actual result object of AJAX request.

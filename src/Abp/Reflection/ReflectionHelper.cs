@@ -180,7 +180,7 @@ namespace Abp.Reflection
 			foreach (var propertyName in absolutePropertyPath.Split('.'))
 			{
 				property = currentType.GetProperty(propertyName);
-				currentType = ((PropertyInfo) property).PropertyType;
+				currentType = ((PropertyInfo)property).PropertyType;
 			}
 
 			return property;

@@ -8,7 +8,7 @@ using Quartz;
 
 namespace Abp.Quartz
 {
-	[DependsOn(typeof (AbpKernelModule))]
+	[DependsOn(typeof(AbpKernelModule))]
 	public class AbpQuartzModule : AbpModule
 	{
 		private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();

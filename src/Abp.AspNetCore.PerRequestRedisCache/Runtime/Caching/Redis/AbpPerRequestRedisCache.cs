@@ -38,7 +38,7 @@ namespace Abp.Runtime.Caching.Redis
 
 				if (httpContext.Items.ContainsKey(localizedKey))
 				{
-					var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
+					var conditionalValue = (ConditionalValue<object>)httpContext.Items[localizedKey];
 					value = conditionalValue.HasValue ? conditionalValue.Value : null;
 
 					return conditionalValue.HasValue;
@@ -80,7 +80,7 @@ namespace Abp.Runtime.Caching.Redis
 					httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
 				}
 
-				return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+				return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>)httpContext.Items[localizedKey]).ToArray();
 			}
 			catch (ObjectDisposedException exception)
 			{
@@ -104,7 +104,7 @@ namespace Abp.Runtime.Caching.Redis
 			{
 				if (httpContext.Items.ContainsKey(localizedKey))
 				{
-					var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
+					var conditionalValue = (ConditionalValue<object>)httpContext.Items[localizedKey];
 					return conditionalValue;
 				}
 				else
@@ -146,7 +146,7 @@ namespace Abp.Runtime.Caching.Redis
 					httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
 				}
 
-				return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+				return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>)httpContext.Items[localizedKey]).ToArray();
 			}
 			catch (ObjectDisposedException exception)
 			{

@@ -14,7 +14,7 @@ namespace Abp.BackgroundJobs
 		  )
 		  where TEventData : EventData
 		{
-			return backgroundJobManager.EnqueueAsync<EventTriggerAsyncBackgroundJob<TEventData>,TEventData>(eventData, priority, delay);
+			return backgroundJobManager.EnqueueAsync<EventTriggerAsyncBackgroundJob<TEventData>, TEventData>(eventData, priority, delay);
 		}
 	}
 }

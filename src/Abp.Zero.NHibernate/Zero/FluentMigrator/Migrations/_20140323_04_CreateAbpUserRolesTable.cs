@@ -16,11 +16,11 @@ namespace Abp.Zero.FluentMigrator.Migrations
 
 			Insert.IntoTable("AbpUserRoles").Row(
 				new
-					{
-						UserId = 1,
-						RoleId = 1
-					}
-				);
+				{
+					UserId = 1,
+					RoleId = 1
+				}
+			);
 		}
 	}
 }

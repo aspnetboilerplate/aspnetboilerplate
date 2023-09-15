@@ -21,7 +21,8 @@ public class SanitizerTestController : DemoControllerBase
 	{
 		return new
 		{
-			firstInput, secondInput
+			firstInput,
+			secondInput
 		};
 	}
 

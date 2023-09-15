@@ -9,7 +9,7 @@ namespace Abp.Zero.Ldap
 	/// <summary>
 	/// This module extends module zero to add LDAP authentication.
 	/// </summary>
-	[DependsOn(typeof (AbpZeroCommonModule))]
+	[DependsOn(typeof(AbpZeroCommonModule))]
 	public class AbpZeroLdapModule : AbpModule
 	{
 		public override void PreInitialize()

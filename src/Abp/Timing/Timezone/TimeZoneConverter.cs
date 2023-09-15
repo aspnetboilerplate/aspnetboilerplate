@@ -34,7 +34,7 @@ namespace Abp.Timing.Timezone
 			}
 
 			var usersTimezone = _settingManager.GetSettingValueForUser(TimingSettingNames.TimeZone, tenantId, userId);
-			if(string.IsNullOrEmpty(usersTimezone))
+			if (string.IsNullOrEmpty(usersTimezone))
 			{
 				return date;
 			}

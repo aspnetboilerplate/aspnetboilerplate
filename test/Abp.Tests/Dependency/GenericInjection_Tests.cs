@@ -11,7 +11,7 @@ namespace Abp.Tests.Dependency
 		{
 			LocalIocManager.IocContainer.Register(
 				Component.For<MyClass>(),
-				Component.For(typeof (IEmpty<>)).ImplementedBy(typeof (EmptyImplOne<>))
+				Component.For(typeof(IEmpty<>)).ImplementedBy(typeof(EmptyImplOne<>))
 				);
 
 			var genericObj = LocalIocManager.Resolve<IEmpty<MyClass>>();

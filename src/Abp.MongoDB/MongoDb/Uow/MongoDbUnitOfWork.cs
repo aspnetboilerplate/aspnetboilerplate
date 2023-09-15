@@ -34,7 +34,7 @@ namespace Abp.MongoDb.Uow
 			_configuration = configuration;
 		}
 
-		#pragma warning disable
+#pragma warning disable
 		protected override void BeginUow()
 		{
 			//TODO: MongoClientExtensions.GetServer(MongoClient)' is obsolete: 'Use the new API instead.
@@ -42,31 +42,31 @@ namespace Abp.MongoDb.Uow
 				.GetServer()
 				.GetDatabase(_configuration.DatabaseName);
 		}
-		#pragma warning restore
+#pragma warning restore
 
 		public override void SaveChanges()
 		{
 
 		}
 
-		#pragma warning disable 1998
+#pragma warning disable 1998
 		public override async Task SaveChangesAsync()
 		{
 
 		}
-		#pragma warning restore 1998
+#pragma warning restore 1998
 
 		protected override void CompleteUow()
 		{
 
 		}
 
-		#pragma warning disable 1998
+#pragma warning disable 1998
 		protected override async Task CompleteUowAsync()
 		{
 
 		}
-		#pragma warning restore 1998
+#pragma warning restore 1998
 		protected override void DisposeUow()
 		{
 

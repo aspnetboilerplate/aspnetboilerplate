@@ -85,7 +85,7 @@ namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 			var dynamicPropertyManager = Resolve<IDynamicPropertyManager>();
 
 			var entity = dynamicPropertyManager.Get(testDynamicProperty.Id);
-		   entity.ShouldBeNull();
+			entity.ShouldBeNull();
 		}
 
 		[Fact]

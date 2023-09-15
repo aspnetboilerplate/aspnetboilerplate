@@ -37,7 +37,7 @@ namespace Abp.Dapper.Repositories
 
 		public override DbConnection GetConnection()
 		{
-			return (DbConnection) _activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
+			return (DbConnection)_activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs);
 		}
 
 		public override async Task<DbConnection> GetConnectionAsync()
@@ -45,12 +45,12 @@ namespace Abp.Dapper.Repositories
 			var connection = await _activeTransactionProvider
 				.GetActiveConnectionAsync(ActiveTransactionProviderArgs);
 
-			return (DbConnection) connection;
+			return (DbConnection)connection;
 		}
 
 		public override DbTransaction GetActiveTransaction()
 		{
-			return (DbTransaction) _activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
+			return (DbTransaction)_activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs);
 		}
 
 		public override async Task<DbTransaction> GetActiveTransactionAsync()
@@ -58,7 +58,7 @@ namespace Abp.Dapper.Repositories
 			var transaction = await _activeTransactionProvider
 				.GetActiveTransactionAsync(ActiveTransactionProviderArgs);
 
-			return (DbTransaction) transaction;
+			return (DbTransaction)transaction;
 		}
 
 		public override int? Timeout => _currentUnitOfWorkProvider.Current?.Options.Timeout?.TotalSeconds.To<int>();

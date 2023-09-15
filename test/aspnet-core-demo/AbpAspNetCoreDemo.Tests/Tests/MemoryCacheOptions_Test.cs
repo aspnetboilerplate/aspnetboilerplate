@@ -11,7 +11,7 @@ using Xunit;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 {
-	public class MemoryCacheOptions_Test: IClassFixture<WebApplicationFactory<Startup>>
+	public class MemoryCacheOptions_Test : IClassFixture<WebApplicationFactory<Startup>>
 	{
 		private readonly WebApplicationFactory<Startup> _applicationFactory;
 
@@ -29,12 +29,12 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 			memoryCacheManager.ShouldNotBeNull();
 			memoryCacheManager.GetType().ShouldBe(typeof(AbpMemoryCacheManager));
 
-			var memoryCache= memoryCacheManager.GetCache("Test");
+			var memoryCache = memoryCacheManager.GetCache("Test");
 
 			memoryCache.ShouldNotBeNull();
 			memoryCache.GetType().ShouldBe(typeof(AbpMemoryCache));
 
-			var memberPath =  ReflectionHelper.GetMemberPath(typeof(AbpMemoryCache), "_memoryCacheOptions").First();
+			var memberPath = ReflectionHelper.GetMemberPath(typeof(AbpMemoryCache), "_memoryCacheOptions").First();
 			var memoryCacheOptions = memberPath.GetMemberValue(memoryCache) as IOptions<MemoryCacheOptions>;
 			memoryCacheOptions.ShouldNotBeNull();
 			memoryCacheOptions.Value.SizeLimit.ShouldBe(2048);

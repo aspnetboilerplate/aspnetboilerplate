@@ -43,7 +43,7 @@ namespace Abp.Configuration
 		/// <param name="displayName">Display name of the setting</param>
 		public SettingDefinitionGroup(string name, ILocalizableString displayName)
 		{
-		   Check.NotNullOrWhiteSpace(name, nameof(name));
+			Check.NotNullOrWhiteSpace(name, nameof(name));
 
 			Name = name;
 			DisplayName = displayName;

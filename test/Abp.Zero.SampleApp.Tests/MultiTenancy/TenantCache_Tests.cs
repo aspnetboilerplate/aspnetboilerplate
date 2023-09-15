@@ -92,7 +92,7 @@ namespace Abp.Zero.SampleApp.Tests.MultiTenancy
 		}
 
 		[Fact]
-		public async Task  Should_Get_Tenant_By_TenancyName_Async()
+		public async Task Should_Get_Tenant_By_TenancyName_Async()
 		{
 			//Act
 			var tenant = await _tenantCache.GetOrNullAsync(Tenant.DefaultTenantName);

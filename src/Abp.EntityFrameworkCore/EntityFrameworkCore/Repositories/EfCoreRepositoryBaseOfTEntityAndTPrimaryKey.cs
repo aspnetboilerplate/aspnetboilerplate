@@ -112,7 +112,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 
 		public virtual DbTransaction GetTransaction()
 		{
-			return (DbTransaction) TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
+			return (DbTransaction)TransactionProvider?.GetActiveTransaction(new ActiveTransactionProviderArgs
 			{
 				{"ContextType", typeof(TDbContext)},
 				{"MultiTenancySide", MultiTenancySide}
@@ -132,7 +132,7 @@ namespace Abp.EntityFrameworkCore.Repositories
 				{"MultiTenancySide", MultiTenancySide}
 			});
 
-			return (DbTransaction) transaction;
+			return (DbTransaction)transaction;
 		}
 
 		public virtual DbConnection GetConnection()

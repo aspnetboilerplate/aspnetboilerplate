@@ -128,7 +128,7 @@ namespace Abp.Zero.Repository
 
 				UsingDbContext(context =>
 				{
-					var category = context.Categories.Single(e=> e.Id == 42);
+					var category = context.Categories.Single(e => e.Id == 42);
 					context.Categories.Remove(category);
 				});
 

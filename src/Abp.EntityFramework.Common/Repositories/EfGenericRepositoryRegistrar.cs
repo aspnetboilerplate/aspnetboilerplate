@@ -153,7 +153,7 @@ namespace Abp.EntityFramework.Repositories
 					}
 				}
 
-				var genericRepositoryTypeWithPrimaryKey = repositoryInterfaceWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType,primaryKeyType);
+				var genericRepositoryTypeWithPrimaryKey = repositoryInterfaceWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType, primaryKeyType);
 				if (!iocManager.IsRegistered(genericRepositoryTypeWithPrimaryKey))
 				{
 					var implType = repositoryImplementationWithPrimaryKey.GetGenericArguments().Length == 2

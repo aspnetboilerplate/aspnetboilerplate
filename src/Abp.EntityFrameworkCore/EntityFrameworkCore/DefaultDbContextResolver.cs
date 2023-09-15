@@ -41,7 +41,7 @@ namespace Abp.EntityFrameworkCore
 			{
 				if (isAbstractDbContext)
 				{
-					return (TDbContext) _iocResolver.Resolve(concreteType, new
+					return (TDbContext)_iocResolver.Resolve(concreteType, new
 					{
 						options = CreateOptionsForType(concreteType, connectionString, existingConnection)
 					});

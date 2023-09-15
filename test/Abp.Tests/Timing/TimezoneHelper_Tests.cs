@@ -102,8 +102,8 @@ namespace Abp.Tests.Timing
 		[Fact]
 		public void ConvertToDateTimeOffset_Date_With_America_NewYork_TimeZone_Should_Return_Correct_DateTimeOffset()
 		{
-			var testDate = new DateTime(1980,11,20);
-			var timeSpan = new TimeSpan(-5,0,0);
+			var testDate = new DateTime(1980, 11, 20);
+			var timeSpan = new TimeSpan(-5, 0, 0);
 
 			DateTimeOffset? dateTimeOffset = TimezoneHelper.ConvertToDateTimeOffset(testDate, "America/New_York");
 

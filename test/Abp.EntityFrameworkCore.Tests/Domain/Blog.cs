@@ -57,7 +57,7 @@ namespace Abp.EntityFrameworkCore.Tests.Domain
 		}
 	}
 
-	public class BlogCategory: AggregateRoot, IHasCreationTime
+	public class BlogCategory : AggregateRoot, IHasCreationTime
 	{
 		public string Name { get; set; }
 

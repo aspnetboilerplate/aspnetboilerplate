@@ -61,7 +61,7 @@ namespace Abp.WebApi.Client
 			where TResult : class
 		{
 			var cookieContainer = new CookieContainer();
-			using (var handler = new HttpClientHandler {CookieContainer = cookieContainer})
+			using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
 			{
 				using (var client = new HttpClient(handler))
 				{

@@ -63,8 +63,8 @@ namespace Abp.AspNetCore.EmbeddedResources
 
 			var resources = _embeddedResourceManager.Value.GetResources(subpath);
 			return new EmbeddedResourceItemDirectoryContents(resources
-				.Where(r=> !IsIgnoredFile(r))
-				.Select(r=> new EmbeddedResourceItemFileInfo(r, r.FileName.Substring(subpath.Length-1))));
+				.Where(r => !IsIgnoredFile(r))
+				.Select(r => new EmbeddedResourceItemFileInfo(r, r.FileName.Substring(subpath.Length - 1))));
 		}
 
 		public IChangeToken Watch(string filter)

@@ -95,7 +95,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 		{
 			string data = new { Test = "test" }.ToJsonString();
 
-			var serializedBody =_webhookManager.GetSerializedBody(new WebhookSenderArgs()
+			var serializedBody = _webhookManager.GetSerializedBody(new WebhookSenderArgs()
 			{
 				TenantId = 1,
 				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,

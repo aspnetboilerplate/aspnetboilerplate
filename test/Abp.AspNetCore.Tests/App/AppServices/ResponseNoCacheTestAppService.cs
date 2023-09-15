@@ -10,7 +10,7 @@ namespace Abp.AspNetCore.App.AppServices
 			return "42";
 		}
 
-		[ResponseCache(Duration = 20, Location =ResponseCacheLocation.Client)]
+		[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Client)]
 		public string GetWithCache()
 		{
 			return "42";

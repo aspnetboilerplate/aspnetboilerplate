@@ -43,7 +43,7 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 			if (IsIgnorantType(type))
 				return "any";
 
-			if (type == typeof (Task))
+			if (type == typeof(Task))
 			{
 				return "void";
 			}
@@ -54,21 +54,21 @@ namespace Abp.WebApi.Controllers.Dynamic.Scripting.TypeScript
 				return GetTypeContractName(type.GetElementType(), newTypesToAdd) + "[]";
 			}
 
-			if (type.IsGenericType && (typeof (Task<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-									   typeof (TaskFactory<>).IsAssignableFrom(type.GetGenericTypeDefinition())))
+			if (type.IsGenericType && (typeof(Task<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+									   typeof(TaskFactory<>).IsAssignableFrom(type.GetGenericTypeDefinition())))
 			{
 				return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd);
 			}
 
-			if (type.IsGenericType && typeof (Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+			if (type.IsGenericType && typeof(Nullable<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
 			{
 				return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd);
 			}
 
 			if (type.IsGenericType && (
-				typeof (List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-				typeof (ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
-				typeof (IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
+				typeof(List<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+				typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
+				typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
 				))
 			{
 				return GetTypeContractName(type.GetGenericArguments()[0], newTypesToAdd) + "[]";

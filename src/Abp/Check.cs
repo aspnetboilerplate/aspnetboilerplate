@@ -11,7 +11,7 @@ namespace Abp
 	public static class Check
 	{
 		[ContractAnnotation("value:null => halt")]
-		public static T NotNull<T>(T value, [InvokerParameterName] [NotNull] string parameterName)
+		public static T NotNull<T>(T value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value == null)
 			{
@@ -22,7 +22,7 @@ namespace Abp
 		}
 
 		[ContractAnnotation("value:null => halt")]
-		public static string NotNullOrEmpty(string value, [InvokerParameterName] [NotNull] string parameterName)
+		public static string NotNullOrEmpty(string value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value.IsNullOrEmpty())
 			{
@@ -33,7 +33,7 @@ namespace Abp
 		}
 
 		[ContractAnnotation("value:null => halt")]
-		public static string NotNullOrWhiteSpace(string value, [InvokerParameterName] [NotNull] string parameterName)
+		public static string NotNullOrWhiteSpace(string value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value.IsNullOrWhiteSpace())
 			{
@@ -44,7 +44,7 @@ namespace Abp
 		}
 
 		[ContractAnnotation("value:null => halt")]
-		public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, [InvokerParameterName] [NotNull] string parameterName)
+		public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value.IsNullOrEmpty())
 			{

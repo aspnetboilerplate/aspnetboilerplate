@@ -8,11 +8,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Abp.Tests.Localization.TestResourceFiles {
+namespace Abp.Tests.Localization.TestResourceFiles
+{
 	using System;
 	using System.Reflection;
-	
-	
+
+
 	/// <summary>
 	///    A strongly-typed resource class, for looking up localized strings, etc.
 	/// </summary>
@@ -22,57 +23,69 @@ namespace Abp.Tests.Localization.TestResourceFiles {
 	// with the /str option, or rebuild your VS project.
 	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
 	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-	public class MyTestResource {
-		
+	public class MyTestResource
+	{
+
 		private static global::System.Resources.ResourceManager resourceMan;
-		
+
 		private static global::System.Globalization.CultureInfo resourceCulture;
-		
-		internal MyTestResource() {
+
+		internal MyTestResource()
+		{
 		}
-		
+
 		/// <summary>
 		///    Returns the cached ResourceManager instance used by this class.
 		/// </summary>
 		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		public static global::System.Resources.ResourceManager ResourceManager {
-			get {
-				if (object.ReferenceEquals(resourceMan, null)) {
+		public static global::System.Resources.ResourceManager ResourceManager
+		{
+			get
+			{
+				if (object.ReferenceEquals(resourceMan, null))
+				{
 					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Abp.Tests.Localization.TestResourceFiles.MyTestResource", typeof(MyTestResource).GetTypeInfo().Assembly);
 					resourceMan = temp;
 				}
 				return resourceMan;
 			}
 		}
-		
+
 		/// <summary>
 		///    Overrides the current thread's CurrentUICulture property for all
 		///    resource lookups using this strongly typed resource class.
 		/// </summary>
 		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-		public static global::System.Globalization.CultureInfo Culture {
-			get {
+		public static global::System.Globalization.CultureInfo Culture
+		{
+			get
+			{
 				return resourceCulture;
 			}
-			set {
+			set
+			{
 				resourceCulture = value;
 			}
 		}
-		
+
 		/// <summary>
 		///    Looks up a localized string similar to Hello!.
 		/// </summary>
-		public static string Hello {
-			get {
+		public static string Hello
+		{
+			get
+			{
 				return ResourceManager.GetString("Hello", resourceCulture);
 			}
 		}
-		
+
 		/// <summary>
 		///    Looks up a localized string similar to World!.
 		/// </summary>
-		public static string World {
-			get {
+		public static string World
+		{
+			get
+			{
 				return ResourceManager.GetString("World", resourceCulture);
 			}
 		}

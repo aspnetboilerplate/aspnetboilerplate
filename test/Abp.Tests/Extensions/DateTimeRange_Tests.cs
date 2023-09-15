@@ -44,7 +44,7 @@ namespace Abp.Tests.Extensions
 			days.Count().ShouldBe(1);
 			days.Single().ShouldBe(now.Date);
 
-			var year = new DateTime(2018,1,1);
+			var year = new DateTime(2018, 1, 1);
 			var yearRange = new DateTimeRange(year, year.AddYears(1));
 
 			var yearDays = yearRange.DaysInRange();

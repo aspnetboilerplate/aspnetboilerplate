@@ -118,7 +118,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
 			if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
 			{
-				return (TDbContext) dbContext;
+				return (TDbContext)dbContext;
 			}
 
 			if (Options.IsTransactional == true)
@@ -138,7 +138,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
 			ActiveDbContexts[dbContextKey] = dbContext;
 
-			return (TDbContext) dbContext;
+			return (TDbContext)dbContext;
 		}
 
 		public virtual TDbContext GetOrCreateDbContext<TDbContext>(
@@ -163,7 +163,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
 			if (ActiveDbContexts.TryGetValue(dbContextKey, out var dbContext))
 			{
-				return (TDbContext) dbContext;
+				return (TDbContext)dbContext;
 			}
 
 			if (Options.IsTransactional == true)
@@ -183,7 +183,7 @@ namespace Abp.EntityFrameworkCore.Uow
 
 			ActiveDbContexts[dbContextKey] = dbContext;
 
-			return (TDbContext) dbContext;
+			return (TDbContext)dbContext;
 		}
 
 		protected override void DisposeUow()

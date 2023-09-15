@@ -450,21 +450,21 @@ namespace Abp.Authorization.Roles
 				if (!includeChildren)
 				{
 					var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-						join role in Roles on organizationUnitRole.RoleId equals role.Id
-						where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
-						select role;
+								join role in Roles on organizationUnitRole.RoleId equals role.Id
+								where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
+								select role;
 
 					return query.ToList();
 				}
 				else
 				{
 					var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-						join role in Roles on organizationUnitRole.RoleId equals role.Id
-						join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId
-							equals
-							ou.Id
-						where ou.Code.StartsWith(organizationUnit.Code)
-						select role;
+								join role in Roles on organizationUnitRole.RoleId equals role.Id
+								join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId
+									equals
+									ou.Id
+								where ou.Code.StartsWith(organizationUnit.Code)
+								select role;
 
 					return query.ToList();
 				}
@@ -585,9 +585,9 @@ namespace Abp.Authorization.Roles
 			var result = _unitOfWorkManager.WithUnitOfWork(() =>
 			{
 				var query = from uor in _organizationUnitRoleRepository.GetAll()
-					join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-					where uor.RoleId == role.Id
-					select ou;
+							join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+							where uor.RoleId == role.Id
+							select ou;
 
 				return query.ToList();
 			});

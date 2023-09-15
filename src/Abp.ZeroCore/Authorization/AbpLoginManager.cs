@@ -108,7 +108,7 @@ namespace Abp.Authorization
 				}
 			}
 
-			int? tenantId = tenant == null ? (int?) null : tenant.Id;
+			int? tenantId = tenant == null ? (int?)null : tenant.Id;
 			using (UnitOfWorkManager.Current.SetTenantId(tenantId))
 			{
 				var user = await UserManager.FindAsync(tenantId, login);
@@ -181,7 +181,7 @@ namespace Abp.Authorization
 				}
 			}
 
-			var tenantId = tenant == null ? (int?) null : tenant.Id;
+			var tenantId = tenant == null ? (int?)null : tenant.Id;
 			using (UnitOfWorkManager.Current.SetTenantId(tenantId))
 			{
 				await UserManager.InitializeOptionsAsync(tenantId);
@@ -256,7 +256,7 @@ namespace Abp.Authorization
 		{
 			using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
 			{
-				var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?) null;
+				var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null;
 				using (UnitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var loginAttempt = new UserLoginAttempt
@@ -264,7 +264,7 @@ namespace Abp.Authorization
 						TenantId = tenantId,
 						TenancyName = tenancyName,
 
-						UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
+						UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
 						UserNameOrEmailAddress = userNameOrEmailAddress,
 
 						Result = loginResult.Result,
@@ -287,7 +287,7 @@ namespace Abp.Authorization
 		{
 			using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
 			{
-				var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?) null;
+				var tenantId = loginResult.Tenant != null ? loginResult.Tenant.Id : (int?)null;
 				using (UnitOfWorkManager.Current.SetTenantId(tenantId))
 				{
 					var loginAttempt = new UserLoginAttempt
@@ -295,7 +295,7 @@ namespace Abp.Authorization
 						TenantId = tenantId,
 						TenancyName = tenancyName,
 
-						UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
+						UserId = loginResult.User != null ? loginResult.User.Id : (long?)null,
 						UserNameOrEmailAddress = userNameOrEmailAddress,
 
 						Result = loginResult.Result,
@@ -349,7 +349,7 @@ namespace Abp.Authorization
 				{
 					if (await source.Object.TryAuthenticateAsync(userNameOrEmailAddress, plainPassword, tenant))
 					{
-						var tenantId = tenant == null ? (int?) null : tenant.Id;
+						var tenantId = tenant == null ? (int?)null : tenant.Id;
 						using (UnitOfWorkManager.Current.SetTenantId(tenantId))
 						{
 							var user = await UserManager.FindByNameOrEmailAsync(tenantId, userNameOrEmailAddress);

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.Tests.Logging
 {
-	public class LogSeverity_Tests: TestBaseWithLocalIocManager
+	public class LogSeverity_Tests : TestBaseWithLocalIocManager
 	{
 		[Fact]
 		public void AuthorizationException_Default_Log_Severity_Test()

@@ -63,7 +63,7 @@ namespace Abp.WebApi.Auditing
 
 				if (_auditingConfiguration.SaveReturnValues && response != null)
 				{
-					if (response.TryGetContentValue(out object resultObject) )
+					if (response.TryGetContentValue(out object resultObject))
 					{
 						auditInfo.ReturnValue = _auditSerializer.Serialize(resultObject);
 					}

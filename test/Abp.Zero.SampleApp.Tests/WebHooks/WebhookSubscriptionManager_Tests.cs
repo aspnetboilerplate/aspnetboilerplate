@@ -538,7 +538,7 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 			var webhookSubscriptionManager = Resolve<IWebhookSubscriptionManager>();
 
 			var userCreatedWebhookSubscription = NewWebhookSubscription("1", tenantId, AppWebhookDefinitionNames.Users.Created);
-			 webhookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebhookSubscription);
+			webhookSubscriptionManager.AddOrUpdateSubscription(userCreatedWebhookSubscription);
 
 			var allSubscriptions = webhookSubscriptionManager.GetAllSubscriptions(tenantId);
 

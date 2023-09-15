@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Abp.Zero.Repository
 {
-	public class Generic_Repository_Registration_Tests: AbpZeroTestBase
+	public class Generic_Repository_Registration_Tests : AbpZeroTestBase
 	{
 		private readonly IRepository<CustomEntity> _customEntityRepository;
 		private readonly IRepository<CustomEntityWithGuidId, Guid> _customEntityWithGuidRepository;
@@ -15,7 +15,7 @@ namespace Abp.Zero.Repository
 		public Generic_Repository_Registration_Tests()
 		{
 			_customEntityRepository = LocalIocManager.Resolve<IRepository<CustomEntity>>();
-			_customEntityWithGuidRepository= LocalIocManager.Resolve<IRepository<CustomEntityWithGuidId, Guid>>();
+			_customEntityWithGuidRepository = LocalIocManager.Resolve<IRepository<CustomEntityWithGuidId, Guid>>();
 		}
 
 		[Fact]

@@ -61,7 +61,7 @@ namespace Abp.Zero.EntityFrameworkCore
 		/// </summary>
 		/// <param name="options"></param>
 		protected AbpZeroHostDbContext(DbContextOptions<TSelf> options)
-			:base(options)
+			: base(options)
 		{
 
 		}

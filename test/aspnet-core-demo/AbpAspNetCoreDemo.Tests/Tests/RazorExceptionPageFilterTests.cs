@@ -35,7 +35,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
 			result.ShouldNotBeNull();
 			result.Error.Message.ShouldBe("OnGet");
-		 }
+		}
 
 		[Fact]
 		public async Task RazorPage_RazorExceptionPageFilter_Post_Test()

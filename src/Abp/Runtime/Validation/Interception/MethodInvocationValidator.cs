@@ -170,7 +170,7 @@ namespace Abp.Runtime.Validation.Interception
 			// Validate items of enumerable
 			if (IsEnumerable(validatingObject))
 			{
-				foreach (var item in (IEnumerable) validatingObject)
+				foreach (var item in (IEnumerable)validatingObject)
 				{
 					// Do not recursively validate for primitive objects
 					if (item == null || TypeHelper.IsPrimitiveExtendedIncludingNullable(item.GetType()))
