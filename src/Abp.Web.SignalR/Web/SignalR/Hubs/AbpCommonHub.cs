@@ -42,18 +42,18 @@ namespace Abp.Web.SignalR.Hubs
 
             Logger.Debug("A client is connected: " + client);
 
-            _onlineClientManager.Add(client);
+            await _onlineClientManager.AddAsync(client);
         }
 
         public override async Task OnReconnected()
         {
             await base.OnReconnected();
 
-            var client = _onlineClientManager.GetByConnectionIdOrNull(Context.ConnectionId);
+            var client = await _onlineClientManager.GetByConnectionIdOrNullAsync(Context.ConnectionId);
             if (client == null)
             {
                 client = _onlineClientInfoProvider.CreateClientForCurrentConnection(Context);
-                _onlineClientManager.Add(client);
+                await _onlineClientManager.AddAsync(client);
                 Logger.Debug("A client is connected (on reconnected event): " + client);
             }
             else
@@ -70,7 +70,7 @@ namespace Abp.Web.SignalR.Hubs
 
             try
             {
-                _onlineClientManager.Remove(Context.ConnectionId);
+                await _onlineClientManager.RemoveAsync(Context.ConnectionId);
             }
             catch (Exception ex)
             {

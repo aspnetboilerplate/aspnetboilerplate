@@ -1,6 +1,7 @@
-﻿using System;
-using Abp.RealTime;
+﻿using Abp.RealTime;
 using Shouldly;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.RealTime
@@ -17,23 +18,23 @@ namespace Abp.Tests.RealTime
         }
 
         [Fact]
-        public void Test_All()
+        public async Task Test_All()
         {
             var connectionId = Guid.NewGuid().ToString("N");
 
-            _store.Add(new OnlineClient(connectionId, "127.0.0.1", 1, 2));
-            _store.TryGet(connectionId, out IOnlineClient client).ShouldBeTrue();
+            await _store.AddAsync(new OnlineClient(connectionId, "127.0.0.1", 1, 2));
+            (await _store.TryGetAsync(connectionId, value => _ = value)).ShouldBeTrue();
 
-            _store.Contains(connectionId).ShouldBeTrue();
-            _store.GetAll().Count.ShouldBe(1);
-            _store.Remove(connectionId).ShouldBeTrue();
-            _store.GetAll().Count.ShouldBe(0);
+            (await _store.ContainsAsync(connectionId)).ShouldBeTrue();
+            (await _store.GetAllAsync()).Count.ShouldBe(1);
+            (await _store.RemoveAsync(connectionId)).ShouldBeTrue();
+            (await _store.GetAllAsync()).Count.ShouldBe(0);
 
-            _chatStore.GetAll().Count.ShouldBe(0);
+            (await _chatStore.GetAllAsync()).Count.ShouldBe(0);
             connectionId = Guid.NewGuid().ToString("N");
 
-            _chatStore.Add(new OnlineClient(connectionId, "127.0.0.1", 1, 2));
-            _chatStore.GetAll().Count.ShouldBe(1);
+            await _chatStore.AddAsync(new OnlineClient(connectionId, "127.0.0.1", 1, 2));
+            (await _chatStore.GetAllAsync()).Count.ShouldBe(1);
         }
 
         internal class ChatChannel

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.RealTime;
 using Newtonsoft.Json;
@@ -32,73 +34,73 @@ namespace Abp.Runtime.Caching.Redis.RealTime
             _clientStoreKey = options.OnlineClientsStoreKey + ".Clients";
         }
 
-        public void Add(IOnlineClient client)
+        public async Task AddAsync(IOnlineClient client)
         {
             var database = GetDatabase();
-            database.HashSet(_clientStoreKey, new[]
+            await database.HashSetAsync(_clientStoreKey, new[]
             {
                 new HashEntry(client.ConnectionId, client.ToString())
             });
         }
 
-        public bool Remove(string connectionId)
+        public async Task<bool> RemoveAsync(string connectionId)
         {
             var database = GetDatabase();
 
-            var clientValue = database.HashGet(_clientStoreKey, connectionId);
+            var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
             if (clientValue.IsNullOrEmpty)
             {
                 return true;
             }
-            
-            database.HashDelete(_clientStoreKey, connectionId);
+
+            await database.HashDeleteAsync(_clientStoreKey, connectionId);
             return true;
         }
 
-        public bool TryRemove(string connectionId, out IOnlineClient client)
+        public async Task<bool> TryRemoveAsync(string connectionId, Action<IOnlineClient> clientAction)
         {
             try
             {
                 var database = GetDatabase();
 
-                var clientValue = database.HashGet(_clientStoreKey, connectionId);
+                var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
                 if (clientValue.IsNullOrEmpty)
                 {
-                    client = null;
+                    clientAction(null);
                     return true;
                 }
 
-                client = JsonConvert.DeserializeObject<OnlineClient>(clientValue);
-            
-                database.HashDelete(_clientStoreKey, connectionId);
+                clientAction(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
+
+                await database.HashDeleteAsync(_clientStoreKey, connectionId);
                 return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                client = null;
+                clientAction(null);
                 return false;
             }
         }
 
-        public bool TryGet(string connectionId, out IOnlineClient client)
+        public async Task<bool> TryGetAsync(string connectionId, Action<IOnlineClient> clientAction)
         {
             var database = GetDatabase();
-            var clientValue = database.HashGet(_clientStoreKey, connectionId);
+            var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
             if (clientValue.IsNullOrEmpty)
             {
-                client = null;
+                clientAction(null);
                 return false;
             }
 
-            client = JsonConvert.DeserializeObject<OnlineClient>(clientValue);
+            clientAction(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
             return true;
         }
 
-        public bool Contains(string connectionId)
+        public async Task<bool> ContainsAsync(string connectionId)
         {
             var database = GetDatabase();
-            var clientValue = database.HashGet(_clientStoreKey, connectionId);
+            var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
             return !clientValue.IsNullOrEmpty;
         }
 
@@ -111,6 +113,18 @@ namespace Abp.Runtime.Caching.Redis.RealTime
             {
                 clients.Add(JsonConvert.DeserializeObject<OnlineClient>(entry.Value));
             }
+
+            return clients.ToImmutableList();
+        }
+
+        public async Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
+        {
+            var database = GetDatabase();
+            var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
+            var clients = clientsEntries
+                .Select(entry => JsonConvert.DeserializeObject<OnlineClient>(entry.Value))
+                .Cast<IOnlineClient>()
+                .ToList();
 
             return clients.ToImmutableList();
         }
