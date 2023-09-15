@@ -9,91 +9,91 @@ using Microsoft.AspNet.SignalR;
 
 namespace Abp.Web.SignalR.Notifications
 {
-    /// <summary>
-    /// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.
-    /// </summary>
-    public class SignalRRealTimeNotifier : IRealTimeNotifier, ITransientDependency
-    {
-        public bool UseOnlyIfRequestedAsTarget => false;
-        
-        /// <summary>
-        /// Reference to the logger.
-        /// </summary>
-        public ILogger Logger { get; set; }
+	/// <summary>
+	/// Implements <see cref="IRealTimeNotifier"/> to send notifications via SignalR.
+	/// </summary>
+	public class SignalRRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+	{
+		public bool UseOnlyIfRequestedAsTarget => false;
 
-        private readonly IOnlineClientManager _onlineClientManager;
+		/// <summary>
+		/// Reference to the logger.
+		/// </summary>
+		public ILogger Logger { get; set; }
 
-        private static IHubContext CommonHub
-        {
-            get
-            {
-                return GlobalHost.ConnectionManager.GetHubContext<AbpCommonHub>();
-            }
-        }
+		private readonly IOnlineClientManager _onlineClientManager;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SignalRRealTimeNotifier"/> class.
-        /// </summary>
-        public SignalRRealTimeNotifier(IOnlineClientManager onlineClientManager)
-        {
-            _onlineClientManager = onlineClientManager;
-            Logger = NullLogger.Instance;
-        }
+		private static IHubContext CommonHub
+		{
+			get
+			{
+				return GlobalHost.ConnectionManager.GetHubContext<AbpCommonHub>();
+			}
+		}
 
-        /// <inheritdoc/>
-        public async Task SendNotificationsAsync(UserNotification[] userNotifications)
-        {
-            foreach (var userNotification in userNotifications)
-            {
-                try
-                {
-                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
-                    foreach (var onlineClient in onlineClients)
-                    {
-                        var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
-                        if (signalRClient == null)
-                        {
-                            Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
-                            continue;
-                        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SignalRRealTimeNotifier"/> class.
+		/// </summary>
+		public SignalRRealTimeNotifier(IOnlineClientManager onlineClientManager)
+		{
+			_onlineClientManager = onlineClientManager;
+			Logger = NullLogger.Instance;
+		}
 
-                        await signalRClient.getNotification(userNotification);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn("Could not send notification to user: " + userNotification.ToUserIdentifier());
-                    Logger.Warn(ex.ToString(), ex);
-                }
-            }
-        }
+		/// <inheritdoc/>
+		public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+		{
+			foreach (var userNotification in userNotifications)
+			{
+				try
+				{
+					var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
+					foreach (var onlineClient in onlineClients)
+					{
+						var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
+						if (signalRClient == null)
+						{
+							Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
+							continue;
+						}
 
-        /// <inheritdoc/>
-        public void SendNotifications(UserNotification[] userNotifications)
-        {
-            foreach (var userNotification in userNotifications)
-            {
-                try
-                {
-                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
-                    foreach (var onlineClient in onlineClients)
-                    {
-                        var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
-                        if (signalRClient == null)
-                        {
-                            Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
-                            continue;
-                        }
+						await signalRClient.getNotification(userNotification);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Warn("Could not send notification to user: " + userNotification.ToUserIdentifier());
+					Logger.Warn(ex.ToString(), ex);
+				}
+			}
+		}
 
-                        signalRClient.getNotification(userNotification);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn("Could not send notification to user: " + userNotification.ToUserIdentifier());
-                    Logger.Warn(ex.ToString(), ex);
-                }
-            }
-        }
-    }
+		/// <inheritdoc/>
+		public void SendNotifications(UserNotification[] userNotifications)
+		{
+			foreach (var userNotification in userNotifications)
+			{
+				try
+				{
+					var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
+					foreach (var onlineClient in onlineClients)
+					{
+						var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
+						if (signalRClient == null)
+						{
+							Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
+							continue;
+						}
+
+						signalRClient.getNotification(userNotification);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Warn("Could not send notification to user: " + userNotification.ToUserIdentifier());
+					Logger.Warn(ex.ToString(), ex);
+				}
+			}
+		}
+	}
 }

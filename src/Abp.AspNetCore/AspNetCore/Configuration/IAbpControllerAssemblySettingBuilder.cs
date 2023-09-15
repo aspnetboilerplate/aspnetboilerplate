@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace Abp.AspNetCore.Configuration
 {
-    public interface IAbpControllerAssemblySettingBuilder
-    {
-        AbpControllerAssemblySettingBuilder Where(Func<Type, bool> predicate);
+	public interface IAbpControllerAssemblySettingBuilder
+	{
+		AbpControllerAssemblySettingBuilder Where(Func<Type, bool> predicate);
 
-        AbpControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer);
-    }
+		AbpControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer);
+	}
 }

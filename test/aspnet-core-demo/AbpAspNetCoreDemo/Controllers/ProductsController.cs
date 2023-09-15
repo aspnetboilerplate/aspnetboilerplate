@@ -5,15 +5,15 @@ using Abp.Domain.Repositories;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
-    public class ProductsController : AbpODataEntityController<Product>, ITransientDependency
-    {
-        public ProductsController(IRepository<Product> repository) : base(repository)
-        {
-            GetPermissionName = "GetProductPermission";
-            GetAllPermissionName = "GetAllProductsPermission";
-            CreatePermissionName = "CreateProductPermission";
-            UpdatePermissionName = "UpdateProductPermission";
-            DeletePermissionName = "DeleteProductPermission";
-        }
-    }
+	public class ProductsController : AbpODataEntityController<Product>, ITransientDependency
+	{
+		public ProductsController(IRepository<Product> repository) : base(repository)
+		{
+			GetPermissionName = "GetProductPermission";
+			GetAllPermissionName = "GetAllProductsPermission";
+			CreatePermissionName = "CreateProductPermission";
+			UpdatePermissionName = "UpdateProductPermission";
+			DeletePermissionName = "DeleteProductPermission";
+		}
+	}
 }

@@ -12,36 +12,36 @@ using Abp.Web.Minifier;
 
 namespace Abp.Web
 {
-    /// <summary>
-    /// This module is used to use ABP in ASP.NET web applications.
-    /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]    
-    public class AbpWebCommonModule : AbpModule
-    {
-        /// <inheritdoc/>
-        public override void PreInitialize()
-        {
-            IocManager.Register<IWebMultiTenancyConfiguration, WebMultiTenancyConfiguration>();
-            IocManager.Register<IApiProxyScriptingConfiguration, ApiProxyScriptingConfiguration>();
-            IocManager.Register<IAbpAntiForgeryConfiguration, AbpAntiForgeryConfiguration>();
-            IocManager.Register<IWebEmbeddedResourcesConfiguration, WebEmbeddedResourcesConfiguration>();
-            IocManager.Register<IAbpWebCommonModuleConfiguration, AbpWebCommonModuleConfiguration>();
-            IocManager.Register<IJavaScriptMinifier, NUglifyJavaScriptMinifier>();
+	/// <summary>
+	/// This module is used to use ABP in ASP.NET web applications.
+	/// </summary>
+	[DependsOn(typeof(AbpKernelModule))]
+	public class AbpWebCommonModule : AbpModule
+	{
+		/// <inheritdoc/>
+		public override void PreInitialize()
+		{
+			IocManager.Register<IWebMultiTenancyConfiguration, WebMultiTenancyConfiguration>();
+			IocManager.Register<IApiProxyScriptingConfiguration, ApiProxyScriptingConfiguration>();
+			IocManager.Register<IAbpAntiForgeryConfiguration, AbpAntiForgeryConfiguration>();
+			IocManager.Register<IWebEmbeddedResourcesConfiguration, WebEmbeddedResourcesConfiguration>();
+			IocManager.Register<IAbpWebCommonModuleConfiguration, AbpWebCommonModuleConfiguration>();
+			IocManager.Register<IJavaScriptMinifier, NUglifyJavaScriptMinifier>();
 
-            Configuration.Modules.AbpWebCommon().ApiProxyScripting.Generators[JQueryProxyScriptGenerator.Name] = typeof(JQueryProxyScriptGenerator);
+			Configuration.Modules.AbpWebCommon().ApiProxyScripting.Generators[JQueryProxyScriptGenerator.Name] = typeof(JQueryProxyScriptGenerator);
 
-            Configuration.Localization.Sources.Add(
-                new DictionaryBasedLocalizationSource(
-                    AbpWebConsts.LocalizaionSourceName,
-                    new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        typeof(AbpWebCommonModule).GetAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
-                        )));
-        }
+			Configuration.Localization.Sources.Add(
+				new DictionaryBasedLocalizationSource(
+					AbpWebConsts.LocalizaionSourceName,
+					new XmlEmbeddedFileLocalizationDictionaryProvider(
+						typeof(AbpWebCommonModule).GetAssembly(), "Abp.Web.Localization.AbpWebXmlSource"
+						)));
+		}
 
-        /// <inheritdoc/>
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpWebCommonModule).GetAssembly());            
-        }
-    }
+		/// <inheritdoc/>
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(AbpWebCommonModule).GetAssembly());
+		}
+	}
 }

@@ -3,40 +3,40 @@ using Abp.Reflection;
 
 namespace Abp.Web.Api.Modeling
 {
-    [Serializable]
-    public class ParameterApiDescriptionModel
-    {
-        public string NameOnMethod { get; }
+	[Serializable]
+	public class ParameterApiDescriptionModel
+	{
+		public string NameOnMethod { get; }
 
-        public string Name { get; }
+		public string Name { get; }
 
-        public Type Type { get; }
+		public Type Type { get; }
 
-        public string TypeAsString { get; }
+		public string TypeAsString { get; }
 
-        public bool IsOptional { get;  }
+		public bool IsOptional { get;  }
 
-        public object DefaultValue { get;  }
+		public object DefaultValue { get;  }
 
-        public string[] ConstraintTypes { get; }
+		public string[] ConstraintTypes { get; }
 
-        public string BindingSourceId { get; }
+		public string BindingSourceId { get; }
 
-        private ParameterApiDescriptionModel()
-        {
-            
-        }
+		private ParameterApiDescriptionModel()
+		{
 
-        public ParameterApiDescriptionModel(string name, string nameOnMethod, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
-        {
-            Name = name;
-            NameOnMethod = nameOnMethod;
-            Type = type;
-            TypeAsString = type?.FullName;
-            IsOptional = isOptional;
-            DefaultValue = defaultValue;
-            ConstraintTypes = constraintTypes;
-            BindingSourceId = bindingSourceId;
-        }
-    }
+		}
+
+		public ParameterApiDescriptionModel(string name, string nameOnMethod, Type type, bool isOptional = false, object defaultValue = null, string[] constraintTypes = null, string bindingSourceId = null)
+		{
+			Name = name;
+			NameOnMethod = nameOnMethod;
+			Type = type;
+			TypeAsString = type?.FullName;
+			IsOptional = isOptional;
+			DefaultValue = defaultValue;
+			ConstraintTypes = constraintTypes;
+			BindingSourceId = bindingSourceId;
+		}
+	}
 }

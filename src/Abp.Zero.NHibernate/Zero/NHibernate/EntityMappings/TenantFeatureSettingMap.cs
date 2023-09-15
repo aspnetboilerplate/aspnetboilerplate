@@ -3,11 +3,11 @@ using FluentNHibernate.Mapping;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class TenantFeatureSettingMap : SubclassMap<TenantFeatureSetting>
-    {
-        public TenantFeatureSettingMap()
-        {
-            DiscriminatorValue("TenantFeatureSetting");
-        }
-    }
+	public class TenantFeatureSettingMap : SubclassMap<TenantFeatureSetting>
+	{
+		public TenantFeatureSettingMap()
+		{
+			DiscriminatorValue("TenantFeatureSetting");
+		}
+	}
 }

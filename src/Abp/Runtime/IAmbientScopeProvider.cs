@@ -2,10 +2,10 @@
 
 namespace Abp.Runtime
 {
-    public interface IAmbientScopeProvider<T>
-    {
-        T GetValue(string contextKey);
+	public interface IAmbientScopeProvider<T>
+	{
+		T GetValue(string contextKey);
 
-        IDisposable BeginScope(string contextKey, T value);
-    }
+		IDisposable BeginScope(string contextKey, T value);
+	}
 }

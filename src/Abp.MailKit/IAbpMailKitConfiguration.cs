@@ -2,8 +2,8 @@
 
 namespace Abp.MailKit
 {
-    public interface IAbpMailKitConfiguration
-    {
-        SecureSocketOptions? SecureSocketOption { get; set; }
-    }
+	public interface IAbpMailKitConfiguration
+	{
+		SecureSocketOptions? SecureSocketOption { get; set; }
+	}
 }

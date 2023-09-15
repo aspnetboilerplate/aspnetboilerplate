@@ -8,36 +8,36 @@ using Quartz;
 
 namespace Abp.Quartz
 {
-    [DependsOn(typeof (AbpKernelModule))]
-    public class AbpQuartzModule : AbpModule
-    {
-        private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
-        
-        public override void PreInitialize()
-        {
-            IocManager.Register<IAbpQuartzConfiguration, AbpQuartzConfiguration>();
+	[DependsOn(typeof (AbpKernelModule))]
+	public class AbpQuartzModule : AbpModule
+	{
+		private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
-            OneTimeRunner.Run(() =>
-            {
-                Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager); 
-            });
-        }
+		public override void PreInitialize()
+		{
+			IocManager.Register<IAbpQuartzConfiguration, AbpQuartzConfiguration>();
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
+			OneTimeRunner.Run(() =>
+			{
+				Configuration.Modules.AbpQuartz().Scheduler.JobFactory = new AbpQuartzJobFactory(IocManager);
+			});
+		}
 
-        public override void PostInitialize()
-        {
-            IocManager.RegisterIfNot<IJobListener, AbpQuartzJobListener>();
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		}
 
-            Configuration.Modules.AbpQuartz().Scheduler.ListenerManager.AddJobListener(IocManager.Resolve<IJobListener>());
+		public override void PostInitialize()
+		{
+			IocManager.RegisterIfNot<IJobListener, AbpQuartzJobListener>();
 
-            if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
-            {
-                IocManager.Resolve<IBackgroundWorkerManager>().Add(IocManager.Resolve<IQuartzScheduleJobManager>());
-            }
-        }
-    }
+			Configuration.Modules.AbpQuartz().Scheduler.ListenerManager.AddJobListener(IocManager.Resolve<IJobListener>());
+
+			if (Configuration.BackgroundJobs.IsJobExecutionEnabled)
+			{
+				IocManager.Resolve<IBackgroundWorkerManager>().Add(IocManager.Resolve<IQuartzScheduleJobManager>());
+			}
+		}
+	}
 }

@@ -1,7 +1,7 @@
 ﻿namespace Abp
 {
-    public interface IHasErrorCode
-    {
-        int Code { get; set; }
-    }
+	public interface IHasErrorCode
+	{
+		int Code { get; set; }
+	}
 }

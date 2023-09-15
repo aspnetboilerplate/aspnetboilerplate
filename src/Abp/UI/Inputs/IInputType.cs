@@ -3,14 +3,14 @@ using Abp.Runtime.Validation;
 
 namespace Abp.UI.Inputs
 {
-    public interface IInputType
-    {
-        string Name { get; }
+	public interface IInputType
+	{
+		string Name { get; }
 
-        object this[string key] { get; set; }
+		object this[string key] { get; set; }
 
-        IDictionary<string, object> Attributes { get; }
+		IDictionary<string, object> Attributes { get; }
 
-        IValueValidator Validator { get; set; }
-    }
+		IValueValidator Validator { get; set; }
+	}
 }

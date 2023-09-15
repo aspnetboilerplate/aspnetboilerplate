@@ -18,174 +18,174 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Abp.Authorization
 {
-    public class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, ITransientDependency
-        where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>, new()
-        where TUser : AbpUser<TUser>
-    {
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly ISettingManager _settingManager;
+	public class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, ITransientDependency
+		where TTenant : AbpTenant<TUser>
+		where TRole : AbpRole<TUser>, new()
+		where TUser : AbpUser<TUser>
+	{
+		private readonly IUnitOfWorkManager _unitOfWorkManager;
+		private readonly ISettingManager _settingManager;
 
-        public AbpSignInManager(
-            AbpUserManager<TRole, TUser> userManager,
-            IHttpContextAccessor contextAccessor,
-            AbpUserClaimsPrincipalFactory<TUser, TRole> claimsFactory,
-            IOptions<IdentityOptions> optionsAccessor,
-            ILogger<SignInManager<TUser>> logger,
-            IUnitOfWorkManager unitOfWorkManager,
-            ISettingManager settingManager,
-            IAuthenticationSchemeProvider schemes,
-            IUserConfirmation<TUser> userConfirmation)
-            : base(
-                userManager,
-                contextAccessor,
-                claimsFactory,
-                optionsAccessor,
-                logger,
-                schemes,
-                userConfirmation)
-        {
-            _unitOfWorkManager = unitOfWorkManager;
-            _settingManager = settingManager;
-        }
+		public AbpSignInManager(
+			AbpUserManager<TRole, TUser> userManager,
+			IHttpContextAccessor contextAccessor,
+			AbpUserClaimsPrincipalFactory<TUser, TRole> claimsFactory,
+			IOptions<IdentityOptions> optionsAccessor,
+			ILogger<SignInManager<TUser>> logger,
+			IUnitOfWorkManager unitOfWorkManager,
+			ISettingManager settingManager,
+			IAuthenticationSchemeProvider schemes,
+			IUserConfirmation<TUser> userConfirmation)
+			: base(
+				userManager,
+				contextAccessor,
+				claimsFactory,
+				optionsAccessor,
+				logger,
+				schemes,
+				userConfirmation)
+		{
+			_unitOfWorkManager = unitOfWorkManager;
+			_settingManager = settingManager;
+		}
 
-        public virtual async Task<SignInResult> SignInOrTwoFactorAsync(AbpLoginResult<TTenant, TUser> loginResult,
-            bool isPersistent, bool? rememberBrowser = null, string loginProvider = null, bool bypassTwoFactor = false)
-        {
-            if (loginResult.Result != AbpLoginResultType.Success)
-            {
-                throw new ArgumentException("loginResult.Result should be success in order to sign in!");
-            }
+		public virtual async Task<SignInResult> SignInOrTwoFactorAsync(AbpLoginResult<TTenant, TUser> loginResult,
+			bool isPersistent, bool? rememberBrowser = null, string loginProvider = null, bool bypassTwoFactor = false)
+		{
+			if (loginResult.Result != AbpLoginResultType.Success)
+			{
+				throw new ArgumentException("loginResult.Result should be success in order to sign in!");
+			}
 
-            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
-            {
-                await UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptionsAsync(loginResult.Tenant?.Id);
+			using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+			{
+				await UserManager.As<AbpUserManager<TRole, TUser>>().InitializeOptionsAsync(loginResult.Tenant?.Id);
 
-                if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled,
-                    loginResult.Tenant?.Id))
-                {
-                    if (await UserManager.GetTwoFactorEnabledAsync(loginResult.User))
-                    {
-                        if ((await UserManager.GetValidTwoFactorProvidersAsync(loginResult.User)).Count > 0)
-                        {
-                            if (!await IsTwoFactorClientRememberedAsync(loginResult.User) || rememberBrowser == false)
-                            {
-                                await Context.SignInAsync(
-                                    IdentityConstants.TwoFactorUserIdScheme,
-                                    StoreTwoFactorInfo(loginResult.User, loginProvider)
-                                );
+				if (!bypassTwoFactor && IsTrue(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled,
+					loginResult.Tenant?.Id))
+				{
+					if (await UserManager.GetTwoFactorEnabledAsync(loginResult.User))
+					{
+						if ((await UserManager.GetValidTwoFactorProvidersAsync(loginResult.User)).Count > 0)
+						{
+							if (!await IsTwoFactorClientRememberedAsync(loginResult.User) || rememberBrowser == false)
+							{
+								await Context.SignInAsync(
+									IdentityConstants.TwoFactorUserIdScheme,
+									StoreTwoFactorInfo(loginResult.User, loginProvider)
+								);
 
-                                return SignInResult.TwoFactorRequired;
-                            }
-                        }
-                    }
-                }
+								return SignInResult.TwoFactorRequired;
+							}
+						}
+					}
+				}
 
-                if (loginProvider != null)
-                {
-                    await Context.SignOutAsync(IdentityConstants.ExternalScheme);
-                }
+				if (loginProvider != null)
+				{
+					await Context.SignOutAsync(IdentityConstants.ExternalScheme);
+				}
 
-                await SignInAsync(loginResult.User, isPersistent, loginProvider);
-                return SignInResult.Success;
-            }
-        }
+				await SignInAsync(loginResult.User, isPersistent, loginProvider);
+				return SignInResult.Success;
+			}
+		}
 
-        public virtual async Task SignOutAndSignInAsync(ClaimsIdentity identity, bool isPersistent)
-        {
-            await SignOutAsync();
-            await SignInAsync(identity, isPersistent);
-        }
+		public virtual async Task SignOutAndSignInAsync(ClaimsIdentity identity, bool isPersistent)
+		{
+			await SignOutAsync();
+			await SignInAsync(identity, isPersistent);
+		}
 
-        public virtual async Task SignInAsync(ClaimsIdentity identity, bool isPersistent)
-        {
-            await Context.SignInAsync(IdentityConstants.ApplicationScheme,
-                new ClaimsPrincipal(identity),
-                new AuthenticationProperties { IsPersistent = isPersistent }
-            );
-        }
+		public virtual async Task SignInAsync(ClaimsIdentity identity, bool isPersistent)
+		{
+			await Context.SignInAsync(IdentityConstants.ApplicationScheme,
+				new ClaimsPrincipal(identity),
+				new AuthenticationProperties { IsPersistent = isPersistent }
+			);
+		}
 
-        public override async Task SignInAsync(TUser user, bool isPersistent, string authenticationMethod = null)
-        {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                await base.SignInAsync(user, isPersistent, authenticationMethod);
-            });
-        }
+		public override async Task SignInAsync(TUser user, bool isPersistent, string authenticationMethod = null)
+		{
+			await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+			{
+				await base.SignInAsync(user, isPersistent, authenticationMethod);
+			});
+		}
 
-        protected virtual ClaimsPrincipal StoreTwoFactorInfo(TUser user, string loginProvider)
-        {
-            var identity = new ClaimsIdentity(IdentityConstants.TwoFactorUserIdScheme);
+		protected virtual ClaimsPrincipal StoreTwoFactorInfo(TUser user, string loginProvider)
+		{
+			var identity = new ClaimsIdentity(IdentityConstants.TwoFactorUserIdScheme);
 
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
+			identity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
-            if (user.TenantId.HasValue)
-            {
-                identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
-            }
+			if (user.TenantId.HasValue)
+			{
+				identity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
+			}
 
-            if (loginProvider != null)
-            {
-                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, loginProvider));
-            }
+			if (loginProvider != null)
+			{
+				identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, loginProvider));
+			}
 
-            return new ClaimsPrincipal(identity);
-        }
+			return new ClaimsPrincipal(identity);
+		}
 
-        protected virtual async Task<ClaimsPrincipal> StoreRememberClient(TUser user)
-        {
-            var rememberBrowserIdentity = new ClaimsIdentity(IdentityConstants.TwoFactorRememberMeScheme);
+		protected virtual async Task<ClaimsPrincipal> StoreRememberClient(TUser user)
+		{
+			var rememberBrowserIdentity = new ClaimsIdentity(IdentityConstants.TwoFactorRememberMeScheme);
 
-            rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
+			rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
-            if (user.TenantId.HasValue)
-            {
-                rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
-            }
+			if (user.TenantId.HasValue)
+			{
+				rememberBrowserIdentity.AddClaim(new Claim(AbpClaimTypes.TenantId, user.TenantId.Value.ToString()));
+			}
 
-            if (UserManager.SupportsUserSecurityStamp)
-            {
-                var stamp = await UserManager.GetSecurityStampAsync(user);
-                rememberBrowserIdentity.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, stamp));
-            }
+			if (UserManager.SupportsUserSecurityStamp)
+			{
+				var stamp = await UserManager.GetSecurityStampAsync(user);
+				rememberBrowserIdentity.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType, stamp));
+			}
 
-            return new ClaimsPrincipal(rememberBrowserIdentity);
-        }
+			return new ClaimsPrincipal(rememberBrowserIdentity);
+		}
 
-        public async Task<int?> GetVerifiedTenantIdAsync()
-        {
-            var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
+		public async Task<int?> GetVerifiedTenantIdAsync()
+		{
+			var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
 
-            if (result?.Principal == null)
-            {
-                return null;
-            }
+			if (result?.Principal == null)
+			{
+				return null;
+			}
 
-            return AbpZeroClaimsIdentityHelper.GetTenantId(result.Principal);
-        }
+			return AbpZeroClaimsIdentityHelper.GetTenantId(result.Principal);
+		}
 
-        public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
-        {
-            var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorRememberMeScheme);
+		public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
+		{
+			var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorRememberMeScheme);
 
-            return result?.Principal != null &&
-                   result.Principal.FindFirstValue(ClaimTypes.Name) == user.Id.ToString() &&
-                   AbpZeroClaimsIdentityHelper.GetTenantId(result.Principal) == user.TenantId;
-        }
+			return result?.Principal != null &&
+				   result.Principal.FindFirstValue(ClaimTypes.Name) == user.Id.ToString() &&
+				   AbpZeroClaimsIdentityHelper.GetTenantId(result.Principal) == user.TenantId;
+		}
 
-        public override async Task RememberTwoFactorClientAsync(TUser user)
-        {
-            var principal = await StoreRememberClient(user);
-            await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
-                principal,
-                new AuthenticationProperties { IsPersistent = true });
-        }
+		public override async Task RememberTwoFactorClientAsync(TUser user)
+		{
+			var principal = await StoreRememberClient(user);
+			await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
+				principal,
+				new AuthenticationProperties { IsPersistent = true });
+		}
 
-        private bool IsTrue(string settingName, int? tenantId)
-        {
-            return tenantId == null
-                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
-                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
-        }
-    }
+		private bool IsTrue(string settingName, int? tenantId)
+		{
+			return tenantId == null
+				? _settingManager.GetSettingValueForApplication<bool>(settingName)
+				: _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
+		}
+	}
 }

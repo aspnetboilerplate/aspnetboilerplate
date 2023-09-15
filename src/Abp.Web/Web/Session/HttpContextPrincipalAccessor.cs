@@ -4,8 +4,8 @@ using Abp.Runtime.Session;
 
 namespace Abp.Web.Session
 {
-    public class HttpContextPrincipalAccessor : DefaultPrincipalAccessor
-    {
-        public override ClaimsPrincipal Principal => HttpContext.Current?.User as ClaimsPrincipal ?? base.Principal;
-    }
+	public class HttpContextPrincipalAccessor : DefaultPrincipalAccessor
+	{
+		public override ClaimsPrincipal Principal => HttpContext.Current?.User as ClaimsPrincipal ?? base.Principal;
+	}
 }

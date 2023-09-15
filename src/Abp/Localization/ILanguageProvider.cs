@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace Abp.Localization
 {
-    public interface ILanguageProvider
-    {
-        IReadOnlyList<LanguageInfo> GetLanguages();
+	public interface ILanguageProvider
+	{
+		IReadOnlyList<LanguageInfo> GetLanguages();
 
-        IReadOnlyList<LanguageInfo> GetActiveLanguages();
-    }
+		IReadOnlyList<LanguageInfo> GetActiveLanguages();
+	}
 }

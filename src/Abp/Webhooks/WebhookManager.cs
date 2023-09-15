@@ -10,155 +10,155 @@ using Abp.Json;
 
 namespace Abp.Webhooks
 {
-    public class WebhookManager : DomainService, IWebhookManager
-    {
-        private const string SignatureHeaderKey = "sha256";
-        private const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
-        private const string SignatureHeaderName = "abp-webhook-signature";
-        
-        private readonly IWebhooksConfiguration _webhooksConfiguration;
-        private readonly IWebhookSendAttemptStore _webhookSendAttemptStore;
+	public class WebhookManager : DomainService, IWebhookManager
+	{
+		private const string SignatureHeaderKey = "sha256";
+		private const string SignatureHeaderValueTemplate = SignatureHeaderKey + "={0}";
+		private const string SignatureHeaderName = "abp-webhook-signature";
 
-        public WebhookManager(
-            IWebhooksConfiguration webhooksConfiguration,
-            IWebhookSendAttemptStore webhookSendAttemptStore)
-        {
-            _webhooksConfiguration = webhooksConfiguration;
-            _webhookSendAttemptStore = webhookSendAttemptStore;
-        }
+		private readonly IWebhooksConfiguration _webhooksConfiguration;
+		private readonly IWebhookSendAttemptStore _webhookSendAttemptStore;
 
-        public virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            var data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
-                : webhookSenderArgs.Data.FromJsonString<dynamic>();
+		public WebhookManager(
+			IWebhooksConfiguration webhooksConfiguration,
+			IWebhookSendAttemptStore webhookSendAttemptStore)
+		{
+			_webhooksConfiguration = webhooksConfiguration;
+			_webhookSendAttemptStore = webhookSendAttemptStore;
+		}
 
-            var attemptNumber = await _webhookSendAttemptStore.GetSendAttemptCountAsync(
-                webhookSenderArgs.TenantId,
-                webhookSenderArgs.WebhookEventId,
-                webhookSenderArgs.WebhookSubscriptionId);
+		public virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderArgs webhookSenderArgs)
+		{
+			var data = _webhooksConfiguration.JsonSerializerSettings != null
+				? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
+				: webhookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookPayload(
-                webhookSenderArgs.WebhookEventId.ToString(),
-                webhookSenderArgs.WebhookName,
-                attemptNumber)
-            {
-                Data = data
-            };
-        }
+			var attemptNumber = await _webhookSendAttemptStore.GetSendAttemptCountAsync(
+				webhookSenderArgs.TenantId,
+				webhookSenderArgs.WebhookEventId,
+				webhookSenderArgs.WebhookSubscriptionId);
 
-        public virtual WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs)
-        {
-            var data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
-                : webhookSenderArgs.Data.FromJsonString<dynamic>();
+			return new WebhookPayload(
+				webhookSenderArgs.WebhookEventId.ToString(),
+				webhookSenderArgs.WebhookName,
+				attemptNumber)
+			{
+				Data = data
+			};
+		}
 
-            var attemptNumber = _webhookSendAttemptStore.GetSendAttemptCount(
-                webhookSenderArgs.TenantId,
-                webhookSenderArgs.WebhookEventId,
-                webhookSenderArgs.WebhookSubscriptionId) + 1;
+		public virtual WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs)
+		{
+			var data = _webhooksConfiguration.JsonSerializerSettings != null
+				? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
+				: webhookSenderArgs.Data.FromJsonString<dynamic>();
 
-            return new WebhookPayload(
-                webhookSenderArgs.WebhookEventId.ToString(),
-                webhookSenderArgs.WebhookName,
-                attemptNumber)
-            {
-                Data = data
-            };
-        }
+			var attemptNumber = _webhookSendAttemptStore.GetSendAttemptCount(
+				webhookSenderArgs.TenantId,
+				webhookSenderArgs.WebhookEventId,
+				webhookSenderArgs.WebhookSubscriptionId) + 1;
 
-        public virtual void SignWebhookRequest(HttpRequestMessage request, string serializedBody, string secret)
-        {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+			return new WebhookPayload(
+				webhookSenderArgs.WebhookEventId.ToString(),
+				webhookSenderArgs.WebhookName,
+				attemptNumber)
+			{
+				Data = data
+			};
+		}
 
-            if (string.IsNullOrWhiteSpace(serializedBody))
-            {
-                throw new ArgumentNullException(nameof(serializedBody));
-            }
+		public virtual void SignWebhookRequest(HttpRequestMessage request, string serializedBody, string secret)
+		{
+			if (request == null)
+			{
+				throw new ArgumentNullException(nameof(request));
+			}
 
-            var secretBytes = Encoding.UTF8.GetBytes(secret);
+			if (string.IsNullOrWhiteSpace(serializedBody))
+			{
+				throw new ArgumentNullException(nameof(serializedBody));
+			}
 
-            using (var hasher = new HMACSHA256(secretBytes))
-            {
-                request.Content = new StringContent(serializedBody, Encoding.UTF8, "application/json");
+			var secretBytes = Encoding.UTF8.GetBytes(secret);
 
-                var data = Encoding.UTF8.GetBytes(serializedBody);
-                var sha256 = hasher.ComputeHash(data);
+			using (var hasher = new HMACSHA256(secretBytes))
+			{
+				request.Content = new StringContent(serializedBody, Encoding.UTF8, "application/json");
 
-                var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate, BitConverter.ToString(sha256));
+				var data = Encoding.UTF8.GetBytes(serializedBody);
+				var sha256 = hasher.ComputeHash(data);
 
-                request.Headers.Add(SignatureHeaderName, headerValue);
-            }
-        }
+				var headerValue = string.Format(CultureInfo.InvariantCulture, SignatureHeaderValueTemplate, BitConverter.ToString(sha256));
 
-        public virtual string GetSerializedBody(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
+				request.Headers.Add(SignatureHeaderName, headerValue);
+			}
+		}
 
-            var payload = GetWebhookPayload(webhookSenderArgs);
+		public virtual string GetSerializedBody(WebhookSenderArgs webhookSenderArgs)
+		{
+			if (webhookSenderArgs.SendExactSameData)
+			{
+				return webhookSenderArgs.Data;
+			}
 
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
+			var payload = GetWebhookPayload(webhookSenderArgs);
 
-            return serializedBody;
-        }
+			var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
+				? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+				: payload.ToJsonString();
 
-        public virtual async Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.SendExactSameData)
-            {
-                return webhookSenderArgs.Data;
-            }
+			return serializedBody;
+		}
 
-            var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
+		public virtual async Task<string> GetSerializedBodyAsync(WebhookSenderArgs webhookSenderArgs)
+		{
+			if (webhookSenderArgs.SendExactSameData)
+			{
+				return webhookSenderArgs.Data;
+			}
 
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
-                : payload.ToJsonString();
+			var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
 
-            return serializedBody;
-        }
-        
-        public virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            using (var uow = UnitOfWorkManager.Begin())
-            {
-                var workItem = new WebhookSendAttempt
-                {
-                    WebhookEventId = webhookSenderArgs.WebhookEventId,
-                    WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
-                    TenantId = webhookSenderArgs.TenantId
-                };
+			var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
+				? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+				: payload.ToJsonString();
 
-                await _webhookSendAttemptStore.InsertAsync(workItem);
-                await CurrentUnitOfWork.SaveChangesAsync();
+			return serializedBody;
+		}
 
-                await uow.CompleteAsync();
-                
-                return workItem.Id;
-            }
-        }
+		public virtual async Task<Guid> InsertAndGetIdWebhookSendAttemptAsync(WebhookSenderArgs webhookSenderArgs)
+		{
+			using (var uow = UnitOfWorkManager.Begin())
+			{
+				var workItem = new WebhookSendAttempt
+				{
+					WebhookEventId = webhookSenderArgs.WebhookEventId,
+					WebhookSubscriptionId = webhookSenderArgs.WebhookSubscriptionId,
+					TenantId = webhookSenderArgs.TenantId
+				};
 
-        public virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
-        {
-            using (var uow = UnitOfWorkManager.Begin())
-            {
-                var webhookSendAttempt = await _webhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
+				await _webhookSendAttemptStore.InsertAsync(workItem);
+				await CurrentUnitOfWork.SaveChangesAsync();
 
-                webhookSendAttempt.ResponseStatusCode = statusCode;
-                webhookSendAttempt.Response = content;
+				await uow.CompleteAsync();
 
-                await _webhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
+				return workItem.Id;
+			}
+		}
 
-                await uow.CompleteAsync();
-            }
-        }
-    }
+		public virtual async Task StoreResponseOnWebhookSendAttemptAsync(Guid webhookSendAttemptId, int? tenantId, HttpStatusCode? statusCode, string content)
+		{
+			using (var uow = UnitOfWorkManager.Begin())
+			{
+				var webhookSendAttempt = await _webhookSendAttemptStore.GetAsync(tenantId, webhookSendAttemptId);
+
+				webhookSendAttempt.ResponseStatusCode = statusCode;
+				webhookSendAttempt.Response = content;
+
+				await _webhookSendAttemptStore.UpdateAsync(webhookSendAttempt);
+
+				await uow.CompleteAsync();
+			}
+		}
+	}
 }

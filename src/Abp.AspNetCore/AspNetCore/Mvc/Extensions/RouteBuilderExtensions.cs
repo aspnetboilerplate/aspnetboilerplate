@@ -4,32 +4,32 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Abp.AspNetCore.Mvc.Extensions
 {
-    public static class RouteBuilderExtensions
-    {
-        public static void ConfigureAll(this List<Action<IRouteBuilder>> routeBuilderActions, IRouteBuilder routes)
-        {
-            if (routeBuilderActions == null)
-            {
-                throw new ArgumentNullException(nameof(routeBuilderActions));
-            }
+	public static class RouteBuilderExtensions
+	{
+		public static void ConfigureAll(this List<Action<IRouteBuilder>> routeBuilderActions, IRouteBuilder routes)
+		{
+			if (routeBuilderActions == null)
+			{
+				throw new ArgumentNullException(nameof(routeBuilderActions));
+			}
 
-            routeBuilderActions.ForEach(action =>
-            {
-                action(routes);
-            });
-        }
+			routeBuilderActions.ForEach(action =>
+			{
+				action(routes);
+			});
+		}
 
-        public static void ConfigureAllEndpoints(this List<Action<IEndpointRouteBuilder>> routeBuilderActions, IEndpointRouteBuilder routes)
-        {
-            if (routeBuilderActions == null)
-            {
-                throw new ArgumentNullException(nameof(routeBuilderActions));
-            }
+		public static void ConfigureAllEndpoints(this List<Action<IEndpointRouteBuilder>> routeBuilderActions, IEndpointRouteBuilder routes)
+		{
+			if (routeBuilderActions == null)
+			{
+				throw new ArgumentNullException(nameof(routeBuilderActions));
+			}
 
-            routeBuilderActions.ForEach(action =>
-            {
-                action(routes);
-            });
-        }
-    }
+			routeBuilderActions.ForEach(action =>
+			{
+				action(routes);
+			});
+		}
+	}
 }

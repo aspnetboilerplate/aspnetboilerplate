@@ -16,175 +16,175 @@ using JetBrains.Annotations;
 
 namespace Abp
 {
-    /// <summary>
-    /// This is the main class that is responsible to start entire ABP system.
-    /// Prepares dependency injection and registers core components needed for startup.
-    /// It must be instantiated and initialized (see <see cref="Initialize"/>) first in an application.
-    /// </summary>
-    public class AbpBootstrapper : IDisposable
-    {
-        /// <summary>
-        /// Get the startup module of the application which depends on other used modules.
-        /// </summary>
-        public Type StartupModule { get; }
+	/// <summary>
+	/// This is the main class that is responsible to start entire ABP system.
+	/// Prepares dependency injection and registers core components needed for startup.
+	/// It must be instantiated and initialized (see <see cref="Initialize"/>) first in an application.
+	/// </summary>
+	public class AbpBootstrapper : IDisposable
+	{
+		/// <summary>
+		/// Get the startup module of the application which depends on other used modules.
+		/// </summary>
+		public Type StartupModule { get; }
 
-        /// <summary>
-        /// A list of plug in folders.
-        /// </summary>
-        public PlugInSourceList PlugInSources { get; }
+		/// <summary>
+		/// A list of plug in folders.
+		/// </summary>
+		public PlugInSourceList PlugInSources { get; }
 
-        /// <summary>
-        /// Gets IIocManager object used by this class.
-        /// </summary>
-        public IIocManager IocManager { get; }
+		/// <summary>
+		/// Gets IIocManager object used by this class.
+		/// </summary>
+		public IIocManager IocManager { get; }
 
-        /// <summary>
-        /// Is this object disposed before?
-        /// </summary>
-        protected bool IsDisposed;
+		/// <summary>
+		/// Is this object disposed before?
+		/// </summary>
+		protected bool IsDisposed;
 
-        private AbpModuleManager _moduleManager;
-        private ILogger _logger;
+		private AbpModuleManager _moduleManager;
+		private ILogger _logger;
 
-        /// <summary>
-        /// Creates a new <see cref="AbpBootstrapper"/> instance.
-        /// </summary>
-        /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
-        /// <param name="optionsAction">An action to set options</param>
-        private AbpBootstrapper(
-            [NotNull] Type startupModule, 
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
-        {
-            Check.NotNull(startupModule, nameof(startupModule));
+		/// <summary>
+		/// Creates a new <see cref="AbpBootstrapper"/> instance.
+		/// </summary>
+		/// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
+		/// <param name="optionsAction">An action to set options</param>
+		private AbpBootstrapper(
+			[NotNull] Type startupModule,
+			[CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+		{
+			Check.NotNull(startupModule, nameof(startupModule));
 
-            var options = new AbpBootstrapperOptions();
-            optionsAction?.Invoke(options);
+			var options = new AbpBootstrapperOptions();
+			optionsAction?.Invoke(options);
 
-            if (!typeof(AbpModule).GetTypeInfo().IsAssignableFrom(startupModule))
-            {
-                throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(AbpModule)}.");
-            }
+			if (!typeof(AbpModule).GetTypeInfo().IsAssignableFrom(startupModule))
+			{
+				throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(AbpModule)}.");
+			}
 
-            StartupModule = startupModule;
+			StartupModule = startupModule;
 
-            IocManager = options.IocManager;
-            PlugInSources = options.PlugInSources;
+			IocManager = options.IocManager;
+			PlugInSources = options.PlugInSources;
 
-            _logger = NullLogger.Instance;
-            
-            AddInterceptorRegistrars(options.InterceptorOptions);
-        }
+			_logger = NullLogger.Instance;
 
-        /// <summary>
-        /// Creates a new <see cref="AbpBootstrapper"/> instance.
-        /// </summary>
-        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
-        /// <param name="optionsAction">An action to set options</param>
-        public static AbpBootstrapper Create<TStartupModule>(
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
-            where TStartupModule : AbpModule
-        {
-            return new AbpBootstrapper(typeof(TStartupModule), optionsAction);
-        }
+			AddInterceptorRegistrars(options.InterceptorOptions);
+		}
 
-        /// <summary>
-        /// Creates a new <see cref="AbpBootstrapper"/> instance.
-        /// </summary>
-        /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
-        /// <param name="optionsAction">An action to set options</param>
-        public static AbpBootstrapper Create(
-            [NotNull] Type startupModule, 
-            [CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
-        {
-            return new AbpBootstrapper(startupModule, optionsAction);
-        }
+		/// <summary>
+		/// Creates a new <see cref="AbpBootstrapper"/> instance.
+		/// </summary>
+		/// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</typeparam>
+		/// <param name="optionsAction">An action to set options</param>
+		public static AbpBootstrapper Create<TStartupModule>(
+			[CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+			where TStartupModule : AbpModule
+		{
+			return new AbpBootstrapper(typeof(TStartupModule), optionsAction);
+		}
 
-        private void AddInterceptorRegistrars(
-            AbpBootstrapperInterceptorOptions options)
-        {
-            if (!options.DisableValidationInterceptor)
-            {
-                ValidationInterceptorRegistrar.Initialize(IocManager);    
-            }
+		/// <summary>
+		/// Creates a new <see cref="AbpBootstrapper"/> instance.
+		/// </summary>
+		/// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="AbpModule"/>.</param>
+		/// <param name="optionsAction">An action to set options</param>
+		public static AbpBootstrapper Create(
+			[NotNull] Type startupModule,
+			[CanBeNull] Action<AbpBootstrapperOptions> optionsAction = null)
+		{
+			return new AbpBootstrapper(startupModule, optionsAction);
+		}
 
-            if (!options.DisableAuditingInterceptor)
-            {
-                AuditingInterceptorRegistrar.Initialize(IocManager);
-            }
+		private void AddInterceptorRegistrars(
+			AbpBootstrapperInterceptorOptions options)
+		{
+			if (!options.DisableValidationInterceptor)
+			{
+				ValidationInterceptorRegistrar.Initialize(IocManager);
+			}
 
-            if (!options.DisableEntityHistoryInterceptor)
-            {
-                EntityHistoryInterceptorRegistrar.Initialize(IocManager);    
-            }
+			if (!options.DisableAuditingInterceptor)
+			{
+				AuditingInterceptorRegistrar.Initialize(IocManager);
+			}
 
-            if (!options.DisableUnitOfWorkInterceptor)
-            {
-                UnitOfWorkRegistrar.Initialize(IocManager);
-            }
+			if (!options.DisableEntityHistoryInterceptor)
+			{
+				EntityHistoryInterceptorRegistrar.Initialize(IocManager);
+			}
 
-            if (!options.DisableAuthorizationInterceptor)
-            {
-                AuthorizationInterceptorRegistrar.Initialize(IocManager);   
-            }
-        }
+			if (!options.DisableUnitOfWorkInterceptor)
+			{
+				UnitOfWorkRegistrar.Initialize(IocManager);
+			}
 
-        /// <summary>
-        /// Initializes the ABP system.
-        /// </summary>
-        public virtual void Initialize()
-        {
-            ResolveLogger();
+			if (!options.DisableAuthorizationInterceptor)
+			{
+				AuthorizationInterceptorRegistrar.Initialize(IocManager);
+			}
+		}
 
-            try
-            {
-                RegisterBootstrapper();
-                IocManager.IocContainer.Install(new AbpCoreInstaller());
+		/// <summary>
+		/// Initializes the ABP system.
+		/// </summary>
+		public virtual void Initialize()
+		{
+			ResolveLogger();
 
-                IocManager.Resolve<AbpPlugInManager>().PlugInSources.AddRange(PlugInSources);
-                IocManager.Resolve<AbpStartupConfiguration>().Initialize();
+			try
+			{
+				RegisterBootstrapper();
+				IocManager.IocContainer.Install(new AbpCoreInstaller());
 
-                _moduleManager = IocManager.Resolve<AbpModuleManager>();
-                _moduleManager.Initialize(StartupModule);
-                _moduleManager.StartModules();
-            }
-            catch (Exception ex)
-            {
-                _logger.Fatal(ex.ToString(), ex);
-                throw;
-            }
-        }
+				IocManager.Resolve<AbpPlugInManager>().PlugInSources.AddRange(PlugInSources);
+				IocManager.Resolve<AbpStartupConfiguration>().Initialize();
 
-        private void ResolveLogger()
-        {
-            if (IocManager.IsRegistered<ILoggerFactory>())
-            {
-                _logger = IocManager.Resolve<ILoggerFactory>().Create(typeof(AbpBootstrapper));
-            }
-        }
+				_moduleManager = IocManager.Resolve<AbpModuleManager>();
+				_moduleManager.Initialize(StartupModule);
+				_moduleManager.StartModules();
+			}
+			catch (Exception ex)
+			{
+				_logger.Fatal(ex.ToString(), ex);
+				throw;
+			}
+		}
 
-        private void RegisterBootstrapper()
-        {
-            if (!IocManager.IsRegistered<AbpBootstrapper>())
-            {
-                IocManager.IocContainer.Register(
-                    Component.For<AbpBootstrapper>().Instance(this)
-                );
-            }
-        }
+		private void ResolveLogger()
+		{
+			if (IocManager.IsRegistered<ILoggerFactory>())
+			{
+				_logger = IocManager.Resolve<ILoggerFactory>().Create(typeof(AbpBootstrapper));
+			}
+		}
 
-        /// <summary>
-        /// Disposes the ABP system.
-        /// </summary>
-        public virtual void Dispose()
-        {
-            if (IsDisposed)
-            {
-                return;
-            }
+		private void RegisterBootstrapper()
+		{
+			if (!IocManager.IsRegistered<AbpBootstrapper>())
+			{
+				IocManager.IocContainer.Register(
+					Component.For<AbpBootstrapper>().Instance(this)
+				);
+			}
+		}
 
-            IsDisposed = true;
+		/// <summary>
+		/// Disposes the ABP system.
+		/// </summary>
+		public virtual void Dispose()
+		{
+			if (IsDisposed)
+			{
+				return;
+			}
 
-            _moduleManager?.ShutdownModules();
-        }
-    }
+			IsDisposed = true;
+
+			_moduleManager?.ShutdownModules();
+		}
+	}
 }

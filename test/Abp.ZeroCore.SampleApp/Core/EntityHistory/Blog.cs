@@ -6,70 +6,70 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Abp.ZeroCore.SampleApp.Core.EntityHistory
 {
-    [Audited]
-    public class Blog : AggregateRoot, IHasCreationTime
-    {
-        // EF property mapped directly to a field
-        private string _name;
+	[Audited]
+	public class Blog : AggregateRoot, IHasCreationTime
+	{
+		// EF property mapped directly to a field
+		private string _name;
 
-        [DisableAuditing]
-        public string Name { get => _name; set => _name = value; }
+		[DisableAuditing]
+		public string Name { get => _name; set => _name = value; }
 
-        public string Url { get; protected set; }
+		public string Url { get; protected set; }
 
-        public DateTime CreationTime { get; set; }
+		public DateTime CreationTime { get; set; }
 
-        public BlogEx More { get; set; }
+		public BlogEx More { get; set; }
 
-        public ICollection<BlogPromotion> Promotions { get; set; }
+		public ICollection<BlogPromotion> Promotions { get; set; }
 
-        public ICollection<Post> Posts { get; set; }
+		public ICollection<Post> Posts { get; set; }
 
-        public Blog()
-        {
-            
-        }
+		public Blog()
+		{
 
-        public Blog(string name, string url, string bloggerName)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
+		}
 
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+		public Blog(string name, string url, string bloggerName)
+		{
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				throw new ArgumentNullException(nameof(name));
+			}
 
-            Name = name;
-            Url = url;
-            More = new BlogEx {BloggerName = bloggerName};
-        }
+			if (string.IsNullOrWhiteSpace(url))
+			{
+				throw new ArgumentNullException(nameof(url));
+			}
 
-        public void ChangeUrl(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                throw new ArgumentNullException(nameof(url));
-            }
+			Name = name;
+			Url = url;
+			More = new BlogEx {BloggerName = bloggerName};
+		}
 
-            var oldUrl = Url;
-            Url = url;
-        }
-    }
+		public void ChangeUrl(string url)
+		{
+			if (string.IsNullOrWhiteSpace(url))
+			{
+				throw new ArgumentNullException(nameof(url));
+			}
 
-    public class BlogEx
-    {
-        public string BloggerName { get; set; }
-    }
+			var oldUrl = Url;
+			Url = url;
+		}
+	}
 
-    public class BlogPromotion
-    {
-        public int BlogId { get; set; }
+	public class BlogEx
+	{
+		public string BloggerName { get; set; }
+	}
 
-        public int AdvertisementId { get; set; }
+	public class BlogPromotion
+	{
+		public int BlogId { get; set; }
 
-        public string Title { get; set; }
-    }
+		public int AdvertisementId { get; set; }
+
+		public string Title { get; set; }
+	}
 }

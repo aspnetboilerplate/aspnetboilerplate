@@ -7,92 +7,92 @@ using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Uow
 {
-    public class TransactionScopeEfTransactionStrategy : IEfTransactionStrategy, ITransientDependency
-    {
-        protected UnitOfWorkOptions Options { get; private set; }
+	public class TransactionScopeEfTransactionStrategy : IEfTransactionStrategy, ITransientDependency
+	{
+		protected UnitOfWorkOptions Options { get; private set; }
 
-        protected TransactionScope CurrentTransaction { get; set; }
+		protected TransactionScope CurrentTransaction { get; set; }
 
-        protected List<DbContext> DbContexts { get; }
+		protected List<DbContext> DbContexts { get; }
 
-        public TransactionScopeEfTransactionStrategy()
-        {
-            DbContexts = new List<DbContext>();
-        }
+		public TransactionScopeEfTransactionStrategy()
+		{
+			DbContexts = new List<DbContext>();
+		}
 
-        public virtual void InitOptions(UnitOfWorkOptions options)
-        {
-            Options = options;
+		public virtual void InitOptions(UnitOfWorkOptions options)
+		{
+			Options = options;
 
-            StartTransaction();
-        }
+			StartTransaction();
+		}
 
-        public virtual void Commit()
-        {
-            if (CurrentTransaction == null)
-            {
-                return;
-            }
+		public virtual void Commit()
+		{
+			if (CurrentTransaction == null)
+			{
+				return;
+			}
 
-            CurrentTransaction.Complete();
+			CurrentTransaction.Complete();
 
-            CurrentTransaction.Dispose();
-            CurrentTransaction = null;
-        }
+			CurrentTransaction.Dispose();
+			CurrentTransaction = null;
+		}
 
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
-            where TDbContext : DbContext
-        {
-            var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-            DbContexts.Add(dbContext);
-            return dbContext;
-        }
+		public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
+			where TDbContext : DbContext
+		{
+			var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
+			DbContexts.Add(dbContext);
+			return dbContext;
+		}
 
-        private void StartTransaction()
-        {
-            if (CurrentTransaction != null)
-            {
-                return;
-            }
+		private void StartTransaction()
+		{
+			if (CurrentTransaction != null)
+			{
+				return;
+			}
 
-            var transactionOptions = new TransactionOptions
-            {
-                IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
-            };
+			var transactionOptions = new TransactionOptions
+			{
+				IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
+			};
 
-            if (Options.Timeout.HasValue)
-            {
-                transactionOptions.Timeout = Options.Timeout.Value;
-            }
+			if (Options.Timeout.HasValue)
+			{
+				transactionOptions.Timeout = Options.Timeout.Value;
+			}
 
-            CurrentTransaction = new TransactionScope(
-                Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
-                transactionOptions,
-                Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
-            );
-        }
+			CurrentTransaction = new TransactionScope(
+				Options.Scope.GetValueOrDefault(TransactionScopeOption.Required),
+				transactionOptions,
+				Options.AsyncFlowOption.GetValueOrDefault(TransactionScopeAsyncFlowOption.Enabled)
+			);
+		}
 
-        public virtual void Dispose(IIocResolver iocResolver)
-        {
-            foreach (var dbContext in DbContexts)
-            {
-                iocResolver.Release(dbContext);
-            }
+		public virtual void Dispose(IIocResolver iocResolver)
+		{
+			foreach (var dbContext in DbContexts)
+			{
+				iocResolver.Release(dbContext);
+			}
 
-            DbContexts.Clear();
+			DbContexts.Clear();
 
-            if (CurrentTransaction != null)
-            {
-                CurrentTransaction.Dispose();
-                CurrentTransaction = null;
-            }
-        }
+			if (CurrentTransaction != null)
+			{
+				CurrentTransaction.Dispose();
+				CurrentTransaction = null;
+			}
+		}
 
-        public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
-        {
-            var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-            DbContexts.Add(dbContext);
-            return await Task.FromResult(dbContext);
-        }
-    }
+		public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+		{
+			var dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
+			DbContexts.Add(dbContext);
+			return await Task.FromResult(dbContext);
+		}
+	}
 }

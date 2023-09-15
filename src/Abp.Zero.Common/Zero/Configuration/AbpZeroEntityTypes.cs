@@ -6,66 +6,66 @@ using Abp.MultiTenancy;
 
 namespace Abp.Zero.Configuration
 {
-    public class AbpZeroEntityTypes : IAbpZeroEntityTypes
-    {
-        public Type User
-        {
-            get { return _user; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+	public class AbpZeroEntityTypes : IAbpZeroEntityTypes
+	{
+		public Type User
+		{
+			get { return _user; }
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
 
-                if (!typeof (AbpUserBase).IsAssignableFrom(value))
-                {
-                    throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpUserBase).AssemblyQualifiedName);
-                }
+				if (!typeof (AbpUserBase).IsAssignableFrom(value))
+				{
+					throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpUserBase).AssemblyQualifiedName);
+				}
 
-                _user = value;
-            }
-        }
-        private Type _user;
+				_user = value;
+			}
+		}
+		private Type _user;
 
-        public Type Role
-        {
-            get { return _role; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+		public Type Role
+		{
+			get { return _role; }
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
 
-                if (!typeof(AbpRoleBase).IsAssignableFrom(value))
-                {
-                    throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpRoleBase).AssemblyQualifiedName);
-                }
+				if (!typeof(AbpRoleBase).IsAssignableFrom(value))
+				{
+					throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpRoleBase).AssemblyQualifiedName);
+				}
 
-                _role = value;
-            }
-        }
-        private Type _role;
+				_role = value;
+			}
+		}
+		private Type _role;
 
-        public Type Tenant
-        {
-            get { return _tenant; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
+		public Type Tenant
+		{
+			get { return _tenant; }
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException(nameof(value));
+				}
 
-                if (!typeof(AbpTenantBase).IsAssignableFrom(value))
-                {
-                    throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpTenantBase).AssemblyQualifiedName);
-                }
+				if (!typeof(AbpTenantBase).IsAssignableFrom(value))
+				{
+					throw new AbpException(value.AssemblyQualifiedName + " should be derived from " + typeof(AbpTenantBase).AssemblyQualifiedName);
+				}
 
-                _tenant = value;
-            }
-        }
-        private Type _tenant;
-    }
+				_tenant = value;
+			}
+		}
+		private Type _tenant;
+	}
 }

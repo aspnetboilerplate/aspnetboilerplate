@@ -10,25 +10,25 @@ using DapperExtensions.Sql;
 
 namespace Abp.Dapper.Tests
 {
-    [DependsOn(
-        typeof(AbpEntityFrameworkModule),
-        typeof(AbpTestBaseModule),
-        typeof(AbpDapperModule)
-    )]
-    public class AbpDapperTestModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
-        }
+	[DependsOn(
+		typeof(AbpEntityFrameworkModule),
+		typeof(AbpTestBaseModule),
+		typeof(AbpDapperModule)
+	)]
+	public class AbpDapperTestModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
+		}
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
+			DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
 
-            DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { Assembly.GetExecutingAssembly() });
-        }
-    }
+			DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { Assembly.GetExecutingAssembly() });
+		}
+	}
 }

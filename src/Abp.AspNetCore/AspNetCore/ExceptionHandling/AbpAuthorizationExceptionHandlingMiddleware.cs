@@ -13,63 +13,63 @@ using Newtonsoft.Json;
 
 namespace Abp.AspNetCore.ExceptionHandling
 {
-    public class AbpAuthorizationExceptionHandlingMiddleware : IMiddleware, ITransientDependency
-    {
-        private readonly IErrorInfoBuilder _errorInfoBuilder;
-        private readonly ILocalizationManager _localizationManager;
+	public class AbpAuthorizationExceptionHandlingMiddleware : IMiddleware, ITransientDependency
+	{
+		private readonly IErrorInfoBuilder _errorInfoBuilder;
+		private readonly ILocalizationManager _localizationManager;
 
-        public ILogger Logger { get; set; }
+		public ILogger Logger { get; set; }
 
-        public IEventBus EventBus { get; set; }
+		public IEventBus EventBus { get; set; }
 
-        public AbpAuthorizationExceptionHandlingMiddleware(
-            IErrorInfoBuilder errorInfoBuilder,
-            ILocalizationManager localizationManager)
-        {
-            _errorInfoBuilder = errorInfoBuilder;
-            _localizationManager = localizationManager;
+		public AbpAuthorizationExceptionHandlingMiddleware(
+			IErrorInfoBuilder errorInfoBuilder,
+			ILocalizationManager localizationManager)
+		{
+			_errorInfoBuilder = errorInfoBuilder;
+			_localizationManager = localizationManager;
 
-            EventBus = NullEventBus.Instance;
-            Logger = NullLogger.Instance;
-        }
+			EventBus = NullEventBus.Instance;
+			Logger = NullLogger.Instance;
+		}
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-        {
-            await next(context);
+		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+		{
+			await next(context);
 
-            if (IsAuthorizationExceptionStatusCode(context))
-            {
-                var exception = new AbpAuthorizationException(GetAuthorizationExceptionMessage(context));
+			if (IsAuthorizationExceptionStatusCode(context))
+			{
+				var exception = new AbpAuthorizationException(GetAuthorizationExceptionMessage(context));
 
-                Logger.Error(exception.Message);
+				Logger.Error(exception.Message);
 
-                await context.Response.WriteAsync(
-                    JsonConvert.SerializeObject(
-                        new AjaxResponse(
-                            _errorInfoBuilder.BuildForException(exception),
-                            true
-                        )
-                    )
-                );
+				await context.Response.WriteAsync(
+					JsonConvert.SerializeObject(
+						new AjaxResponse(
+							_errorInfoBuilder.BuildForException(exception),
+							true
+						)
+					)
+				);
 
-                await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
-            }
-        }
+				await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
+			}
+		}
 
-        protected virtual string GetAuthorizationExceptionMessage(HttpContext context)
-        {
-            if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
-            {
-                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403");
-            }
+		protected virtual string GetAuthorizationExceptionMessage(HttpContext context)
+		{
+			if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
+			{
+				_localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403");
+			}
 
-            return _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401");
-        }
+			return _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401");
+		}
 
-        protected virtual bool IsAuthorizationExceptionStatusCode(HttpContext context)
-        {
-            return context.Response.StatusCode == (int)HttpStatusCode.Forbidden
-                   || context.Response.StatusCode == (int)HttpStatusCode.Unauthorized;
-        }
-    }
+		protected virtual bool IsAuthorizationExceptionStatusCode(HttpContext context)
+		{
+			return context.Response.StatusCode == (int)HttpStatusCode.Forbidden
+				   || context.Response.StatusCode == (int)HttpStatusCode.Unauthorized;
+		}
+	}
 }

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Repositories
 {
-    public interface IRepositoryWithDbContext
-    {
-        DbContext GetDbContext();
-        
-        Task<DbContext> GetDbContextAsync();
-    }
+	public interface IRepositoryWithDbContext
+	{
+		DbContext GetDbContext();
+
+		Task<DbContext> GetDbContextAsync();
+	}
 }

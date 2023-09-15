@@ -11,37 +11,37 @@ using Abp.Zero.SampleApp.Roles;
 
 namespace Abp.Zero.SampleApp.Users
 {
-    public class UserManager : AbpUserManager<Role, User>
-    {
-        public UserManager(
-            UserStore userStore, 
-            RoleManager roleManager, 
-            IPermissionManager permissionManager, 
-            IUnitOfWorkManager unitOfWorkManager, 
-            ICacheManager cacheManager, 
-            IRepository<OrganizationUnit, long> organizationUnitRepository, 
-            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
-            IOrganizationUnitSettings organizationUnitSettings,
-            ILocalizationManager localizationManager,
-            ISettingManager settingManager,
-            IdentityEmailMessageService emailService,
-            IUserTokenProviderAccessor userTokenProviderAccessor,
-            IRepository<UserLogin, long> userLoginRepository)
-            : base(
-                  userStore, 
-                  roleManager, 
-                  permissionManager, 
-                  unitOfWorkManager, 
-                  cacheManager, 
-                  organizationUnitRepository, 
-                  userOrganizationUnitRepository, 
-                  organizationUnitSettings,
-                  localizationManager,
-                  emailService,
-                  settingManager,
-                  userTokenProviderAccessor,
-                  userLoginRepository)
-        {
-        }
-    }
+	public class UserManager : AbpUserManager<Role, User>
+	{
+		public UserManager(
+			UserStore userStore,
+			RoleManager roleManager,
+			IPermissionManager permissionManager,
+			IUnitOfWorkManager unitOfWorkManager,
+			ICacheManager cacheManager,
+			IRepository<OrganizationUnit, long> organizationUnitRepository,
+			IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+			IOrganizationUnitSettings organizationUnitSettings,
+			ILocalizationManager localizationManager,
+			ISettingManager settingManager,
+			IdentityEmailMessageService emailService,
+			IUserTokenProviderAccessor userTokenProviderAccessor,
+			IRepository<UserLogin, long> userLoginRepository)
+			: base(
+				  userStore,
+				  roleManager,
+				  permissionManager,
+				  unitOfWorkManager,
+				  cacheManager,
+				  organizationUnitRepository,
+				  userOrganizationUnitRepository,
+				  organizationUnitSettings,
+				  localizationManager,
+				  emailService,
+				  settingManager,
+				  userTokenProviderAccessor,
+				  userLoginRepository)
+		{
+		}
+	}
 }

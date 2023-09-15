@@ -2,7 +2,7 @@
 
 namespace Abp.Domain.Values
 {
-    public class IgnoreOnCompareAttribute : Attribute
-    {
-    }
+	public class IgnoreOnCompareAttribute : Attribute
+	{
+	}
 }

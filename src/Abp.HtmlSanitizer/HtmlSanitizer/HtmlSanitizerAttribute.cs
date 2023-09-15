@@ -2,9 +2,9 @@
 
 namespace Abp.HtmlSanitizer
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property)]
-    public class HtmlSanitizerAttribute : Attribute
-    {
-    
-    }
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property)]
+	public class HtmlSanitizerAttribute : Attribute
+	{
+
+	}
 }

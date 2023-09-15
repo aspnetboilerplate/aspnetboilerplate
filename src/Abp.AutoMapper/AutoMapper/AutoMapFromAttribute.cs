@@ -4,33 +4,33 @@ using AutoMapper;
 
 namespace Abp.AutoMapper
 {
-    public class AutoMapFromAttribute : AutoMapAttributeBase
-    {
-        public MemberList MemberList { get; set; } = MemberList.Destination;
+	public class AutoMapFromAttribute : AutoMapAttributeBase
+	{
+		public MemberList MemberList { get; set; } = MemberList.Destination;
 
-        public AutoMapFromAttribute(params Type[] targetTypes)
-            : base(targetTypes)
-        {
+		public AutoMapFromAttribute(params Type[] targetTypes)
+			: base(targetTypes)
+		{
 
-        }
+		}
 
-        public AutoMapFromAttribute(MemberList memberList, params Type[] targetTypes)
-            : this(targetTypes)
-        {
-            MemberList = memberList;
-        }
+		public AutoMapFromAttribute(MemberList memberList, params Type[] targetTypes)
+			: this(targetTypes)
+		{
+			MemberList = memberList;
+		}
 
-        public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
-        {
-            if (TargetTypes.IsNullOrEmpty())
-            {
-                return;
-            }
+		public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
+		{
+			if (TargetTypes.IsNullOrEmpty())
+			{
+				return;
+			}
 
-            foreach (var targetType in TargetTypes)
-            {
-                configuration.CreateAutoAttributeMaps(targetType, new[] { type }, MemberList);
-            }
-        }
-    }
+			foreach (var targetType in TargetTypes)
+			{
+				configuration.CreateAutoAttributeMaps(targetType, new[] { type }, MemberList);
+			}
+		}
+	}
 }

@@ -11,177 +11,177 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Webhooks
 {
-    public class WebhookManager_Tests : WebhookTestBase
-    {
-        private readonly IWebhookManager _webhookManager;
-        
-        public WebhookManager_Tests()
-        {
-            _webhookManager = Resolve<IWebhookManager>();
-        }
+	public class WebhookManager_Tests : WebhookTestBase
+	{
+		private readonly IWebhookManager _webhookManager;
 
-        [Fact]
-        public async Task GetWebhookPayloadAsync_Tests()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+		public WebhookManager_Tests()
+		{
+			_webhookManager = Resolve<IWebhookManager>();
+		}
 
-            var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data
-            });
+		[Fact]
+		public async Task GetWebhookPayloadAsync_Tests()
+		{
+			string data = new { Test = "test" }.ToJsonString();
 
-            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
-            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
-        }
+			var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data
+			});
 
-        [Fact]
-        public void GetWebhookPayload_Tests()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+			payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+			((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
+			payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
+		}
 
-            var payload = _webhookManager.GetWebhookPayload(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data
-            });
+		[Fact]
+		public void GetWebhookPayload_Tests()
+		{
+			string data = new { Test = "test" }.ToJsonString();
 
-            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            ((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
-            payload.Attempt.ShouldBe(1);
-        }
-        
-        [Fact]
-        public async Task SignWebhookRequest_Tests()
-        {
-            var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = new { Test = "test" }.ToJsonString()
-            });
+			var payload = _webhookManager.GetWebhookPayload(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data
+			});
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "www.test.com");
+			payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+			((string)JsonConvert.SerializeObject(payload.Data)).ShouldBe(data);
+			payload.Attempt.ShouldBe(1);
+		}
 
-            _webhookManager.SignWebhookRequest(request, payload.ToJsonString(), "mysecret");
+		[Fact]
+		public async Task SignWebhookRequest_Tests()
+		{
+			var payload = await _webhookManager.GetWebhookPayloadAsync(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = new { Test = "test" }.ToJsonString()
+			});
 
-            request.Content.ShouldBeAssignableTo(typeof(StringContent));
+			var request = new HttpRequestMessage(HttpMethod.Post, "www.test.com");
 
-            var content = await request.Content.ReadAsStringAsync();
-            content.ShouldBe(payload.ToJsonString());
+			_webhookManager.SignWebhookRequest(request, payload.ToJsonString(), "mysecret");
 
-            request.Headers.GetValues("abp-webhook-signature").Single()
-                .ShouldStartWith("sha256=");
-        }
+			request.Content.ShouldBeAssignableTo(typeof(StringContent));
 
-        //WebhookPayload with parameterless constructor for testing
-        public class WebhookPayloadTest : WebhookPayload
-        {
-            public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id, webHookWebhookEvent, attempt)
-            {
-            }
+			var content = await request.Content.ReadAsStringAsync();
+			content.ShouldBe(payload.ToJsonString());
 
-            public WebhookPayloadTest() : base("test", "test", int.MaxValue)
-            {
+			request.Headers.GetValues("abp-webhook-signature").Single()
+				.ShouldStartWith("sha256=");
+		}
 
-            }
-        }
+		//WebhookPayload with parameterless constructor for testing
+		public class WebhookPayloadTest : WebhookPayload
+		{
+			public WebhookPayloadTest(string id, string webHookWebhookEvent, int attempt) : base(id, webHookWebhookEvent, attempt)
+			{
+			}
 
-        [Fact]
-        public void GetSerializedBody_SendExactSameData_False_Test()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+			public WebhookPayloadTest() : base("test", "test", int.MaxValue)
+			{
 
-            var serializedBody =_webhookManager.GetSerializedBody(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data,
-                SendExactSameData = false
-            });
+			}
+		}
 
-            serializedBody.ShouldContain(data);
-            serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
+		[Fact]
+		public void GetSerializedBody_SendExactSameData_False_Test()
+		{
+			string data = new { Test = "test" }.ToJsonString();
 
-            WebhookPayloadTest payload;
-            try
-            {
-                payload = serializedBody.FromJsonString<WebhookPayloadTest>();
-            }
-            catch (Exception)
-            {
-                throw new Exception("Payload must be WebhookPayload json");
-            }
+			var serializedBody =_webhookManager.GetSerializedBody(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data,
+				SendExactSameData = false
+			});
 
-            payload.Id.ShouldNotBe("test");
-            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            payload.Attempt.ShouldBe(1);
-        }
+			serializedBody.ShouldContain(data);
+			serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
 
-        [Fact]
-        public void GetSerializedBody_SendExactSameData_True_Test()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+			WebhookPayloadTest payload;
+			try
+			{
+				payload = serializedBody.FromJsonString<WebhookPayloadTest>();
+			}
+			catch (Exception)
+			{
+				throw new Exception("Payload must be WebhookPayload json");
+			}
 
-            var serializedBody = _webhookManager.GetSerializedBody(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data,
-                SendExactSameData = true
-            });
+			payload.Id.ShouldNotBe("test");
+			payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+			payload.Attempt.ShouldBe(1);
+		}
 
-            serializedBody.ShouldBe(data); // serializedBody must be equal to data
-        }
-        
-        [Fact]
-        public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+		[Fact]
+		public void GetSerializedBody_SendExactSameData_True_Test()
+		{
+			string data = new { Test = "test" }.ToJsonString();
 
-            var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data,
-                SendExactSameData = false
-            });
+			var serializedBody = _webhookManager.GetSerializedBody(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data,
+				SendExactSameData = true
+			});
 
-            serializedBody.ShouldContain(data);
-            serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
+			serializedBody.ShouldBe(data); // serializedBody must be equal to data
+		}
 
-            WebhookPayloadTest payload;
-            try
-            {
-                payload = serializedBody.FromJsonString<WebhookPayloadTest>();
-            }
-            catch (Exception)
-            {
-                throw new Exception("Payload must be WebhookPayload json");
-            }
+		[Fact]
+		public async Task GetSerializedBodyAsync_SendExactSameData_False_Test()
+		{
+			string data = new { Test = "test" }.ToJsonString();
 
-            payload.Id.ShouldNotBe("test");
-            payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
-            payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
-        }
+			var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data,
+				SendExactSameData = false
+			});
 
-        [Fact]
-        public async Task GetSerializedBodyAsync_SendExactSameData_True_Test()
-        {
-            string data = new { Test = "test" }.ToJsonString();
+			serializedBody.ShouldContain(data);
+			serializedBody.ShouldNotBe(data); // serializedBody must be created with WebhookPayload
 
-            var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
-            {
-                TenantId = 1,
-                WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
-                Data = data,
-                SendExactSameData = true
-            });
+			WebhookPayloadTest payload;
+			try
+			{
+				payload = serializedBody.FromJsonString<WebhookPayloadTest>();
+			}
+			catch (Exception)
+			{
+				throw new Exception("Payload must be WebhookPayload json");
+			}
 
-            serializedBody.ShouldBe(data); // serializedBody must be equal to data
-        }
-    }
+			payload.Id.ShouldNotBe("test");
+			payload.WebhookEvent.ShouldBe(AppWebhookDefinitionNames.Theme.DefaultThemeChanged);
+			payload.Attempt.ShouldBe(0); // Because webHook is not sent yet
+		}
+
+		[Fact]
+		public async Task GetSerializedBodyAsync_SendExactSameData_True_Test()
+		{
+			string data = new { Test = "test" }.ToJsonString();
+
+			var serializedBody = await _webhookManager.GetSerializedBodyAsync(new WebhookSenderArgs()
+			{
+				TenantId = 1,
+				WebhookName = AppWebhookDefinitionNames.Theme.DefaultThemeChanged,
+				Data = data,
+				SendExactSameData = true
+			});
+
+			serializedBody.ShouldBe(data); // serializedBody must be equal to data
+		}
+	}
 }

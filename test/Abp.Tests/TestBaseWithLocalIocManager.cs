@@ -3,18 +3,18 @@ using Abp.Dependency;
 
 namespace Abp.Tests
 {
-    public abstract class TestBaseWithLocalIocManager : IDisposable
-    {
-        protected IIocManager LocalIocManager;
+	public abstract class TestBaseWithLocalIocManager : IDisposable
+	{
+		protected IIocManager LocalIocManager;
 
-        protected TestBaseWithLocalIocManager()
-        {
-            LocalIocManager = new IocManager();
-        }
+		protected TestBaseWithLocalIocManager()
+		{
+			LocalIocManager = new IocManager();
+		}
 
-        public virtual void Dispose()
-        {
-            LocalIocManager.Dispose();
-        }
-    }
+		public virtual void Dispose()
+		{
+			LocalIocManager.Dispose();
+		}
+	}
 }

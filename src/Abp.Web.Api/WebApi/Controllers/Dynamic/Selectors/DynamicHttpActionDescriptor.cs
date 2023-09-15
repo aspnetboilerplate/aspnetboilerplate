@@ -13,122 +13,122 @@ using Abp.Extensions;
 
 namespace Abp.WebApi.Controllers.Dynamic.Selectors
 {
-    internal static class DynamicApiDescriptorHelper
-    {
-        internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
-        {
-            int max = objects.Length;
-            List<T> list = new List<T>(max);
-            int idx = 0;
-            for (int i = 0; i < max; i++)
-            {
-                T attr = objects[i] as T;
-                if (attr != null)
-                {
-                    list.Add(attr);
-                    idx++;
-                }
-            }
-            list.Capacity = idx;
+	internal static class DynamicApiDescriptorHelper
+	{
+		internal static ReadOnlyCollection<T> FilterType<T>(object[] objects) where T : class
+		{
+			int max = objects.Length;
+			List<T> list = new List<T>(max);
+			int idx = 0;
+			for (int i = 0; i < max; i++)
+			{
+				T attr = objects[i] as T;
+				if (attr != null)
+				{
+					list.Add(attr);
+					idx++;
+				}
+			}
+			list.Capacity = idx;
 
-            return new ReadOnlyCollection<T>(list);
-        }
-    }
+			return new ReadOnlyCollection<T>(list);
+		}
+	}
 
-    public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
-    {
-        public override Collection<HttpMethod> SupportedHttpMethods { get; }
+	public class DynamicHttpActionDescriptor : ReflectedHttpActionDescriptor
+	{
+		public override Collection<HttpMethod> SupportedHttpMethods { get; }
 
-        private readonly DynamicApiActionInfo _actionInfo;
-        private readonly Lazy<Collection<IFilter>> _filters;
-        private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
+		private readonly DynamicApiActionInfo _actionInfo;
+		private readonly Lazy<Collection<IFilter>> _filters;
+		private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
 
-        private readonly object[] _attributes;
-        private readonly object[] _declaredOnlyAttributes;
-        
-        public DynamicHttpActionDescriptor(
-            IAbpWebApiConfiguration configuration,
-            HttpControllerDescriptor controllerDescriptor,
-            DynamicApiActionInfo actionInfo)
-            : base(
-                  controllerDescriptor,
-                  actionInfo.Method)
-        {
-            _actionInfo = actionInfo;
-            SupportedHttpMethods = new Collection<HttpMethod> { actionInfo.Verb.ToHttpMethod() };
+		private readonly object[] _attributes;
+		private readonly object[] _declaredOnlyAttributes;
 
-            Properties["__AbpDynamicApiActionInfo"] = actionInfo;
-            Properties["__AbpDynamicApiDontWrapResultAttribute"] =
-                ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-                    actionInfo.Method,
-                    configuration.DefaultDynamicApiWrapResultAttribute
-                );
+		public DynamicHttpActionDescriptor(
+			IAbpWebApiConfiguration configuration,
+			HttpControllerDescriptor controllerDescriptor,
+			DynamicApiActionInfo actionInfo)
+			: base(
+				  controllerDescriptor,
+				  actionInfo.Method)
+		{
+			_actionInfo = actionInfo;
+			SupportedHttpMethods = new Collection<HttpMethod> { actionInfo.Verb.ToHttpMethod() };
 
-            _filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
-            _parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
+			Properties["__AbpDynamicApiActionInfo"] = actionInfo;
+			Properties["__AbpDynamicApiDontWrapResultAttribute"] =
+				ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+					actionInfo.Method,
+					configuration.DefaultDynamicApiWrapResultAttribute
+				);
 
-            _declaredOnlyAttributes = _actionInfo.Method.GetCustomAttributes(inherit: false);
-            _attributes = _actionInfo.Method.GetCustomAttributes(inherit: true);
-        }
+			_filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
+			_parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
 
-        /// <summary>
-        /// Overrides the GetFilters for the action and adds the Dynamic Action filters.
-        /// </summary>
-        /// <returns> The Collection of filters.</returns>
-        public override Collection<IFilter> GetFilters()
-        {
-            return _filters.Value;
-        }
+			_declaredOnlyAttributes = _actionInfo.Method.GetCustomAttributes(inherit: false);
+			_attributes = _actionInfo.Method.GetCustomAttributes(inherit: true);
+		}
 
-        public override Collection<T> GetCustomAttributes<T>(bool inherit)
-        {
-            object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
-            return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
-        }
+		/// <summary>
+		/// Overrides the GetFilters for the action and adds the Dynamic Action filters.
+		/// </summary>
+		/// <returns> The Collection of filters.</returns>
+		public override Collection<IFilter> GetFilters()
+		{
+			return _filters.Value;
+		}
 
-        public override Collection<HttpParameterDescriptor> GetParameters()
-        {
-            return _parameters.Value;
-        }
+		public override Collection<T> GetCustomAttributes<T>(bool inherit)
+		{
+			object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
+			return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
+		}
 
-        private Collection<IFilter> GetFiltersInternal()
-        {
-            if (_actionInfo.Filters.IsNullOrEmpty())
-            {
-                return base.GetFilters();
-            }
+		public override Collection<HttpParameterDescriptor> GetParameters()
+		{
+			return _parameters.Value;
+		}
 
-            var actionFilters = new Collection<IFilter>();
+		private Collection<IFilter> GetFiltersInternal()
+		{
+			if (_actionInfo.Filters.IsNullOrEmpty())
+			{
+				return base.GetFilters();
+			}
 
-            foreach (var filter in _actionInfo.Filters)
-            {
-                actionFilters.Add(filter);
-            }
+			var actionFilters = new Collection<IFilter>();
 
-            foreach (var baseFilter in base.GetFilters())
-            {
-                actionFilters.Add(baseFilter);
-            }
+			foreach (var filter in _actionInfo.Filters)
+			{
+				actionFilters.Add(filter);
+			}
 
-            return actionFilters;
-        }
+			foreach (var baseFilter in base.GetFilters())
+			{
+				actionFilters.Add(baseFilter);
+			}
 
-        private Collection<HttpParameterDescriptor> GetParametersInternal()
-        {
-            var parameters = base.GetParameters();
+			return actionFilters;
+		}
 
-            if (_actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
-            {
-                foreach (var parameter in parameters)
-                {
-                    if (parameter.ParameterBinderAttribute == null)
-                    {
-                        parameter.ParameterBinderAttribute = new FromUriAttribute();
-                    }
-                }
-            }
+		private Collection<HttpParameterDescriptor> GetParametersInternal()
+		{
+			var parameters = base.GetParameters();
 
-            return parameters;
-        }
-    }
+			if (_actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
+			{
+				foreach (var parameter in parameters)
+				{
+					if (parameter.ParameterBinderAttribute == null)
+					{
+						parameter.ParameterBinderAttribute = new FromUriAttribute();
+					}
+				}
+			}
+
+			return parameters;
+		}
+	}
 }

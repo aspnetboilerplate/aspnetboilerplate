@@ -4,8 +4,8 @@ using Abp.Domain.Entities;
 
 namespace Abp.EntityFramework
 {
-    public interface IDbContextEntityFinder
-    {
-        IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType);
-    }
+	public interface IDbContextEntityFinder
+	{
+		IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType);
+	}
 }

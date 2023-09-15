@@ -2,18 +2,18 @@
 
 namespace Abp.Dapper
 {
-    public class NhBasedDapperAutoRepositoryTypes
-    {
-        static NhBasedDapperAutoRepositoryTypes()
-        {
-            Default = new DapperAutoRepositoryTypeAttribute(
-                typeof(IDapperRepository<>),
-                typeof(IDapperRepository<,>),
-                typeof(DapperRepositoryBase<>),
-                typeof(DapperRepositoryBase<,>)
-            );
-        }
+	public class NhBasedDapperAutoRepositoryTypes
+	{
+		static NhBasedDapperAutoRepositoryTypes()
+		{
+			Default = new DapperAutoRepositoryTypeAttribute(
+				typeof(IDapperRepository<>),
+				typeof(IDapperRepository<,>),
+				typeof(DapperRepositoryBase<>),
+				typeof(DapperRepositoryBase<,>)
+			);
+		}
 
-        public static DapperAutoRepositoryTypeAttribute Default { get; }
-    }
+		public static DapperAutoRepositoryTypeAttribute Default { get; }
+	}
 }

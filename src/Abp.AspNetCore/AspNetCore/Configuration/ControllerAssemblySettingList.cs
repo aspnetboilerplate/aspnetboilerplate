@@ -6,11 +6,11 @@ using JetBrains.Annotations;
 
 namespace Abp.AspNetCore.Configuration
 {
-    public class ControllerAssemblySettingList : List<AbpControllerAssemblySetting>
-    {
-        public List<AbpControllerAssemblySetting> GetSettings(Type controllerType)
-        {
-            return this.Where(controllerSetting => controllerSetting.Assembly == controllerType.GetAssembly()).ToList();
-        }
-    }
+	public class ControllerAssemblySettingList : List<AbpControllerAssemblySetting>
+	{
+		public List<AbpControllerAssemblySetting> GetSettings(Type controllerType)
+		{
+			return this.Where(controllerSetting => controllerSetting.Assembly == controllerType.GetAssembly()).ToList();
+		}
+	}
 }

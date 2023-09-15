@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Pages
 {
-    [DisableAuditing]
-    [IgnoreAntiforgeryToken]
-    public class AuditFilterPageDemo4Model : AbpPageModel
-    {
-        public IActionResult OnGet()
-        {
-            return Page();
-        }
+	[DisableAuditing]
+	[IgnoreAntiforgeryToken]
+	public class AuditFilterPageDemo4Model : AbpPageModel
+	{
+		public IActionResult OnGet()
+		{
+			return Page();
+		}
 
-        public void OnPost()
-        {
-        }
-    }
+		public void OnPost()
+		{
+		}
+	}
 }

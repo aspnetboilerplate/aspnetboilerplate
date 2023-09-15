@@ -9,64 +9,64 @@ using Xunit;
 
 namespace Abp.Web.Tests.Auditing
 {
-    public class Client_Info_Provider_Tests : AbpIntegratedTestBase<AbpWebModule>
-    {
-        private readonly WebClientInfoProvider _clientInfoProvider;
+	public class Client_Info_Provider_Tests : AbpIntegratedTestBase<AbpWebModule>
+	{
+		private readonly WebClientInfoProvider _clientInfoProvider;
 
-        public Client_Info_Provider_Tests()
-        {
-            _clientInfoProvider = Substitute.ForPartsOf<WebClientInfoProvider>();
-        }
-        
-        [Theory]
-        [InlineData(null, null)]
-        [InlineData("", null)]
-        [InlineData("::1", "::1")]
-        [InlineData("127.0.0.1", "127.0.0.1")]
-        [InlineData("0:0:0:0:0:0:0:1", "::1")]
-        public void Should_Save_Remote_Address_From_Server_Variable(string remote_address, string clientIpAddress)
-        {
-            var serverVariables = new NameValueCollection
-            {
-                { "REMOTE_ADDR", remote_address }
-            };
+		public Client_Info_Provider_Tests()
+		{
+			_clientInfoProvider = Substitute.ForPartsOf<WebClientInfoProvider>();
+		}
 
-            MockHttpContext(serverVariables);
+		[Theory]
+		[InlineData(null, null)]
+		[InlineData("", null)]
+		[InlineData("::1", "::1")]
+		[InlineData("127.0.0.1", "127.0.0.1")]
+		[InlineData("0:0:0:0:0:0:0:1", "::1")]
+		public void Should_Save_Remote_Address_From_Server_Variable(string remote_address, string clientIpAddress)
+		{
+			var serverVariables = new NameValueCollection
+			{
+				{ "REMOTE_ADDR", remote_address }
+			};
 
-            _clientInfoProvider.ClientIpAddress.ShouldBe(clientIpAddress);
-        }
+			MockHttpContext(serverVariables);
 
-        [Theory]
-        [InlineData(null, null)]
-        [InlineData("", null)]
-        [InlineData("::1", "::1")]
-        [InlineData("127.0.0.1", "127.0.0.1")]
-        [InlineData("127.0.0.1, 192.168.1.1", "127.0.0.1")]
-        [InlineData("127.0.0.1:8888", "127.0.0.1")]
-        [InlineData("0:0:0:0:0:0:0:1", "::1")]
-        [InlineData("0:0:0:0:0:0:0:1, 0:0:0:0:0:ffff:c0a8:101", "::1")]
-        [InlineData("[0:0:0:0:0:0:0:1]:8888", "::1")]
-        public void Should_Save_Http_X_Forwarded_For_From_Server_Variable(string forwarded_for, string clientIpAddress)
-        {
-            var serverVariables = new NameValueCollection
-            {
-                { "HTTP_X_FORWARDED_FOR", forwarded_for }
-            };
+			_clientInfoProvider.ClientIpAddress.ShouldBe(clientIpAddress);
+		}
 
-            MockHttpContext(serverVariables);
+		[Theory]
+		[InlineData(null, null)]
+		[InlineData("", null)]
+		[InlineData("::1", "::1")]
+		[InlineData("127.0.0.1", "127.0.0.1")]
+		[InlineData("127.0.0.1, 192.168.1.1", "127.0.0.1")]
+		[InlineData("127.0.0.1:8888", "127.0.0.1")]
+		[InlineData("0:0:0:0:0:0:0:1", "::1")]
+		[InlineData("0:0:0:0:0:0:0:1, 0:0:0:0:0:ffff:c0a8:101", "::1")]
+		[InlineData("[0:0:0:0:0:0:0:1]:8888", "::1")]
+		public void Should_Save_Http_X_Forwarded_For_From_Server_Variable(string forwarded_for, string clientIpAddress)
+		{
+			var serverVariables = new NameValueCollection
+			{
+				{ "HTTP_X_FORWARDED_FOR", forwarded_for }
+			};
 
-            _clientInfoProvider.ClientIpAddress.ShouldBe(clientIpAddress);
-        }
+			MockHttpContext(serverVariables);
 
-        private void MockHttpContext(NameValueCollection serverVariables = null)
-        {
-            var mockHttpRequest = Substitute.For<HttpRequestBase>();
-            if (serverVariables != null)
-            {
-                mockHttpRequest.ServerVariables.Returns(serverVariables);
-            }
+			_clientInfoProvider.ClientIpAddress.ShouldBe(clientIpAddress);
+		}
 
-            _clientInfoProvider.Configure().GetCurrentHttpRequest().Returns(mockHttpRequest);
-        }
-    }
+		private void MockHttpContext(NameValueCollection serverVariables = null)
+		{
+			var mockHttpRequest = Substitute.For<HttpRequestBase>();
+			if (serverVariables != null)
+			{
+				mockHttpRequest.ServerVariables.Returns(serverVariables);
+			}
+
+			_clientInfoProvider.Configure().GetCurrentHttpRequest().Returns(mockHttpRequest);
+		}
+	}
 }

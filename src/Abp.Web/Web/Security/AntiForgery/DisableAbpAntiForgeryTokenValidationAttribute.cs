@@ -2,9 +2,9 @@
 
 namespace Abp.Web.Security.AntiForgery
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method)]
-    public class DisableAbpAntiForgeryTokenValidationAttribute : Attribute
-    {
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method)]
+	public class DisableAbpAntiForgeryTokenValidationAttribute : Attribute
+	{
 
-    }
+	}
 }

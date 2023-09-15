@@ -4,11 +4,11 @@ using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.Authorization
 {
-    public class AppPermissionChecker : PermissionChecker<Role, User>
-    {
-        public AppPermissionChecker(UserManager userManager)
-            : base(userManager)
-        {
-        }
-    }
+	public class AppPermissionChecker : PermissionChecker<Role, User>
+	{
+		public AppPermissionChecker(UserManager userManager)
+			: base(userManager)
+		{
+		}
+	}
 }

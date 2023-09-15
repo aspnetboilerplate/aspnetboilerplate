@@ -11,31 +11,31 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization
 {
-    public class AbpSecurityStampValidator<TTenant, TRole, TUser> : SecurityStampValidator<TUser>
-        where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>, new()
-        where TUser : AbpUser<TUser>
-    {
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+	public class AbpSecurityStampValidator<TTenant, TRole, TUser> : SecurityStampValidator<TUser>
+		where TTenant : AbpTenant<TUser>
+		where TRole : AbpRole<TUser>, new()
+		where TUser : AbpUser<TUser>
+	{
+		private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public AbpSecurityStampValidator(
-            IOptions<SecurityStampValidatorOptions> options,
-            AbpSignInManager<TTenant, TRole, TUser> signInManager,
-            ISystemClock systemClock,
-            ILoggerFactory loggerFactory,
-            IUnitOfWorkManager unitOfWorkManager)
-            : base(
-                options,
-                signInManager,
-                systemClock,
-                loggerFactory)
-        {
-            _unitOfWorkManager = unitOfWorkManager;
-        }
+		public AbpSecurityStampValidator(
+			IOptions<SecurityStampValidatorOptions> options,
+			AbpSignInManager<TTenant, TRole, TUser> signInManager,
+			ISystemClock systemClock,
+			ILoggerFactory loggerFactory,
+			IUnitOfWorkManager unitOfWorkManager)
+			: base(
+				options,
+				signInManager,
+				systemClock,
+				loggerFactory)
+		{
+			_unitOfWorkManager = unitOfWorkManager;
+		}
 
-        public override async Task ValidateAsync(CookieValidatePrincipalContext context)
-        {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => { await base.ValidateAsync(context); });
-        }
-    }
+		public override async Task ValidateAsync(CookieValidatePrincipalContext context)
+		{
+			await _unitOfWorkManager.WithUnitOfWorkAsync(async () => { await base.ValidateAsync(context); });
+		}
+	}
 }

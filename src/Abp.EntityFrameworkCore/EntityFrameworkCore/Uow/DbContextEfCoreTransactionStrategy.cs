@@ -11,129 +11,129 @@ using System.Transactions;
 
 namespace Abp.EntityFrameworkCore.Uow
 {
-    public class DbContextEfCoreTransactionStrategy : IEfCoreTransactionStrategy, ITransientDependency
-    {
-        protected UnitOfWorkOptions Options { get; private set; }
+	public class DbContextEfCoreTransactionStrategy : IEfCoreTransactionStrategy, ITransientDependency
+	{
+		protected UnitOfWorkOptions Options { get; private set; }
 
-        protected IDictionary<string, ActiveTransactionInfo> ActiveTransactions { get; }
+		protected IDictionary<string, ActiveTransactionInfo> ActiveTransactions { get; }
 
-        public DbContextEfCoreTransactionStrategy()
-        {
-            ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>(System.StringComparer.OrdinalIgnoreCase);
-        }
+		public DbContextEfCoreTransactionStrategy()
+		{
+			ActiveTransactions = new Dictionary<string, ActiveTransactionInfo>(System.StringComparer.OrdinalIgnoreCase);
+		}
 
-        public void InitOptions(UnitOfWorkOptions options)
-        {
-            Options = options;
-        }
+		public void InitOptions(UnitOfWorkOptions options)
+		{
+			Options = options;
+		}
 
-        public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
-        {
-            DbContext dbContext;
+		public async Task<DbContext> CreateDbContextAsync<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+		{
+			DbContext dbContext;
 
-            var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
-            if (activeTransaction == null)
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
+			var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
+			if (activeTransaction == null)
+			{
+				dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
 
-                var dbTransaction = await dbContext.Database.BeginTransactionAsync(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
-                
-                activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
-                ActiveTransactions[connectionString] = activeTransaction;
-            }
-            else
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(
-                    connectionString,
-                    activeTransaction.DbContextTransaction.GetDbTransaction().Connection
-                );
+				var dbTransaction = await dbContext.Database.BeginTransactionAsync(
+						(Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
 
-                if (dbContext.HasRelationalTransactionManager())
-                {
-                    await dbContext.Database.UseTransactionAsync(activeTransaction.DbContextTransaction.GetDbTransaction());
-                }
-                else
-                {
-                    await dbContext.Database.BeginTransactionAsync();
-                }
+				activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
+				ActiveTransactions[connectionString] = activeTransaction;
+			}
+			else
+			{
+				dbContext = dbContextResolver.Resolve<TDbContext>(
+					connectionString,
+					activeTransaction.DbContextTransaction.GetDbTransaction().Connection
+				);
 
-                activeTransaction.AttendedDbContexts.Add(dbContext);
-            }
+				if (dbContext.HasRelationalTransactionManager())
+				{
+					await dbContext.Database.UseTransactionAsync(activeTransaction.DbContextTransaction.GetDbTransaction());
+				}
+				else
+				{
+					await dbContext.Database.BeginTransactionAsync();
+				}
 
-            return dbContext;
-        }
+				activeTransaction.AttendedDbContexts.Add(dbContext);
+			}
 
-        public void Commit()
-        {
-            foreach (var activeTransaction in ActiveTransactions.Values)
-            {
-                activeTransaction.DbContextTransaction.Commit();
+			return dbContext;
+		}
 
-                foreach (var dbContext in activeTransaction.AttendedDbContexts)
-                {
-                    if (dbContext.HasRelationalTransactionManager())
-                    {
-                        continue; //Relational databases use the shared transaction
-                    }
+		public void Commit()
+		{
+			foreach (var activeTransaction in ActiveTransactions.Values)
+			{
+				activeTransaction.DbContextTransaction.Commit();
 
-                    dbContext.Database.CommitTransaction();
-                }
-            }
-        }
+				foreach (var dbContext in activeTransaction.AttendedDbContexts)
+				{
+					if (dbContext.HasRelationalTransactionManager())
+					{
+						continue; //Relational databases use the shared transaction
+					}
 
-        public void Dispose(IIocResolver iocResolver)
-        {
-            foreach (var activeTransaction in ActiveTransactions.Values)
-            {
-                activeTransaction.DbContextTransaction.Dispose();
+					dbContext.Database.CommitTransaction();
+				}
+			}
+		}
 
-                foreach (var attendedDbContext in activeTransaction.AttendedDbContexts)
-                {
-                    iocResolver.Release(attendedDbContext);
-                }
+		public void Dispose(IIocResolver iocResolver)
+		{
+			foreach (var activeTransaction in ActiveTransactions.Values)
+			{
+				activeTransaction.DbContextTransaction.Dispose();
 
-                iocResolver.Release(activeTransaction.StarterDbContext);
-            }
+				foreach (var attendedDbContext in activeTransaction.AttendedDbContexts)
+				{
+					iocResolver.Release(attendedDbContext);
+				}
 
-            ActiveTransactions.Clear();
-        }
+				iocResolver.Release(activeTransaction.StarterDbContext);
+			}
 
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
-        {
-            DbContext dbContext;
+			ActiveTransactions.Clear();
+		}
 
-            var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
-            if (activeTransaction == null)
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
+		public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
+		{
+			DbContext dbContext;
 
-                var dbTransaction = dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
-                
-                activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
-                ActiveTransactions[connectionString] = activeTransaction;
-            }
-            else
-            {
-                dbContext = dbContextResolver.Resolve<TDbContext>(
-                    connectionString,
-                    activeTransaction.DbContextTransaction.GetDbTransaction().Connection
-                );
+			var activeTransaction = ActiveTransactions.GetOrDefault(connectionString);
+			if (activeTransaction == null)
+			{
+				dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
 
-                if (dbContext.HasRelationalTransactionManager())
-                {
-                    dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
-                }
-                else
-                {
-                    dbContext.Database.BeginTransaction();
-                }
+				var dbTransaction = dbContext.Database.BeginTransaction(
+						(Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
 
-                activeTransaction.AttendedDbContexts.Add(dbContext);
-            }
+				activeTransaction = new ActiveTransactionInfo(dbTransaction, dbContext);
+				ActiveTransactions[connectionString] = activeTransaction;
+			}
+			else
+			{
+				dbContext = dbContextResolver.Resolve<TDbContext>(
+					connectionString,
+					activeTransaction.DbContextTransaction.GetDbTransaction().Connection
+				);
 
-            return dbContext;
-        }
-    }
+				if (dbContext.HasRelationalTransactionManager())
+				{
+					dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.GetDbTransaction());
+				}
+				else
+				{
+					dbContext.Database.BeginTransaction();
+				}
+
+				activeTransaction.AttendedDbContexts.Add(dbContext);
+			}
+
+			return dbContext;
+		}
+	}
 }

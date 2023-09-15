@@ -9,22 +9,22 @@ using NSubstitute;
 
 namespace Abp.Zero.SampleApp.Tests
 {
-    [DependsOn(
-        typeof(SampleAppEntityFrameworkModule),
-        typeof(AbpZeroLdapModule),
-        typeof(AbpTestBaseModule))]
-    public class SampleAppTestModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(2);
-        }
+	[DependsOn(
+		typeof(SampleAppEntityFrameworkModule),
+		typeof(AbpZeroLdapModule),
+		typeof(AbpTestBaseModule))]
+	public class SampleAppTestModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(2);
+		}
 
-        public override void Initialize()
-        {
-            IocManager.IocContainer.Register(
-                Component.For<IAuthenticationManager>().Instance(Substitute.For<IAuthenticationManager>())
-            );
-        }
-    }
+		public override void Initialize()
+		{
+			IocManager.IocContainer.Register(
+				Component.For<IAuthenticationManager>().Instance(Substitute.For<IAuthenticationManager>())
+			);
+		}
+	}
 }

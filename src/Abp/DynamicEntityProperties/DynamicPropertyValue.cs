@@ -4,31 +4,31 @@ using Abp.Domain.Entities;
 
 namespace Abp.DynamicEntityProperties
 {
-    [Table("AbpDynamicPropertyValues")]
-    public class DynamicPropertyValue : Entity<long>, IMayHaveTenant
-    {
-        /// <summary>
-        /// Value.
-        /// </summary>
-        [Required(AllowEmptyStrings = false)]
-        public string Value { get; set; }
+	[Table("AbpDynamicPropertyValues")]
+	public class DynamicPropertyValue : Entity<long>, IMayHaveTenant
+	{
+		/// <summary>
+		/// Value.
+		/// </summary>
+		[Required(AllowEmptyStrings = false)]
+		public string Value { get; set; }
 
-        public int? TenantId { get; set; }
+		public int? TenantId { get; set; }
 
-        public int DynamicPropertyId { get; set; }
+		public int DynamicPropertyId { get; set; }
 
-        [ForeignKey("DynamicPropertyId")]
-        public virtual DynamicProperty DynamicProperty { get; set; }
+		[ForeignKey("DynamicPropertyId")]
+		public virtual DynamicProperty DynamicProperty { get; set; }
 
-        public DynamicPropertyValue()
-        {
-        }
+		public DynamicPropertyValue()
+		{
+		}
 
-        public DynamicPropertyValue(DynamicProperty dynamicProperty, string value, int? tenantId)
-        {
-            Value = value;
-            TenantId = tenantId;
-            DynamicPropertyId = dynamicProperty.Id;
-        }
-    }
+		public DynamicPropertyValue(DynamicProperty dynamicProperty, string value, int? tenantId)
+		{
+			Value = value;
+			TenantId = tenantId;
+			DynamicPropertyId = dynamicProperty.Id;
+		}
+	}
 }

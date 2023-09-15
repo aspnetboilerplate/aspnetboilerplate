@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Abp.RealTime
 {
-    public interface IOnlineClientInfoProvider : ITransientDependency
-    {
-        IOnlineClient CreateClientForCurrentConnection(HubCallerContext context);
-    }
+	public interface IOnlineClientInfoProvider : ITransientDependency
+	{
+		IOnlineClient CreateClientForCurrentConnection(HubCallerContext context);
+	}
 }

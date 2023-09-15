@@ -2,11 +2,11 @@
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
-    public class DemoAppServiceBase : ApplicationService
-    {
-        public DemoAppServiceBase()
-        {
-            LocalizationSourceName = "AbpAspNetCoreDemoModule";
-        }
-    }
+	public class DemoAppServiceBase : ApplicationService
+	{
+		public DemoAppServiceBase()
+		{
+			LocalizationSourceName = "AbpAspNetCoreDemoModule";
+		}
+	}
 }

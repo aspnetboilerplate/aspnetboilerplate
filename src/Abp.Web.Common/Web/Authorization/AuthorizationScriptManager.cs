@@ -9,84 +9,84 @@ using Abp.Web.Http;
 
 namespace Abp.Web.Authorization
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
-    {
-        /// <inheritdoc/>
-        public IAbpSession AbpSession { get; set; }
+	/// <summary>
+	///
+	/// </summary>
+	public class AuthorizationScriptManager : IAuthorizationScriptManager, ITransientDependency
+	{
+		/// <inheritdoc/>
+		public IAbpSession AbpSession { get; set; }
 
-        private readonly IPermissionManager _permissionManager;
+		private readonly IPermissionManager _permissionManager;
 
-        public IPermissionChecker PermissionChecker { get; set; }
+		public IPermissionChecker PermissionChecker { get; set; }
 
-        /// <inheritdoc/>
-        public AuthorizationScriptManager(IPermissionManager permissionManager)
-        {
-            AbpSession = NullAbpSession.Instance;
-            PermissionChecker = NullPermissionChecker.Instance;
+		/// <inheritdoc/>
+		public AuthorizationScriptManager(IPermissionManager permissionManager)
+		{
+			AbpSession = NullAbpSession.Instance;
+			PermissionChecker = NullPermissionChecker.Instance;
 
-            _permissionManager = permissionManager;
-        }
+			_permissionManager = permissionManager;
+		}
 
-        /// <inheritdoc/>
-        public async Task<string> GetScriptAsync()
-        {
-            var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
-            var grantedPermissionNames = new List<string>();
+		/// <inheritdoc/>
+		public async Task<string> GetScriptAsync()
+		{
+			var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
+			var grantedPermissionNames = new List<string>();
 
-            if (AbpSession.UserId.HasValue)
-            {
-                foreach (var permissionName in allPermissionNames)
-                {
-                    if (await PermissionChecker.IsGrantedAsync(permissionName))
-                    {
-                        grantedPermissionNames.Add(permissionName);
-                    }
-                }
-            }
-            
-            var script = new StringBuilder();
+			if (AbpSession.UserId.HasValue)
+			{
+				foreach (var permissionName in allPermissionNames)
+				{
+					if (await PermissionChecker.IsGrantedAsync(permissionName))
+					{
+						grantedPermissionNames.Add(permissionName);
+					}
+				}
+			}
 
-            script.AppendLine("(function(){");
+			var script = new StringBuilder();
 
-            script.AppendLine();
+			script.AppendLine("(function(){");
 
-            script.AppendLine("    abp.auth = abp.auth || {};");
+			script.AppendLine();
 
-            script.AppendLine();
+			script.AppendLine("    abp.auth = abp.auth || {};");
 
-            AppendPermissionList(script, "allPermissions", allPermissionNames);
+			script.AppendLine();
 
-            script.AppendLine();
+			AppendPermissionList(script, "allPermissions", allPermissionNames);
 
-            AppendPermissionList(script, "grantedPermissions", grantedPermissionNames);
+			script.AppendLine();
 
-            script.AppendLine();
-            script.Append("})();");
+			AppendPermissionList(script, "grantedPermissions", grantedPermissionNames);
 
-            return script.ToString();
-        }
+			script.AppendLine();
+			script.Append("})();");
 
-        private static void AppendPermissionList(StringBuilder script, string name, IReadOnlyList<string> permissions)
-        {
-            script.AppendLine("    abp.auth." + name + " = {");
+			return script.ToString();
+		}
 
-            for (var i = 0; i < permissions.Count; i++)
-            {
-                var permission = permissions[i];
-                if (i < permissions.Count - 1)
-                {
-                    script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true,");
-                }
-                else
-                {
-                    script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true");
-                }
-            }
+		private static void AppendPermissionList(StringBuilder script, string name, IReadOnlyList<string> permissions)
+		{
+			script.AppendLine("    abp.auth." + name + " = {");
 
-            script.AppendLine("    };");
-        }
-    }
+			for (var i = 0; i < permissions.Count; i++)
+			{
+				var permission = permissions[i];
+				if (i < permissions.Count - 1)
+				{
+					script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true,");
+				}
+				else
+				{
+					script.AppendLine("        '" + HttpEncode.JavaScriptStringEncode(permission) + "': true");
+				}
+			}
+
+			script.AppendLine("    };");
+		}
+	}
 }

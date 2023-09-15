@@ -5,56 +5,56 @@ using JetBrains.Annotations;
 
 namespace Abp.Modules
 {
-    /// <summary>
-    /// Used to store all needed information for a module.
-    /// </summary>
-    public class AbpModuleInfo
-    {
-        /// <summary>
-        /// The assembly which contains the module definition.
-        /// </summary>
-        public Assembly Assembly { get; }
+	/// <summary>
+	/// Used to store all needed information for a module.
+	/// </summary>
+	public class AbpModuleInfo
+	{
+		/// <summary>
+		/// The assembly which contains the module definition.
+		/// </summary>
+		public Assembly Assembly { get; }
 
-        /// <summary>
-        /// Type of the module.
-        /// </summary>
-        public Type Type { get; }
+		/// <summary>
+		/// Type of the module.
+		/// </summary>
+		public Type Type { get; }
 
-        /// <summary>
-        /// Instance of the module.
-        /// </summary>
-        public AbpModule Instance { get; }
+		/// <summary>
+		/// Instance of the module.
+		/// </summary>
+		public AbpModule Instance { get; }
 
-        /// <summary>
-        /// Is this module loaded as a plugin.
-        /// </summary>
-        public bool IsLoadedAsPlugIn { get; }
+		/// <summary>
+		/// Is this module loaded as a plugin.
+		/// </summary>
+		public bool IsLoadedAsPlugIn { get; }
 
-        /// <summary>
-        /// All dependent modules of this module.
-        /// </summary>
-        public List<AbpModuleInfo> Dependencies { get; }
+		/// <summary>
+		/// All dependent modules of this module.
+		/// </summary>
+		public List<AbpModuleInfo> Dependencies { get; }
 
-        /// <summary>
-        /// Creates a new AbpModuleInfo object.
-        /// </summary>
-        public AbpModuleInfo([NotNull] Type type, [NotNull] AbpModule instance, bool isLoadedAsPlugIn)
-        {
-            Check.NotNull(type, nameof(type));
-            Check.NotNull(instance, nameof(instance));
+		/// <summary>
+		/// Creates a new AbpModuleInfo object.
+		/// </summary>
+		public AbpModuleInfo([NotNull] Type type, [NotNull] AbpModule instance, bool isLoadedAsPlugIn)
+		{
+			Check.NotNull(type, nameof(type));
+			Check.NotNull(instance, nameof(instance));
 
-            Type = type;
-            Instance = instance;
-            IsLoadedAsPlugIn = isLoadedAsPlugIn;
-            Assembly = Type.GetTypeInfo().Assembly;
+			Type = type;
+			Instance = instance;
+			IsLoadedAsPlugIn = isLoadedAsPlugIn;
+			Assembly = Type.GetTypeInfo().Assembly;
 
-            Dependencies = new List<AbpModuleInfo>();
-        }
+			Dependencies = new List<AbpModuleInfo>();
+		}
 
-        public override string ToString()
-        {
-            return Type.AssemblyQualifiedName ??
-                   Type.FullName;
-        }
-    }
+		public override string ToString()
+		{
+			return Type.AssemblyQualifiedName ??
+				   Type.FullName;
+		}
+	}
 }

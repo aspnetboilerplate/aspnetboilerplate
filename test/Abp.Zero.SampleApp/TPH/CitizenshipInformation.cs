@@ -8,11 +8,11 @@ using Abp.Domain.Entities;
 
 namespace Abp.Zero.SampleApp.TPH
 {
-    public class CitizenshipInformation : Entity
-    {
-        public string CitizenShipId { get; set; }
+	public class CitizenshipInformation : Entity
+	{
+		public string CitizenShipId { get; set; }
 
-        [Required]
-        public Student Student { get; set; }
-    }
+		[Required]
+		public Student Student { get; set; }
+	}
 }

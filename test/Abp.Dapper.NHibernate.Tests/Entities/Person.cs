@@ -2,17 +2,17 @@
 
 namespace Abp.Dapper.NHibernate.Tests
 {
-    public class Person : Entity
-    {
-        protected Person()
-        {
-        }
+	public class Person : Entity
+	{
+		protected Person()
+		{
+		}
 
-        public Person(string name) : this()
-        {
-            Name = name;
-        }
+		public Person(string name) : this()
+		{
+			Name = name;
+		}
 
-        public virtual string Name { get; set; }
-    }
+		public virtual string Name { get; set; }
+	}
 }

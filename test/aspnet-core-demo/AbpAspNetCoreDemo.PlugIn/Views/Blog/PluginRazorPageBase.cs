@@ -6,5 +6,5 @@ namespace AbpAspNetCoreDemo.PlugIn.Views;
 
 public abstract class PluginRazorPageBase<TModel> : AbpRazorPage<TModel>
 {
-    [RazorInject] public IAbpSession AbpSession { get; set; }
+	[RazorInject] public IAbpSession AbpSession { get; set; }
 }

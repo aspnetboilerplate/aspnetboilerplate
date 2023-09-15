@@ -6,42 +6,42 @@ using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Abp.RealTime
 {
-    public class OnlineClientInfoProvider : IOnlineClientInfoProvider
-    {
-        private readonly IClientInfoProvider _clientInfoProvider;
+	public class OnlineClientInfoProvider : IOnlineClientInfoProvider
+	{
+		private readonly IClientInfoProvider _clientInfoProvider;
 
-        public IAbpSession AbpSession { get; set; }
-        public ILogger Logger { get; set; }
+		public IAbpSession AbpSession { get; set; }
+		public ILogger Logger { get; set; }
 
-        public OnlineClientInfoProvider(IClientInfoProvider clientInfoProvider)
-        {
-            _clientInfoProvider = clientInfoProvider;
-            AbpSession = NullAbpSession.Instance;
-            Logger = NullLogger.Instance;
-        }
+		public OnlineClientInfoProvider(IClientInfoProvider clientInfoProvider)
+		{
+			_clientInfoProvider = clientInfoProvider;
+			AbpSession = NullAbpSession.Instance;
+			Logger = NullLogger.Instance;
+		}
 
-        public IOnlineClient CreateClientForCurrentConnection(HubCallerContext context)
-        {
-            return new OnlineClient(
-                context.ConnectionId,
-                GetIpAddressOfClient(context),
-                AbpSession.TenantId,
-                AbpSession.UserId
-            );
-        }
+		public IOnlineClient CreateClientForCurrentConnection(HubCallerContext context)
+		{
+			return new OnlineClient(
+				context.ConnectionId,
+				GetIpAddressOfClient(context),
+				AbpSession.TenantId,
+				AbpSession.UserId
+			);
+		}
 
-        private string GetIpAddressOfClient(HubCallerContext context)
-        {
-            try
-            {
-                return _clientInfoProvider.ClientIpAddress;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Can not find IP address of the client! connectionId: " + context.ConnectionId);
-                Logger.Error(ex.Message, ex);
-                return "";
-            }
-        }
-    }
+		private string GetIpAddressOfClient(HubCallerContext context)
+		{
+			try
+			{
+				return _clientInfoProvider.ClientIpAddress;
+			}
+			catch (Exception ex)
+			{
+				Logger.Error("Can not find IP address of the client! connectionId: " + context.ConnectionId);
+				Logger.Error(ex.Message, ex);
+				return "";
+			}
+		}
+	}
 }

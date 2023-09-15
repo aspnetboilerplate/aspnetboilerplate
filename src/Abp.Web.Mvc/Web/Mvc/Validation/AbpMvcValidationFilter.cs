@@ -5,40 +5,40 @@ using Abp.Web.Mvc.Extensions;
 
 namespace Abp.Web.Mvc.Validation
 {
-    public class AbpMvcValidationFilter : IActionFilter, ITransientDependency
-    {
-        private readonly IIocResolver _iocResolver;
-        private readonly IAbpMvcConfiguration _configuration;
+	public class AbpMvcValidationFilter : IActionFilter, ITransientDependency
+	{
+		private readonly IIocResolver _iocResolver;
+		private readonly IAbpMvcConfiguration _configuration;
 
-        public AbpMvcValidationFilter(IIocResolver iocResolver, IAbpMvcConfiguration configuration)
-        {
-            _iocResolver = iocResolver;
-            _configuration = configuration;
-        }
+		public AbpMvcValidationFilter(IIocResolver iocResolver, IAbpMvcConfiguration configuration)
+		{
+			_iocResolver = iocResolver;
+			_configuration = configuration;
+		}
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (!_configuration.IsValidationEnabledForControllers)
-            {
-                return;
-            }
+		public void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			if (!_configuration.IsValidationEnabledForControllers)
+			{
+				return;
+			}
 
-            var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            if (methodInfo == null)
-            {
-                return;
-            }
+			var methodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
+			if (methodInfo == null)
+			{
+				return;
+			}
 
-            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
-            {
-                validator.Object.Initialize(filterContext, methodInfo);
-                validator.Object.Validate();
-            }
-        }
+			using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+			{
+				validator.Object.Initialize(filterContext, methodInfo);
+				validator.Object.Validate();
+			}
+		}
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            
-        }
-    }
+		public void OnActionExecuted(ActionExecutedContext filterContext)
+		{
+
+		}
+	}
 }

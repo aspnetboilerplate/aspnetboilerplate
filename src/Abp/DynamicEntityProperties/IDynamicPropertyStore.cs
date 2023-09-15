@@ -3,30 +3,30 @@ using System.Threading.Tasks;
 
 namespace Abp.DynamicEntityProperties
 {
-    public interface IDynamicPropertyStore
-    {
-        DynamicProperty Get(int id);
+	public interface IDynamicPropertyStore
+	{
+		DynamicProperty Get(int id);
 
-        Task<DynamicProperty> GetAsync(int id);
+		Task<DynamicProperty> GetAsync(int id);
 
-        DynamicProperty Get(string propertyName);
+		DynamicProperty Get(string propertyName);
 
-        Task<DynamicProperty> GetAsync(string propertyName);
+		Task<DynamicProperty> GetAsync(string propertyName);
 
-        List<DynamicProperty> GetAll();
+		List<DynamicProperty> GetAll();
 
-        Task<List<DynamicProperty>> GetAllAsync();
+		Task<List<DynamicProperty>> GetAllAsync();
 
-        void Add(DynamicProperty dynamicProperty);
+		void Add(DynamicProperty dynamicProperty);
 
-        Task AddAsync(DynamicProperty dynamicProperty);
+		Task AddAsync(DynamicProperty dynamicProperty);
 
-        void Update(DynamicProperty dynamicProperty);
+		void Update(DynamicProperty dynamicProperty);
 
-        Task UpdateAsync(DynamicProperty dynamicProperty);
+		Task UpdateAsync(DynamicProperty dynamicProperty);
 
-        void Delete(int id);
+		void Delete(int id);
 
-        Task DeleteAsync(int id);
-    }
+		Task DeleteAsync(int id);
+	}
 }

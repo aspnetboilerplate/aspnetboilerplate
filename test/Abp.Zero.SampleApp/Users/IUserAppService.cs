@@ -4,16 +4,16 @@ using Abp.Zero.SampleApp.Users.Dto;
 
 namespace Abp.Zero.SampleApp.Users
 {
-    public interface IUserAppService : IApplicationService
-    {
-        void CreateUser(CreateUserInput input);
+	public interface IUserAppService : IApplicationService
+	{
+		void CreateUser(CreateUserInput input);
 
-        void UpdateUser(UpdateUserInput input);
+		void UpdateUser(UpdateUserInput input);
 
-        void DeleteUser(long userId);
+		void DeleteUser(long userId);
 
-        Task ResetPassword(ResetPasswordInput input);
+		Task ResetPassword(ResetPasswordInput input);
 
-        void CustomValidateMethod(CustomValidateMethodInput input);
-    }
+		void CustomValidateMethod(CustomValidateMethodInput input);
+	}
 }

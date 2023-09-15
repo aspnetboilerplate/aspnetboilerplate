@@ -13,50 +13,50 @@ using Xunit;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 {
-    public class RazorResultPageFilterTests : IClassFixture<WebApplicationFactory<Startup>>
-    {
-        private readonly WebApplicationFactory<Startup> _factory;
+	public class RazorResultPageFilterTests : IClassFixture<WebApplicationFactory<Startup>>
+	{
+		private readonly WebApplicationFactory<Startup> _factory;
 
-        public RazorResultPageFilterTests(WebApplicationFactory<Startup> factory)
-        {
-            _factory = factory;
-        }
+		public RazorResultPageFilterTests(WebApplicationFactory<Startup> factory)
+		{
+			_factory = factory;
+		}
 
-        [Fact]
-        public async Task RazorPage_RazorResultPageFilter_Get_Test()
-        {
-            // Arrange
-            var client = _factory.CreateClient();
+		[Fact]
+		public async Task RazorPage_RazorResultPageFilter_Get_Test()
+		{
+			// Arrange
+			var client = _factory.CreateClient();
 
-            // Act
-            var response = await client.GetAsync("/ResultFilterPageDemo");
+			// Act
+			var response = await client.GetAsync("/ResultFilterPageDemo");
 
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+			// Assert
+			response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var result = await response.Content.ReadAsStringAsync();
+			var result = await response.Content.ReadAsStringAsync();
 
-            result.ShouldBe("OnGet");
-        }
+			result.ShouldBe("OnGet");
+		}
 
-        [Fact]
-        public async Task RazorPage_RazorResultPageFilter_Post_Test()
-        {
-            // Arrange
-            var client = _factory.CreateClient();
+		[Fact]
+		public async Task RazorPage_RazorResultPageFilter_Post_Test()
+		{
+			// Arrange
+			var client = _factory.CreateClient();
 
-            // Act
-            var response = await client.PostAsync("/ResultFilterPageDemo", new StringContent(""));
+			// Act
+			var response = await client.PostAsync("/ResultFilterPageDemo", new StringContent(""));
 
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+			// Assert
+			response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var result = JsonConvert.DeserializeObject<AjaxResponse>(await response.Content.ReadAsStringAsync());
+			var result = JsonConvert.DeserializeObject<AjaxResponse>(await response.Content.ReadAsStringAsync());
 
-            result.ShouldNotBeNull();
-            result.Success.ShouldBeTrue();
+			result.ShouldNotBeNull();
+			result.Success.ShouldBeTrue();
 
-            result.Result.ShouldBe("OnPost");
-        }
-    }
+			result.Result.ShouldBe("OnPost");
+		}
+	}
 }

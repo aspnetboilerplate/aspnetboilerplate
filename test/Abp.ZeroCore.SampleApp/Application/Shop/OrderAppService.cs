@@ -8,23 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.ZeroCore.SampleApp.Application.Shop
 {
-    public class OrderAppService : ApplicationService, IOrderAppService
-    {
-        private readonly IRepository<Order> _orderRepository;
+	public class OrderAppService : ApplicationService, IOrderAppService
+	{
+		private readonly IRepository<Order> _orderRepository;
 
-        public OrderAppService(IRepository<Order> orderRepository)
-        {
-            _orderRepository = orderRepository;
-        }
+		public OrderAppService(IRepository<Order> orderRepository)
+		{
+			_orderRepository = orderRepository;
+		}
 
-        public async Task<ListResultDto<OrderListDto>> GetOrders()
-        {
-            var products = await _orderRepository.GetAll()
-                .Include(p => p.Translations)
-                .Include(p => p.Products)
-                .ToListAsync();
+		public async Task<ListResultDto<OrderListDto>> GetOrders()
+		{
+			var products = await _orderRepository.GetAll()
+				.Include(p => p.Translations)
+				.Include(p => p.Products)
+				.ToListAsync();
 
-            return new ListResultDto<OrderListDto>(ObjectMapper.Map<List<OrderListDto>>(products));
-        }
-    }
+			return new ListResultDto<OrderListDto>(ObjectMapper.Map<List<OrderListDto>>(products));
+		}
+	}
 }

@@ -4,12 +4,12 @@ using Abp.Zero.EntityFrameworkCore;
 
 namespace Abp.IdentityServer4
 {
-    [DependsOn(typeof(AbpZeroCoreIdentityServerModule), typeof(AbpZeroCoreEntityFrameworkCoreModule))]
-    public class AbpZeroCoreIdentityServerEntityFrameworkCoreModule : AbpModule
-    {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule).GetAssembly());
-        }
-    }
+	[DependsOn(typeof(AbpZeroCoreIdentityServerModule), typeof(AbpZeroCoreEntityFrameworkCoreModule))]
+	public class AbpZeroCoreIdentityServerEntityFrameworkCoreModule : AbpModule
+	{
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule).GetAssembly());
+		}
+	}
 }

@@ -5,12 +5,12 @@ using Abp.Dependency;
 
 namespace Abp.HtmlSanitizer.Configuration
 {
-    public interface IHtmlSanitizerConfiguration
-    {
-        bool IsEnabledForGetRequests { get; set; }
+	public interface IHtmlSanitizerConfiguration
+	{
+		bool IsEnabledForGetRequests { get; set; }
 
-        List<Func<MethodInfo, bool>> Selectors { get; set; }
+		List<Func<MethodInfo, bool>> Selectors { get; set; }
 
-        bool KeepChildNodes { get; set; }
-    }
+		bool KeepChildNodes { get; set; }
+	}
 }

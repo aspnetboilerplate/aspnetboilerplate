@@ -7,22 +7,22 @@ using Microsoft.AspNet.OData;
 
 namespace Abp.WebApi.OData
 {
-    [DependsOn(typeof(AbpWebApiModule))]
-    public class AbpWebApiODataModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            IocManager.Register<IAbpWebApiODataModuleConfiguration, AbpWebApiODataModuleConfiguration>();
+	[DependsOn(typeof(AbpWebApiModule))]
+	public class AbpWebApiODataModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			IocManager.Register<IAbpWebApiODataModuleConfiguration, AbpWebApiODataModuleConfiguration>();
 
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Delta));
-        }
+			Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Delta));
+		}
 
-        public override void Initialize()
-        {
-            IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		public override void Initialize()
+		{
+			IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            Configuration.Modules.AbpWebApiOData().MapAction?.Invoke(Configuration);
-        }
-    }
+			Configuration.Modules.AbpWebApiOData().MapAction?.Invoke(Configuration);
+		}
+	}
 }

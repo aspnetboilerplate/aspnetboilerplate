@@ -9,146 +9,146 @@ using Xunit;
 
 namespace Abp.Quartz.Tests
 {
-    public class QuartzTests : AbpIntegratedTestBase<AbpQuartzTestModule>
-    {
-        private readonly IAbpQuartzConfiguration _abpQuartzConfiguration;
-        private readonly IQuartzScheduleJobManager _quartzScheduleJobManager;
+	public class QuartzTests : AbpIntegratedTestBase<AbpQuartzTestModule>
+	{
+		private readonly IAbpQuartzConfiguration _abpQuartzConfiguration;
+		private readonly IQuartzScheduleJobManager _quartzScheduleJobManager;
 
-        public QuartzTests()
-        {
-            _quartzScheduleJobManager = LocalIocManager.Resolve<IQuartzScheduleJobManager>();
-            _abpQuartzConfiguration = LocalIocManager.Resolve<IAbpQuartzConfiguration>();
-        }
+		public QuartzTests()
+		{
+			_quartzScheduleJobManager = LocalIocManager.Resolve<IQuartzScheduleJobManager>();
+			_abpQuartzConfiguration = LocalIocManager.Resolve<IAbpQuartzConfiguration>();
+		}
 
-        private async Task ScheduleJobs()
-        {
-            await _quartzScheduleJobManager.ScheduleAsync<HelloJob>(
-                job =>
-                {
-                    job.WithDescription("HelloJobDescription")
-                       .WithIdentity("HelloJobKey");
-                },
-                trigger =>
-                {
-                    trigger.WithIdentity("HelloJobTrigger")
-                           .WithDescription("HelloJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
-                });
+		private async Task ScheduleJobs()
+		{
+			await _quartzScheduleJobManager.ScheduleAsync<HelloJob>(
+				job =>
+				{
+					job.WithDescription("HelloJobDescription")
+					   .WithIdentity("HelloJobKey");
+				},
+				trigger =>
+				{
+					trigger.WithIdentity("HelloJobTrigger")
+						   .WithDescription("HelloJobTriggerDescription")
+						   .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+						   .StartNow();
+				});
 
-            await _quartzScheduleJobManager.ScheduleAsync<GoodByeJob>(
-                job =>
-                {
-                    job.WithDescription("GoodByeJobDescription")
-                       .WithIdentity("GoodByeJobKey");
-                },
-                trigger =>
-                {
-                    trigger.WithIdentity("GoodByeJobTrigger")
-                           .WithDescription("GoodByeJobTriggerDescription")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
-                });
-        }
+			await _quartzScheduleJobManager.ScheduleAsync<GoodByeJob>(
+				job =>
+				{
+					job.WithDescription("GoodByeJobDescription")
+					   .WithIdentity("GoodByeJobKey");
+				},
+				trigger =>
+				{
+					trigger.WithIdentity("GoodByeJobTrigger")
+						   .WithDescription("GoodByeJobTriggerDescription")
+						   .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+						   .StartNow();
+				});
+		}
 
-        private async Task RescheduleJob()
-        {
-            await _quartzScheduleJobManager.RescheduleAsync(new TriggerKey("HelloJobTrigger"),
-                trigger =>
-                {
-                    trigger.WithIdentity("HelloJobRescheduleTrigger")
-                           .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
-                           .StartNow();
-                });
-        }
+		private async Task RescheduleJob()
+		{
+			await _quartzScheduleJobManager.RescheduleAsync(new TriggerKey("HelloJobTrigger"),
+				trigger =>
+				{
+					trigger.WithIdentity("HelloJobRescheduleTrigger")
+						   .WithSimpleSchedule(schedule => schedule.WithRepeatCount(50).WithInterval(TimeSpan.FromSeconds(1)))
+						   .StartNow();
+				});
+		}
 
-        private async Task UnscheduleJob()
-        {
-            await _quartzScheduleJobManager.UnscheduleAsync(new TriggerKey("GoodByeJobTrigger"));
-        }
+		private async Task UnscheduleJob()
+		{
+			await _quartzScheduleJobManager.UnscheduleAsync(new TriggerKey("GoodByeJobTrigger"));
+		}
 
-        [Fact]
-        public async Task QuartzScheduler_Jobs_ShouldBe_Registered_And_Executed_With_SingletonDependency()
-        {
-            // There should be only one test case in this project, or the unit test may fail in AppVeyor
-            await ScheduleJobs();
+		[Fact]
+		public async Task QuartzScheduler_Jobs_ShouldBe_Registered_And_Executed_With_SingletonDependency()
+		{
+			// There should be only one test case in this project, or the unit test may fail in AppVeyor
+			await ScheduleJobs();
 
-            var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
-            var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
+			var helloDependency = LocalIocManager.Resolve<IHelloDependency>();
+			var goodByeDependency = LocalIocManager.Resolve<IGoodByeDependency>();
 
-            _abpQuartzConfiguration.Scheduler.ShouldNotBeNull();
-            _abpQuartzConfiguration.Scheduler.IsStarted.ShouldBe(true);
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey"))).ShouldBe(true);
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey"))).ShouldBe(true);
+			_abpQuartzConfiguration.Scheduler.ShouldNotBeNull();
+			_abpQuartzConfiguration.Scheduler.IsStarted.ShouldBe(true);
+			(await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("HelloJobKey"))).ShouldBe(true);
+			(await _abpQuartzConfiguration.Scheduler.CheckExists(JobKey.Create("GoodByeJobKey"))).ShouldBe(true);
 
-            //Wait for execution!
-            await Task.Delay(TimeSpan.FromSeconds(5));
+			//Wait for execution!
+			await Task.Delay(TimeSpan.FromSeconds(5));
 
-            helloDependency.ExecutionCount.ShouldBeGreaterThan(0);
-            goodByeDependency.ExecutionCount.ShouldBeGreaterThan(0);
+			helloDependency.ExecutionCount.ShouldBeGreaterThan(0);
+			goodByeDependency.ExecutionCount.ShouldBeGreaterThan(0);
 
-            await RescheduleJob();
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobTrigger"))).ShouldBe(false);
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobRescheduleTrigger"))).ShouldBe(true);
+			await RescheduleJob();
+			(await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobTrigger"))).ShouldBe(false);
+			(await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("HelloJobRescheduleTrigger"))).ShouldBe(true);
 
-            await UnscheduleJob();
-            (await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("GoodByeJobTrigger"))).ShouldBe(false);
-        }
-    }
+			await UnscheduleJob();
+			(await _abpQuartzConfiguration.Scheduler.CheckExists(new TriggerKey("GoodByeJobTrigger"))).ShouldBe(false);
+		}
+	}
 
-    [DisallowConcurrentExecution]
-    public class HelloJob : JobBase, ITransientDependency
-    {
-        private readonly IHelloDependency _helloDependency;
+	[DisallowConcurrentExecution]
+	public class HelloJob : JobBase, ITransientDependency
+	{
+		private readonly IHelloDependency _helloDependency;
 
-        public HelloJob(IHelloDependency helloDependency)
-        {
-            _helloDependency = helloDependency;
-        }
+		public HelloJob(IHelloDependency helloDependency)
+		{
+			_helloDependency = helloDependency;
+		}
 
-        public override Task Execute(IJobExecutionContext context)
-        {
-            _helloDependency.ExecutionCount++;
+		public override Task Execute(IJobExecutionContext context)
+		{
+			_helloDependency.ExecutionCount++;
 
-            return Task.CompletedTask;
-        }
-    }
+			return Task.CompletedTask;
+		}
+	}
 
-    [DisallowConcurrentExecution]
-    public class GoodByeJob : JobBase, ITransientDependency
-    {
-        private readonly IGoodByeDependency _goodByeDependency;
+	[DisallowConcurrentExecution]
+	public class GoodByeJob : JobBase, ITransientDependency
+	{
+		private readonly IGoodByeDependency _goodByeDependency;
 
-        public GoodByeJob(IGoodByeDependency goodByeDependency)
-        {
-            _goodByeDependency = goodByeDependency;
-        }
+		public GoodByeJob(IGoodByeDependency goodByeDependency)
+		{
+			_goodByeDependency = goodByeDependency;
+		}
 
-        public override Task Execute(IJobExecutionContext context)
-        {
-            _goodByeDependency.ExecutionCount++;
+		public override Task Execute(IJobExecutionContext context)
+		{
+			_goodByeDependency.ExecutionCount++;
 
-            return Task.CompletedTask;
-        }
-    }
+			return Task.CompletedTask;
+		}
+	}
 
-    public interface IHelloDependency
-    {
-        int ExecutionCount { get; set; }
-    }
+	public interface IHelloDependency
+	{
+		int ExecutionCount { get; set; }
+	}
 
-    public interface IGoodByeDependency
-    {
-        int ExecutionCount { get; set; }
-    }
+	public interface IGoodByeDependency
+	{
+		int ExecutionCount { get; set; }
+	}
 
-    public class HelloDependency : IHelloDependency, ISingletonDependency
-    {
-        public int ExecutionCount { get; set; }
-    }
+	public class HelloDependency : IHelloDependency, ISingletonDependency
+	{
+		public int ExecutionCount { get; set; }
+	}
 
-    public class GoodByeDependency : IGoodByeDependency, ISingletonDependency
-    {
-        public int ExecutionCount { get; set; }
-    }
+	public class GoodByeDependency : IGoodByeDependency, ISingletonDependency
+	{
+		public int ExecutionCount { get; set; }
+	}
 }

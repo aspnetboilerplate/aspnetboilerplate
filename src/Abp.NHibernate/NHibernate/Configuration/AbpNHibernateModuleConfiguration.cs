@@ -2,13 +2,13 @@
 
 namespace Abp.NHibernate.Configuration
 {
-    internal class AbpNHibernateModuleConfiguration : IAbpNHibernateModuleConfiguration
-    {
-        public FluentConfiguration FluentConfiguration { get; }
+	internal class AbpNHibernateModuleConfiguration : IAbpNHibernateModuleConfiguration
+	{
+		public FluentConfiguration FluentConfiguration { get; }
 
-        public AbpNHibernateModuleConfiguration()
-        {
-            FluentConfiguration = Fluently.Configure();
-        }
-    }
+		public AbpNHibernateModuleConfiguration()
+		{
+			FluentConfiguration = Fluently.Configure();
+		}
+	}
 }

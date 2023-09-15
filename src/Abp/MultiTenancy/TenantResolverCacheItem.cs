@@ -1,12 +1,12 @@
 namespace Abp.MultiTenancy
 {
-    public class TenantResolverCacheItem
-    {
-        public int? TenantId { get; }
+	public class TenantResolverCacheItem
+	{
+		public int? TenantId { get; }
 
-        public TenantResolverCacheItem(int? tenantId)
-        {
-            TenantId = tenantId;
-        }
-    }
+		public TenantResolverCacheItem(int? tenantId)
+		{
+			TenantId = tenantId;
+		}
+	}
 }

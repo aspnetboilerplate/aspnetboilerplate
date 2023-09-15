@@ -5,8 +5,8 @@ using Abp.Dependency;
 
 namespace Abp.Web.Mvc.Alerts
 {
-    public interface IAlertMessageRendererManager : ITransientDependency
-    {
-        string Render(string alertDisplayType);
-    }
+	public interface IAlertMessageRendererManager : ITransientDependency
+	{
+		string Render(string alertDisplayType);
+	}
 }

@@ -2,8 +2,8 @@
 
 namespace Abp.IdentityServer4
 {
-    public abstract class AbpZeroIdentityServerTestBase : AbpIntegratedTestBase<AbpZeroIdentityServerTestModule>
-    {
-        
-    }
+	public abstract class AbpZeroIdentityServerTestBase : AbpIntegratedTestBase<AbpZeroIdentityServerTestModule>
+	{
+
+	}
 }

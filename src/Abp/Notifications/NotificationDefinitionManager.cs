@@ -8,217 +8,217 @@ using Abp.Dependency;
 
 namespace Abp.Notifications
 {
-    /// <summary>
-    /// Implements <see cref="INotificationDefinitionManager"/>.
-    /// </summary>
-    internal class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
-    {
-        private readonly INotificationConfiguration _configuration;
-        private readonly IocManager _iocManager;
+	/// <summary>
+	/// Implements <see cref="INotificationDefinitionManager"/>.
+	/// </summary>
+	internal class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
+	{
+		private readonly INotificationConfiguration _configuration;
+		private readonly IocManager _iocManager;
 
-        private readonly IDictionary<string, NotificationDefinition> _notificationDefinitions;
+		private readonly IDictionary<string, NotificationDefinition> _notificationDefinitions;
 
-        public NotificationDefinitionManager(
-            IocManager iocManager,
-            INotificationConfiguration configuration)
-        {
-            _configuration = configuration;
-            _iocManager = iocManager;
+		public NotificationDefinitionManager(
+			IocManager iocManager,
+			INotificationConfiguration configuration)
+		{
+			_configuration = configuration;
+			_iocManager = iocManager;
 
-            _notificationDefinitions = new Dictionary<string, NotificationDefinition>();
-        }
+			_notificationDefinitions = new Dictionary<string, NotificationDefinition>();
+		}
 
-        public void Initialize()
-        {
-            var context = new NotificationDefinitionContext(this);
+		public void Initialize()
+		{
+			var context = new NotificationDefinitionContext(this);
 
-            foreach (var providerType in _configuration.Providers)
-            {
-                using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
-                {
-                    provider.Object.SetNotifications(context);
-                }
-            }
-        }
+			foreach (var providerType in _configuration.Providers)
+			{
+				using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
+				{
+					provider.Object.SetNotifications(context);
+				}
+			}
+		}
 
-        public void Add(NotificationDefinition notificationDefinition)
-        {
-            if (_notificationDefinitions.ContainsKey(notificationDefinition.Name))
-            {
-                throw new AbpInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
-            }
+		public void Add(NotificationDefinition notificationDefinition)
+		{
+			if (_notificationDefinitions.ContainsKey(notificationDefinition.Name))
+			{
+				throw new AbpInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
+			}
 
-            _notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
-        }
+			_notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
+		}
 
-        public NotificationDefinition Get(string name)
-        {
-            var definition = GetOrNull(name);
-            if (definition == null)
-            {
-                throw new AbpException("There is no notification definition with given name: " + name);
-            }
+		public NotificationDefinition Get(string name)
+		{
+			var definition = GetOrNull(name);
+			if (definition == null)
+			{
+				throw new AbpException("There is no notification definition with given name: " + name);
+			}
 
-            return definition;
-        }
+			return definition;
+		}
 
-        public NotificationDefinition GetOrNull(string name)
-        {
-            return _notificationDefinitions.GetOrDefault(name);
-        }
+		public NotificationDefinition GetOrNull(string name)
+		{
+			return _notificationDefinitions.GetOrDefault(name);
+		}
 
-        public void Remove(string name)
-        {
-            _notificationDefinitions.Remove(name);
-        }
+		public void Remove(string name)
+		{
+			_notificationDefinitions.Remove(name);
+		}
 
-        public IReadOnlyList<NotificationDefinition> GetAll()
-        {
-            return _notificationDefinitions.Values.ToImmutableList();
-        }
+		public IReadOnlyList<NotificationDefinition> GetAll()
+		{
+			return _notificationDefinitions.Values.ToImmutableList();
+		}
 
-        public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
-        {
-            var notificationDefinition = GetOrNull(name);
-            if (notificationDefinition == null)
-            {
-                return true;
-            }
+		public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
+		{
+			var notificationDefinition = GetOrNull(name);
+			if (notificationDefinition == null)
+			{
+				return true;
+			}
 
-            if (notificationDefinition.FeatureDependency != null)
-            {
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+			if (notificationDefinition.FeatureDependency != null)
+			{
+				using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+				{
+					featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
+					if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+					{
+						return false;
+					}
+				}
+			}
 
-            if (notificationDefinition.PermissionDependency != null)
-            {
-                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-                {
-                    permissionDependencyContext.Object.User = user;
+			if (notificationDefinition.PermissionDependency != null)
+			{
+				using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+				{
+					permissionDependencyContext.Object.User = user;
 
-                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
+					if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+					{
+						return false;
+					}
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        public bool IsAvailable(string name, UserIdentifier user)
-        {
-            var notificationDefinition = GetOrNull(name);
-            if (notificationDefinition == null)
-            {
-                return true;
-            }
+		public bool IsAvailable(string name, UserIdentifier user)
+		{
+			var notificationDefinition = GetOrNull(name);
+			if (notificationDefinition == null)
+			{
+				return true;
+			}
 
-            if (notificationDefinition.FeatureDependency != null)
-            {
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+			if (notificationDefinition.FeatureDependency != null)
+			{
+				using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+				{
+					featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
+					if (! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+					{
+						return false;
+					}
+				}
+			}
 
-            if (notificationDefinition.PermissionDependency != null)
-            {
-                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-                {
-                    permissionDependencyContext.Object.User = user;
+			if (notificationDefinition.PermissionDependency != null)
+			{
+				using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+				{
+					permissionDependencyContext.Object.User = user;
 
-                    if (! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
-                    {
-                        return false;
-                    }
-                }
-            }
+					if (! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+					{
+						return false;
+					}
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user)
-        {
-            var availableDefinitions = new List<NotificationDefinition>();
+		public async Task<IReadOnlyList<NotificationDefinition>> GetAllAvailableAsync(UserIdentifier user)
+		{
+			var availableDefinitions = new List<NotificationDefinition>();
 
-            using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-            {
-                permissionDependencyContext.Object.User = user;
+			using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+			{
+				permissionDependencyContext.Object.User = user;
 
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+				using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+				{
+					featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    foreach (var notificationDefinition in GetAll())
-                    {
-                        if (notificationDefinition.PermissionDependency != null &&
-                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
-                        {
-                            continue;
-                        }
+					foreach (var notificationDefinition in GetAll())
+					{
+						if (notificationDefinition.PermissionDependency != null &&
+							!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+						{
+							continue;
+						}
 
-                        if (user.TenantId.HasValue &&
-                            notificationDefinition.FeatureDependency != null &&
-                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
-                        {
-                            continue;
-                        }
+						if (user.TenantId.HasValue &&
+							notificationDefinition.FeatureDependency != null &&
+							!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+						{
+							continue;
+						}
 
-                        availableDefinitions.Add(notificationDefinition);
-                    }
-                }
-            }
+						availableDefinitions.Add(notificationDefinition);
+					}
+				}
+			}
 
-            return availableDefinitions.ToImmutableList();
-        }
+			return availableDefinitions.ToImmutableList();
+		}
 
-        public IReadOnlyList<NotificationDefinition> GetAllAvailable(UserIdentifier user)
-        {
-            var availableDefinitions = new List<NotificationDefinition>();
+		public IReadOnlyList<NotificationDefinition> GetAllAvailable(UserIdentifier user)
+		{
+			var availableDefinitions = new List<NotificationDefinition>();
 
-            using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
-            {
-                permissionDependencyContext.Object.User = user;
+			using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+			{
+				permissionDependencyContext.Object.User = user;
 
-                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
-                {
-                    featureDependencyContext.Object.TenantId = user.TenantId;
+				using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+				{
+					featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    foreach (var notificationDefinition in GetAll())
-                    {
-                        if (notificationDefinition.PermissionDependency != null &&
-                            ! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
-                        {
-                            continue;
-                        }
+					foreach (var notificationDefinition in GetAll())
+					{
+						if (notificationDefinition.PermissionDependency != null &&
+							! notificationDefinition.PermissionDependency.IsSatisfied(permissionDependencyContext.Object))
+						{
+							continue;
+						}
 
-                        if (user.TenantId.HasValue &&
-                            notificationDefinition.FeatureDependency != null &&
-                            ! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
-                        {
-                            continue;
-                        }
+						if (user.TenantId.HasValue &&
+							notificationDefinition.FeatureDependency != null &&
+							! notificationDefinition.FeatureDependency.IsSatisfied(featureDependencyContext.Object))
+						{
+							continue;
+						}
 
-                        availableDefinitions.Add(notificationDefinition);
-                    }
-                }
-            }
+						availableDefinitions.Add(notificationDefinition);
+					}
+				}
+			}
 
-            return availableDefinitions.ToImmutableList();
-        }
-    }
+			return availableDefinitions.ToImmutableList();
+		}
+	}
 }

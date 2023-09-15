@@ -18,111 +18,111 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [UnsetVisualStudioEnvironmentVariables]
 [MSBuildVerbosityMapping]
 [AzurePipelines(
-    AzurePipelinesImage.WindowsLatest,
-    InvokedTargets = new[] {nameof(Test)},
-    ExcludedTargets = new[] {nameof(Clean)},
-    NonEntryTargets = new[] {nameof(Restore), nameof(Compile)})]
+	AzurePipelinesImage.WindowsLatest,
+	InvokedTargets = new[] {nameof(Test)},
+	ExcludedTargets = new[] {nameof(Clean)},
+	NonEntryTargets = new[] {nameof(Restore), nameof(Compile)})]
 [AppVeyor(
-    AppVeyorImage.VisualStudioLatest,
-    InvokedTargets = new[] {nameof(Test)},
-    AutoGenerate = false)]
+	AppVeyorImage.VisualStudioLatest,
+	InvokedTargets = new[] {nameof(Test)},
+	AutoGenerate = false)]
 class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
-    public static int Main() => Execute<Build>(x => x.Compile);
+	/// Support plugins are available for:
+	///   - JetBrains ReSharper        https://nuke.build/resharper
+	///   - JetBrains Rider            https://nuke.build/rider
+	///   - Microsoft VisualStudio     https://nuke.build/visualstudio
+	///   - Microsoft VSCode           https://nuke.build/vscode
+	public static int Main() => Execute<Build>(x => x.Compile);
 
-    [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+	[Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
+	readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [CI] readonly AzurePipelines AzurePipelines;
-    [Solution] readonly Solution Solution;
+	[CI] readonly AzurePipelines AzurePipelines;
+	[Solution] readonly Solution Solution;
 
-    Target Clean => _ => _
-        .Before(Restore)
-        .Executes(() =>
-        {
-            RootDirectory
-                .GlobDirectories(
-                    "*/src/*/obj",
-                    "*/src/*/bin",
-                    "*/test/*/obj",
-                    "*/test/*/bin")
-                .ForEach(DeleteDirectory);
-        });
+	Target Clean => _ => _
+		.Before(Restore)
+		.Executes(() =>
+		{
+			RootDirectory
+				.GlobDirectories(
+					"*/src/*/obj",
+					"*/src/*/bin",
+					"*/test/*/obj",
+					"*/test/*/bin")
+				.ForEach(DeleteDirectory);
+		});
 
-    Target Restore => _ => _
-        .Executes(() =>
-        {
-            DotNetRestore(_ => _
-                .SetProjectFile(Solution));
-        });
+	Target Restore => _ => _
+		.Executes(() =>
+		{
+			DotNetRestore(_ => _
+				.SetProjectFile(Solution));
+		});
 
-    Target Compile => _ => _
-        .DependsOn(Restore)
-        .Executes(() =>
-        {
-            DotNetBuild(_ => _
-                .SetProjectFile(Solution)
-                .SetNoRestore(InvokedTargets.Contains(Restore))
-                .SetConfiguration(Configuration)
-                .SetProperty("SourceLinkCreate", true));
-        });
+	Target Compile => _ => _
+		.DependsOn(Restore)
+		.Executes(() =>
+		{
+			DotNetBuild(_ => _
+				.SetProjectFile(Solution)
+				.SetNoRestore(InvokedTargets.Contains(Restore))
+				.SetConfiguration(Configuration)
+				.SetProperty("SourceLinkCreate", true));
+		});
 
-    static AbsolutePath PackagesDirectory => RootDirectory / "output" / "packages";
+	static AbsolutePath PackagesDirectory => RootDirectory / "output" / "packages";
 
-    Target Pack => _ => _
-        .DependsOn(Compile)
-        .Produces(PackagesDirectory / "*.nupkg")
-        .Executes(() =>
-        {
-            DotNetPack(_ => _
-                .SetConfiguration(Configuration)
-                .SetOutputDirectory(PackagesDirectory)
-                .SetNoBuild(InvokedTargets.Contains(Compile))
-                .SetProperty("SourceLinkCreate", true)
-                .CombineWith(
-                    Solution.AllProjects.Where(x => x.SolutionFolder?.Name == "src"), (_, v) => _
-                        .SetProject(v)));
-        });
+	Target Pack => _ => _
+		.DependsOn(Compile)
+		.Produces(PackagesDirectory / "*.nupkg")
+		.Executes(() =>
+		{
+			DotNetPack(_ => _
+				.SetConfiguration(Configuration)
+				.SetOutputDirectory(PackagesDirectory)
+				.SetNoBuild(InvokedTargets.Contains(Compile))
+				.SetProperty("SourceLinkCreate", true)
+				.CombineWith(
+					Solution.AllProjects.Where(x => x.SolutionFolder?.Name == "src"), (_, v) => _
+						.SetProject(v)));
+		});
 
 
-    AbsolutePath TestResultDirectory => RootDirectory / "output" / "test-results";
+	AbsolutePath TestResultDirectory => RootDirectory / "output" / "test-results";
 
-    Target Test => _ => _
-        .DependsOn(Compile)
-        .Partition(4)
-        .Executes(() =>
-        {
-            var allTestConfigurations =
-                from project in Solution.GetProjects("*Tests")
-                from targetFramework in project.GetTargetFrameworks()
-                select (project, targetFramework);
-            var relevantTestConfigurations = Partition.GetCurrent(allTestConfigurations);
+	Target Test => _ => _
+		.DependsOn(Compile)
+		.Partition(4)
+		.Executes(() =>
+		{
+			var allTestConfigurations =
+				from project in Solution.GetProjects("*Tests")
+				from targetFramework in project.GetTargetFrameworks()
+				select (project, targetFramework);
+			var relevantTestConfigurations = Partition.GetCurrent(allTestConfigurations);
 
-            try
-            {
-                DotNetTest(_ => _
-                        .SetConfiguration(Configuration.Release)
-                        .SetNoBuild(InvokedTargets.Contains(Compile))
-                        .SetResultsDirectory(TestResultDirectory)
-                        .CombineWith(relevantTestConfigurations, (_, v) => _
-                            .SetProjectFile(v.project)
-                            .SetFramework(v.targetFramework)
-                            .SetLoggers($"trx;LogFileName={v.project.Name}.trx")
-                        ),
-                    completeOnFailure: true);
-            }
-            finally
-            {
-                TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
-                    AzurePipelines?.PublishTestResults(
-                        type: AzurePipelinesTestResultsType.VSTest,
-                        title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
-                        files: new string[] { x }));
-            }
-        });
+			try
+			{
+				DotNetTest(_ => _
+						.SetConfiguration(Configuration.Release)
+						.SetNoBuild(InvokedTargets.Contains(Compile))
+						.SetResultsDirectory(TestResultDirectory)
+						.CombineWith(relevantTestConfigurations, (_, v) => _
+							.SetProjectFile(v.project)
+							.SetFramework(v.targetFramework)
+							.SetLoggers($"trx;LogFileName={v.project.Name}.trx")
+						),
+					completeOnFailure: true);
+			}
+			finally
+			{
+				TestResultDirectory.GlobFiles("*.trx").ForEach(x =>
+					AzurePipelines?.PublishTestResults(
+						type: AzurePipelinesTestResultsType.VSTest,
+						title: $"{Path.GetFileNameWithoutExtension(x)} ({AzurePipelines.StageDisplayName})",
+						files: new string[] { x }));
+			}
+		});
 }

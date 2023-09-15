@@ -4,54 +4,54 @@ using Abp.Extensions;
 
 namespace Abp.Runtime.Caching.Redis
 {
-    public class AbpRedisCacheOptions
-    {
-        public IAbpStartupConfiguration AbpStartupConfiguration { get; }
+	public class AbpRedisCacheOptions
+	{
+		public IAbpStartupConfiguration AbpStartupConfiguration { get; }
 
-        private const string ConnectionStringKey = "Abp.Redis.Cache";
+		private const string ConnectionStringKey = "Abp.Redis.Cache";
 
-        private const string DatabaseIdSettingKey = "Abp.Redis.Cache.DatabaseId";
+		private const string DatabaseIdSettingKey = "Abp.Redis.Cache.DatabaseId";
 
-        public string ConnectionString { get; set; }
+		public string ConnectionString { get; set; }
 
-        public int DatabaseId { get; set; }
+		public int DatabaseId { get; set; }
 
-        public string OnlineClientsStoreKey = "Abp.RealTime.OnlineClients";
-        
-        public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
-        {
-            AbpStartupConfiguration = abpStartupConfiguration;
+		public string OnlineClientsStoreKey = "Abp.RealTime.OnlineClients";
 
-            ConnectionString = GetDefaultConnectionString();
-            DatabaseId = GetDefaultDatabaseId();
-        }
+		public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
+		{
+			AbpStartupConfiguration = abpStartupConfiguration;
 
-        private static int GetDefaultDatabaseId()
-        {
-            var appSetting = ConfigurationManager.AppSettings[DatabaseIdSettingKey];
-            if (appSetting.IsNullOrEmpty())
-            {
-                return -1;
-            }
+			ConnectionString = GetDefaultConnectionString();
+			DatabaseId = GetDefaultDatabaseId();
+		}
 
-            int databaseId;
-            if (!int.TryParse(appSetting, out databaseId))
-            {
-                return -1;
-            }
+		private static int GetDefaultDatabaseId()
+		{
+			var appSetting = ConfigurationManager.AppSettings[DatabaseIdSettingKey];
+			if (appSetting.IsNullOrEmpty())
+			{
+				return -1;
+			}
 
-            return databaseId;
-        }
+			int databaseId;
+			if (!int.TryParse(appSetting, out databaseId))
+			{
+				return -1;
+			}
 
-        private static string GetDefaultConnectionString()
-        {
-            var connStr = ConfigurationManager.ConnectionStrings[ConnectionStringKey];
-            if (connStr == null || connStr.ConnectionString.IsNullOrWhiteSpace())
-            {
-                return "localhost";
-            }
+			return databaseId;
+		}
 
-            return connStr.ConnectionString;
-        }
-    }
+		private static string GetDefaultConnectionString()
+		{
+			var connStr = ConfigurationManager.ConnectionStrings[ConnectionStringKey];
+			if (connStr == null || connStr.ConnectionString.IsNullOrWhiteSpace())
+			{
+				return "localhost";
+			}
+
+			return connStr.ConnectionString;
+		}
+	}
 }

@@ -4,9 +4,9 @@ using Abp.ZeroCore.SampleApp.Core;
 
 namespace Abp.ZeroCore.SampleApp.Application.Users
 {
-    [AutoMap(typeof(User))]
-    public class UserDto : EntityDto<long>
-    {
-        public string UserName { get; set; }
-    }
+	[AutoMap(typeof(User))]
+	public class UserDto : EntityDto<long>
+	{
+		public string UserName { get; set; }
+	}
 }

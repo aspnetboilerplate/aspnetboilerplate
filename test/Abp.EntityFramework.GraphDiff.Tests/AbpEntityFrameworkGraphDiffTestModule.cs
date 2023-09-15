@@ -10,20 +10,20 @@ using RefactorThis.GraphDiff;
 
 namespace Abp.EntityFramework.GraphDIff.Tests
 {
-    [DependsOn(typeof(AbpEntityFrameworkGraphDiffModule), typeof(AbpTestBaseModule))]
-    public class AbpEntityFrameworkGraphDiffTestModule : AbpModule
-    {
-        public override void Initialize()
-        {
-            base.Initialize();
+	[DependsOn(typeof(AbpEntityFrameworkGraphDiffModule), typeof(AbpTestBaseModule))]
+	public class AbpEntityFrameworkGraphDiffTestModule : AbpModule
+	{
+		public override void Initialize()
+		{
+			base.Initialize();
 
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            Configuration.Modules.AbpEfGraphDiff().EntityMappings = new List<EntityMapping>
-            {
-                MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
-                MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
-            };
-        }
-    }
+			Configuration.Modules.AbpEfGraphDiff().EntityMappings = new List<EntityMapping>
+			{
+				MappingExpressionBuilder.For<MyMainEntity>(config => config.AssociatedCollection(entity => entity.MyDependentEntities)),
+				MappingExpressionBuilder.For<MyDependentEntity>(config => config.AssociatedEntity(entity => entity.MyMainEntity))
+			};
+		}
+	}
 }

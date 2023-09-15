@@ -3,38 +3,38 @@ using System.Collections.Generic;
 
 namespace Abp.Web.Api.Modeling
 {
-    [Serializable]
-    public class ActionApiDescriptionModel
-    {
-        public string Name { get; }
+	[Serializable]
+	public class ActionApiDescriptionModel
+	{
+		public string Name { get; }
 
-        public string HttpMethod { get; }
+		public string HttpMethod { get; }
 
-        public string Url { get; }
+		public string Url { get; }
 
-        public IList<ParameterApiDescriptionModel> Parameters { get; }
+		public IList<ParameterApiDescriptionModel> Parameters { get; }
 
-        public ReturnValueApiDescriptionModel ReturnValue { get; }
+		public ReturnValueApiDescriptionModel ReturnValue { get; }
 
-        private ActionApiDescriptionModel()
-        {
+		private ActionApiDescriptionModel()
+		{
 
-        }
+		}
 
-        public ActionApiDescriptionModel(string name, ReturnValueApiDescriptionModel returnValue, string url, string httpMethod = null)
-        {
-            Name = name;
-            ReturnValue = returnValue;
-            Url = url;
-            HttpMethod = httpMethod;
+		public ActionApiDescriptionModel(string name, ReturnValueApiDescriptionModel returnValue, string url, string httpMethod = null)
+		{
+			Name = name;
+			ReturnValue = returnValue;
+			Url = url;
+			HttpMethod = httpMethod;
 
-            Parameters = new List<ParameterApiDescriptionModel>();
-        }
+			Parameters = new List<ParameterApiDescriptionModel>();
+		}
 
-        public ParameterApiDescriptionModel AddParameter(ParameterApiDescriptionModel parameter)
-        {
-            Parameters.Add(parameter);
-            return parameter;
-        }
-    }
+		public ParameterApiDescriptionModel AddParameter(ParameterApiDescriptionModel parameter)
+		{
+			Parameters.Add(parameter);
+			return parameter;
+		}
+	}
 }

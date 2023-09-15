@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Abp.AspNetCore.PlugIn
 {
-    public class AbpPlugInAssemblyPart : AssemblyPart, ICompilationReferencesProvider
-    {
-        public AbpPlugInAssemblyPart(Assembly assembly)
-            : base(assembly)
-        {
-        }
+	public class AbpPlugInAssemblyPart : AssemblyPart, ICompilationReferencesProvider
+	{
+		public AbpPlugInAssemblyPart(Assembly assembly)
+			: base(assembly)
+		{
+		}
 
-        IEnumerable<string> ICompilationReferencesProvider.GetReferencePaths() => Enumerable.Empty<string>();
-    }
+		IEnumerable<string> ICompilationReferencesProvider.GetReferencePaths() => Enumerable.Empty<string>();
+	}
 }

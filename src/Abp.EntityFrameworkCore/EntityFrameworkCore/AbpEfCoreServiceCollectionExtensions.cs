@@ -5,17 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.EntityFrameworkCore
 {
-    public static class AbpEfCoreServiceCollectionExtensions
-    {
-        public static void AddAbpDbContext<TDbContext>(
-            this IServiceCollection services,
-            Action<AbpDbContextConfiguration<TDbContext>> action)
-            where TDbContext : DbContext
-        {
-            services.AddSingleton(
-                typeof(IAbpDbContextConfigurer<TDbContext>),
-                new AbpDbContextConfigurerAction<TDbContext>(action)
-            );
-        }
-    }
+	public static class AbpEfCoreServiceCollectionExtensions
+	{
+		public static void AddAbpDbContext<TDbContext>(
+			this IServiceCollection services,
+			Action<AbpDbContextConfiguration<TDbContext>> action)
+			where TDbContext : DbContext
+		{
+			services.AddSingleton(
+				typeof(IAbpDbContextConfigurer<TDbContext>),
+				new AbpDbContextConfigurerAction<TDbContext>(action)
+			);
+		}
+	}
 }

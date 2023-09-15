@@ -2,8 +2,8 @@
 
 namespace Abp.DynamicEntityProperties
 {
-    public interface IDynamicEntityPropertyConfiguration
-    {
-        ITypeList<DynamicEntityPropertyDefinitionProvider> Providers { get; }
-    }
+	public interface IDynamicEntityPropertyConfiguration
+	{
+		ITypeList<DynamicEntityPropertyDefinitionProvider> Providers { get; }
+	}
 }

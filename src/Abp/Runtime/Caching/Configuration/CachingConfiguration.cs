@@ -6,34 +6,34 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Abp.Runtime.Caching.Configuration
 {
-    internal class CachingConfiguration : ICachingConfiguration
-    {
-        public IAbpStartupConfiguration AbpConfiguration { get; private set; }
+	internal class CachingConfiguration : ICachingConfiguration
+	{
+		public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
-        public IReadOnlyList<ICacheConfigurator> Configurators
-        {
-            get { return _configurators.ToImmutableList(); }
-        }
+		public IReadOnlyList<ICacheConfigurator> Configurators
+		{
+			get { return _configurators.ToImmutableList(); }
+		}
 
-        public MemoryCacheOptions MemoryCacheOptions { get; set; }
-        
-        private readonly List<ICacheConfigurator> _configurators;
+		public MemoryCacheOptions MemoryCacheOptions { get; set; }
 
-        public CachingConfiguration(IAbpStartupConfiguration abpConfiguration)
-        {
-            AbpConfiguration = abpConfiguration;
+		private readonly List<ICacheConfigurator> _configurators;
 
-            _configurators = new List<ICacheConfigurator>();
-        }
+		public CachingConfiguration(IAbpStartupConfiguration abpConfiguration)
+		{
+			AbpConfiguration = abpConfiguration;
 
-        public void ConfigureAll(Action<ICacheOptions> initAction)
-        {
-            _configurators.Add(new CacheConfigurator(initAction));
-        }
+			_configurators = new List<ICacheConfigurator>();
+		}
 
-        public void Configure(string cacheName, Action<ICacheOptions> initAction)
-        {
-            _configurators.Add(new CacheConfigurator(cacheName, initAction));
-        }
-    }
+		public void ConfigureAll(Action<ICacheOptions> initAction)
+		{
+			_configurators.Add(new CacheConfigurator(initAction));
+		}
+
+		public void Configure(string cacheName, Action<ICacheOptions> initAction)
+		{
+			_configurators.Add(new CacheConfigurator(cacheName, initAction));
+		}
+	}
 }

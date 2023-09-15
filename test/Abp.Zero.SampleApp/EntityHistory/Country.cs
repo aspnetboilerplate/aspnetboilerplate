@@ -2,8 +2,8 @@
 
 namespace Abp.Zero.SampleApp.EntityHistory
 {
-    public class Country : FullAuditedEntity
-    {
-        public string CountryCode { get; set; }
-    }
+	public class Country : FullAuditedEntity
+	{
+		public string CountryCode { get; set; }
+	}
 }

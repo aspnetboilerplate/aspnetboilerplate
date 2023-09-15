@@ -7,23 +7,23 @@ using Abp.Zero.SampleApp.Features;
 
 namespace Abp.Zero.SampleApp
 {
-    [DependsOn(typeof(AbpZeroCoreModule))]
-    public class SampleAppModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+	[DependsOn(typeof(AbpZeroCoreModule))]
+	public class SampleAppModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
 
-            Configuration.Features.Providers.Add<AppFeatureProvider>();
+			Configuration.Features.Providers.Add<AppFeatureProvider>();
 
-            Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
-            Configuration.Settings.Providers.Add<AppSettingProvider>();
-            Configuration.MultiTenancy.IsEnabled = true;
-        }
+			Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
+			Configuration.Settings.Providers.Add<AppSettingProvider>();
+			Configuration.MultiTenancy.IsEnabled = true;
+		}
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
-    }
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		}
+	}
 }

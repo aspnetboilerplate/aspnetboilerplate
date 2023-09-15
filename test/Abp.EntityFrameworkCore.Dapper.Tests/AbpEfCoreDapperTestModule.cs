@@ -17,48 +17,48 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Abp.EntityFrameworkCore.Dapper.Tests
 {
-    [DependsOn(
-        typeof(AbpEntityFrameworkCoreModule),
-        typeof(AbpDapperModule),
-        typeof(AbpTestBaseModule))]
-    public class AbpEfCoreDapperTestModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
+	[DependsOn(
+		typeof(AbpEntityFrameworkCoreModule),
+		typeof(AbpDapperModule),
+		typeof(AbpTestBaseModule))]
+	public class AbpEfCoreDapperTestModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
 
-            DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
-            
-            Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
-            {
-                IocManager.IocContainer.Register(
-                    Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
-                             .ImplementedBy<PostRepository>()
-                             .LifestyleTransient()
-                );
-            });
-        }
+			DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
 
-        public override void Initialize()
-        {
-            var builder = new DbContextOptionsBuilder<BloggingDbContext>();
+			Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
+			{
+				IocManager.IocContainer.Register(
+					Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
+							 .ImplementedBy<PostRepository>()
+							 .LifestyleTransient()
+				);
+			});
+		}
 
-            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+		public override void Initialize()
+		{
+			var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
-            IocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<BloggingDbContext>>()
-                    .Instance(builder.Options)
-                    .LifestyleSingleton()
-            );
+			var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+			builder.UseSqlite(inMemorySqlite);
 
-            inMemorySqlite.Open();
-            new BloggingDbContext(builder.Options).Database.EnsureCreated();
+			IocManager.IocContainer.Register(
+				Component
+					.For<DbContextOptions<BloggingDbContext>>()
+					.Instance(builder.Options)
+					.LifestyleSingleton()
+			);
 
-            IocManager.RegisterAssemblyByConvention(typeof(AbpEfCoreDapperTestModule).GetAssembly());
+			inMemorySqlite.Open();
+			new BloggingDbContext(builder.Options).Database.EnsureCreated();
 
-            DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { typeof(AbpEfCoreDapperTestModule).GetAssembly() });
-        }
-    }
+			IocManager.RegisterAssemblyByConvention(typeof(AbpEfCoreDapperTestModule).GetAssembly());
+
+			DapperExtensions.DapperExtensions.SetMappingAssemblies(new List<Assembly> { typeof(AbpEfCoreDapperTestModule).GetAssembly() });
+		}
+	}
 }

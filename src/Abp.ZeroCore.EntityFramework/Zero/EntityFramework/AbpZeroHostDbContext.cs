@@ -14,221 +14,221 @@ using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFramework
 {
-    [MultiTenancySide(MultiTenancySides.Host)]
-    public abstract class AbpZeroHostDbContext<TTenant, TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>
-        where TTenant : AbpTenant<TUser>
-        where TRole : AbpRole<TUser>
-        where TUser : AbpUser<TUser>
-        where TSelf : AbpZeroHostDbContext<TTenant, TRole, TUser, TSelf>
-    {
-        /// <summary>
-        /// Tenants
-        /// </summary>
-        public virtual DbSet<TTenant> Tenants { get; set; }
+	[MultiTenancySide(MultiTenancySides.Host)]
+	public abstract class AbpZeroHostDbContext<TTenant, TRole, TUser, TSelf> : AbpZeroCommonDbContext<TRole, TUser, TSelf>
+		where TTenant : AbpTenant<TUser>
+		where TRole : AbpRole<TUser>
+		where TUser : AbpUser<TUser>
+		where TSelf : AbpZeroHostDbContext<TTenant, TRole, TUser, TSelf>
+	{
+		/// <summary>
+		/// Tenants
+		/// </summary>
+		public virtual DbSet<TTenant> Tenants { get; set; }
 
-        /// <summary>
-        /// Editions.
-        /// </summary>
-        public virtual DbSet<Edition> Editions { get; set; }
+		/// <summary>
+		/// Editions.
+		/// </summary>
+		public virtual DbSet<Edition> Editions { get; set; }
 
-        /// <summary>
-        /// FeatureSettings.
-        /// </summary>
-        public virtual DbSet<FeatureSetting> FeatureSettings { get; set; }
+		/// <summary>
+		/// FeatureSettings.
+		/// </summary>
+		public virtual DbSet<FeatureSetting> FeatureSettings { get; set; }
 
-        /// <summary>
-        /// TenantFeatureSetting.
-        /// </summary>
-        public virtual DbSet<TenantFeatureSetting> TenantFeatureSettings { get; set; }
+		/// <summary>
+		/// TenantFeatureSetting.
+		/// </summary>
+		public virtual DbSet<TenantFeatureSetting> TenantFeatureSettings { get; set; }
 
-        /// <summary>
-        /// EditionFeatureSettings.
-        /// </summary>
-        public virtual DbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
+		/// <summary>
+		/// EditionFeatureSettings.
+		/// </summary>
+		public virtual DbSet<EditionFeatureSetting> EditionFeatureSettings { get; set; }
 
-        /// <summary>
-        /// Background jobs.
-        /// </summary>
-        public virtual DbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
+		/// <summary>
+		/// Background jobs.
+		/// </summary>
+		public virtual DbSet<BackgroundJobInfo> BackgroundJobs { get; set; }
 
-        /// <summary>
-        /// User accounts
-        /// </summary>
-        public virtual DbSet<UserAccount> UserAccounts { get; set; }
+		/// <summary>
+		/// User accounts
+		/// </summary>
+		public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
-        /// <summary>
-        /// Notifications.
-        /// </summary>
-        public virtual DbSet<NotificationInfo> Notifications { get; set; }
-        
-        protected AbpZeroHostDbContext()
-        {
+		/// <summary>
+		/// Notifications.
+		/// </summary>
+		public virtual DbSet<NotificationInfo> Notifications { get; set; }
 
-        }
+		protected AbpZeroHostDbContext()
+		{
 
-        protected AbpZeroHostDbContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
-        {
+		}
 
-        }
+		protected AbpZeroHostDbContext(string nameOrConnectionString)
+			: base(nameOrConnectionString)
+		{
 
-        protected AbpZeroHostDbContext(DbCompiledModel model)
-            : base(model)
-        {
+		}
 
-        }
+		protected AbpZeroHostDbContext(DbCompiledModel model)
+			: base(model)
+		{
 
-        protected AbpZeroHostDbContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
-        {
+		}
 
-        }
+		protected AbpZeroHostDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+			: base(existingConnection, contextOwnsConnection)
+		{
 
-        protected AbpZeroHostDbContext(string nameOrConnectionString, DbCompiledModel model)
-            : base(nameOrConnectionString, model)
-        {
-        }
+		}
 
-        protected AbpZeroHostDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
-            : base(objectContext, dbContextOwnsObjectContext)
-        {
-        }
+		protected AbpZeroHostDbContext(string nameOrConnectionString, DbCompiledModel model)
+			: base(nameOrConnectionString, model)
+		{
+		}
 
-        protected AbpZeroHostDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
-        {
-        }
+		protected AbpZeroHostDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+			: base(objectContext, dbContextOwnsObjectContext)
+		{
+		}
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+		protected AbpZeroHostDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+			: base(existingConnection, model, contextOwnsConnection)
+		{
+		}
 
-            #region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(e => e.IsAbandoned)
-                .CreateIndex("IX_IsAbandoned_NextTryTime", 1);
+			#region BackgroundJobInfo.IX_IsAbandoned_NextTryTime
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(e => e.NextTryTime)
-                .CreateIndex("IX_IsAbandoned_NextTryTime", 2);
+			modelBuilder.Entity<BackgroundJobInfo>()
+				.Property(e => e.IsAbandoned)
+				.CreateIndex("IX_IsAbandoned_NextTryTime", 1);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.Priority)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
+			modelBuilder.Entity<BackgroundJobInfo>()
+				.Property(e => e.NextTryTime)
+				.CreateIndex("IX_IsAbandoned_NextTryTime", 2);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.TryCount)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
+			modelBuilder.Entity<BackgroundJobInfo>()
+				.Property(j => j.Priority)
+				.CreateIndex("IX_Priority_TryCount_NextTryTime", 1);
 
-            modelBuilder.Entity<BackgroundJobInfo>()
-                .Property(j => j.NextTryTime)
-                .CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
+			modelBuilder.Entity<BackgroundJobInfo>()
+				.Property(j => j.TryCount)
+				.CreateIndex("IX_Priority_TryCount_NextTryTime", 2);
 
-            #endregion
+			modelBuilder.Entity<BackgroundJobInfo>()
+				.Property(j => j.NextTryTime)
+				.CreateIndex("IX_Priority_TryCount_NextTryTime", 3);
 
-            #region TenantFeatureSetting.IX_TenantId_Name
+			#endregion
 
-            modelBuilder.Entity<TenantFeatureSetting>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+			#region TenantFeatureSetting.IX_TenantId_Name
 
-            modelBuilder.Entity<TenantFeatureSetting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_TenantId_Name", 2);
+			modelBuilder.Entity<TenantFeatureSetting>()
+				.Property(e => e.TenantId)
+				.CreateIndex("IX_TenantId_Name", 1);
 
-            #endregion
+			modelBuilder.Entity<TenantFeatureSetting>()
+				.Property(e => e.Name)
+				.CreateIndex("IX_TenantId_Name", 2);
 
-            #region EditionFeatureSetting.IX_EditionId_Name
+			#endregion
 
-            modelBuilder.Entity<EditionFeatureSetting>()
-                .Property(e => e.EditionId)
-                .CreateIndex("IX_EditionId_Name", 1);
+			#region EditionFeatureSetting.IX_EditionId_Name
 
-            modelBuilder.Entity<EditionFeatureSetting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_EditionId_Name", 2);
+			modelBuilder.Entity<EditionFeatureSetting>()
+				.Property(e => e.EditionId)
+				.CreateIndex("IX_EditionId_Name", 1);
 
-            #endregion
+			modelBuilder.Entity<EditionFeatureSetting>()
+				.Property(e => e.Name)
+				.CreateIndex("IX_EditionId_Name", 2);
 
-            #region TTenant.IX_TenancyName
+			#endregion
 
-            modelBuilder.Entity<TTenant>()
-                .Property(e => e.TenancyName)
-                .CreateIndex("IX_TenancyName", 1);
+			#region TTenant.IX_TenancyName
 
-            #endregion
+			modelBuilder.Entity<TTenant>()
+				.Property(e => e.TenancyName)
+				.CreateIndex("IX_TenancyName", 1);
 
-            #region TTenant.Set_ForeignKeys
+			#endregion
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.DeleterUser)
-                .WithMany()
-                .HasForeignKey(p => p.DeleterUserId);
+			#region TTenant.Set_ForeignKeys
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.CreatorUser)
-                .WithMany()
-                .HasForeignKey(p => p.CreatorUserId);
+			modelBuilder.Entity<TTenant>()
+				.HasOptional(p => p.DeleterUser)
+				.WithMany()
+				.HasForeignKey(p => p.DeleterUserId);
 
-            modelBuilder.Entity<TTenant>()
-                .HasOptional(p => p.LastModifierUser)
-                .WithMany()
-                .HasForeignKey(p => p.LastModifierUserId);
+			modelBuilder.Entity<TTenant>()
+				.HasOptional(p => p.CreatorUser)
+				.WithMany()
+				.HasForeignKey(p => p.CreatorUserId);
 
-            #endregion
+			modelBuilder.Entity<TTenant>()
+				.HasOptional(p => p.LastModifierUser)
+				.WithMany()
+				.HasForeignKey(p => p.LastModifierUserId);
 
-            #region UserAccount.IX_TenantId_UserId
+			#endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+			#region UserAccount.IX_TenantId_UserId
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.TenantId)
+				.CreateIndex("IX_TenantId_UserId", 1);
 
-            #endregion
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.UserId)
+				.CreateIndex("IX_TenantId_UserId", 2);
 
-            #region UserAccount.IX_TenantId_UserName
+			#endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserName", 1);
+			#region UserAccount.IX_TenantId_UserName
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserName)
-                .CreateIndex("IX_TenantId_UserName", 2);
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.TenantId)
+				.CreateIndex("IX_TenantId_UserName", 1);
 
-            #endregion
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.UserName)
+				.CreateIndex("IX_TenantId_UserName", 2);
 
-            #region UserAccount.IX_TenantId_EmailAddress
+			#endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_EmailAddress", 1);
+			#region UserAccount.IX_TenantId_EmailAddress
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.EmailAddress)
-                .CreateIndex("IX_TenantId_EmailAddress", 2);
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.TenantId)
+				.CreateIndex("IX_TenantId_EmailAddress", 1);
 
-            #endregion
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.EmailAddress)
+				.CreateIndex("IX_TenantId_EmailAddress", 2);
 
-            #region UserAccount.IX_UserName
+			#endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.UserName)
-                .CreateIndex("IX_UserName", 1);
+			#region UserAccount.IX_UserName
 
-            #endregion
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.UserName)
+				.CreateIndex("IX_UserName", 1);
 
-            #region UserAccount.IX_EmailAddress
+			#endregion
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(e => e.EmailAddress)
-                .CreateIndex("IX_EmailAddress", 1);
+			#region UserAccount.IX_EmailAddress
 
-            #endregion
-        }
-    }
+			modelBuilder.Entity<UserAccount>()
+				.Property(e => e.EmailAddress)
+				.CreateIndex("IX_EmailAddress", 1);
+
+			#endregion
+		}
+	}
 }

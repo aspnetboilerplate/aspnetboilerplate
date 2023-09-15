@@ -2,7 +2,7 @@
 
 public class MyDeepestInnerModel
 {
-    public string DeepestInnerHtmlInput { get; set; }
-    
-    public string DeepestInnerSecondInput { get; set; }
+	public string DeepestInnerHtmlInput { get; set; }
+
+	public string DeepestInnerSecondInput { get; set; }
 }

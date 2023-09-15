@@ -7,122 +7,122 @@ using Abp.Domain.Uow;
 
 namespace Abp.Webhooks
 {
-    public class DefaultWebhookSender : DomainService, IWebhookSender
-    {
-        private readonly IWebhooksConfiguration _webhooksConfiguration;
-        private readonly IWebhookManager _webhookManager;
-        
-        private const string FailedRequestDefaultContent = "Webhook Send Request Failed";
+	public class DefaultWebhookSender : DomainService, IWebhookSender
+	{
+		private readonly IWebhooksConfiguration _webhooksConfiguration;
+		private readonly IWebhookManager _webhookManager;
 
-        public DefaultWebhookSender(
-            IWebhooksConfiguration webhooksConfiguration, 
-            IWebhookManager webhookManager)
-        {
-            _webhooksConfiguration = webhooksConfiguration;
-            _webhookManager = webhookManager;
-        }
+		private const string FailedRequestDefaultContent = "Webhook Send Request Failed";
 
-        public async Task<Guid> SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
-        {
-            if (webhookSenderArgs.WebhookEventId == default)
-            {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
-            }
+		public DefaultWebhookSender(
+			IWebhooksConfiguration webhooksConfiguration,
+			IWebhookManager webhookManager)
+		{
+			_webhooksConfiguration = webhooksConfiguration;
+			_webhookManager = webhookManager;
+		}
 
-            if (webhookSenderArgs.WebhookSubscriptionId == default)
-            {
-                throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookSubscriptionId));
-            }
+		public async Task<Guid> SendWebhookAsync(WebhookSenderArgs webhookSenderArgs)
+		{
+			if (webhookSenderArgs.WebhookEventId == default)
+			{
+				throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookEventId));
+			}
 
-            var webhookSendAttemptId = await _webhookManager.InsertAndGetIdWebhookSendAttemptAsync(webhookSenderArgs);
+			if (webhookSenderArgs.WebhookSubscriptionId == default)
+			{
+				throw new ArgumentNullException(nameof(webhookSenderArgs.WebhookSubscriptionId));
+			}
 
-            var request = CreateWebhookRequestMessage(webhookSenderArgs);
+			var webhookSendAttemptId = await _webhookManager.InsertAndGetIdWebhookSendAttemptAsync(webhookSenderArgs);
 
-            var serializedBody = await _webhookManager.GetSerializedBodyAsync(webhookSenderArgs);
+			var request = CreateWebhookRequestMessage(webhookSenderArgs);
 
-            _webhookManager.SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
+			var serializedBody = await _webhookManager.GetSerializedBodyAsync(webhookSenderArgs);
 
-            AddAdditionalHeaders(request, webhookSenderArgs);
+			_webhookManager.SignWebhookRequest(request, serializedBody, webhookSenderArgs.Secret);
 
-            var isSucceed = false;
-            HttpStatusCode? statusCode = null;
-            var content = FailedRequestDefaultContent;
+			AddAdditionalHeaders(request, webhookSenderArgs);
 
-            try
-            {
-                var response = await SendHttpRequest(request);
-                isSucceed = response.isSucceed;
-                statusCode = response.statusCode;
-                content = response.content;
-            }
-            catch (TaskCanceledException)
-            {
-                statusCode = HttpStatusCode.RequestTimeout;
-                content = "Request Timeout";
-            }
-            catch (HttpRequestException e)
-            {
-                content = e.Message;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("An error occured while sending a webhook request", e);
-            }
-            finally
-            {
-                await _webhookManager.StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
-            }
+			var isSucceed = false;
+			HttpStatusCode? statusCode = null;
+			var content = FailedRequestDefaultContent;
 
-            if (!isSucceed)
-            {
-                throw new Exception($"Webhook sending attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
-            }
+			try
+			{
+				var response = await SendHttpRequest(request);
+				isSucceed = response.isSucceed;
+				statusCode = response.statusCode;
+				content = response.content;
+			}
+			catch (TaskCanceledException)
+			{
+				statusCode = HttpStatusCode.RequestTimeout;
+				content = "Request Timeout";
+			}
+			catch (HttpRequestException e)
+			{
+				content = e.Message;
+			}
+			catch (Exception e)
+			{
+				Logger.Error("An error occured while sending a webhook request", e);
+			}
+			finally
+			{
+				await _webhookManager.StoreResponseOnWebhookSendAttemptAsync(webhookSendAttemptId, webhookSenderArgs.TenantId, statusCode, content);
+			}
 
-            return webhookSendAttemptId;
-        }
+			if (!isSucceed)
+			{
+				throw new Exception($"Webhook sending attempt failed. WebhookSendAttempt id: {webhookSendAttemptId}");
+			}
 
-        /// <summary>
-        /// You can override this to change request message
-        /// </summary>
-        /// <returns></returns>
-        protected virtual HttpRequestMessage CreateWebhookRequestMessage(WebhookSenderArgs webhookSenderArgs)
-        {
-            return new HttpRequestMessage(HttpMethod.Post, webhookSenderArgs.WebhookUri);
-        }
+			return webhookSendAttemptId;
+		}
 
-        protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebhookSenderArgs webhookSenderArgs)
-        {
-            foreach (var header in webhookSenderArgs.Headers)
-            {
-                if (request.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                {
-                    continue;
-                }
+		/// <summary>
+		/// You can override this to change request message
+		/// </summary>
+		/// <returns></returns>
+		protected virtual HttpRequestMessage CreateWebhookRequestMessage(WebhookSenderArgs webhookSenderArgs)
+		{
+			return new HttpRequestMessage(HttpMethod.Post, webhookSenderArgs.WebhookUri);
+		}
 
-                if (request.Content.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                {
-                    continue;
-                }
+		protected virtual void AddAdditionalHeaders(HttpRequestMessage request, WebhookSenderArgs webhookSenderArgs)
+		{
+			foreach (var header in webhookSenderArgs.Headers)
+			{
+				if (request.Headers.TryAddWithoutValidation(header.Key, header.Value))
+				{
+					continue;
+				}
 
-                throw new Exception($"Invalid Header. SubscriptionId:{webhookSenderArgs.WebhookSubscriptionId},Header: {header.Key}:{header.Value}");
-            }
-        }
+				if (request.Content.Headers.TryAddWithoutValidation(header.Key, header.Value))
+				{
+					continue;
+				}
 
-        protected virtual async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(HttpRequestMessage request)
-        {
-            using (var client = new HttpClient
-            {
-                Timeout = _webhooksConfiguration.TimeoutDuration
-            })
-            {
-                var response = await client.SendAsync(request);
+				throw new Exception($"Invalid Header. SubscriptionId:{webhookSenderArgs.WebhookSubscriptionId},Header: {header.Key}:{header.Value}");
+			}
+		}
 
-                var isSucceed = response.IsSuccessStatusCode;
-                var statusCode = response.StatusCode;
-                var content = await response.Content.ReadAsStringAsync();
+		protected virtual async Task<(bool isSucceed, HttpStatusCode statusCode, string content)> SendHttpRequest(HttpRequestMessage request)
+		{
+			using (var client = new HttpClient
+			{
+				Timeout = _webhooksConfiguration.TimeoutDuration
+			})
+			{
+				var response = await client.SendAsync(request);
 
-                return (isSucceed, statusCode, content);
-            }
-        }
-    }
+				var isSucceed = response.IsSuccessStatusCode;
+				var statusCode = response.StatusCode;
+				var content = await response.Content.ReadAsStringAsync();
+
+				return (isSucceed, statusCode, content);
+			}
+		}
+	}
 }

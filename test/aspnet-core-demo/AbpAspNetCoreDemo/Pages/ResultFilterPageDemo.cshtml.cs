@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Pages
 {
-    [IgnoreAntiforgeryToken]
-    public class ResultFilterPageDemoModel : AbpPageModel
-    {
-        public IActionResult OnGet()
-        {
-            return Content("OnGet");
-        }
+	[IgnoreAntiforgeryToken]
+	public class ResultFilterPageDemoModel : AbpPageModel
+	{
+		public IActionResult OnGet()
+		{
+			return Content("OnGet");
+		}
 
-        public JsonResult OnPost()
-        {
-            return new JsonResult("OnPost");
-        }
-    }
+		public JsonResult OnPost()
+		{
+			return new JsonResult("OnPost");
+		}
+	}
 }

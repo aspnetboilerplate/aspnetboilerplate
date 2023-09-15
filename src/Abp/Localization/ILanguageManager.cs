@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace Abp.Localization
 {
-    public interface ILanguageManager
-    {
-        LanguageInfo CurrentLanguage { get; }
+	public interface ILanguageManager
+	{
+		LanguageInfo CurrentLanguage { get; }
 
-        IReadOnlyList<LanguageInfo> GetLanguages();
+		IReadOnlyList<LanguageInfo> GetLanguages();
 
-        IReadOnlyList<LanguageInfo> GetActiveLanguages();
-    }
+		IReadOnlyList<LanguageInfo> GetActiveLanguages();
+	}
 }

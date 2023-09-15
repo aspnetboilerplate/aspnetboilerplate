@@ -2,12 +2,12 @@
 
 namespace AbpAspNetCoreDemo.Model;
 
-public class MyAttributedModel 
+public class MyAttributedModel
 {
-    public string HtmlInput { get; set; }
+	public string HtmlInput { get; set; }
 
-    [DisableHtmlSanitizer]
-    public string DontSanitizeInput { get; set; }
+	[DisableHtmlSanitizer]
+	public string DontSanitizeInput { get; set; }
 
-    public string KeepChildNodesInput { get; set; }
+	public string KeepChildNodesInput { get; set; }
 }

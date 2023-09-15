@@ -1,9 +1,9 @@
 ﻿namespace Abp.MultiTenancy
 {
-    public interface IAbpZeroDbMigrator
-    {
-        void CreateOrMigrateForHost();
+	public interface IAbpZeroDbMigrator
+	{
+		void CreateOrMigrateForHost();
 
-        void CreateOrMigrateForTenant(AbpTenantBase tenant);
-    }
+		void CreateOrMigrateForTenant(AbpTenantBase tenant);
+	}
 }

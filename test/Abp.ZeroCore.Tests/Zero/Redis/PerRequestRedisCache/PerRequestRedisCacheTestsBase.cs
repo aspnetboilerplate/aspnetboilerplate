@@ -9,45 +9,45 @@ using StackExchange.Redis;
 
 namespace Abp.Zero.Redis.PerRequestRedisCache
 {
-    public abstract class PerRequestRedisCacheTestsBase<TStartupModule>: AbpIntegratedTestBase<TStartupModule> 
-    where TStartupModule : AbpModule
-    {
-        protected IDatabase RedisDatabase;
-        protected IRedisCacheSerializer RedisSerializer;
-        protected HttpContext CurrentHttpContext;
+	public abstract class PerRequestRedisCacheTestsBase<TStartupModule>: AbpIntegratedTestBase<TStartupModule>
+	where TStartupModule : AbpModule
+	{
+		protected IDatabase RedisDatabase;
+		protected IRedisCacheSerializer RedisSerializer;
+		protected HttpContext CurrentHttpContext;
 
-        protected override void PreInitialize()
-        {
-            CurrentHttpContext = GetNewContextSubstitute();
+		protected override void PreInitialize()
+		{
+			CurrentHttpContext = GetNewContextSubstitute();
 
-            RedisDatabase = Substitute.For<IDatabase>();
-            
-            var redisDatabaseProvider = Substitute.For<IAbpRedisCacheDatabaseProvider>();
-            redisDatabaseProvider.GetDatabase().Returns(RedisDatabase);
-            
-            LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(redisDatabaseProvider).LifestyleSingleton().IsDefault());
-        }
+			RedisDatabase = Substitute.For<IDatabase>();
 
-        protected PerRequestRedisCacheTestsBase()
-        {
-            var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
-            httpContextAccessor.HttpContext.Returns(info => CurrentHttpContext);
+			var redisDatabaseProvider = Substitute.For<IAbpRedisCacheDatabaseProvider>();
+			redisDatabaseProvider.GetDatabase().Returns(RedisDatabase);
 
-            LocalIocManager.IocContainer.Register(Component.For<IHttpContextAccessor>().Instance(httpContextAccessor).LifestyleSingleton().IsDefault());
-            
-            RedisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
-        }
-        
-        protected HttpContext GetNewContextSubstitute()
-        {
-            var httpContext = Substitute.For<HttpContext>();
-            httpContext.Items = new Dictionary<object, object>();
-            return httpContext;
-        }
+			LocalIocManager.IocContainer.Register(Component.For<IAbpRedisCacheDatabaseProvider>().Instance(redisDatabaseProvider).LifestyleSingleton().IsDefault());
+		}
 
-        protected void ChangeHttpContext()
-        {
-            CurrentHttpContext = GetNewContextSubstitute();
-        }
-    }
+		protected PerRequestRedisCacheTestsBase()
+		{
+			var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+			httpContextAccessor.HttpContext.Returns(info => CurrentHttpContext);
+
+			LocalIocManager.IocContainer.Register(Component.For<IHttpContextAccessor>().Instance(httpContextAccessor).LifestyleSingleton().IsDefault());
+
+			RedisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
+		}
+
+		protected HttpContext GetNewContextSubstitute()
+		{
+			var httpContext = Substitute.For<HttpContext>();
+			httpContext.Items = new Dictionary<object, object>();
+			return httpContext;
+		}
+
+		protected void ChangeHttpContext()
+		{
+			CurrentHttpContext = GetNewContextSubstitute();
+		}
+	}
 }

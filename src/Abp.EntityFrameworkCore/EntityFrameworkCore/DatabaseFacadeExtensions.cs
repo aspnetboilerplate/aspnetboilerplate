@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Abp.EntityFrameworkCore
 {
-    public static class DatabaseFacadeExtensions
-    {
-        public static bool IsRelational(this DatabaseFacade database)
-        {
-            return database.GetInfrastructure().GetService<IRelationalConnection>() != null;
-        }
-    }
+	public static class DatabaseFacadeExtensions
+	{
+		public static bool IsRelational(this DatabaseFacade database)
+		{
+			return database.GetInfrastructure().GetService<IRelationalConnection>() != null;
+		}
+	}
 }

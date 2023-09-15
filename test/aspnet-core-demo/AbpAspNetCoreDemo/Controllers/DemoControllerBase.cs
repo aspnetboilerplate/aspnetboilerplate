@@ -2,11 +2,11 @@
 
 namespace AbpAspNetCoreDemo.Controllers
 {
-    public class DemoControllerBase : AbpController
-    {
-        public DemoControllerBase()
-        {
-            LocalizationSourceName = "AbpAspNetCoreDemoModule";
-        }
-    }
+	public class DemoControllerBase : AbpController
+	{
+		public DemoControllerBase()
+		{
+			LocalizationSourceName = "AbpAspNetCoreDemoModule";
+		}
+	}
 }

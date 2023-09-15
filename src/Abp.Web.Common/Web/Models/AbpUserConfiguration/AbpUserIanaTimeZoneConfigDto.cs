@@ -1,7 +1,7 @@
 namespace Abp.Web.Models.AbpUserConfiguration
 {
-    public class AbpUserIanaTimeZoneConfigDto
-    {
-        public string TimeZoneId { get; set; }
-    }
+	public class AbpUserIanaTimeZoneConfigDto
+	{
+		public string TimeZoneId { get; set; }
+	}
 }

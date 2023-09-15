@@ -4,11 +4,11 @@ namespace Abp.ZeroCore.SampleApp.Application.Shop;
 
 public class OrderListDto : EntityDto
 {
-    public decimal Price { get; set; }
+	public decimal Price { get; set; }
 
-    public string Name { get; set; }
+	public string Name { get; set; }
 
-    public string Language { get; set; }
+	public string Language { get; set; }
 
-    public int ProductCount { get; set; }
+	public int ProductCount { get; set; }
 }

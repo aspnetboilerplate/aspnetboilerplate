@@ -2,8 +2,8 @@
 
 namespace Abp.Resources.Embedded
 {
-    public interface IEmbeddedResourcesConfiguration
-    {
-        List<EmbeddedResourceSet> Sources { get; }
-    }
+	public interface IEmbeddedResourcesConfiguration
+	{
+		List<EmbeddedResourceSet> Sources { get; }
+	}
 }

@@ -3,16 +3,16 @@ using Abp.RealTime;
 
 namespace Abp.AspNetCore.SignalR.Hubs
 {
-    public class AbpCommonHub : OnlineClientHubBase
-    {
-        public AbpCommonHub(IOnlineClientManager onlineClientManager, IOnlineClientInfoProvider clientInfoProvider)
-            : base(onlineClientManager, clientInfoProvider)
-        {
-        }
+	public class AbpCommonHub : OnlineClientHubBase
+	{
+		public AbpCommonHub(IOnlineClientManager onlineClientManager, IOnlineClientInfoProvider clientInfoProvider)
+			: base(onlineClientManager, clientInfoProvider)
+		{
+		}
 
-        public void Register()
-        {
-            Logger.Debug("A client is registered: " + Context.ConnectionId);
-        }
-    }
+		public void Register()
+		{
+			Logger.Debug("A client is registered: " + Context.ConnectionId);
+		}
+	}
 }

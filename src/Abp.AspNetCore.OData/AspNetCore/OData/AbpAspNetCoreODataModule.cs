@@ -8,20 +8,20 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Abp.AspNetCore.OData
 {
-    [DependsOn(typeof(AbpAspNetCoreModule))]
-    public class AbpAspNetCoreODataModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            IocManager.Register<IAbpAspNetCoreODataModuleConfiguration, AbpAspNetCoreODataModuleConfiguration>();
+	[DependsOn(typeof(AbpAspNetCoreModule))]
+	public class AbpAspNetCoreODataModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			IocManager.Register<IAbpAspNetCoreODataModuleConfiguration, AbpAspNetCoreODataModuleConfiguration>();
 
-            Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Delta));
-        }
+			Configuration.Validation.IgnoredTypes.AddIfNotContains(typeof(Delta));
+		}
 
-        public override void Initialize()
-        {
-            IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
-    }
+		public override void Initialize()
+		{
+			IocManager.Register<MetadataController>(DependencyLifeStyle.Transient);
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		}
+	}
 }

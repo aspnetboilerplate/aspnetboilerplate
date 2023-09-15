@@ -7,39 +7,39 @@ using Castle.Core;
 
 namespace Abp.EntityHistory
 {
-    internal static class EntityHistoryInterceptorRegistrar
-    {
-        public static void Initialize(IIocManager iocManager)
-        {
-            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
-            {
-                if (!iocManager.IsRegistered<IEntityHistoryConfiguration>())
-                {
-                    return;
-                }
+	internal static class EntityHistoryInterceptorRegistrar
+	{
+		public static void Initialize(IIocManager iocManager)
+		{
+			iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
+			{
+				if (!iocManager.IsRegistered<IEntityHistoryConfiguration>())
+				{
+					return;
+				}
 
-                var entityHistoryConfiguration = iocManager.Resolve<IEntityHistoryConfiguration>();
+				var entityHistoryConfiguration = iocManager.Resolve<IEntityHistoryConfiguration>();
 
-                if (ShouldIntercept(entityHistoryConfiguration, handler.ComponentModel.Implementation))
-                {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>)));
-                }
-            };
-        }
-        
-        private static bool ShouldIntercept(IEntityHistoryConfiguration entityHistoryConfiguration, Type type)
-        {
-            if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true))
-            {
-                return true;
-            }
+				if (ShouldIntercept(entityHistoryConfiguration, handler.ComponentModel.Implementation))
+				{
+					handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<EntityHistoryInterceptor>)));
+				}
+			};
+		}
 
-            if (type.GetMethods().Any(m => m.IsDefined(typeof(UseCaseAttribute), true)))
-            {
-                return true;
-            }
+		private static bool ShouldIntercept(IEntityHistoryConfiguration entityHistoryConfiguration, Type type)
+		{
+			if (type.GetTypeInfo().IsDefined(typeof(UseCaseAttribute), true))
+			{
+				return true;
+			}
 
-            return false;
-        }
-    }
+			if (type.GetMethods().Any(m => m.IsDefined(typeof(UseCaseAttribute), true)))
+			{
+				return true;
+			}
+
+			return false;
+		}
+	}
 }

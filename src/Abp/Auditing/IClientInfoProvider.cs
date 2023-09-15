@@ -1,11 +1,11 @@
 ﻿namespace Abp.Auditing
 {
-    public interface IClientInfoProvider
-    {
-        string BrowserInfo { get; }
+	public interface IClientInfoProvider
+	{
+		string BrowserInfo { get; }
 
-        string ClientIpAddress { get; }
+		string ClientIpAddress { get; }
 
-        string ComputerName { get; }
-    }
+		string ComputerName { get; }
+	}
 }

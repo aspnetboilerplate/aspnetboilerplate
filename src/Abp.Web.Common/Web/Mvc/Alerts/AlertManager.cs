@@ -2,13 +2,13 @@
 
 namespace Abp.Web.Mvc.Alerts
 {
-    public class AlertManager : IAlertManager, IPerWebRequestDependency
-    {
-        public AlertList Alerts { get; }
+	public class AlertManager : IAlertManager, IPerWebRequestDependency
+	{
+		public AlertList Alerts { get; }
 
-        public AlertManager()
-        {
-            Alerts = new AlertList();
-        }
-    }
+		public AlertManager()
+		{
+			Alerts = new AlertList();
+		}
+	}
 }

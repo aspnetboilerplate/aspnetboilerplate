@@ -12,30 +12,30 @@ using Xunit;
 
 namespace Abp.Web.Tests.Navigation
 {
-    public class NavigationScript_Tests
-    {
-        [Fact]
-        public async Task Should_Get_Script()
-        {
-            var testCase = new NavigationTestCase();
-            var scriptManager = new NavigationScriptManager(testCase.UserNavigationManager)
-            {
-                AbpSession = CreateTestAbpSession()
-            };
+	public class NavigationScript_Tests
+	{
+		[Fact]
+		public async Task Should_Get_Script()
+		{
+			var testCase = new NavigationTestCase();
+			var scriptManager = new NavigationScriptManager(testCase.UserNavigationManager)
+			{
+				AbpSession = CreateTestAbpSession()
+			};
 
-            var script = await scriptManager.GetScriptAsync();
-            script.ShouldNotBeNullOrEmpty();
-        }
+			var script = await scriptManager.GetScriptAsync();
+			script.ShouldNotBeNullOrEmpty();
+		}
 
-        private static TestAbpSession CreateTestAbpSession()
-        {
-            return new TestAbpSession(
-                new MultiTenancyConfig { IsEnabled = true },
-                new DataContextAmbientScopeProvider<SessionOverride>(
-                    new AsyncLocalAmbientDataContext()
-                ),
-                Substitute.For<ITenantResolver>()
-            );
-        }
-    }
+		private static TestAbpSession CreateTestAbpSession()
+		{
+			return new TestAbpSession(
+				new MultiTenancyConfig { IsEnabled = true },
+				new DataContextAmbientScopeProvider<SessionOverride>(
+					new AsyncLocalAmbientDataContext()
+				),
+				Substitute.For<ITenantResolver>()
+			);
+		}
+	}
 }

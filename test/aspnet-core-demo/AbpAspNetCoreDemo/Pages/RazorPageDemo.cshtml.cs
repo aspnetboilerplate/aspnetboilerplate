@@ -2,16 +2,16 @@
 
 namespace AbpAspNetCoreDemo.Pages
 {
-    public class RazorPageDemo : PageModel
-    {
-        public void OnGet()
-        {
+	public class RazorPageDemo : PageModel
+	{
+		public void OnGet()
+		{
 
-        }
+		}
 
-        public void OnPost()
-        {
+		public void OnPost()
+		{
 
-        }
-    }
+		}
+	}
 }

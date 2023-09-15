@@ -12,28 +12,28 @@ using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.Authorization
 {
-    public class AppLogInManager : AbpLogInManager<Tenant, Role, User>
-    {
-        public AppLogInManager(
-            UserManager userManager, 
-            IMultiTenancyConfig multiTenancyConfig, 
-            IRepository<Tenant> tenantRepository, 
-            IUnitOfWorkManager unitOfWorkManager, 
-            ISettingManager settingManager, 
-            IRepository<UserLoginAttempt, long> userLoginAttemptRepository, 
-            IUserManagementConfig userManagementConfig, IIocResolver iocResolver, 
-            RoleManager roleManager) 
-            : base(
-                  userManager,
-                  multiTenancyConfig, 
-                  tenantRepository, 
-                  unitOfWorkManager, 
-                  settingManager, 
-                  userLoginAttemptRepository, 
-                  userManagementConfig, 
-                  iocResolver, 
-                  roleManager)
-        {
-        }
-    }
+	public class AppLogInManager : AbpLogInManager<Tenant, Role, User>
+	{
+		public AppLogInManager(
+			UserManager userManager,
+			IMultiTenancyConfig multiTenancyConfig,
+			IRepository<Tenant> tenantRepository,
+			IUnitOfWorkManager unitOfWorkManager,
+			ISettingManager settingManager,
+			IRepository<UserLoginAttempt, long> userLoginAttemptRepository,
+			IUserManagementConfig userManagementConfig, IIocResolver iocResolver,
+			RoleManager roleManager)
+			: base(
+				  userManager,
+				  multiTenancyConfig,
+				  tenantRepository,
+				  unitOfWorkManager,
+				  settingManager,
+				  userLoginAttemptRepository,
+				  userManagementConfig,
+				  iocResolver,
+				  roleManager)
+		{
+		}
+	}
 }

@@ -1,15 +1,15 @@
 ﻿namespace Abp.Owin
 {
-    public class AbpOwinOptions
-    {
-        /// <summary>
-        /// Default: true.
-        /// </summary>
-        public bool UseEmbeddedFiles { get; set; }
+	public class AbpOwinOptions
+	{
+		/// <summary>
+		/// Default: true.
+		/// </summary>
+		public bool UseEmbeddedFiles { get; set; }
 
-        public AbpOwinOptions()
-        {
-            UseEmbeddedFiles = true;
-        }
-    }
+		public AbpOwinOptions()
+		{
+			UseEmbeddedFiles = true;
+		}
+	}
 }

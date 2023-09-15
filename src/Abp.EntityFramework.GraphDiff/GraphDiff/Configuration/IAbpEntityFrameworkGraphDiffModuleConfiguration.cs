@@ -3,8 +3,8 @@ using Abp.EntityFramework.GraphDiff.Mapping;
 
 namespace Abp.EntityFramework.GraphDiff.Configuration
 {
-    public interface IAbpEntityFrameworkGraphDiffModuleConfiguration
-    {
-        List<EntityMapping> EntityMappings { get; set; }
-    }
+	public interface IAbpEntityFrameworkGraphDiffModuleConfiguration
+	{
+		List<EntityMapping> EntityMappings { get; set; }
+	}
 }

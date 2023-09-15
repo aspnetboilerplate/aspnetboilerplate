@@ -8,38 +8,38 @@ using Microsoft.AspNet.OData;
 
 namespace Abp.WebApi.OData.Controllers
 {
-    public abstract class AbpODataController : ODataController
-    {
-        public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+	public abstract class AbpODataController : ODataController
+	{
+		public IUnitOfWorkManager UnitOfWorkManager { get; set; }
 
-        protected IUnitOfWorkCompleteHandle UnitOfWorkCompleteHandler { get; private set; }
+		protected IUnitOfWorkCompleteHandle UnitOfWorkCompleteHandler { get; private set; }
 
-        protected bool IsDisposed { get; set; }
+		protected bool IsDisposed { get; set; }
 
-        public IPermissionChecker PermissionChecker { protected get; set; }
+		public IPermissionChecker PermissionChecker { protected get; set; }
 
-        protected AbpODataController()
-        {
-            PermissionChecker = NullPermissionChecker.Instance;
-        }
+		protected AbpODataController()
+		{
+			PermissionChecker = NullPermissionChecker.Instance;
+		}
 
-        public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
-        {
-            UnitOfWorkCompleteHandler = UnitOfWorkManager.Begin();
-            return base.ExecuteAsync(controllerContext, cancellationToken);
-        }
+		public override Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+		{
+			UnitOfWorkCompleteHandler = UnitOfWorkManager.Begin();
+			return base.ExecuteAsync(controllerContext, cancellationToken);
+		}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
-            {
-                UnitOfWorkCompleteHandler.Complete();
-                UnitOfWorkCompleteHandler.Dispose();
-            }
+		protected override void Dispose(bool disposing)
+		{
+			if (!IsDisposed)
+			{
+				UnitOfWorkCompleteHandler.Complete();
+				UnitOfWorkCompleteHandler.Dispose();
+			}
 
-            IsDisposed = true;
+			IsDisposed = true;
 
-            base.Dispose(disposing);
-        }
-    }
+			base.Dispose(disposing);
+		}
+	}
 }

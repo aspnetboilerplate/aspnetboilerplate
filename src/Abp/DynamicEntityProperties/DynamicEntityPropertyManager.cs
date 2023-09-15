@@ -10,221 +10,221 @@ using Abp.Runtime.Session;
 
 namespace Abp.DynamicEntityProperties
 {
-    public class DynamicEntityPropertyManager : IDynamicEntityPropertyManager, ITransientDependency
-    {
-        private readonly IDynamicPropertyPermissionChecker _dynamicPropertyPermissionChecker;
-        private readonly ICacheManager _cacheManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IDynamicEntityPropertyDefinitionManager _dynamicEntityPropertyDefinitionManager;
+	public class DynamicEntityPropertyManager : IDynamicEntityPropertyManager, ITransientDependency
+	{
+		private readonly IDynamicPropertyPermissionChecker _dynamicPropertyPermissionChecker;
+		private readonly ICacheManager _cacheManager;
+		private readonly IUnitOfWorkManager _unitOfWorkManager;
+		private readonly IDynamicEntityPropertyDefinitionManager _dynamicEntityPropertyDefinitionManager;
 
-        public IDynamicEntityPropertyStore DynamicEntityPropertyStore { get; set; }
-        public IAbpSession AbpSession { get; set; }
+		public IDynamicEntityPropertyStore DynamicEntityPropertyStore { get; set; }
+		public IAbpSession AbpSession { get; set; }
 
-        public const string CacheName = "AbpZeroDynamicEntityPropertyCache";
+		public const string CacheName = "AbpZeroDynamicEntityPropertyCache";
 
-        private ITypedCache<string, DynamicEntityProperty> DynamicEntityPropertyCache =>
-            _cacheManager.GetCache<string, DynamicEntityProperty>(CacheName);
+		private ITypedCache<string, DynamicEntityProperty> DynamicEntityPropertyCache =>
+			_cacheManager.GetCache<string, DynamicEntityProperty>(CacheName);
 
-        public DynamicEntityPropertyManager(
-            IDynamicPropertyPermissionChecker dynamicPropertyPermissionChecker,
-            ICacheManager cacheManager,
-            IUnitOfWorkManager unitOfWorkManager,
-            IDynamicEntityPropertyDefinitionManager dynamicEntityPropertyDefinitionManager
-        )
-        {
-            _dynamicPropertyPermissionChecker = dynamicPropertyPermissionChecker;
-            _cacheManager = cacheManager;
-            _unitOfWorkManager = unitOfWorkManager;
-            _dynamicEntityPropertyDefinitionManager = dynamicEntityPropertyDefinitionManager;
+		public DynamicEntityPropertyManager(
+			IDynamicPropertyPermissionChecker dynamicPropertyPermissionChecker,
+			ICacheManager cacheManager,
+			IUnitOfWorkManager unitOfWorkManager,
+			IDynamicEntityPropertyDefinitionManager dynamicEntityPropertyDefinitionManager
+		)
+		{
+			_dynamicPropertyPermissionChecker = dynamicPropertyPermissionChecker;
+			_cacheManager = cacheManager;
+			_unitOfWorkManager = unitOfWorkManager;
+			_dynamicEntityPropertyDefinitionManager = dynamicEntityPropertyDefinitionManager;
 
-            DynamicEntityPropertyStore = NullDynamicEntityPropertyStore.Instance;
-            AbpSession = NullAbpSession.Instance;
-        }
+			DynamicEntityPropertyStore = NullDynamicEntityPropertyStore.Instance;
+			AbpSession = NullAbpSession.Instance;
+		}
 
-        private void CheckEntityName(string entityFullName)
-        {
-            if (!_dynamicEntityPropertyDefinitionManager.ContainsEntity(entityFullName))
-            {
-                throw new ApplicationException($"Unknown entity {entityFullName}.");
-            }
-        }
+		private void CheckEntityName(string entityFullName)
+		{
+			if (!_dynamicEntityPropertyDefinitionManager.ContainsEntity(entityFullName))
+			{
+				throw new ApplicationException($"Unknown entity {entityFullName}.");
+			}
+		}
 
-        public virtual DynamicEntityProperty Get(int id)
-        {
-            var tenantId = GetCurrentTenantId();
-            var cacheKey = GetCacheKey(id, tenantId);
+		public virtual DynamicEntityProperty Get(int id)
+		{
+			var tenantId = GetCurrentTenantId();
+			var cacheKey = GetCacheKey(id, tenantId);
 
-            var entityProperty = DynamicEntityPropertyCache.Get(cacheKey, () => DynamicEntityPropertyStore.Get(id));
-            _dynamicPropertyPermissionChecker.CheckPermission(entityProperty.DynamicPropertyId);
-            return entityProperty;
-        }
+			var entityProperty = DynamicEntityPropertyCache.Get(cacheKey, () => DynamicEntityPropertyStore.Get(id));
+			_dynamicPropertyPermissionChecker.CheckPermission(entityProperty.DynamicPropertyId);
+			return entityProperty;
+		}
 
-        public virtual async Task<DynamicEntityProperty> GetAsync(int id)
-        {
-            var tenantId = GetCurrentTenantId();
-            var cacheKey = GetCacheKey(id, tenantId);
+		public virtual async Task<DynamicEntityProperty> GetAsync(int id)
+		{
+			var tenantId = GetCurrentTenantId();
+			var cacheKey = GetCacheKey(id, tenantId);
 
-            var entityProperty =
-                await DynamicEntityPropertyCache.GetAsync(cacheKey, () => DynamicEntityPropertyStore.GetAsync(id));
-            await _dynamicPropertyPermissionChecker.CheckPermissionAsync(entityProperty.DynamicPropertyId);
-            return entityProperty;
-        }
+			var entityProperty =
+				await DynamicEntityPropertyCache.GetAsync(cacheKey, () => DynamicEntityPropertyStore.GetAsync(id));
+			await _dynamicPropertyPermissionChecker.CheckPermissionAsync(entityProperty.DynamicPropertyId);
+			return entityProperty;
+		}
 
-        public List<DynamicEntityProperty> GetAll(string entityFullName)
-        {
-            var allProperties = DynamicEntityPropertyStore.GetAll(entityFullName);
-            allProperties = allProperties.Where(dynamicEntityProperty =>
-                    _dynamicPropertyPermissionChecker.IsGranted(dynamicEntityProperty.DynamicPropertyId))
-                .ToList();
-            return allProperties;
-        }
+		public List<DynamicEntityProperty> GetAll(string entityFullName)
+		{
+			var allProperties = DynamicEntityPropertyStore.GetAll(entityFullName);
+			allProperties = allProperties.Where(dynamicEntityProperty =>
+					_dynamicPropertyPermissionChecker.IsGranted(dynamicEntityProperty.DynamicPropertyId))
+				.ToList();
+			return allProperties;
+		}
 
-        public async Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName)
-        {
-            var allProperties = await DynamicEntityPropertyStore.GetAllAsync(entityFullName);
+		public async Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName)
+		{
+			var allProperties = await DynamicEntityPropertyStore.GetAllAsync(entityFullName);
 
-            var controlledProperties = new List<DynamicEntityProperty>();
-            foreach (var dynamicEntityProperty in allProperties)
-            {
-                if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
-                    controlledProperties.Add(dynamicEntityProperty);
-                }
-            }
+			var controlledProperties = new List<DynamicEntityProperty>();
+			foreach (var dynamicEntityProperty in allProperties)
+			{
+				if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
+				{
+					controlledProperties.Add(dynamicEntityProperty);
+				}
+			}
 
-            return controlledProperties;
-        }
+			return controlledProperties;
+		}
 
-        public List<DynamicEntityProperty> GetAll()
-        {
-            var allProperties = DynamicEntityPropertyStore.GetAll();
-            allProperties = allProperties.Where(dynamicEntityProperty =>
-                    _dynamicPropertyPermissionChecker.IsGranted(dynamicEntityProperty.DynamicPropertyId))
-                .ToList();
-            return allProperties;
-        }
+		public List<DynamicEntityProperty> GetAll()
+		{
+			var allProperties = DynamicEntityPropertyStore.GetAll();
+			allProperties = allProperties.Where(dynamicEntityProperty =>
+					_dynamicPropertyPermissionChecker.IsGranted(dynamicEntityProperty.DynamicPropertyId))
+				.ToList();
+			return allProperties;
+		}
 
-        public async Task<List<DynamicEntityProperty>> GetAllAsync()
-        {
-            var allProperties = await DynamicEntityPropertyStore.GetAllAsync();
+		public async Task<List<DynamicEntityProperty>> GetAllAsync()
+		{
+			var allProperties = await DynamicEntityPropertyStore.GetAllAsync();
 
-            var controlledProperties = new List<DynamicEntityProperty>();
-            foreach (var dynamicEntityProperty in allProperties)
-            {
-                if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
-                {
-                    controlledProperties.Add(dynamicEntityProperty);
-                }
-            }
+			var controlledProperties = new List<DynamicEntityProperty>();
+			foreach (var dynamicEntityProperty in allProperties)
+			{
+				if (await _dynamicPropertyPermissionChecker.IsGrantedAsync(dynamicEntityProperty.DynamicPropertyId))
+				{
+					controlledProperties.Add(dynamicEntityProperty);
+				}
+			}
 
-            return controlledProperties;
-        }
+			return controlledProperties;
+		}
 
-        public virtual void Add(DynamicEntityProperty dynamicEntityProperty)
-        {
-            CheckEntityName(dynamicEntityProperty.EntityFullName);
-            _dynamicPropertyPermissionChecker.CheckPermission(dynamicEntityProperty.DynamicPropertyId);
+		public virtual void Add(DynamicEntityProperty dynamicEntityProperty)
+		{
+			CheckEntityName(dynamicEntityProperty.EntityFullName);
+			_dynamicPropertyPermissionChecker.CheckPermission(dynamicEntityProperty.DynamicPropertyId);
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
-                DynamicEntityPropertyStore.Add(dynamicEntityProperty);
-                uow.Complete();
-            }
+			using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+			{
+				DynamicEntityPropertyStore.Add(dynamicEntityProperty);
+				uow.Complete();
+			}
 
-            var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
-            DynamicEntityPropertyCache.Set(cacheKey, dynamicEntityProperty);
-        }
+			var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
+			DynamicEntityPropertyCache.Set(cacheKey, dynamicEntityProperty);
+		}
 
-        public virtual async Task AddAsync(DynamicEntityProperty dynamicEntityProperty)
-        {
-            CheckEntityName(dynamicEntityProperty.EntityFullName);
-            await _dynamicPropertyPermissionChecker.CheckPermissionAsync(dynamicEntityProperty.DynamicPropertyId);
+		public virtual async Task AddAsync(DynamicEntityProperty dynamicEntityProperty)
+		{
+			CheckEntityName(dynamicEntityProperty.EntityFullName);
+			await _dynamicPropertyPermissionChecker.CheckPermissionAsync(dynamicEntityProperty.DynamicPropertyId);
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
-                await DynamicEntityPropertyStore.AddAsync(dynamicEntityProperty);
-                await uow.CompleteAsync();
-            }
+			using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+			{
+				await DynamicEntityPropertyStore.AddAsync(dynamicEntityProperty);
+				await uow.CompleteAsync();
+			}
 
-            var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
-            await DynamicEntityPropertyCache.SetAsync(cacheKey, dynamicEntityProperty);
-        }
+			var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
+			await DynamicEntityPropertyCache.SetAsync(cacheKey, dynamicEntityProperty);
+		}
 
-        public virtual void Update(DynamicEntityProperty dynamicEntityProperty)
-        {
-            CheckEntityName(dynamicEntityProperty.EntityFullName);
-            _dynamicPropertyPermissionChecker.CheckPermission(dynamicEntityProperty.DynamicPropertyId);
+		public virtual void Update(DynamicEntityProperty dynamicEntityProperty)
+		{
+			CheckEntityName(dynamicEntityProperty.EntityFullName);
+			_dynamicPropertyPermissionChecker.CheckPermission(dynamicEntityProperty.DynamicPropertyId);
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
-                DynamicEntityPropertyStore.Update(dynamicEntityProperty);
-                uow.Complete();
-            }
+			using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+			{
+				DynamicEntityPropertyStore.Update(dynamicEntityProperty);
+				uow.Complete();
+			}
 
-            var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
-            DynamicEntityPropertyCache.Set(cacheKey, dynamicEntityProperty);
-        }
+			var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
+			DynamicEntityPropertyCache.Set(cacheKey, dynamicEntityProperty);
+		}
 
-        public virtual async Task UpdateAsync(DynamicEntityProperty dynamicEntityProperty)
-        {
-            CheckEntityName(dynamicEntityProperty.EntityFullName);
-            await _dynamicPropertyPermissionChecker.CheckPermissionAsync(dynamicEntityProperty.DynamicPropertyId);
+		public virtual async Task UpdateAsync(DynamicEntityProperty dynamicEntityProperty)
+		{
+			CheckEntityName(dynamicEntityProperty.EntityFullName);
+			await _dynamicPropertyPermissionChecker.CheckPermissionAsync(dynamicEntityProperty.DynamicPropertyId);
 
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
-            {
-                await DynamicEntityPropertyStore.UpdateAsync(dynamicEntityProperty);
-                await uow.CompleteAsync();
-            }
+			using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
+			{
+				await DynamicEntityPropertyStore.UpdateAsync(dynamicEntityProperty);
+				await uow.CompleteAsync();
+			}
 
-            var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
-            await DynamicEntityPropertyCache.SetAsync(cacheKey, dynamicEntityProperty);
-        }
+			var cacheKey = GetCacheKey(dynamicEntityProperty.Id, dynamicEntityProperty.TenantId);
+			await DynamicEntityPropertyCache.SetAsync(cacheKey, dynamicEntityProperty);
+		}
 
-        public virtual void Delete(int id)
-        {
-            var dynamicEntityProperty = Get(id); //Get checks permission, no need to check it again
-            if (dynamicEntityProperty == null)
-            {
-                return;
-            }
+		public virtual void Delete(int id)
+		{
+			var dynamicEntityProperty = Get(id); //Get checks permission, no need to check it again
+			if (dynamicEntityProperty == null)
+			{
+				return;
+			}
 
-            DynamicEntityPropertyStore.Delete(dynamicEntityProperty.Id);
-            
-            var tenantId = GetCurrentTenantId();
-            var cacheKey = GetCacheKey(id, tenantId);
-            
-            DynamicEntityPropertyCache.Remove(cacheKey);
-        }
+			DynamicEntityPropertyStore.Delete(dynamicEntityProperty.Id);
 
-        public virtual async Task DeleteAsync(int id)
-        {
-            var dynamicEntityProperty = await GetAsync(id); //Get checks permission, no need to check it again
-            if (dynamicEntityProperty == null)
-            {
-                return;
-            }
+			var tenantId = GetCurrentTenantId();
+			var cacheKey = GetCacheKey(id, tenantId);
 
-            await DynamicEntityPropertyStore.DeleteAsync(dynamicEntityProperty.Id);
-            
-            var tenantId = GetCurrentTenantId();
-            var cacheKey = GetCacheKey(id, tenantId);
-            
-            await DynamicEntityPropertyCache.RemoveAsync(cacheKey);
-        }
+			DynamicEntityPropertyCache.Remove(cacheKey);
+		}
 
-        protected virtual int? GetCurrentTenantId()
-        {
-            if (_unitOfWorkManager.Current != null)
-            {
-                return _unitOfWorkManager.Current.GetTenantId();
-            }
+		public virtual async Task DeleteAsync(int id)
+		{
+			var dynamicEntityProperty = await GetAsync(id); //Get checks permission, no need to check it again
+			if (dynamicEntityProperty == null)
+			{
+				return;
+			}
 
-            return AbpSession.TenantId;
-        }
+			await DynamicEntityPropertyStore.DeleteAsync(dynamicEntityProperty.Id);
 
-        protected virtual string GetCacheKey(int id, int? tenantId)
-        {
-            return id + "@" + (tenantId ?? 0);
-        }
-    }
+			var tenantId = GetCurrentTenantId();
+			var cacheKey = GetCacheKey(id, tenantId);
+
+			await DynamicEntityPropertyCache.RemoveAsync(cacheKey);
+		}
+
+		protected virtual int? GetCurrentTenantId()
+		{
+			if (_unitOfWorkManager.Current != null)
+			{
+				return _unitOfWorkManager.Current.GetTenantId();
+			}
+
+			return AbpSession.TenantId;
+		}
+
+		protected virtual string GetCacheKey(int id, int? tenantId)
+		{
+			return id + "@" + (tenantId ?? 0);
+		}
+	}
 }

@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Abp.AspNetCore.Runtime.Session
 {
-    public class AspNetCorePrincipalAccessor : DefaultPrincipalAccessor
-    {
-        public override ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User ?? base.Principal;
+	public class AspNetCorePrincipalAccessor : DefaultPrincipalAccessor
+	{
+		public override ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User ?? base.Principal;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AspNetCorePrincipalAccessor(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
-    }
+		public AspNetCorePrincipalAccessor(IHttpContextAccessor httpContextAccessor)
+		{
+			_httpContextAccessor = httpContextAccessor;
+		}
+	}
 }

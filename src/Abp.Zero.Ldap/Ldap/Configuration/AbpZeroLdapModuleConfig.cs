@@ -3,27 +3,27 @@ using Abp.Zero.Configuration;
 
 namespace Abp.Zero.Ldap.Configuration
 {
-    public class AbpZeroLdapModuleConfig : IAbpZeroLdapModuleConfig
-    {
-        public bool IsEnabled { get; private set; }
-        
-        public bool UseUserPrincipalNameAsUserName { get; set; }
+	public class AbpZeroLdapModuleConfig : IAbpZeroLdapModuleConfig
+	{
+		public bool IsEnabled { get; private set; }
 
-        public Type AuthenticationSourceType { get; private set; }
-    
-        private readonly IAbpZeroConfig _zeroConfig;
+		public bool UseUserPrincipalNameAsUserName { get; set; }
 
-        public AbpZeroLdapModuleConfig(IAbpZeroConfig zeroConfig)
-        {
-            _zeroConfig = zeroConfig;
-        }
+		public Type AuthenticationSourceType { get; private set; }
 
-        public void Enable(Type authenticationSourceType)
-        {
-            AuthenticationSourceType = authenticationSourceType;
-            IsEnabled = true;
+		private readonly IAbpZeroConfig _zeroConfig;
 
-            _zeroConfig.UserManagement.ExternalAuthenticationSources.Add(authenticationSourceType);
-        }
-    }
+		public AbpZeroLdapModuleConfig(IAbpZeroConfig zeroConfig)
+		{
+			_zeroConfig = zeroConfig;
+		}
+
+		public void Enable(Type authenticationSourceType)
+		{
+			AuthenticationSourceType = authenticationSourceType;
+			IsEnabled = true;
+
+			_zeroConfig.UserManagement.ExternalAuthenticationSources.Add(authenticationSourceType);
+		}
+	}
 }

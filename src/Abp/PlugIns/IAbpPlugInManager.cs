@@ -1,7 +1,7 @@
 ﻿namespace Abp.PlugIns
 {
-    public interface IAbpPlugInManager
-    {
-        PlugInSourceList PlugInSources { get; }
-    }
+	public interface IAbpPlugInManager
+	{
+		PlugInSourceList PlugInSources { get; }
+	}
 }

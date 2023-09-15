@@ -5,18 +5,18 @@ using Microsoft.OData.ModelBuilder;
 
 namespace Abp.AspNetCore.OData.Configuration
 {
-    internal class AbpAspNetCoreODataModuleConfiguration : IAbpAspNetCoreODataModuleConfiguration
-    {
-        public ODataConventionModelBuilder ODataModelBuilder { get; set; }
+	internal class AbpAspNetCoreODataModuleConfiguration : IAbpAspNetCoreODataModuleConfiguration
+	{
+		public ODataConventionModelBuilder ODataModelBuilder { get; set; }
 
-        public Action<IMvcCoreBuilder> MapAction { get; set; }
+		public Action<IMvcCoreBuilder> MapAction { get; set; }
 
-        public AbpAspNetCoreODataModuleConfiguration()
-        {
-            MapAction = routes =>
-            {
-                routes.AddOData(opt => opt.AddRouteComponents("odata", ODataModelBuilder.GetEdmModel()));
-            };
-        }
-    }
+		public AbpAspNetCoreODataModuleConfiguration()
+		{
+			MapAction = routes =>
+			{
+				routes.AddOData(opt => opt.AddRouteComponents("odata", ODataModelBuilder.GetEdmModel()));
+			};
+		}
+	}
 }

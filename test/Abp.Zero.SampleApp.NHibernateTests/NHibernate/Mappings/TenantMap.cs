@@ -4,8 +4,8 @@ using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class TenantMap : AbpTenantMap<Tenant, User>
-    {
+	public class TenantMap : AbpTenantMap<Tenant, User>
+	{
 
-    }
+	}
 }

@@ -3,11 +3,11 @@ using Abp.EntityFramework;
 
 namespace Abp.EntityFrameworkCore
 {
-    public class DbContextTypeMatcher : DbContextTypeMatcher<AbpDbContext>
-    {
-        public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
-            : base(currentUnitOfWorkProvider)
-        {
-        }
-    }
+	public class DbContextTypeMatcher : DbContextTypeMatcher<AbpDbContext>
+	{
+		public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
+			: base(currentUnitOfWorkProvider)
+		{
+		}
+	}
 }

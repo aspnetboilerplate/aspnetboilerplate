@@ -10,122 +10,122 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
-    public class MultiTenancy_Tests : AppTestBase
-    {
-        private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
+	public class MultiTenancy_Tests : AppTestBase
+	{
+		private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+		private readonly IMultiTenancyConfig _multiTenancyConfig;
 
-        public MultiTenancy_Tests()
-        {
-            _multiTenancyConfig = IocManager.Resolve<IMultiTenancyConfig>();
-            _multiTenancyConfig.IsEnabled = true;
-            _multiTenancyConfiguration = Resolve<IWebMultiTenancyConfiguration>();
-        }
+		public MultiTenancy_Tests()
+		{
+			_multiTenancyConfig = IocManager.Resolve<IMultiTenancyConfig>();
+			_multiTenancyConfig.IsEnabled = true;
+			_multiTenancyConfiguration = Resolve<IWebMultiTenancyConfiguration>();
+		}
 
-        [Fact]
-        public async Task HttpHeaderTenantResolveContributor_Test()
-        {
-            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
+		[Fact]
+		public async Task HttpHeaderTenantResolveContributor_Test()
+		{
+			Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
 
-            // Act
-            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
-                GetUrl<MultiTenancyTestController>(
-                    nameof(MultiTenancyTestController.GetTenantId)
-                )
-            );
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
 
-            //Assert
-            response.Result.ShouldBe(42);
-        }
+			//Assert
+			response.Result.ShouldBe(42);
+		}
 
-        [Fact]
-        public async Task HttpHeaderTenantResolveContributor_Configure_Test()
-        {
-            _multiTenancyConfig.TenantIdResolveKey = "Abp-TenantId";
+		[Fact]
+		public async Task HttpHeaderTenantResolveContributor_Configure_Test()
+		{
+			_multiTenancyConfig.TenantIdResolveKey = "Abp-TenantId";
 
-            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
+			Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
 
-            // Act
-            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
-                GetUrl<MultiTenancyTestController>(
-                    nameof(MultiTenancyTestController.GetTenantId)
-                )
-            );
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
 
-            //Assert
-            response.Result.ShouldBe(42);
-        }
+			//Assert
+			response.Result.ShouldBe(42);
+		}
 
-        [Fact]
-        public async Task HttpCookieTenantResolveContributor_Test()
-        {
-            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "42").ToString());
+		[Fact]
+		public async Task HttpCookieTenantResolveContributor_Test()
+		{
+			Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "42").ToString());
 
-            // Act
-            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
-                GetUrl<MultiTenancyTestController>(
-                    nameof(MultiTenancyTestController.GetTenantId)
-                )
-            );
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
 
-            //Assert
-            response.Result.ShouldBe(42);
-        }
+			//Assert
+			response.Result.ShouldBe(42);
+		}
 
-        [Fact]
-        public async Task Header_Should_Have_High_Priority_Than_Cookie()
-        {
-            Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "43").ToString());
-            Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
+		[Fact]
+		public async Task Header_Should_Have_High_Priority_Than_Cookie()
+		{
+			Client.DefaultRequestHeaders.Add("Cookie", new CookieHeaderValue(_multiTenancyConfig.TenantIdResolveKey, "43").ToString());
+			Client.DefaultRequestHeaders.Add(_multiTenancyConfig.TenantIdResolveKey, "42");
 
-            // Act
-            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
-                GetUrl<MultiTenancyTestController>(
-                    nameof(MultiTenancyTestController.GetTenantId)
-                )
-            );
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
 
-            //Assert
-            response.Result.ShouldBe(42);
-        }
+			//Assert
+			response.Result.ShouldBe(42);
+		}
 
-        [Theory]
-        [InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mysite.com", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mywebsite.com", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mysite.com:8080", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mywebsite.com:8080", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mysite.com/", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mywebsite.com/", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mysite.com/host", 1)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mywebsite.com/host", 1)]
-        [InlineData("http://{TENANCY_NAME}:80", "http://default:80", 1)]
-        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:80", 1)]
-        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:81", 1)]
-        [InlineData("http://{TENANCY_NAME}:80", "http://test:80", null)]
-        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:80", null)]
-        [InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:81", null)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://mysite.default.com/host", null)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mysite.default.com/host", null)]
-        [InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mywebsite.default.com/host", null)]
-        [InlineData("https://localhost:44301/", "https://localhost:44301/", null)]
-        public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain, int? tenantId)
-        {
-            _multiTenancyConfiguration.DomainFormat = domainFormat;
-            Client.BaseAddress = new Uri(domain);
+		[Theory]
+		[InlineData("http://{TENANCY_NAME}.mysite.com", "http://default.mysite.com", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mysite.com", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com;http://{TENANCY_NAME}.mywebsite.com", "http://default.mywebsite.com", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com:8080", "http://default.mysite.com:8080", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mysite.com:8080", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com:8080;http://{TENANCY_NAME}.mywebsite.com:8080", "http://default.mywebsite.com:8080", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/", "http://default.mysite.com/", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mysite.com/", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/;http://{TENANCY_NAME}.mywebsite.com/", "http://default.mywebsite.com/", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://default.mysite.com/host", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mysite.com/host", 1)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://default.mywebsite.com/host", 1)]
+		[InlineData("http://{TENANCY_NAME}:80", "http://default:80", 1)]
+		[InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:80", 1)]
+		[InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://default:81", 1)]
+		[InlineData("http://{TENANCY_NAME}:80", "http://test:80", null)]
+		[InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:80", null)]
+		[InlineData("http://{TENANCY_NAME}:80;http://{TENANCY_NAME}:81", "http://test:81", null)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host", "http://mysite.default.com/host", null)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mysite.default.com/host", null)]
+		[InlineData("http://{TENANCY_NAME}.mysite.com/host;http://{TENANCY_NAME}.mywebsite.com/host", "http://mywebsite.default.com/host", null)]
+		[InlineData("https://localhost:44301/", "https://localhost:44301/", null)]
+		public async Task DomainTenantResolveContributor_Test(string domainFormat, string domain, int? tenantId)
+		{
+			_multiTenancyConfiguration.DomainFormat = domainFormat;
+			Client.BaseAddress = new Uri(domain);
 
-            // Act
-            var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
-                GetUrl<MultiTenancyTestController>(
-                    nameof(MultiTenancyTestController.GetTenantId)
-                )
-            );
+			// Act
+			var response = await GetResponseAsObjectAsync<AjaxResponse<int?>>(
+				GetUrl<MultiTenancyTestController>(
+					nameof(MultiTenancyTestController.GetTenantId)
+				)
+			);
 
-            //Assert
-            response.Result.ShouldBe(tenantId);
-        }
-    }
+			//Assert
+			response.Result.ShouldBe(tenantId);
+		}
+	}
 }

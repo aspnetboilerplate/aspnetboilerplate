@@ -1,12 +1,12 @@
 ﻿namespace Abp.Configuration.Startup
 {
-    internal class EventBusConfiguration : IEventBusConfiguration
-    {
-        public bool UseDefaultEventBus { get; set; }
+	internal class EventBusConfiguration : IEventBusConfiguration
+	{
+		public bool UseDefaultEventBus { get; set; }
 
-        public EventBusConfiguration()
-        {
-            UseDefaultEventBus = true;
-        }
-    }
+		public EventBusConfiguration()
+		{
+			UseDefaultEventBus = true;
+		}
+	}
 }

@@ -6,29 +6,29 @@ using Abp.Domain.Entities.Auditing;
 
 namespace Abp.Dapper.Tests.Entities
 {
-    [Table("Products")]
-    public class Product : FullAuditedEntity, IMayHaveTenant
-    {
-        protected Product()
-        {
-        }
+	[Table("Products")]
+	public class Product : FullAuditedEntity, IMayHaveTenant
+	{
+		protected Product()
+		{
+		}
 
-        public Product(string name) : this()
-        {
-            Name = name;
-        }
+		public Product(string name) : this()
+		{
+			Name = name;
+		}
 
-        [Required]
-        public string Name { get; set; }
-        
-        public Status Status { get; set; }
+		[Required]
+		public string Name { get; set; }
 
-        public int? TenantId { get; set; }
-    }
+		public Status Status { get; set; }
 
-    public enum Status
-    {
-        Active,
-        Passive
-    }
+		public int? TenantId { get; set; }
+	}
+
+	public enum Status
+	{
+		Active,
+		Passive
+	}
 }

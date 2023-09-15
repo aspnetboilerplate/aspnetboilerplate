@@ -1,6 +1,6 @@
 ﻿namespace Abp.Authorization
 {
-    public interface IAbpAllowAnonymousAttribute
-    {
-    }
+	public interface IAbpAllowAnonymousAttribute
+	{
+	}
 }

@@ -23,70 +23,70 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace AbpAspNetCoreDemo
 {
-    [DependsOn(
-        typeof(AbpAspNetCoreModule),
-        typeof(AbpAspNetCoreDemoCoreModule),
-        typeof(AbpEntityFrameworkCoreModule),
-        typeof(AbpCastleLog4NetModule),
-        typeof(AbpAspNetCoreODataModule),
-        typeof(AbpHtmlSanitizerModule)
-    )]
-    public class AbpAspNetCoreDemoModule : AbpModule
-    {
-        public static AsyncLocal<Action<IAbpStartupConfiguration>> ConfigurationAction =
-            new AsyncLocal<Action<IAbpStartupConfiguration>>();
+	[DependsOn(
+		typeof(AbpAspNetCoreModule),
+		typeof(AbpAspNetCoreDemoCoreModule),
+		typeof(AbpEntityFrameworkCoreModule),
+		typeof(AbpCastleLog4NetModule),
+		typeof(AbpAspNetCoreODataModule),
+		typeof(AbpHtmlSanitizerModule)
+	)]
+	public class AbpAspNetCoreDemoModule : AbpModule
+	{
+		public static AsyncLocal<Action<IAbpStartupConfiguration>> ConfigurationAction =
+			new AsyncLocal<Action<IAbpStartupConfiguration>>();
 
-        public override void PreInitialize()
-        {
-            RegisterDbContextToSqliteInMemoryDb(IocManager);
+		public override void PreInitialize()
+		{
+			RegisterDbContextToSqliteInMemoryDb(IocManager);
 
-            Configuration.Modules.AbpAspNetCore()
-                .CreateControllersForAppServices(
-                    typeof(AbpAspNetCoreDemoCoreModule).GetAssembly()
-                );
+			Configuration.Modules.AbpAspNetCore()
+				.CreateControllersForAppServices(
+					typeof(AbpAspNetCoreDemoCoreModule).GetAssembly()
+				);
 
-            Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new AbpODataDontWrapResultFilter());
+			Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new AbpODataDontWrapResultFilter());
 
-            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
-            {
-                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
+			Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
+			{
+				endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapRazorPages();
+			});
 
-            Configuration.Caching.MemoryCacheOptions = new MemoryCacheOptions
-            {
-                SizeLimit = 2048
-            };
+			Configuration.Caching.MemoryCacheOptions = new MemoryCacheOptions
+			{
+				SizeLimit = 2048
+			};
 
-            ConfigurationAction.Value?.Invoke(Configuration);
+			ConfigurationAction.Value?.Invoke(Configuration);
 
-            Configuration.Modules.AbpHtmlSanitizer()
-                .AddSelector<IAccountAppService>(x => nameof(x.Register));
-        }
+			Configuration.Modules.AbpHtmlSanitizer()
+				.AddSelector<IAccountAppService>(x => nameof(x.Register));
+		}
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoModule).GetAssembly());
-        }
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreDemoModule).GetAssembly());
+		}
 
-        private static void RegisterDbContextToSqliteInMemoryDb(IIocManager iocManager)
-        {
-            var builder = new DbContextOptionsBuilder<MyDbContext>();
+		private static void RegisterDbContextToSqliteInMemoryDb(IIocManager iocManager)
+		{
+			var builder = new DbContextOptionsBuilder<MyDbContext>();
 
-            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+			var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+			builder.UseSqlite(inMemorySqlite);
 
-            iocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<MyDbContext>>()
-                    .Instance(builder.Options)
-                    .LifestyleSingleton()
-            );
+			iocManager.IocContainer.Register(
+				Component
+					.For<DbContextOptions<MyDbContext>>()
+					.Instance(builder.Options)
+					.LifestyleSingleton()
+			);
 
-            inMemorySqlite.Open();
-            var ctx = new MyDbContext(builder.Options);
-            ctx.Database.EnsureCreated();
-        }
-    }
+			inMemorySqlite.Open();
+			var ctx = new MyDbContext(builder.Options);
+			ctx.Database.EnsureCreated();
+		}
+	}
 }

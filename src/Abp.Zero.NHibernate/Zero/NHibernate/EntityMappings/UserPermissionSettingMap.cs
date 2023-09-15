@@ -3,14 +3,14 @@ using FluentNHibernate.Mapping;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class UserPermissionSettingMap : SubclassMap<UserPermissionSetting>
-    {
-        public UserPermissionSettingMap()
-        {
-            DiscriminatorValue("UserPermissionSetting");
+	public class UserPermissionSettingMap : SubclassMap<UserPermissionSetting>
+	{
+		public UserPermissionSettingMap()
+		{
+			DiscriminatorValue("UserPermissionSetting");
 
-            Map(x => x.UserId)
-                .Not.Nullable();
-        }
-    }
+			Map(x => x.UserId)
+				.Not.Nullable();
+		}
+	}
 }

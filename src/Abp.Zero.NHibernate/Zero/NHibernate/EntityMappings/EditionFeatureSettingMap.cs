@@ -3,15 +3,15 @@ using FluentNHibernate.Mapping;
 
 namespace Abp.Zero.NHibernate.EntityMappings
 {
-    public class EditionFeatureSettingMap : SubclassMap<EditionFeatureSetting>
-    {
-        public EditionFeatureSettingMap()
-        {
-            DiscriminatorValue("EditionFeatureSetting");
+	public class EditionFeatureSettingMap : SubclassMap<EditionFeatureSetting>
+	{
+		public EditionFeatureSettingMap()
+		{
+			DiscriminatorValue("EditionFeatureSetting");
 
-            References(x => x.Edition)
-                .Column("EditionId");
-            Map(x => x.EditionId).ReadOnly();
-        }
-    }
+			References(x => x.Edition)
+				.Column("EditionId");
+			Map(x => x.EditionId).ReadOnly();
+		}
+	}
 }

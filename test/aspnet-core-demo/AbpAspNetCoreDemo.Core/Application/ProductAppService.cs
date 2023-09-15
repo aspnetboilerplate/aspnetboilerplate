@@ -12,57 +12,57 @@ using Abp.UI;
 
 namespace AbpAspNetCoreDemo.Core.Application
 {
-    public class ProductAppService : ApplicationService
-    {
-        private readonly IRepository<Product> _productRepository;
+	public class ProductAppService : ApplicationService
+	{
+		private readonly IRepository<Product> _productRepository;
 
-        public ProductAppService(IRepository<Product> productRepository)
-        {
-            _productRepository = productRepository;
-        }
+		public ProductAppService(IRepository<Product> productRepository)
+		{
+			_productRepository = productRepository;
+		}
 
-        public async Task<List<ProductDto>> GetAllAsync()
-        {
-            return ObjectMapper.Map<List<ProductDto>>(await _productRepository.GetAllListAsync());
-        }
-        
-        public int CreateProduct(ProductCreateInput input)
-        {
-            var product = ObjectMapper.Map<Product>(input);
-            return _productRepository.InsertAndGetId(product);
-        }
+		public async Task<List<ProductDto>> GetAllAsync()
+		{
+			return ObjectMapper.Map<List<ProductDto>>(await _productRepository.GetAllListAsync());
+		}
 
-        public void CreateProductAndRollback(ProductCreateInput input)
-        {
-            _productRepository.Insert(ObjectMapper.Map<Product>(input));
-            CurrentUnitOfWork.SaveChanges();
-            throw new UserFriendlyException("This exception is thrown to rollback the transaction!");
-        }
+		public int CreateProduct(ProductCreateInput input)
+		{
+			var product = ObjectMapper.Map<Product>(input);
+			return _productRepository.InsertAndGetId(product);
+		}
 
-        //TODO: This method crashes!
-        public async Task GetAllParallel()
-        {
-            const int threadCount = 32;
+		public void CreateProductAndRollback(ProductCreateInput input)
+		{
+			_productRepository.Insert(ObjectMapper.Map<Product>(input));
+			CurrentUnitOfWork.SaveChanges();
+			throw new UserFriendlyException("This exception is thrown to rollback the transaction!");
+		}
 
-            var tasks = new List<Task<int>>();
+		//TODO: This method crashes!
+		public async Task GetAllParallel()
+		{
+			const int threadCount = 32;
 
-            for (int i = 0; i < threadCount; i++)
-            {
-                tasks.Add(GetAllParallelMethod());
-            }
+			var tasks = new List<Task<int>>();
 
-            await Task.WhenAll(tasks.Cast<Task>().ToArray());
+			for (int i = 0; i < threadCount; i++)
+			{
+				tasks.Add(GetAllParallelMethod());
+			}
 
-            foreach (var task in tasks)
-            {
-                Debug.Assert(task.Result > 0);
-            }
-        }
+			await Task.WhenAll(tasks.Cast<Task>().ToArray());
 
-        [UnitOfWork(TransactionScopeOption.RequiresNew)]
-        protected virtual async Task<int> GetAllParallelMethod()
-        {
-            return await _productRepository.CountAsync();
-        }
-    }
+			foreach (var task in tasks)
+			{
+				Debug.Assert(task.Result > 0);
+			}
+		}
+
+		[UnitOfWork(TransactionScopeOption.RequiresNew)]
+		protected virtual async Task<int> GetAllParallelMethod()
+		{
+			return await _productRepository.CountAsync();
+		}
+	}
 }

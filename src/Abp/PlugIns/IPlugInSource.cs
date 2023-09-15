@@ -4,10 +4,10 @@ using System.Reflection;
 
 namespace Abp.PlugIns
 {
-    public interface IPlugInSource
-    {
-        List<Assembly> GetAssemblies();
+	public interface IPlugInSource
+	{
+		List<Assembly> GetAssemblies();
 
-        List<Type> GetModules();
-    }
+		List<Type> GetModules();
+	}
 }

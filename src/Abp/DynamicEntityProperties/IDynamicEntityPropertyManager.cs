@@ -3,30 +3,30 @@ using System.Threading.Tasks;
 
 namespace Abp.DynamicEntityProperties
 {
-    public interface IDynamicEntityPropertyManager
-    {
-        DynamicEntityProperty Get(int id);
+	public interface IDynamicEntityPropertyManager
+	{
+		DynamicEntityProperty Get(int id);
 
-        Task<DynamicEntityProperty> GetAsync(int id);
+		Task<DynamicEntityProperty> GetAsync(int id);
 
-        List<DynamicEntityProperty> GetAll(string entityFullName);
+		List<DynamicEntityProperty> GetAll(string entityFullName);
 
-        Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName);
+		Task<List<DynamicEntityProperty>> GetAllAsync(string entityFullName);
 
-        List<DynamicEntityProperty> GetAll();
+		List<DynamicEntityProperty> GetAll();
 
-        Task<List<DynamicEntityProperty>> GetAllAsync();
+		Task<List<DynamicEntityProperty>> GetAllAsync();
 
-        void Add(DynamicEntityProperty dynamicEntityProperty);
+		void Add(DynamicEntityProperty dynamicEntityProperty);
 
-        Task AddAsync(DynamicEntityProperty dynamicEntityProperty);
+		Task AddAsync(DynamicEntityProperty dynamicEntityProperty);
 
-        void Update(DynamicEntityProperty dynamicEntityProperty);
+		void Update(DynamicEntityProperty dynamicEntityProperty);
 
-        Task UpdateAsync(DynamicEntityProperty dynamicEntityProperty);
+		Task UpdateAsync(DynamicEntityProperty dynamicEntityProperty);
 
-        void Delete(int id);
+		void Delete(int id);
 
-        Task DeleteAsync(int id);
-    }
+		Task DeleteAsync(int id);
+	}
 }

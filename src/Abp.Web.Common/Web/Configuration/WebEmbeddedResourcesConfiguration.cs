@@ -2,17 +2,17 @@
 
 namespace Abp.Web.Configuration
 {
-    internal class WebEmbeddedResourcesConfiguration : IWebEmbeddedResourcesConfiguration
-    {
-        public HashSet<string> IgnoredFileExtensions { get; }
+	internal class WebEmbeddedResourcesConfiguration : IWebEmbeddedResourcesConfiguration
+	{
+		public HashSet<string> IgnoredFileExtensions { get; }
 
-        public WebEmbeddedResourcesConfiguration()
-        {
-            IgnoredFileExtensions = new HashSet<string>
-            {
-                "cshtml",
-                "config"
-            };
-        }
-    }
+		public WebEmbeddedResourcesConfiguration()
+		{
+			IgnoredFileExtensions = new HashSet<string>
+			{
+				"cshtml",
+				"config"
+			};
+		}
+	}
 }

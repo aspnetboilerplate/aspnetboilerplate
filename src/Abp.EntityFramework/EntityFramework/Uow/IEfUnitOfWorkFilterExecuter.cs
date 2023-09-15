@@ -3,8 +3,8 @@ using Abp.Domain.Uow;
 
 namespace Abp.EntityFramework.Uow
 {
-    public interface IEfUnitOfWorkFilterExecuter : IUnitOfWorkFilterExecuter
-    {
-        void ApplyCurrentFilters(IUnitOfWork unitOfWork, DbContext dbContext);
-    }
+	public interface IEfUnitOfWorkFilterExecuter : IUnitOfWorkFilterExecuter
+	{
+		void ApplyCurrentFilters(IUnitOfWork unitOfWork, DbContext dbContext);
+	}
 }

@@ -19,105 +19,105 @@ using Castle.MicroKernel.Registration;
 
 namespace Abp.Zero
 {
-    /// <summary>
-    /// ABP zero core module.
-    /// </summary>
-    [DependsOn(typeof(AbpKernelModule))]
-    public class AbpZeroCommonModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            IocManager.RegisterIfNot<IAbpZeroEntityTypes, AbpZeroEntityTypes>(); //Registered on services.AddAbpIdentity() for Abp.ZeroCore.
+	/// <summary>
+	/// ABP zero core module.
+	/// </summary>
+	[DependsOn(typeof(AbpKernelModule))]
+	public class AbpZeroCommonModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			IocManager.RegisterIfNot<IAbpZeroEntityTypes, AbpZeroEntityTypes>(); //Registered on services.AddAbpIdentity() for Abp.ZeroCore.
 
-            IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
-            IocManager.Register<IUserManagementConfig, UserManagementConfig>();
-            IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
-            IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
+			IocManager.Register<IRoleManagementConfig, RoleManagementConfig>();
+			IocManager.Register<IUserManagementConfig, UserManagementConfig>();
+			IocManager.Register<ILanguageManagementConfig, LanguageManagementConfig>();
+			IocManager.Register<IAbpZeroConfig, AbpZeroConfig>();
 
-            Configuration.ReplaceService<ITenantStore, TenantStore>(DependencyLifeStyle.Transient);
+			Configuration.ReplaceService<ITenantStore, TenantStore>(DependencyLifeStyle.Transient);
 
-            Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
+			Configuration.Settings.Providers.Add<AbpZeroSettingProvider>();
 
-            Configuration.Localization.Sources.Add(
-                new DictionaryBasedLocalizationSource(
-                    AbpZeroConsts.LocalizationSourceName,
-                    new XmlEmbeddedFileLocalizationDictionaryProvider(
-                        typeof(AbpZeroCommonModule).GetAssembly(), "Abp.Zero.Localization.Source"
-                        )));
+			Configuration.Localization.Sources.Add(
+				new DictionaryBasedLocalizationSource(
+					AbpZeroConsts.LocalizationSourceName,
+					new XmlEmbeddedFileLocalizationDictionaryProvider(
+						typeof(AbpZeroCommonModule).GetAssembly(), "Abp.Zero.Localization.Source"
+						)));
 
-            IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
+			IocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
 
-            AddIgnoredTypes();
-        }
+			AddIgnoredTypes();
+		}
 
-        public override void Initialize()
-        {
-            FillMissingEntityTypes();
+		public override void Initialize()
+		{
+			FillMissingEntityTypes();
 
-            IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
+			IocManager.Register<IMultiTenantLocalizationDictionary, MultiTenantLocalizationDictionary>(DependencyLifeStyle.Transient);
+			IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCommonModule).GetAssembly());
 
-            RegisterTenantCache();
-        }
+			RegisterTenantCache();
+		}
 
-        private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
-        {
-            if (typeof(IAbpZeroFeatureValueStore).IsAssignableFrom(handler.ComponentModel.Implementation) && !IocManager.IsRegistered<IAbpZeroFeatureValueStore>())
-            {
-                IocManager.IocContainer.Register(
-                    Component.For<IAbpZeroFeatureValueStore>().ImplementedBy(handler.ComponentModel.Implementation).Named("AbpZeroFeatureValueStore").LifestyleTransient()
-                    );
-            }
-        }
+		private void Kernel_ComponentRegistered(string key, Castle.MicroKernel.IHandler handler)
+		{
+			if (typeof(IAbpZeroFeatureValueStore).IsAssignableFrom(handler.ComponentModel.Implementation) && !IocManager.IsRegistered<IAbpZeroFeatureValueStore>())
+			{
+				IocManager.IocContainer.Register(
+					Component.For<IAbpZeroFeatureValueStore>().ImplementedBy(handler.ComponentModel.Implementation).Named("AbpZeroFeatureValueStore").LifestyleTransient()
+					);
+			}
+		}
 
-        private void AddIgnoredTypes()
-        {
-            var ignoredTypes = new[]
-            {
-                typeof(AuditLog)
-            };
+		private void AddIgnoredTypes()
+		{
+			var ignoredTypes = new[]
+			{
+				typeof(AuditLog)
+			};
 
-            foreach (var ignoredType in ignoredTypes)
-            {
-                Configuration.EntityHistory.IgnoredTypes.AddIfNotContains(ignoredType);
-            }
-        }
+			foreach (var ignoredType in ignoredTypes)
+			{
+				Configuration.EntityHistory.IgnoredTypes.AddIfNotContains(ignoredType);
+			}
+		}
 
-        private void FillMissingEntityTypes()
-        {
-            using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
-            {
-                if (entityTypes.Object.User != null &&
-                    entityTypes.Object.Role != null &&
-                    entityTypes.Object.Tenant != null)
-                {
-                    return;
-                }
+		private void FillMissingEntityTypes()
+		{
+			using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+			{
+				if (entityTypes.Object.User != null &&
+					entityTypes.Object.Role != null &&
+					entityTypes.Object.Tenant != null)
+				{
+					return;
+				}
 
-                using (var typeFinder = IocManager.ResolveAsDisposable<ITypeFinder>())
-                {
-                    var types = typeFinder.Object.FindAll();
-                    entityTypes.Object.Tenant = types.FirstOrDefault(t => typeof(AbpTenantBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
-                    entityTypes.Object.Role = types.FirstOrDefault(t => typeof(AbpRoleBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
-                    entityTypes.Object.User = types.FirstOrDefault(t => typeof(AbpUserBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
-                }
-            }
-        }
+				using (var typeFinder = IocManager.ResolveAsDisposable<ITypeFinder>())
+				{
+					var types = typeFinder.Object.FindAll();
+					entityTypes.Object.Tenant = types.FirstOrDefault(t => typeof(AbpTenantBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
+					entityTypes.Object.Role = types.FirstOrDefault(t => typeof(AbpRoleBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
+					entityTypes.Object.User = types.FirstOrDefault(t => typeof(AbpUserBase).IsAssignableFrom(t) && !t.GetTypeInfo().IsAbstract);
+				}
+			}
+		}
 
-        private void RegisterTenantCache()
-        {
-            if (IocManager.IsRegistered<ITenantCache>())
-            {
-                return;
-            }
+		private void RegisterTenantCache()
+		{
+			if (IocManager.IsRegistered<ITenantCache>())
+			{
+				return;
+			}
 
-            using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
-            {
-                var implType = typeof (TenantCache<,>)
-                    .MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
+			using (var entityTypes = IocManager.ResolveAsDisposable<IAbpZeroEntityTypes>())
+			{
+				var implType = typeof (TenantCache<,>)
+					.MakeGenericType(entityTypes.Object.Tenant, entityTypes.Object.User);
 
-                IocManager.Register(typeof (ITenantCache), implType, DependencyLifeStyle.Transient);
-            }
-        }
-    }
+				IocManager.Register(typeof (ITenantCache), implType, DependencyLifeStyle.Transient);
+			}
+		}
+	}
 }

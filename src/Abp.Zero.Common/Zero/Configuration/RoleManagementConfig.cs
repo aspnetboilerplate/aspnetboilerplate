@@ -2,13 +2,13 @@
 
 namespace Abp.Zero.Configuration
 {
-    internal class RoleManagementConfig : IRoleManagementConfig
-    {
-        public List<StaticRoleDefinition> StaticRoles { get; }
+	internal class RoleManagementConfig : IRoleManagementConfig
+	{
+		public List<StaticRoleDefinition> StaticRoles { get; }
 
-        public RoleManagementConfig()
-        {
-            StaticRoles = new List<StaticRoleDefinition>();
-        }
-    }
+		public RoleManagementConfig()
+		{
+			StaticRoles = new List<StaticRoleDefinition>();
+		}
+	}
 }

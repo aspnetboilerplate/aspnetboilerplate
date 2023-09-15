@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Abp.Zero.Users
 {
-    public class SecurityStampValidator_Tests : AbpZeroTestBase
-    {
-        [Fact]
-        public void Should_Resolve_AbpSecurityStampValidator()
-        {
-            (Resolve<ISecurityStampValidator>() is AbpSecurityStampValidator<Tenant, Role, User>).ShouldBeTrue();
-            (Resolve<SecurityStampValidator<User>>() is AbpSecurityStampValidator<Tenant, Role, User>).ShouldBeTrue();
-        }
-    }
+	public class SecurityStampValidator_Tests : AbpZeroTestBase
+	{
+		[Fact]
+		public void Should_Resolve_AbpSecurityStampValidator()
+		{
+			(Resolve<ISecurityStampValidator>() is AbpSecurityStampValidator<Tenant, Role, User>).ShouldBeTrue();
+			(Resolve<SecurityStampValidator<User>>() is AbpSecurityStampValidator<Tenant, Role, User>).ShouldBeTrue();
+		}
+	}
 }

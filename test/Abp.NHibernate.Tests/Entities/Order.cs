@@ -6,13 +6,13 @@ using Abp.Timing;
 
 namespace Abp.NHibernate.Tests.Entities
 {
-    public class Order : Entity, IHasCreationTime
-    {
-        public virtual decimal TotalPrice { get; set; }
+	public class Order : Entity, IHasCreationTime
+	{
+		public virtual decimal TotalPrice { get; set; }
 
-        [DisableDateTimeNormalization]
-        public virtual DateTime CreationTime { get; set; }
+		[DisableDateTimeNormalization]
+		public virtual DateTime CreationTime { get; set; }
 
-        public virtual ICollection<OrderDetail> Items { get; set; }
-    }
+		public virtual ICollection<OrderDetail> Items { get; set; }
+	}
 }

@@ -15,122 +15,122 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests;
 
 public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Startup>>
 {
-    private readonly WebApplicationFactory<Startup> _factory;
-    private const string BaseUrl = "/SanitizerTest/";
+	private readonly WebApplicationFactory<Startup> _factory;
+	private const string BaseUrl = "/SanitizerTest/";
 
-    public SanitizerControllerTests(WebApplicationFactory<Startup> factory)
-    {
-        _factory = factory;
-    }
+	public SanitizerControllerTests(WebApplicationFactory<Startup> factory)
+	{
+		_factory = factory;
+	}
 
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestData), MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Html_Test(MyModel myInputModel, MyModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
+	[Theory]
+	[MemberData(nameof(SanitizerControllerData.SanitizerTestData), MemberType = typeof(SanitizerControllerData))]
+	public async Task Sanitize_Html_Test(MyModel myInputModel, MyModel myExpectedModel)
+	{
+		// Arrange
+		var client = _factory.CreateClient();
 
-        var content = JsonContent.Create(new
-        {
-            myInputModel.HtmlInput, myInputModel.SecondInput,
-        });
+		var content = JsonContent.Create(new
+		{
+			myInputModel.HtmlInput, myInputModel.SecondInput,
+		});
 
-        // Act
-        var response = await client.PostAsync(BaseUrl + "SanitizeHtmlTest", content);
+		// Act
+		var response = await client.PostAsync(BaseUrl + "SanitizeHtmlTest", content);
 
-        // Assert
+		// Assert
 
-        var json = await response.Content.ReadAsStringAsync();
+		var json = await response.Content.ReadAsStringAsync();
 
-        var myResult = JsonConvert.DeserializeObject<MyModel>(json);
+		var myResult = JsonConvert.DeserializeObject<MyModel>(json);
 
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
+		myResult.ShouldBeEquivalentTo(myExpectedModel);
+	}
 
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestPropertyData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Html_Property_Test(string firstInput, string secondInput, object myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-        
-        // Act
-        var response = await client.PostAsync(BaseUrl + "sanitizeHtmlPropertyTest", new FormUrlEncodedContent(new[]
-        {
-            new KeyValuePair<string, string>("firstInput", firstInput),
-            new KeyValuePair<string, string>("secondInput", secondInput),
-        }));
+	[Theory]
+	[MemberData(nameof(SanitizerControllerData.SanitizerTestPropertyData),
+		MemberType = typeof(SanitizerControllerData))]
+	public async Task Sanitize_Html_Property_Test(string firstInput, string secondInput, object myExpectedModel)
+	{
+		// Arrange
+		var client = _factory.CreateClient();
 
-        // Assert
+		// Act
+		var response = await client.PostAsync(BaseUrl + "sanitizeHtmlPropertyTest", new FormUrlEncodedContent(new[]
+		{
+			new KeyValuePair<string, string>("firstInput", firstInput),
+			new KeyValuePair<string, string>("secondInput", secondInput),
+		}));
 
-        var json = await response.Content.ReadAsStringAsync();
+		// Assert
 
-        var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" } );
+		var json = await response.Content.ReadAsStringAsync();
 
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
-    
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestInnerModelData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Inner_Model_Test(MyModel myInputModel, MyModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
+		var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" } );
 
-        // Act
-        var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeInnerModelTest", myInputModel);
+		myResult.ShouldBeEquivalentTo(myExpectedModel);
+	}
 
-        // Assert
+	[Theory]
+	[MemberData(nameof(SanitizerControllerData.SanitizerTestInnerModelData),
+		MemberType = typeof(SanitizerControllerData))]
+	public async Task Sanitize_Inner_Model_Test(MyModel myInputModel, MyModel myExpectedModel)
+	{
+		// Arrange
+		var client = _factory.CreateClient();
 
-        var json = await response.Content.ReadAsStringAsync();
+		// Act
+		var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeInnerModelTest", myInputModel);
 
-        var myResult = JsonConvert.DeserializeObject<MyModel>(json);
+		// Assert
 
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
-    
-    [Theory]
-    [MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedPropertyModelData),
-        MemberType = typeof(SanitizerControllerData))]
-    public async Task Sanitize_Attributed_Property_Model_Test(MyAttributedPropertyModel myInputModel, MyAttributedPropertyModel myExpectedModel)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
+		var json = await response.Content.ReadAsStringAsync();
 
-        // Act
-        var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeAttributedPropertyModelTest", myInputModel);
+		var myResult = JsonConvert.DeserializeObject<MyModel>(json);
 
-        // Assert
+		myResult.ShouldBeEquivalentTo(myExpectedModel);
+	}
 
-        var json = await response.Content.ReadAsStringAsync();
+	[Theory]
+	[MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedPropertyModelData),
+		MemberType = typeof(SanitizerControllerData))]
+	public async Task Sanitize_Attributed_Property_Model_Test(MyAttributedPropertyModel myInputModel, MyAttributedPropertyModel myExpectedModel)
+	{
+		// Arrange
+		var client = _factory.CreateClient();
 
-        var myResult = JsonConvert.DeserializeObject<MyAttributedPropertyModel>(json);
+		// Act
+		var response = await client.PostAsJsonAsync(BaseUrl + "sanitizeAttributedPropertyModelTest", myInputModel);
 
-        myResult.ShouldBeEquivalentTo(myExpectedModel);
-    }
-    
-    [Theory]
-    [InlineData("<a href='://malicioussite'>Please verify your email address</a>", "<a>Please verify your email address</a>")]
-    [InlineData("<script>alert('test')</script>", "")]
-    public async Task Sanitize_Html_For_AppServices_Test(string htmlInput, string expectedInput)
-    {
-        // Arrange
-        var client = _factory.CreateClient();
+		// Assert
 
-        var content = JsonContent.Create(new
-        {
-            FullName = htmlInput
-        });
+		var json = await response.Content.ReadAsStringAsync();
 
-        // Act
-        var response = await client.PostAsync("/api/services/app/Account/Register", content);
+		var myResult = JsonConvert.DeserializeObject<MyAttributedPropertyModel>(json);
 
-        // Assert
-        var json = await response.Content.ReadAsStringAsync();
+		myResult.ShouldBeEquivalentTo(myExpectedModel);
+	}
 
-        var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<RegisterOutput>>(json);
-        ajaxResponse.Result.FullName.ShouldBe(expectedInput);
-    }
+	[Theory]
+	[InlineData("<a href='://malicioussite'>Please verify your email address</a>", "<a>Please verify your email address</a>")]
+	[InlineData("<script>alert('test')</script>", "")]
+	public async Task Sanitize_Html_For_AppServices_Test(string htmlInput, string expectedInput)
+	{
+		// Arrange
+		var client = _factory.CreateClient();
+
+		var content = JsonContent.Create(new
+		{
+			FullName = htmlInput
+		});
+
+		// Act
+		var response = await client.PostAsync("/api/services/app/Account/Register", content);
+
+		// Assert
+		var json = await response.Content.ReadAsStringAsync();
+
+		var ajaxResponse = JsonConvert.DeserializeObject<AjaxResponse<RegisterOutput>>(json);
+		ajaxResponse.Result.FullName.ShouldBe(expectedInput);
+	}
 }

@@ -8,26 +8,26 @@ using Abp.Linq;
 
 namespace Abp.EntityFramework.Linq
 {
-    public class EfAsyncQueryableExecuter : IAsyncQueryableExecuter, ISingletonDependency
-    {
-        public Task<int> CountAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.CountAsync();
-        }
+	public class EfAsyncQueryableExecuter : IAsyncQueryableExecuter, ISingletonDependency
+	{
+		public Task<int> CountAsync<T>(IQueryable<T> queryable)
+		{
+			return queryable.CountAsync();
+		}
 
-        public Task<List<T>> ToListAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.ToListAsync();
-        }
+		public Task<List<T>> ToListAsync<T>(IQueryable<T> queryable)
+		{
+			return queryable.ToListAsync();
+		}
 
-        public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.FirstOrDefaultAsync();
-        }
+		public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable)
+		{
+			return queryable.FirstOrDefaultAsync();
+		}
 
-        public Task<bool> AnyAsync<T>(IQueryable<T> queryable)
-        {
-            return queryable.AnyAsync();
-        }
-    }
+		public Task<bool> AnyAsync<T>(IQueryable<T> queryable)
+		{
+			return queryable.AnyAsync();
+		}
+	}
 }

@@ -14,88 +14,88 @@ using Microsoft.Data.Sqlite;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
-    [DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
-    public class EntityFrameworkCoreTestModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
+	[DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
+	public class EntityFrameworkCoreTestModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
 
-            //BloggingDbContext
-            RegisterBloggingDbContextToSqliteInMemoryDb(IocManager);
+			//BloggingDbContext
+			RegisterBloggingDbContextToSqliteInMemoryDb(IocManager);
 
-            //SupportDbContext
-            RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-            
-            //Custom repository
-            Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
-            {
-                IocManager.IocContainer.Register(
-                    Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
-                        .ImplementedBy<PostRepository>()
-                        .LifestyleTransient()
-                );
-            });
+			//SupportDbContext
+			RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
 
-            Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
-        }
+			//Custom repository
+			Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
+			{
+				IocManager.IocContainer.Register(
+					Component.For<IRepository<Post, Guid>, IPostRepository, PostRepository>()
+						.ImplementedBy<PostRepository>()
+						.LifestyleTransient()
+				);
+			});
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
-        }
+			Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
+		}
 
-        public override void PostInitialize()
-        {
-            using (var context = IocManager.Resolve<BloggingDbContext>())
-            {
-                context.Database.ExecuteSqlRaw("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
-            }
-        }
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
+		}
 
-        private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
-        {
-            var builder = new DbContextOptionsBuilder<BloggingDbContext>();
+		public override void PostInitialize()
+		{
+			using (var context = IocManager.Resolve<BloggingDbContext>())
+			{
+				context.Database.ExecuteSqlRaw("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
+			}
+		}
 
-            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+		private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
+		{
+			var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
-            iocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<BloggingDbContext>>()
-                    .Instance(builder.Options)
-                    .LifestyleSingleton()
-            );
+			var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+			builder.UseSqlite(inMemorySqlite);
 
-            inMemorySqlite.Open();
-            new BloggingDbContext(builder.Options).Database.EnsureCreated();
-        }
+			iocManager.IocContainer.Register(
+				Component
+					.For<DbContextOptions<BloggingDbContext>>()
+					.Instance(builder.Options)
+					.LifestyleSingleton()
+			);
 
-        private static void RegisterSupportDbContextToSqliteInMemoryDb(IIocManager iocManager)
-        {
-            var builder = new DbContextOptionsBuilder<SupportDbContext>();
+			inMemorySqlite.Open();
+			new BloggingDbContext(builder.Options).Database.EnsureCreated();
+		}
 
-            var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+		private static void RegisterSupportDbContextToSqliteInMemoryDb(IIocManager iocManager)
+		{
+			var builder = new DbContextOptionsBuilder<SupportDbContext>();
 
-            iocManager.IocContainer.Register(
-                Component
-                    .For<DbContextOptions<SupportDbContext>>()
-                    .Instance(builder.Options)
-                    .LifestyleSingleton()
-            );
+			var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
+			builder.UseSqlite(inMemorySqlite);
 
-            inMemorySqlite.Open();
-            var ctx = new SupportDbContext(builder.Options);
-            ctx.Database.EnsureCreated();
+			iocManager.IocContainer.Register(
+				Component
+					.For<DbContextOptions<SupportDbContext>>()
+					.Instance(builder.Options)
+					.LifestyleSingleton()
+			);
 
-            using (var command = ctx.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = SupportDbContext.TicketViewSql;
-                ctx.Database.OpenConnection();
+			inMemorySqlite.Open();
+			var ctx = new SupportDbContext(builder.Options);
+			ctx.Database.EnsureCreated();
 
-                command.ExecuteNonQuery();
-            }
-        }
-    }
+			using (var command = ctx.Database.GetDbConnection().CreateCommand())
+			{
+				command.CommandText = SupportDbContext.TicketViewSql;
+				ctx.Database.OpenConnection();
+
+				command.ExecuteNonQuery();
+			}
+		}
+	}
 }

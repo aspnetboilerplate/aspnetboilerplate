@@ -8,55 +8,55 @@ using Abp.Reflection;
 
 namespace Abp.PlugIns
 {
-    public class FolderPlugInSource : IPlugInSource
-    {
-        public string Folder { get; }
+	public class FolderPlugInSource : IPlugInSource
+	{
+		public string Folder { get; }
 
-        public SearchOption SearchOption { get; set; }
+		public SearchOption SearchOption { get; set; }
 
-        private readonly Lazy<List<Assembly>> _assemblies;
-        
-        public FolderPlugInSource(string folder, SearchOption searchOption = SearchOption.TopDirectoryOnly)
-        {
-            Folder = folder;
-            SearchOption = searchOption;
+		private readonly Lazy<List<Assembly>> _assemblies;
 
-            _assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
-        }
+		public FolderPlugInSource(string folder, SearchOption searchOption = SearchOption.TopDirectoryOnly)
+		{
+			Folder = folder;
+			SearchOption = searchOption;
 
-        public List<Assembly> GetAssemblies()
-        {
-            return _assemblies.Value;
-        }
+			_assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
+		}
 
-        public List<Type> GetModules()
-        {
-            var modules = new List<Type>();
+		public List<Assembly> GetAssemblies()
+		{
+			return _assemblies.Value;
+		}
 
-            foreach (var assembly in GetAssemblies())
-            {
-                try
-                {
-                    foreach (var type in assembly.GetTypes())
-                    {
-                        if (AbpModule.IsAbpModule(type))
-                        {
-                            modules.AddIfNotContains(type);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new AbpInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
-                }
-            }
+		public List<Type> GetModules()
+		{
+			var modules = new List<Type>();
 
-            return modules;
-        }
+			foreach (var assembly in GetAssemblies())
+			{
+				try
+				{
+					foreach (var type in assembly.GetTypes())
+					{
+						if (AbpModule.IsAbpModule(type))
+						{
+							modules.AddIfNotContains(type);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					throw new AbpInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
+				}
+			}
 
-        private List<Assembly> LoadAssemblies()
-        {
-            return AssemblyHelper.GetAllAssembliesInFolder(Folder, SearchOption);
-        }
-    }
+			return modules;
+		}
+
+		private List<Assembly> LoadAssemblies()
+		{
+			return AssemblyHelper.GetAllAssembliesInFolder(Folder, SearchOption);
+		}
+	}
 }

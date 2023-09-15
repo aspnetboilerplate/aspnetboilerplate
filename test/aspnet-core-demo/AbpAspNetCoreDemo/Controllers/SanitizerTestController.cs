@@ -10,31 +10,31 @@ namespace AbpAspNetCoreDemo.Controllers;
 [HtmlSanitizer]
 public class SanitizerTestController : DemoControllerBase
 {
-    [HttpPost("sanitizerTest/sanitizeHtmlTest")]
-    public MyModel HtmlSanitizer(MyModel myModel)
-    {
-        return myModel;
-    }
+	[HttpPost("sanitizerTest/sanitizeHtmlTest")]
+	public MyModel HtmlSanitizer(MyModel myModel)
+	{
+		return myModel;
+	}
 
-    [HttpPost("sanitizerTest/sanitizeHtmlPropertyTest")]
-    public object HtmlSanitizerWithProperty([FromForm] string firstInput, [FromForm] string secondInput)
-    {
-        return new
-        {
-            firstInput, secondInput
-        };
-    }
+	[HttpPost("sanitizerTest/sanitizeHtmlPropertyTest")]
+	public object HtmlSanitizerWithProperty([FromForm] string firstInput, [FromForm] string secondInput)
+	{
+		return new
+		{
+			firstInput, secondInput
+		};
+	}
 
-    [HttpPost("sanitizerTest/sanitizeInnerModelTest")]
-    public MyModel SanitizeInnerModel(MyModel myModel)
-    {
-        return myModel;
-    }
+	[HttpPost("sanitizerTest/sanitizeInnerModelTest")]
+	public MyModel SanitizeInnerModel(MyModel myModel)
+	{
+		return myModel;
+	}
 
-    [HttpPost("sanitizerTest/sanitizeAttributedPropertyModelTest")]
-    public MyAttributedPropertyModel SanitizeAttributedPropertyModel(MyAttributedPropertyModel myModel)
-    {
-        return myModel;
-    }
-    
+	[HttpPost("sanitizerTest/sanitizeAttributedPropertyModelTest")]
+	public MyAttributedPropertyModel SanitizeAttributedPropertyModel(MyAttributedPropertyModel myModel)
+	{
+		return myModel;
+	}
+
 }

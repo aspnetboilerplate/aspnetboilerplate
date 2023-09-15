@@ -2,10 +2,10 @@
 
 namespace Abp.Web.Configuration
 {
-    public interface IAbpWebModuleConfiguration
-    {
-        IAbpAntiForgeryWebConfiguration AntiForgery { get; }
+	public interface IAbpWebModuleConfiguration
+	{
+		IAbpAntiForgeryWebConfiguration AntiForgery { get; }
 
-        IAbpWebLocalizationConfiguration Localization { get; }
-    }
+		IAbpWebLocalizationConfiguration Localization { get; }
+	}
 }

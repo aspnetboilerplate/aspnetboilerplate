@@ -7,17 +7,17 @@ using Abp.Owin;
 
 namespace Abp
 {
-    [DependsOn(typeof(AbpZeroCoreModule))]
-    public class AbpZeroOwinModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.ReplaceService<IUserTokenProviderAccessor, OwinUserTokenProviderAccessor>();
-        }
+	[DependsOn(typeof(AbpZeroCoreModule))]
+	public class AbpZeroOwinModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.ReplaceService<IUserTokenProviderAccessor, OwinUserTokenProviderAccessor>();
+		}
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-        }
-    }
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		}
+	}
 }

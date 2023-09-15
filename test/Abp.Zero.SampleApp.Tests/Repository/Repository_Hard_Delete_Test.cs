@@ -9,134 +9,134 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Repository
 {
-    public class Repository_Hard_Delete_Test : SampleAppTestBase
-    {
-        private readonly IRepository<User, long> _useRepository;
+	public class Repository_Hard_Delete_Test : SampleAppTestBase
+	{
+		private readonly IRepository<User, long> _useRepository;
 
-        public Repository_Hard_Delete_Test()
-        {
-            _useRepository = LocalIocManager.Resolve<IRepository<User, long>>();
-        }
+		public Repository_Hard_Delete_Test()
+		{
+			_useRepository = LocalIocManager.Resolve<IRepository<User, long>>();
+		}
 
-        [Fact]
-        public async Task Should_Permanently_Delete_SoftDelete_Entity_With_HarDelete_Method()
-        {
-            AbpSession.TenantId = 1;
+		[Fact]
+		public async Task Should_Permanently_Delete_SoftDelete_Entity_With_HarDelete_Method()
+		{
+			AbpSession.TenantId = 1;
 
-            var uowManager = Resolve<IUnitOfWorkManager>();
+			var uowManager = Resolve<IUnitOfWorkManager>();
 
-            // Soft-Delete admin
-            using (var uow = uowManager.Begin())
-            {
-                var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
-                await _useRepository.DeleteAsync(admin);
+			// Soft-Delete admin
+			using (var uow = uowManager.Begin())
+			{
+				var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
+				await _useRepository.DeleteAsync(admin);
 
-                await uow.CompleteAsync();
-            }
+				await uow.CompleteAsync();
+			}
 
-            using (var uow = uowManager.Begin())
-            {
-                var users = await _useRepository.GetAllListAsync();
+			using (var uow = uowManager.Begin())
+			{
+				var users = await _useRepository.GetAllListAsync();
 
-                foreach (var user in users)
-                {
-                    await _useRepository.HardDeleteAsync(user);
-                }
-                
-                await uow.CompleteAsync();
-            }
+				foreach (var user in users)
+				{
+					await _useRepository.HardDeleteAsync(user);
+				}
 
-            using (var uow = uowManager.Begin())
-            {
-                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
-                {
-                    var users = await _useRepository.GetAllListAsync();
-                    users.Count.ShouldBe(1);
-                    users.First().UserName.ShouldBe("admin");
-                }
+				await uow.CompleteAsync();
+			}
 
-                await uow.CompleteAsync();
-            }
-        }
+			using (var uow = uowManager.Begin())
+			{
+				using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+				{
+					var users = await _useRepository.GetAllListAsync();
+					users.Count.ShouldBe(1);
+					users.First().UserName.ShouldBe("admin");
+				}
 
-        [Fact]
-        public async Task Should_Permanently_Delete_Multiple_SoftDelete_Entities_With_HarDelete_Method()
-        {
-            AbpSession.TenantId = 1;
+				await uow.CompleteAsync();
+			}
+		}
 
-            var uowManager = Resolve<IUnitOfWorkManager>();
+		[Fact]
+		public async Task Should_Permanently_Delete_Multiple_SoftDelete_Entities_With_HarDelete_Method()
+		{
+			AbpSession.TenantId = 1;
 
-            // Soft-Delete admin
-            using (var uow = uowManager.Begin())
-            {
-                var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
-                await _useRepository.DeleteAsync(admin);
+			var uowManager = Resolve<IUnitOfWorkManager>();
 
-                await uow.CompleteAsync();
-            }
+			// Soft-Delete admin
+			using (var uow = uowManager.Begin())
+			{
+				var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
+				await _useRepository.DeleteAsync(admin);
 
-            using (var uow = uowManager.Begin())
-            {
-                await _useRepository.HardDeleteAsync(u => u.Id > 0);
+				await uow.CompleteAsync();
+			}
 
-                await uow.CompleteAsync();
-            }
+			using (var uow = uowManager.Begin())
+			{
+				await _useRepository.HardDeleteAsync(u => u.Id > 0);
 
-            using (var uow = uowManager.Begin())
-            {
-                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
-                {
-                    var users = await _useRepository.GetAllListAsync();
-                    users.Count.ShouldBe(1);
-                    users.First().UserName.ShouldBe("admin");
-                }
+				await uow.CompleteAsync();
+			}
 
-                await uow.CompleteAsync();
-            }
-        }
+			using (var uow = uowManager.Begin())
+			{
+				using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+				{
+					var users = await _useRepository.GetAllListAsync();
+					users.Count.ShouldBe(1);
+					users.First().UserName.ShouldBe("admin");
+				}
 
-        [Fact]
-        public async Task Should_Throw_Exception_If_There_No_UnitOfWork()
-        {
-            var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
+				await uow.CompleteAsync();
+			}
+		}
 
-            Assert.Throws<AbpException>(() => _useRepository.HardDelete(admin));
-            Assert.Throws<AbpException>(() => _useRepository.HardDelete(u => u.Id > 0));
+		[Fact]
+		public async Task Should_Throw_Exception_If_There_No_UnitOfWork()
+		{
+			var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
 
-            await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(admin));
-            await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(u => u.Id > 0));
-        }
-        
-        [Fact]
-        public async Task Should_Not_Throw_Exception_When_Deleting_ValueObject_And_HardDeleting_Entity()
-        {
-            AbpSession.TenantId = 1;
+			Assert.Throws<AbpException>(() => _useRepository.HardDelete(admin));
+			Assert.Throws<AbpException>(() => _useRepository.HardDelete(u => u.Id > 0));
 
-            var uowManager = Resolve<IUnitOfWorkManager>();
-            
-            UsingDbContext(context =>
-            {
-                context.Categories.Add(new Category
-                {
-                    DisplayName = "Soft Drinks"
-                });
-                
-                context.SaveChanges();
-            });
-            
-            using (var uow = uowManager.Begin())
-            {
-                var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
-                await _useRepository.HardDeleteAsync(admin);
- 
-                UsingDbContext(context =>
-                {
-                    var category = context.Categories.Single(e=> e.DisplayName == "Soft Drinks");
-                    context.Categories.Remove(category);
-                });
-                
-                await uow.CompleteAsync();
-            }
-        }
-    }
+			await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(admin));
+			await Assert.ThrowsAsync<AbpException>(async () => await _useRepository.HardDeleteAsync(u => u.Id > 0));
+		}
+
+		[Fact]
+		public async Task Should_Not_Throw_Exception_When_Deleting_ValueObject_And_HardDeleting_Entity()
+		{
+			AbpSession.TenantId = 1;
+
+			var uowManager = Resolve<IUnitOfWorkManager>();
+
+			UsingDbContext(context =>
+			{
+				context.Categories.Add(new Category
+				{
+					DisplayName = "Soft Drinks"
+				});
+
+				context.SaveChanges();
+			});
+
+			using (var uow = uowManager.Begin())
+			{
+				var admin = await _useRepository.FirstOrDefaultAsync(u => u.UserName == "admin");
+				await _useRepository.HardDeleteAsync(admin);
+
+				UsingDbContext(context =>
+				{
+					var category = context.Categories.Single(e=> e.DisplayName == "Soft Drinks");
+					context.Categories.Remove(category);
+				});
+
+				await uow.CompleteAsync();
+			}
+		}
+	}
 }

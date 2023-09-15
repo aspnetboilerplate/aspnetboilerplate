@@ -1,27 +1,27 @@
 namespace Abp.Authorization
 {
-    public enum AbpLoginResultType : byte
-    {
-        Success = 1,
+	public enum AbpLoginResultType : byte
+	{
+		Success = 1,
 
-        InvalidUserNameOrEmailAddress,
-        
-        InvalidPassword,
-        
-        UserIsNotActive,
+		InvalidUserNameOrEmailAddress,
 
-        InvalidTenancyName,
-        
-        TenantIsNotActive,
+		InvalidPassword,
 
-        UserEmailIsNotConfirmed,
-        
-        UnknownExternalLogin,
+		UserIsNotActive,
 
-        LockedOut,
+		InvalidTenancyName,
 
-        UserPhoneNumberIsNotConfirmed,
-        
-        FailedForOtherReason
-    }
+		TenantIsNotActive,
+
+		UserEmailIsNotConfirmed,
+
+		UnknownExternalLogin,
+
+		LockedOut,
+
+		UserPhoneNumberIsNotConfirmed,
+
+		FailedForOtherReason
+	}
 }

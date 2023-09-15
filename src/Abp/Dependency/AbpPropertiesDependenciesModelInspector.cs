@@ -4,22 +4,22 @@ using Castle.MicroKernel.SubSystems.Conversion;
 
 namespace Abp.Dependency
 {
-    public class AbpPropertiesDependenciesModelInspector : PropertiesDependenciesModelInspector
-    {
-        public AbpPropertiesDependenciesModelInspector(IConversionManager converter) 
-            : base(converter)
-        {
-        }
+	public class AbpPropertiesDependenciesModelInspector : PropertiesDependenciesModelInspector
+	{
+		public AbpPropertiesDependenciesModelInspector(IConversionManager converter)
+			: base(converter)
+		{
+		}
 
-        protected override void InspectProperties(ComponentModel model)
-        {
-            if (model.Implementation.FullName != null && 
-                model.Implementation.FullName.StartsWith("Microsoft"))
-            {
-                return;
-            }
+		protected override void InspectProperties(ComponentModel model)
+		{
+			if (model.Implementation.FullName != null &&
+				model.Implementation.FullName.StartsWith("Microsoft"))
+			{
+				return;
+			}
 
-            base.InspectProperties(model);
-        }
-    }
+			base.InspectProperties(model);
+		}
+	}
 }

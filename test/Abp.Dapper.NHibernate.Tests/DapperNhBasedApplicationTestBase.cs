@@ -10,60 +10,60 @@ using NHibernate;
 
 namespace Abp.Dapper.NHibernate.Tests
 {
-    public class DapperNhBasedApplicationTestBase : AbpIntegratedTestBase<AbpDapperNhBasedTestModule>
-    {
-        private SQLiteConnection _connection;
+	public class DapperNhBasedApplicationTestBase : AbpIntegratedTestBase<AbpDapperNhBasedTestModule>
+	{
+		private SQLiteConnection _connection;
 
-        protected DapperNhBasedApplicationTestBase()
-        {
-            AbpSession.UserId = 1;
-            AbpSession.TenantId = 1;
-        }
+		protected DapperNhBasedApplicationTestBase()
+		{
+			AbpSession.UserId = 1;
+			AbpSession.TenantId = 1;
+		}
 
-        protected override void PreInitialize()
-        {
-            _connection = new SQLiteConnection("data source=:memory:");
-            _connection.Open();
+		protected override void PreInitialize()
+		{
+			_connection = new SQLiteConnection("data source=:memory:");
+			_connection.Open();
 
-            LocalIocManager.IocContainer.Register(
-                Component.For<DbConnection>().Instance(_connection).LifestyleSingleton()
-            );
-        }
+			LocalIocManager.IocContainer.Register(
+				Component.For<DbConnection>().Instance(_connection).LifestyleSingleton()
+			);
+		}
 
-        public void UsingSession(Action<ISession> action)
-        {
-            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
-            {
-                using (ITransaction transaction = session.BeginTransaction())
-                {
-                    action(session);
-                    session.Flush();
-                    transaction.Commit();
-                }
-            }
-        }
+		public void UsingSession(Action<ISession> action)
+		{
+			using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+			{
+				using (ITransaction transaction = session.BeginTransaction())
+				{
+					action(session);
+					session.Flush();
+					transaction.Commit();
+				}
+			}
+		}
 
-        public T UsingSession<T>(Func<ISession, T> func)
-        {
-            T result;
+		public T UsingSession<T>(Func<ISession, T> func)
+		{
+			T result;
 
-            using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
-            {
-                using (ITransaction transaction = session.BeginTransaction())
-                {
-                    result = func(session);
-                    session.Flush();
-                    transaction.Commit();
-                }
-            }
+			using (ISession session = LocalIocManager.Resolve<ISessionFactory>().WithOptions().Connection(_connection).OpenSession())
+			{
+				using (ITransaction transaction = session.BeginTransaction())
+				{
+					result = func(session);
+					session.Flush();
+					transaction.Commit();
+				}
+			}
 
-            return result;
-        }
+			return result;
+		}
 
-        public override void Dispose()
-        {
-            _connection.Dispose();
-            base.Dispose();
-        }
-    }
+		public override void Dispose()
+		{
+			_connection.Dispose();
+			base.Dispose();
+		}
+	}
 }

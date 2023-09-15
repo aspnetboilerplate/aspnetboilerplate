@@ -4,8 +4,8 @@ using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class RoleMap : AbpRoleMap<Role, User>
-    {
-        
-    }
+	public class RoleMap : AbpRoleMap<Role, User>
+	{
+
+	}
 }

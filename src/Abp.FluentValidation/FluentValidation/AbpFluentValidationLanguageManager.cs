@@ -8,38 +8,38 @@ using LanguageManager = FluentValidation.Resources.LanguageManager;
 
 namespace Abp.FluentValidation
 {
-    public class AbpFluentValidationLanguageManager : LanguageManager
-    {
-        public AbpFluentValidationLanguageManager(
-            ILocalizationManager localizationManager,
-            ILanguageManager languageManager,
-            IAbpFluentValidationConfiguration configuration)
-        {
-            if (!configuration.LocalizationSourceName.IsNullOrEmpty())
-            {
-                var source = localizationManager.GetSource(configuration.LocalizationSourceName);
-                var languages = languageManager.GetActiveLanguages();
+	public class AbpFluentValidationLanguageManager : LanguageManager
+	{
+		public AbpFluentValidationLanguageManager(
+			ILocalizationManager localizationManager,
+			ILanguageManager languageManager,
+			IAbpFluentValidationConfiguration configuration)
+		{
+			if (!configuration.LocalizationSourceName.IsNullOrEmpty())
+			{
+				var source = localizationManager.GetSource(configuration.LocalizationSourceName);
+				var languages = languageManager.GetActiveLanguages();
 
-                AddAllTranslations(source, languages);
-            }
-        }
+				AddAllTranslations(source, languages);
+			}
+		}
 
-        private void AddAllTranslations(ILocalizationSource source, IReadOnlyList<LanguageInfo> languages)
-        {
-            foreach (var language in languages)
-            {
-                var culture = new CultureInfo(language.Name);
-                var translations = source.GetAllStrings(culture, false);
-                AddTranslations(language.Name, translations);
-            }
-        }
+		private void AddAllTranslations(ILocalizationSource source, IReadOnlyList<LanguageInfo> languages)
+		{
+			foreach (var language in languages)
+			{
+				var culture = new CultureInfo(language.Name);
+				var translations = source.GetAllStrings(culture, false);
+				AddTranslations(language.Name, translations);
+			}
+		}
 
-        private void AddTranslations(string language, IReadOnlyList<LocalizedString> translations)
-        {
-            foreach (var translation in translations)
-            {
-                AddTranslation(language, translation.Name, translation.Value);
-            }
-        }
-    }
+		private void AddTranslations(string language, IReadOnlyList<LocalizedString> translations)
+		{
+			foreach (var translation in translations)
+			{
+				AddTranslation(language, translation.Name, translation.Value);
+			}
+		}
+	}
 }

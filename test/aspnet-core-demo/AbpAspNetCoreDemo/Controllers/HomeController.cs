@@ -3,30 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AbpAspNetCoreDemo.Controllers
 {
-    public class HomeController : DemoControllerBase
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
+	public class HomeController : DemoControllerBase
+	{
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = L("AboutDescription");
+		public IActionResult About()
+		{
+			ViewData["Message"] = L("AboutDescription");
 
-            return View();
-        }
+			return View();
+		}
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+		public IActionResult Contact()
+		{
+			ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
+			return View();
+		}
 
-        public IActionResult Error()
-        {
-            return View();
-        }
-    }
+		public IActionResult Error()
+		{
+			return View();
+		}
+	}
 }

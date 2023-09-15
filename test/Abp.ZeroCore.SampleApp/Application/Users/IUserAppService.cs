@@ -2,8 +2,8 @@
 
 namespace Abp.ZeroCore.SampleApp.Application.Users
 {
-    public interface IUserAppService : IAsyncCrudAppService<UserDto, long>
-    {
-        
-    }
+	public interface IUserAppService : IAsyncCrudAppService<UserDto, long>
+	{
+
+	}
 }

@@ -8,66 +8,66 @@ using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.Users
 {
-    public class UserManager_DeleteUser_Tests : SampleAppTestBase
-    {
-        [Fact]
-        public async Task DeleteUserAsync_Test()
-        {
-            var user = new User
-            {
-                TenantId = AbpSession.TenantId,
-                UserName = "user1",
-                Name = "John",
-                Surname = "Doe",
-                EmailAddress = "user1@aspnetboilerplate.com",
-                IsEmailConfirmed = true,
-                Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
-            };
+	public class UserManager_DeleteUser_Tests : SampleAppTestBase
+	{
+		[Fact]
+		public async Task DeleteUserAsync_Test()
+		{
+			var user = new User
+			{
+				TenantId = AbpSession.TenantId,
+				UserName = "user1",
+				Name = "John",
+				Surname = "Doe",
+				EmailAddress = "user1@aspnetboilerplate.com",
+				IsEmailConfirmed = true,
+				Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==", //123qwe
+			};
 
-            await WithUnitOfWorkAsync(async () =>
-            {
-                //Add user
-                var userManager = LocalIocManager.Resolve<UserManager>();
-                await userManager.CreateAsync(user);
+			await WithUnitOfWorkAsync(async () =>
+			{
+				//Add user
+				var userManager = LocalIocManager.Resolve<UserManager>();
+				await userManager.CreateAsync(user);
 
-                //Add user login
-                var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
-                await userLoginRepository.InsertAsync(
-                    new UserLogin(
-                        user.TenantId,
-                        user.Id,
-                        "TestLoginProvider",
-                        "TestLoginProviderKey"
-                    )
-                );
-            });
+				//Add user login
+				var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
+				await userLoginRepository.InsertAsync(
+					new UserLogin(
+						user.TenantId,
+						user.Id,
+						"TestLoginProvider",
+						"TestLoginProviderKey"
+					)
+				);
+			});
 
-            await WithUnitOfWorkAsync(async () =>
-            {
-                var userManager = LocalIocManager.Resolve<UserManager>();
-                var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
+			await WithUnitOfWorkAsync(async () =>
+			{
+				var userManager = LocalIocManager.Resolve<UserManager>();
+				var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
 
-                var isLoginInserted = await userLoginRepository.GetAll().AnyAsync(userLogin =>
-                    userLogin.UserId == user.Id &&
-                    userLogin.TenantId == user.TenantId
-                );
-                isLoginInserted.ShouldBeTrue();
+				var isLoginInserted = await userLoginRepository.GetAll().AnyAsync(userLogin =>
+					userLogin.UserId == user.Id &&
+					userLogin.TenantId == user.TenantId
+				);
+				isLoginInserted.ShouldBeTrue();
 
-                //delete user
-                await userManager.DeleteAsync(user);
-            });
+				//delete user
+				await userManager.DeleteAsync(user);
+			});
 
-            await WithUnitOfWorkAsync(async () =>
-            {
-                var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
+			await WithUnitOfWorkAsync(async () =>
+			{
+				var userLoginRepository = Resolve<IRepository<UserLogin, long>>();
 
-                //user login should be deleted
-                var isUserLoginExists = await userLoginRepository.GetAll().AnyAsync(userLogin =>
-                    userLogin.UserId == user.Id &&
-                    userLogin.TenantId == user.TenantId
-                );
-                isUserLoginExists.ShouldBeFalse();
-            });
-        }
-    }
+				//user login should be deleted
+				var isUserLoginExists = await userLoginRepository.GetAll().AnyAsync(userLogin =>
+					userLogin.UserId == user.Id &&
+					userLogin.TenantId == user.TenantId
+				);
+				isUserLoginExists.ShouldBeFalse();
+			});
+		}
+	}
 }

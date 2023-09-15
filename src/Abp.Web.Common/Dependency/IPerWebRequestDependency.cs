@@ -1,7 +1,7 @@
 ﻿namespace Abp.Dependency
 {
-    public interface IPerWebRequestDependency
-    {
+	public interface IPerWebRequestDependency
+	{
 
-    }
+	}
 }

@@ -6,29 +6,29 @@ using Xunit;
 
 namespace Abp.Zero.Roles
 {
-    public class RoleStore_Tests : AbpZeroTestBase
-    {
-        private readonly RoleStore _roleStore;
+	public class RoleStore_Tests : AbpZeroTestBase
+	{
+		private readonly RoleStore _roleStore;
 
-        public RoleStore_Tests()
-        {
-            _roleStore = Resolve<RoleStore>();
-        }
+		public RoleStore_Tests()
+		{
+			_roleStore = Resolve<RoleStore>();
+		}
 
-        [Fact]
-        public async Task Should_Get_Role_Claims()
-        {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var role = await _roleStore.FindByNameAsync("ADMIN");
-                role.ShouldNotBeNull();
+		[Fact]
+		public async Task Should_Get_Role_Claims()
+		{
+			using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+			{
+				var role = await _roleStore.FindByNameAsync("ADMIN");
+				role.ShouldNotBeNull();
 
-                var claims = await _roleStore.GetClaimsAsync(role);
+				var claims = await _roleStore.GetClaimsAsync(role);
 
-                claims.ShouldNotBeNull();
+				claims.ShouldNotBeNull();
 
-                await uow.CompleteAsync();
-            }
-        }
-    }
+				await uow.CompleteAsync();
+			}
+		}
+	}
 }

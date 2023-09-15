@@ -2,8 +2,8 @@
 
 namespace Abp.EntityFramework.GraphDIff.Tests
 {
-    public class AbpEntityFrameworkGraphDiffTestBase : AbpIntegratedTestBase<AbpEntityFrameworkGraphDiffTestModule>
-    {
+	public class AbpEntityFrameworkGraphDiffTestBase : AbpIntegratedTestBase<AbpEntityFrameworkGraphDiffTestModule>
+	{
 
-    }
+	}
 }

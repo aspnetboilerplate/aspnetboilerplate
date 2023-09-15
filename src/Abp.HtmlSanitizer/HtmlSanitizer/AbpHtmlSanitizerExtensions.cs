@@ -2,11 +2,11 @@
 
 namespace Abp.HtmlSanitizer
 {
-    public static class AbpHtmlSanitizerExtensions
-    {
-        public static void AddAbpHtmlSanitizer(this MvcOptions options)
-        {
-            options.Filters.AddService(typeof(AbpHtmlSanitizerActionFilter));
-        }
-    }
+	public static class AbpHtmlSanitizerExtensions
+	{
+		public static void AddAbpHtmlSanitizer(this MvcOptions options)
+		{
+			options.Filters.AddService(typeof(AbpHtmlSanitizerActionFilter));
+		}
+	}
 }

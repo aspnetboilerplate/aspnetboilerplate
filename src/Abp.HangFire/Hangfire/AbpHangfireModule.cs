@@ -5,23 +5,23 @@ using Hangfire;
 
 namespace Abp.Hangfire
 {
-    [DependsOn(typeof(AbpKernelModule))]
-    public class AbpHangfireModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
-            
-            Configuration.Modules
-                .AbpHangfire()
-                .GlobalConfiguration
-                .UseActivator(new HangfireIocJobActivator(IocManager));
-        }
+	[DependsOn(typeof(AbpKernelModule))]
+	public class AbpHangfireModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			IocManager.Register<IAbpHangfireConfiguration, AbpHangfireConfiguration>();
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpHangfireModule).GetAssembly());
-            GlobalJobFilters.Filters.Add(IocManager.Resolve<AbpHangfireJobExceptionFilter>());
-        }
-    }
+			Configuration.Modules
+				.AbpHangfire()
+				.GlobalConfiguration
+				.UseActivator(new HangfireIocJobActivator(IocManager));
+		}
+
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(AbpHangfireModule).GetAssembly());
+			GlobalJobFilters.Filters.Add(IocManager.Resolve<AbpHangfireJobExceptionFilter>());
+		}
+	}
 }

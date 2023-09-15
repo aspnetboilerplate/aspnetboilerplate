@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace Abp.EntityHistory
 {
-    public interface IEntityHistoryHelper
-    {
-        EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries);
+	public interface IEntityHistoryHelper
+	{
+		EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries);
 
-        Task SaveAsync(EntityChangeSet changeSet);
+		Task SaveAsync(EntityChangeSet changeSet);
 
-        void Save(EntityChangeSet changeSet);
-    }
+		void Save(EntityChangeSet changeSet);
+	}
 }

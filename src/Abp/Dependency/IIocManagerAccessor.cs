@@ -1,7 +1,7 @@
 namespace Abp.Dependency
 {
-    public interface IIocManagerAccessor
-    {
-        IIocManager IocManager { get; }
-    }
+	public interface IIocManagerAccessor
+	{
+		IIocManager IocManager { get; }
+	}
 }

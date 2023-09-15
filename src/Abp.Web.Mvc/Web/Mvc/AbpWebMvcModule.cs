@@ -17,43 +17,43 @@ using Abp.Web.Security.AntiForgery;
 
 namespace Abp.Web.Mvc
 {
-    /// <summary>
-    /// This module is used to build ASP.NET MVC web sites using Abp.
-    /// </summary>
-    [DependsOn(typeof(AbpWebModule))]
-    public class AbpWebMvcModule : AbpModule
-    {
-        /// <inheritdoc/>
-        public override void PreInitialize()
-        {
-            IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
+	/// <summary>
+	/// This module is used to build ASP.NET MVC web sites using Abp.
+	/// </summary>
+	[DependsOn(typeof(AbpWebModule))]
+	public class AbpWebMvcModule : AbpModule
+	{
+		/// <inheritdoc/>
+		public override void PreInitialize()
+		{
+			IocManager.AddConventionalRegistrar(new ControllerConventionalRegistrar());
 
-            IocManager.Register<IAbpMvcConfiguration, AbpMvcConfiguration>();
+			IocManager.Register<IAbpMvcConfiguration, AbpMvcConfiguration>();
 
-            Configuration.ReplaceService<IAbpAntiForgeryManager, AbpMvcAntiForgeryManager>();
-        }
+			Configuration.ReplaceService<IAbpAntiForgeryManager, AbpMvcAntiForgeryManager>();
+		}
 
-        /// <inheritdoc/>
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+		/// <inheritdoc/>
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
 
-            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager));
-            HostingEnvironment.RegisterVirtualPathProvider(IocManager.Resolve<EmbeddedResourceVirtualPathProvider>());
-        }
+			ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(IocManager));
+			HostingEnvironment.RegisterVirtualPathProvider(IocManager.Resolve<EmbeddedResourceVirtualPathProvider>());
+		}
 
-        /// <inheritdoc/>
-        public override void PostInitialize()
-        {
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcAuthorizeFilter>());
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpAntiForgeryMvcFilter>());
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcAuditFilter>());
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcValidationFilter>());
-            GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcUowFilter>());
+		/// <inheritdoc/>
+		public override void PostInitialize()
+		{
+			GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcAuthorizeFilter>());
+			GlobalFilters.Filters.Add(IocManager.Resolve<AbpAntiForgeryMvcFilter>());
+			GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcAuditFilter>());
+			GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcValidationFilter>());
+			GlobalFilters.Filters.Add(IocManager.Resolve<AbpMvcUowFilter>());
 
-            var abpMvcDateTimeBinder = new AbpMvcDateTimeBinder();
-            ModelBinders.Binders.Add(typeof(DateTime), abpMvcDateTimeBinder);
-            ModelBinders.Binders.Add(typeof(DateTime?), abpMvcDateTimeBinder);
-        }
-    }
+			var abpMvcDateTimeBinder = new AbpMvcDateTimeBinder();
+			ModelBinders.Binders.Add(typeof(DateTime), abpMvcDateTimeBinder);
+			ModelBinders.Binders.Add(typeof(DateTime?), abpMvcDateTimeBinder);
+		}
+	}
 }

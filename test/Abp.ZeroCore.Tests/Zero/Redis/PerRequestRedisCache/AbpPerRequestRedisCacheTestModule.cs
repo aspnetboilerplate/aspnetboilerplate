@@ -4,17 +4,17 @@ using Abp.Runtime.Caching.Redis;
 
 namespace Abp.Zero.Redis.PerRequestRedisCache
 {
-    [DependsOn(typeof(AbpAspNetCorePerRequestRedisCacheModule))]
-    public class AbpPerRequestRedisCacheTestModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            Configuration.Caching.UseRedis();
-        }
-        
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpPerRequestRedisCacheTestModule).GetAssembly());
-        }
-    }
+	[DependsOn(typeof(AbpAspNetCorePerRequestRedisCacheModule))]
+	public class AbpPerRequestRedisCacheTestModule : AbpModule
+	{
+		public override void PreInitialize()
+		{
+			Configuration.Caching.UseRedis();
+		}
+
+		public override void Initialize()
+		{
+			IocManager.RegisterAssemblyByConvention(typeof(AbpPerRequestRedisCacheTestModule).GetAssembly());
+		}
+	}
 }
