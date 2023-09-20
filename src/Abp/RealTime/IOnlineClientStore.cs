@@ -50,5 +50,17 @@ namespace Abp.RealTime
         /// Gets all online clients asynchronously.
         /// </summary>
         Task<IReadOnlyList<IOnlineClient>> GetAllAsync();
+
+        /// <summary>
+        /// Gets all online clients by user identifier.
+        /// </summary>
+        /// <param name="userIdentifier">user identifier with tenant id and user id</param>
+        IReadOnlyList<IOnlineClient> GetAllByUserId(UserIdentifier userIdentifier);
+
+        /// <summary>
+        /// Gets all online clients by user identifier asynchronously.
+        /// </summary>
+        /// <param name="userIdentifier">user identifier with tenant id and user id</param>
+        Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier);
     }
 }

@@ -3,8 +3,6 @@ using Abp.Extensions;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Abp.RealTime
@@ -95,12 +93,7 @@ namespace Abp.RealTime
             return null;
         }
 
-        public IReadOnlyList<IOnlineClient> GetAllClients()
-        {
-            return Store.GetAll();
-        }
-
-        private async Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync()
+        public async Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync()
         {
             return await Store.GetAllAsync();
         }
@@ -110,9 +103,10 @@ namespace Abp.RealTime
         {
             Check.NotNull(user, nameof(user));
 
-            return GetAllClients()
-                 .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
-                 .ToImmutableList();
+            var userIdentifier = new UserIdentifier(user.TenantId, user.UserId);
+            var clients = Store.GetAllByUserId(userIdentifier);
+
+            return clients;
         }
 
         [NotNull]
@@ -120,9 +114,11 @@ namespace Abp.RealTime
         {
             Check.NotNull(user, nameof(user));
 
-            return (await GetAllClientsAsync())
-                .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
-                .ToImmutableList();
+            var userIdentifier = new UserIdentifier(user.TenantId, user.UserId);
+            var clients = await Store.GetAllByUserIdAsync(userIdentifier);
+
+            return clients;
         }
+
     }
 }

@@ -39,11 +39,11 @@ namespace Abp.Tests.RealTime
 
             var testId = connections.Keys.ToList()[5];
 
-            _clientManager.GetAllClients().Count.ShouldBe(connections.Count);
+            (await _clientManager.GetAllClientsAsync()).Count.ShouldBe(connections.Count);
             (await _clientManager.GetAllByUserIdAsync(new UserIdentifier(tenantId, connections[testId]))).Count.ShouldBe(1);
-            await _clientManager.GetByConnectionIdOrNullAsync(testId).ShouldNotBeNull();
+            (await _clientManager.GetByConnectionIdOrNullAsync(testId)).ShouldNotBeNull();
             (await _clientManager.RemoveAsync(testId)).ShouldBeTrue();
-            _clientManager.GetAllClients().Count.ShouldBe(connections.Count - 1);
+            (await _clientManager.GetAllClientsAsync()).Count.ShouldBe(connections.Count - 1);
             (await _clientManager.GetByConnectionIdOrNullAsync(testId)).ShouldBeNull();
             (await _clientManager.GetAllByUserIdAsync(new UserIdentifier(tenantId, connections[testId]))).Count.ShouldBe(0);
         }

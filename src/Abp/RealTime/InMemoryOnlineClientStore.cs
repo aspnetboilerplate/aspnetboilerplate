@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Abp.RealTime
@@ -62,6 +63,20 @@ namespace Abp.RealTime
         public Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
         {
             return Task.FromResult(GetAll());
+        }
+
+        public IReadOnlyList<IOnlineClient> GetAllByUserId(UserIdentifier userIdentifier)
+        {
+            return GetAll()
+                .Where(c => c.UserId == userIdentifier.UserId && c.TenantId == userIdentifier.TenantId)
+                .ToImmutableList();
+        }
+
+        public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
+        {
+            return (await GetAllAsync())
+                .Where(c => c.UserId == userIdentifier.UserId && c.TenantId == userIdentifier.TenantId)
+                .ToImmutableList();
         }
     }
 }
