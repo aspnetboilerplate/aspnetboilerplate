@@ -93,21 +93,11 @@ namespace Abp.RealTime
             return null;
         }
 
-        public async Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync()
+        public Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync()
         {
-            return await Store.GetAllAsync();
+            return Store.GetAllAsync();
         }
 
-        [NotNull]
-        public virtual IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user)
-        {
-            Check.NotNull(user, nameof(user));
-
-            var userIdentifier = new UserIdentifier(user.TenantId, user.UserId);
-            var clients = Store.GetAllByUserId(userIdentifier);
-
-            return clients;
-        }
 
         [NotNull]
         public virtual async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync([NotNull] IUserIdentifier user)

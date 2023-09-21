@@ -99,19 +99,6 @@ namespace Abp.Runtime.Caching.Redis.RealTime
             return true;
         }
 
-        public IReadOnlyList<IOnlineClient> GetAll()
-        {
-            var database = GetDatabase();
-            var clientsEntries = database.HashGetAll(_clientStoreKey);
-            var clients = new List<IOnlineClient>();
-            foreach (var entry in clientsEntries)
-            {
-                clients.Add(JsonConvert.DeserializeObject<OnlineClient>(entry.Value));
-            }
-
-            return clients.ToImmutableList();
-        }
-
         public async Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
         {
             var database = GetDatabase();
@@ -122,37 +109,6 @@ namespace Abp.Runtime.Caching.Redis.RealTime
                 .ToList();
 
             return clients.ToImmutableList();
-        }
-
-        public IReadOnlyList<IOnlineClient> GetAllByUserId(UserIdentifier userIdentifier)
-        {
-            var clients = new List<OnlineClient>();
-
-            if (!IsUserOnline(userIdentifier))
-            {
-                return clients;
-            }
-            var database = GetDatabase();
-
-            var userClientsValue = database.HashGet(_userStoreKey, userIdentifier.ToUserIdentifierString());
-            if (!userClientsValue.HasValue)
-            {
-                return clients;
-            }
-
-            var userClients = JsonConvert.DeserializeObject<List<string>>(userClientsValue);
-            foreach (var connectionId in userClients)
-            {
-                var clientValue = database.HashGet(_clientStoreKey, connectionId);
-                if (clientValue.IsNullOrEmpty)
-                {
-                    continue;
-                }
-
-                clients.Add(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
-            }
-
-            return clients;
         }
 
         public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
@@ -189,12 +145,6 @@ namespace Abp.Runtime.Caching.Redis.RealTime
         private IDatabase GetDatabase()
         {
             return _database.GetDatabase();
-        }
-
-        private bool IsUserOnline(UserIdentifier user)
-        {
-            var database = GetDatabase();
-            return database.HashExists(_userStoreKey, user.ToUserIdentifierString());
         }
 
         private async Task<bool> IsUserOnlineAsync(UserIdentifier user)
