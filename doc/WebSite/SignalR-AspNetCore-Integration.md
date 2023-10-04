@@ -87,6 +87,8 @@ connecting:
         };
     </script>
 
+This is mostly useful when you need to register your custom events to SignalR becasue if you register your events after `abp.signalr.connect()` is called, your events will not be triggered.
+
 Note: See [Official SignalR documentation](https://learn.microsoft.com/en-us/aspnet/core/signalr/configuration?view=aspnetcore-6.0&tabs=javascript#configure-additional-options) for withUrlOptions values.
 
 In this case, you can call the **abp.signalr.connect()** function manually
