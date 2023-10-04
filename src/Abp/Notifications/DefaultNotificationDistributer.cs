@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Configuration;
 using Abp.Dependency;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Extensions;
-using Castle.Core.Internal;
 
 namespace Abp.Notifications
 {
@@ -85,9 +85,6 @@ namespace Abp.Notifications
             }
             else
             {
-                // Get subscribed users
-                // TODO@6618 -> allow filtering by NotificationSubscription.TargetNotifiers here...
-
                 var tenantIds = GetTenantIds(notificationInfo);
 
                 List<NotificationSubscriptionInfo> subscriptions;
