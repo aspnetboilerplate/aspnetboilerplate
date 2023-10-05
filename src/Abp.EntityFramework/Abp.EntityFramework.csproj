@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <Import Project="..\..\common.props" />
   <Import Project="..\..\configureawait.props" />
-
   <PropertyGroup>
-    <TargetFrameworks>net462;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFramework</AssemblyName>
     <PackageId>Abp.EntityFramework</PackageId>
@@ -19,24 +17,18 @@
     <RootNamespace>Abp</RootNamespace>
     <Description>Abp.EntityFramework</Description>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
     <ProjectReference Include="..\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="System.Transactions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
@@ -48,5 +40,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net462;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <AssemblyName>Abp.Tests</AssemblyName>
     <PackageId>Abp.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -14,29 +13,23 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Localization\Json\JsonSources\*.json;Localization\Json\XmlSources\*.xml;Localization\TestResourceFiles\*.resx;Localization\TestXmlFiles\*.xml;Resources\Embedded\MyResources\js\*.js" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Resources\Embedded\MyResources\js_underscore\MyScriptFile.js" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Resources\Embedded\MyResources\js-dash\MyScriptFile.js" />
     <EmbeddedResource Include="Resources\Embedded\MyResources\0.9\MyScriptFile.0.9.js" />
     <EmbeddedResource Include="Resources\Embedded\MyResources\js_underscore\MyScriptFile.js" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abp\Abp.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -46,23 +39,12 @@
     <PackageReference Include="xunit" Version="2.5.1" />
     <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-    <PackageReference Include="System.Runtime" Version="4.3.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System.Transactions" />
-  </ItemGroup>
-
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="ObjectComparators\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
@@ -70,5 +52,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>

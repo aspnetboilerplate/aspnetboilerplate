@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <Import Project="..\..\..\configureawait.props" />
-  
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>AbpAspNetCoreDemo</RootNamespace>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
@@ -14,7 +12,6 @@
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
   </PropertyGroup>
-
   <ItemGroup>
     <None Include="app.config" />
     <None Update="log4net.config">
@@ -25,21 +22,16 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>  
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0-rc.1.23419.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.1.23419.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-rc.1.23419.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.1.23419.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-rc.1.23419.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0-rc.1.23461.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Abp.AspNetCore.OData\Abp.AspNetCore.OData.csproj" />
     <ProjectReference Include="..\..\..\src\Abp.AspNetCore\Abp.AspNetCore.csproj" />
@@ -48,11 +40,9 @@
     <ProjectReference Include="..\..\..\src\Abp.HtmlSanitizer\Abp.HtmlSanitizer.csproj" />
     <ProjectReference Include="..\AbpAspNetCoreDemo.Core\AbpAspNetCoreDemo.Core.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
@@ -63,10 +53,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="bower install" />
     <Exec Command="dotnet bundle" />
   </Target>
-
 </Project>

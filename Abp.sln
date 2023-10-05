@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
@@ -181,7 +181,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.AspNetCore.PerRequestRe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.ZeroCore.NHibernate", "src\Abp.ZeroCore.NHibernate\Abp.ZeroCore.NHibernate.csproj", "{01F71E3D-5010-43AA-870A-ADED860FF73B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abp.HtmlSanitizer", "src\Abp.HtmlSanitizer\Abp.HtmlSanitizer.csproj", "{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.HtmlSanitizer", "src\Abp.HtmlSanitizer\Abp.HtmlSanitizer.csproj", "{BC2B3FA8-40D1-49AF-AD73-703A163F1BAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

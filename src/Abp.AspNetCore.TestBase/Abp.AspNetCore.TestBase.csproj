@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <Import Project="..\..\common.props" />
   <Import Project="..\..\configureawait.props" />
-  
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.AspNetCore.TestBase</AssemblyName>
     <PackageId>Abp.AspNetCore.TestBase</PackageId>
@@ -18,17 +16,14 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Description>Abp.AspNetCore.TestBase</Description>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
     <ProjectReference Include="..\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.11" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.0-rc.1.23421.29" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
@@ -39,5 +34,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>
