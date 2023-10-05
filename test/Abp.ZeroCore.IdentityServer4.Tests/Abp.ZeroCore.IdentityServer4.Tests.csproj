@@ -9,16 +9,16 @@
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.0.0" />
-    <PackageReference Include="xunit" Version="2.5.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.5.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+    <PackageReference Include="xunit" Version="2.5.1" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.5.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="NSubstitute" Version="5.0.0" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
