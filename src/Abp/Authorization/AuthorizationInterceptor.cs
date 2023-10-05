@@ -16,12 +16,6 @@ namespace Abp.Authorization
             _authorizationHelper = authorizationHelper;
         }
 
-        public void Intercept(IInvocation invocation)
-        {
-            _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
-            invocation.Proceed();
-        }
-
         public override void InterceptSynchronous(IInvocation invocation)
         {
             _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
