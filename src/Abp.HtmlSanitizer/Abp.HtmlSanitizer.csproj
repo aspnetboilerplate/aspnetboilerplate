@@ -1,41 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<Import Project="..\..\common.props" />
-	<Import Project="..\..\configureawait.props" />
-
-	<PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Abp.HtmlSanitizer</AssemblyName>
-        <PackageId>Abp.HtmlSanitizer</PackageId>
-        <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;html sanitizer;xss</PackageTags>
-        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-        <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-        <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-        <RootNamespace>Abp</RootNamespace>
-        <Description>Abp.HtmlSanitizer</Description>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
-      <ProjectReference Include="..\Abp\Abp.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="HtmlSanitizer" Version="8.0.692" />
-      <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
-      <PackageReference Update="Fody" Version="6.8.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      </PackageReference>
-      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
-
+  <Import Project="..\..\common.props" />
+  <Import Project="..\..\configureawait.props" />
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Abp.HtmlSanitizer</AssemblyName>
+    <PackageId>Abp.HtmlSanitizer</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;html sanitizer;xss</PackageTags>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <RootNamespace>Abp</RootNamespace>
+    <Description>Abp.HtmlSanitizer</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
+    <ProjectReference Include="..\Abp\Abp.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" Version="8.0.692" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
+    <PackageReference Update="Fody" Version="6.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

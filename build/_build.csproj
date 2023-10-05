@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <IsPackable>False</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
     <NukeTelemetryVersion>1</NukeTelemetryVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="NuGet.CommandLine" Version="6.6.1">
       <PrivateAssets>all</PrivateAssets>
@@ -17,21 +16,17 @@
     </PackageReference>
     <PackageReference Include="Nuke.Common" Version="7.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
     <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
     <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
-
     <!-- Common build related files -->
     <None Include="..\build.ps1" />
     <None Include="..\build.sh" />
-
     <None Include="..\.nuke" LinkBase="config" />
     <None Include="..\global.json" LinkBase="config" Condition="Exists('..\global.json')" />
     <None Include="..\nuget.config" LinkBase="config" Condition="Exists('..\nuget.config')" />
     <None Include="..\GitVersion.yml" LinkBase="config" Condition="Exists('..\GitVersion.yml')" />
-
     <None Include="..\.teamcity\settings.kts" LinkBase="ci" Condition="Exists('..\.teamcity\settings.kts')" />
     <None Include="..\.github\workflows\*.yml" LinkBase="ci" />
     <None Include="..\azure-pipelines.yml" LinkBase="ci" Condition="Exists('..\azure-pipelines.yml')" />
@@ -39,12 +34,10 @@
     <None Include="..\appveyor.yml" LinkBase="ci" Condition="Exists('..\appveyor.yml')" />
     <None Include="..\.travis.yml" LinkBase="ci" Condition="Exists('..\.travis.yml')" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>
