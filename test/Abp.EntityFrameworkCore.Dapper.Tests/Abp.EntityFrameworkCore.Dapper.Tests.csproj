@@ -10,7 +10,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.0.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0-rc.1.23419.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.1.23419.6" />
   </ItemGroup>

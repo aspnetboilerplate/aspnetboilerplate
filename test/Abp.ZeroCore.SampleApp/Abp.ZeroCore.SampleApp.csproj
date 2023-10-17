@@ -4,7 +4,7 @@
     <RootNamespace>Abp.ZeroCore.SampleApp</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.0.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-rc.1.23419.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-rc.1.23419.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-rc.1.23419.6" />
