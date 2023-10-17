@@ -2,6 +2,7 @@
 using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.IdentityServer4vNext;
 using Abp.Runtime.Security;
 using Abp.ZeroCore.SampleApp.Core;
 using Microsoft.AspNetCore.Identity;

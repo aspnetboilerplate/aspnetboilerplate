@@ -1,4 +1,4 @@
-﻿using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4vNext;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
