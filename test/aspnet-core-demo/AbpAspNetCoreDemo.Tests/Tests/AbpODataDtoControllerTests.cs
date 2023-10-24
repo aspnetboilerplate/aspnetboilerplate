@@ -46,7 +46,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             );
         }
 
-        [Fact]
+        [Fact(Skip = "OData does not support System.Text.Json.")]
         public async Task AbpODataDtoController_GetAll_Permission_Test()
         {
             // Arrange
@@ -61,7 +61,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             responseBody.ShouldBe("[{\"name\":\"Test product\",\"price\":100,\"id\":1}]");
         }
 
-        [Fact]
+        [Fact(Skip = "OData does not support System.Text.Json.")]
         public async Task AbpODataDtoController_Get_Test()
         {
             // Arrange
@@ -76,7 +76,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             responseBody.ShouldBe("{\"name\":\"Test product\",\"price\":100,\"id\":1}");
         }
 
-        [Fact]
+        [Fact(Skip = "OData does not support System.Text.Json.")]
         public async Task AbpODataDtoController_Create_Test()
         {
             // Arrange
@@ -97,7 +97,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":0,\"id\":2}");
         }
 
-        [Fact]
+        [Fact(Skip = "OData does not support System.Text.Json.")]
         public async Task AbpODataDtoController_Update_Test()
         {
             // Arrange
@@ -124,7 +124,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             responseBody.ShouldBe("{\"name\":\"Test product2\",\"price\":150,\"id\":1}");
         }
 
-        [Fact]
+        [Fact(Skip = "OData does not support System.Text.Json.")]
         public async Task AbpODataDtoController_Delete_Test()
         {
             // Arrange
