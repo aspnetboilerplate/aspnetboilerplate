@@ -12,6 +12,8 @@ namespace Abp.BackgroundJobs
 
         public TimeSpan? UserTokenExpirationPeriod { get; set; }
 
+        public int MaxWaitingJobToProcessPerPeriod { get; set; } = 1000;
+        
         public IAbpStartupConfiguration AbpConfiguration { get; private set; }
 
         public BackgroundJobConfiguration(IAbpStartupConfiguration abpConfiguration)
