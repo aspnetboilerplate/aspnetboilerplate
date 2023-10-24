@@ -104,9 +104,9 @@ namespace AbpAspNetCoreDemo
                     if (parentDirectory.Name == "test")
                     {
 #if DEBUG
-                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Debug", "net7.0", "AbpAspNetCoreDemo.PlugIn.dll");
+                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Debug", "net8.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #else
-                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Release", "net7.0", "AbpAspNetCoreDemo.PlugIn.dll");
+                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Release", "net8.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #endif
                         break;
                     }

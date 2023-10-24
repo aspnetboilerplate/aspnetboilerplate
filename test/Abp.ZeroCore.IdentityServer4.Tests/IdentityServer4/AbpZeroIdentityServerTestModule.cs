@@ -1,4 +1,5 @@
-﻿using Abp.Modules;
+﻿using Abp.IdentityServer4vNext;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero;
 using Abp.ZeroCore.SampleApp.Core;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.IdentityServer4
 {
-    [DependsOn(typeof(AbpZeroCoreIdentityServerEntityFrameworkCoreModule), typeof(AbpZeroTestModule))]
+    [DependsOn(typeof(AbpZeroCoreIdentityServervNextEntityFrameworkCoreModule), typeof(AbpZeroTestModule))]
     public class AbpZeroIdentityServerTestModule : AbpModule
     {
         public override void PreInitialize()

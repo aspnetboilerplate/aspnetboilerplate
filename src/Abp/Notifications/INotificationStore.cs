@@ -62,22 +62,22 @@ namespace Abp.Notifications
         /// <summary>
         /// Gets subscriptions for a notification.
         /// </summary>
-        Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName, string entityId);
+        Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Gets subscriptions for a notification.
         /// </summary>
-        List<NotificationSubscriptionInfo> GetSubscriptions(string notificationName, string entityTypeName, string entityId);
+        List<NotificationSubscriptionInfo> GetSubscriptions(string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Gets subscriptions for a notification for specified tenant(s).
         /// </summary>
-        Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId);
+        Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Gets subscriptions for a notification for specified tenant(s).
         /// </summary>
-        List<NotificationSubscriptionInfo> GetSubscriptions(int?[] tenantIds, string notificationName, string entityTypeName, string entityId);
+        List<NotificationSubscriptionInfo> GetSubscriptions(int?[] tenantIds, string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Gets subscriptions for a user.
@@ -92,12 +92,12 @@ namespace Abp.Notifications
         /// <summary>
         /// Checks if a user subscribed for a notification
         /// </summary>
-        Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId);
+        Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Checks if a user subscribed for a notification
         /// </summary>
-        bool IsSubscribed(UserIdentifier user, string notificationName, string entityTypeName, string entityId);
+        bool IsSubscribed(UserIdentifier user, string notificationName, string entityTypeName, string entityId, string targetNotifiers);
 
         /// <summary>
         /// Updates a user notification state.

@@ -1,4 +1,4 @@
-﻿using Abp.IdentityServer4;
+﻿using Abp.IdentityServer4vNext;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
@@ -60,8 +60,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
             modelBuilder.ConfigurePersistedGrantEntity();
 
             // EF property mapped directly to a field
-            modelBuilder.Entity<Blog>()
-                 .Property<string>("_name").HasColumnName("Name");
+
 
             modelBuilder.Entity<Blog>().OwnsOne(x => x.More);
 
