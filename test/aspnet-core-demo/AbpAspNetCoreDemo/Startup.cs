@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
@@ -27,7 +26,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OData.ModelBuilder;
-using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
@@ -81,6 +79,7 @@ namespace AbpAspNetCoreDemo
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDecimalJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantDoubleJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDoubleJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new Abp.Json.SystemTextJson.DateOnlyJsonConverter());
             });
 
             services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());

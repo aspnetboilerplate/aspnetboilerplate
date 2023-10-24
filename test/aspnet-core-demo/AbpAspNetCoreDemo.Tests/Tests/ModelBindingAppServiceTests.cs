@@ -66,7 +66,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 
             // Arrange
             client.DefaultRequestHeaders.Add(HeaderNames.AcceptLanguage, culture);
-            var content = new StringContent("{OrderDate: \"" + inputOrderDate + "\" }", Encoding.UTF8, "application/json");
+            var content = new StringContent("{\"OrderDate\": \"" + inputOrderDate + "\" }", Encoding.UTF8, "application/json");
 
             // Act
             var response = await client.PostAsync("/api/services/app/ModelBinding/CalculatePrice", content);

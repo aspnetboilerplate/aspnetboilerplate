@@ -6,8 +6,6 @@ namespace Abp.Json.SystemTextJson
 {
     public class AbpStringToGuidConverter : JsonConverter<Guid>
     {
-        private JsonSerializerOptions _writeJsonSerializerOptions;
-
         public override Guid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.String)
@@ -28,20 +26,12 @@ namespace Abp.Json.SystemTextJson
 
         public override void Write(Utf8JsonWriter writer, Guid value, JsonSerializerOptions options)
         {
-            if (_writeJsonSerializerOptions == null)
-            {
-                _writeJsonSerializerOptions = JsonSerializerOptionsHelper.Create(options, this);
-            }
-
-            var entityConverter = (JsonConverter<Guid>)_writeJsonSerializerOptions.GetConverter(typeof(Guid));
-            entityConverter.Write(writer, value, _writeJsonSerializerOptions);
+            writer.WriteStringValue(value);
         }
     }
 
     public class AbpNullableStringToGuidConverter : JsonConverter<Guid?>
     {
-        private JsonSerializerOptions _writeJsonSerializerOptions;
-
         public override Guid? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.String)
@@ -67,13 +57,14 @@ namespace Abp.Json.SystemTextJson
 
         public override void Write(Utf8JsonWriter writer, Guid? value, JsonSerializerOptions options)
         {
-            if (_writeJsonSerializerOptions == null)
+            if (value == null)
             {
-                _writeJsonSerializerOptions = JsonSerializerOptionsHelper.Create(options, this);
+                writer.WriteNullValue();
             }
-
-            var entityConverter = (JsonConverter<Guid?>)_writeJsonSerializerOptions.GetConverter(typeof(Guid?));
-            entityConverter.Write(writer, value, _writeJsonSerializerOptions);
+            else
+            {
+                writer.WriteStringValue(value.Value);
+            }
         }
     }
 

@@ -52,6 +52,12 @@ namespace Abp.Json.SystemTextJson
 
         public override void Write(Utf8JsonWriter writer, TNullableType value, JsonSerializerOptions options)
         {
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
+
             if (_writeJsonSerializerOptions == null)
             {
                 _writeJsonSerializerOptions = JsonSerializerOptionsHelper.Create(options, x =>

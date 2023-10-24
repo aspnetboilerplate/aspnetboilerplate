@@ -8,8 +8,6 @@ namespace Abp.Json.SystemTextJson
 {
     public class AbpStringToBooleanConverter : JsonConverter<bool>
     {
-        private JsonSerializerOptions _writeJsonSerializerOptions;
-
         public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.String)
@@ -31,13 +29,7 @@ namespace Abp.Json.SystemTextJson
 
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
         {
-            if (_writeJsonSerializerOptions == null)
-            {
-                _writeJsonSerializerOptions = JsonSerializerOptionsHelper.Create(options, this);
-            }
-
-            var entityConverter = (JsonConverter<bool>)_writeJsonSerializerOptions.GetConverter(typeof(bool));
-            entityConverter.Write(writer, value, _writeJsonSerializerOptions);
+            writer.WriteBooleanValue(value);
         }
     }
 }
