@@ -43,7 +43,11 @@ var abp = abp || {};
 
         options.reverseButtons = true;
 
-        messageContent.text = message;
+        if (options.isHtml) {
+            options.html = message;
+        } else {
+            options.text = message;
+        }
 
         var opts = $.extend(
             {},
