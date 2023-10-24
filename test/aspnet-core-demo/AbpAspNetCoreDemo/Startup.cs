@@ -80,7 +80,7 @@ namespace AbpAspNetCoreDemo
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantDecimalJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDecimalJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new CultureInvariantDoubleJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDecimalJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDoubleJsonConverter());
             });
 
             services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
