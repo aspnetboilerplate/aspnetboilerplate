@@ -19,14 +19,6 @@ namespace Abp.Application.Features
         /// Default: false.
         /// </summary>
         public bool RequiresAll { get; set; }
-
-        /// <summary>
-        /// Required for serialization.
-        /// </summary>
-        public SimpleFeatureDependency()
-        {
-            
-        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleFeatureDependency"/> class.
