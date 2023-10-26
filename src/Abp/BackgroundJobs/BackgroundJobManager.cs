@@ -28,6 +28,7 @@ namespace Abp.BackgroundJobs
 
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
 
         static BackgroundJobManager()
         {
@@ -40,17 +41,19 @@ namespace Abp.BackgroundJobs
         public BackgroundJobManager(
             IIocResolver iocResolver,
             IBackgroundJobStore store,
+            IBackgroundJobConfiguration backgroundJobConfiguration,
             AbpAsyncTimer timer)
             : base(timer)
         {
             _store = store;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
             _iocResolver = iocResolver;
 
             EventBus = NullEventBus.Instance;
 
             Timer.Period = JobPollPeriod;
         }
-        
+
         public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -80,7 +83,7 @@ namespace Abp.BackgroundJobs
 
             return jobInfoId;
         }
-        
+
         public virtual string Enqueue<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
@@ -105,7 +108,7 @@ namespace Abp.BackgroundJobs
                 CurrentUnitOfWork.SaveChanges();
 
                 jobInfoId = jobInfo.Id.ToString();
-                
+
                 uow.Complete();
             }
 
@@ -140,7 +143,7 @@ namespace Abp.BackgroundJobs
 
         protected override async Task DoWorkAsync()
         {
-            var waitingJobs = await _store.GetWaitingJobsAsync(1000);
+            var waitingJobs = await _store.GetWaitingJobsAsync(_backgroundJobConfiguration.MaxWaitingJobToProcessPerPeriod);
 
             foreach (var job in waitingJobs)
             {

@@ -19,7 +19,7 @@ namespace Abp.Authorization
         /// Default: false.
         /// </summary>
         public bool RequiresAll { get; set; }
-
+        
         /// <summary>
         /// Required for serialization.
         /// </summary>
