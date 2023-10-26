@@ -19,7 +19,7 @@ namespace Abp.Authorization
         /// Default: false.
         /// </summary>
         public bool RequiresAll { get; set; }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePermissionDependency"/> class.
         /// </summary>
