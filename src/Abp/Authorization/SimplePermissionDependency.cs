@@ -21,6 +21,14 @@ namespace Abp.Authorization
         public bool RequiresAll { get; set; }
 
         /// <summary>
+        /// Required for serialization.
+        /// </summary>
+        public SimplePermissionDependency()
+        {
+            
+        }
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="SimplePermissionDependency"/> class.
         /// </summary>
         /// <param name="permissions">The permissions.</param>
