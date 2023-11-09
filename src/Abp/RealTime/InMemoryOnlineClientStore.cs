@@ -1,7 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using Abp.Dependency;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Abp.Dependency;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
@@ -21,34 +25,47 @@ namespace Abp.RealTime
             Clients = new ConcurrentDictionary<string, IOnlineClient>();
         }
 
-        public void Add(IOnlineClient client)
+        public Task AddAsync(IOnlineClient client)
         {
             Clients.AddOrUpdate(client.ConnectionId, client, (s, o) => client);
+            return Task.CompletedTask;
         }
 
-        public bool Remove(string connectionId)
+        public Task<bool> RemoveAsync(string connectionId)
         {
-            return TryRemove(connectionId, out IOnlineClient removed);
+            return TryRemoveAsync(connectionId, value => _ = value);
         }
 
-        public bool TryRemove(string connectionId, out IOnlineClient client)
+        public Task<bool> TryRemoveAsync(string connectionId, Action<IOnlineClient> clientAction)
         {
-            return Clients.TryRemove(connectionId, out client);
+            var hasRemoved = Clients.TryRemove(connectionId, out IOnlineClient client);
+            clientAction(client);
+            return Task.FromResult(hasRemoved);
         }
 
-        public bool TryGet(string connectionId, out IOnlineClient client)
+        public Task<bool> TryGetAsync(string connectionId, Action<IOnlineClient> clientAction)
         {
-            return Clients.TryGetValue(connectionId, out client);
+            var hasValue = Clients.TryGetValue(connectionId, out IOnlineClient client);
+            clientAction(client);
+            return Task.FromResult(hasValue);
         }
 
-        public bool Contains(string connectionId)
+        public Task<bool> ContainsAsync(string connectionId)
         {
-            return Clients.ContainsKey(connectionId);
+            var hasKey = Clients.ContainsKey(connectionId);
+            return Task.FromResult(hasKey);
         }
 
-        public IReadOnlyList<IOnlineClient> GetAll()
+        public Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
         {
-            return Clients.Values.ToImmutableList();
+            return Task.FromResult<IReadOnlyList<IOnlineClient>>(Clients.Values.ToImmutableList());
+        }
+
+        public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
+        {
+            return (await GetAllAsync())
+                .Where(c => c.UserId == userIdentifier.UserId && c.TenantId == userIdentifier.TenantId)
+                .ToImmutableList();
         }
     }
 }
