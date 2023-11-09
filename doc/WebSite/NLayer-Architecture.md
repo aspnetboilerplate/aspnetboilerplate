@@ -2,12 +2,12 @@
 
 The layering of an application's codebase is a widely accepted technique to
 help reduce complexity and to improve code reusability. To achieve a layered
-architecture, ASP.NET Boilerplate follows the principles of **Domain
+architecture, ASP.NET Boilerplate follows the principles of the **Traditional "N-Layer" Architecture** with **Domain
 Driven Design**.
 
-### Domain Driven Design Layers
+### Traditional "N-Layer" Architecture Layers
 
-There are four fundamental layers in Domain Driven Design (DDD):
+There are four fundamental layers in the N-Layer Architecture:
 
 -   **Presentation Layer**: Provides an interface to the user. Uses the
     Application Layer to achieve user interactions.
@@ -15,7 +15,7 @@ There are four fundamental layers in Domain Driven Design (DDD):
     Layers. Orchestrates business objects to perform specific
     application tasks.
 -   **Domain Layer**: Includes business objects and their rules. This is the
-    heart of the application.
+    heart of the application and this is where DDD is applied.
 -   **Infrastructure Layer**: Provides generic technical capabilities
     that support higher layers mostly using 3rd-party libraries.
 
