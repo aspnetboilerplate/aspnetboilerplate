@@ -299,6 +299,11 @@ namespace Abp.Runtime.Caching.Redis
 
         public override void Clear()
         {
+            ClearPerRequestRedisCacheInternal();
+        }
+
+        protected virtual void ClearPerRequestRedisCacheInternal()
+        {
             base.Clear();
 
             var httpContext = _httpContextAccessor.HttpContext;
@@ -318,7 +323,7 @@ namespace Abp.Runtime.Caching.Redis
                 }
             }
         }
-
+        
         protected virtual string GetPerRequestRedisCacheKey(string key)
         {
             return AbpPerRequestRedisCachePrefix + GetLocalizedRedisKey(key).ToString();
