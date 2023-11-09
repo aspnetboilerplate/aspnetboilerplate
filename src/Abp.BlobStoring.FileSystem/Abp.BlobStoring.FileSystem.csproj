@@ -26,11 +26,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Polly" Version="7.2.3" />
+		<PackageReference Include="Polly" Version="8.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Update="Fody" Version="6.6.4">
+		<PackageReference Update="Fody" Version="6.8.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>

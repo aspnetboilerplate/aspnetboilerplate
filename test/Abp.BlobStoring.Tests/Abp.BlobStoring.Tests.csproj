@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net462;net7.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<Reference Include="System" />
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />
-		<PackageReference Include="Castle.Windsor.Extensions.DependencyInjection" Version="5.1.2" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-		<PackageReference Include="xunit" Version="2.4.2" />
+		<PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
+		<PackageReference Include="Castle.Windsor.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+		<PackageReference Include="xunit" Version="2.5.1" />
 		<ProjectReference Include="..\..\src\Abp.BlobStoring\Abp.BlobStoring.csproj" />
 		<ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
 	</ItemGroup>
