@@ -100,8 +100,8 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             var item2 = _normalRedisCache.Get(cacheKey, GetCacheValue);
             RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
-            //should still be one received calls
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            // Should still be one received calls
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -162,7 +162,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
 
             var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             _perRequestRedisCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
         }
@@ -191,7 +191,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
             var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
@@ -203,8 +203,8 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             RedisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
 
-            //should still be one received calls
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            // Should still be one received calls
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -238,7 +238,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
             var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
             RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
@@ -248,8 +248,8 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             var item2 = _perRequestRedisCache.Get(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
             RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
-            //should still be one received calls
-            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            // Should still be one received calls
+            RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -310,7 +310,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
 
             var cachedObject = RedisSerializer.Serialize(new MyCacheItem {Value = cacheValue}, typeof(MyCacheItem));
-            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             (await _perRequestRedisCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
         }
@@ -339,7 +339,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
             var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
-            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
@@ -351,8 +351,8 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await RedisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>());
 
-            //should still be one received calls
-            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            // Should still be one received calls
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);
@@ -386,7 +386,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
             var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
             await RedisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
-            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
@@ -396,8 +396,8 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
             var item2 = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue); //since _currentHttpContext is null it should go to the redisdb again
             await RedisDatabase.Received(4).StringGetAsync(Arg.Any<RedisKey>());
 
-            //should still be one received calls
-            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>(), Arg.Any<When>(), Arg.Any<CommandFlags>());
+            // Should still be one received calls
+            await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
 
             counter.ShouldBe(1);
             item.ShouldNotBe(null);

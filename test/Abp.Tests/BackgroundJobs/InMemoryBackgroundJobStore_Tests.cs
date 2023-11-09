@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Abp.BackgroundJobs;
 using Abp.Timing;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
 namespace Abp.Tests.BackgroundJobs
 {
-    public class InMemoryBackgroundJobStore_Tests
+    public class InMemoryBackgroundJobStore_Tests: TestBaseWithLocalIocManager
     {
         private readonly InMemoryBackgroundJobStore _store;
-
+        
         public InMemoryBackgroundJobStore_Tests()
         {
             _store = new InMemoryBackgroundJobStore();
@@ -26,7 +27,7 @@ namespace Abp.Tests.BackgroundJobs
             };
             
             await _store.InsertAsync(jobInfo);
-            (await _store.GetWaitingJobsAsync(1000)).Count.ShouldBe(1);
+            (await _store.GetWaitingJobsAsync(BackgroundJobConfiguration.DefaultMaxWaitingJobToProcessPerPeriod)).Count.ShouldBe(1);
 
             var jobInfoFromStore = await _store.GetAsync(1);
             jobInfoFromStore.ShouldNotBeNull();
@@ -34,7 +35,7 @@ namespace Abp.Tests.BackgroundJobs
             jobInfoFromStore.JobArgs.ShouldBeSameAs(jobInfo.JobArgs);
 
             await _store.DeleteAsync(jobInfo);
-            (await _store.GetWaitingJobsAsync(1000)).Count.ShouldBe(0);
+            (await _store.GetWaitingJobsAsync(BackgroundJobConfiguration.DefaultMaxWaitingJobToProcessPerPeriod)).Count.ShouldBe(0);
         }
     }
 }

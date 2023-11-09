@@ -54,7 +54,7 @@ AbpSession defines a few key properties:
     is not an impersonated login.
 -   **MultiTenancySide**: It may be Host or Tenant.
 
-UserId and TenantId is **nullable**. There are also the non-nullable
+UserId and TenantId are **nullable**. There are also the non-nullable
 **GetUserId()** and **GetTenantId()** methods. If you're sure there is a
 current user, you can call GetUserId(). If the current user is null, this
 method throws an exception. GetTenantId() also works in this way.

@@ -10,7 +10,7 @@
 
         let url: string;
 
-        let withUrlOptions: string;
+        let withUrlOptions: object;
         
         function connect(): any;
 

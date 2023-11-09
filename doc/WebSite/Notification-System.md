@@ -56,7 +56,10 @@ persistence.
 ### Subscribe to Notifications
 
 The **INotificationSubscriptionManager** provides an API to **subscribe** to
-notifications. Examples:
+notifications. A User can subscribe to a specific notification, to a notification related to a specific entity. 
+A user can also select specific notifiers when subscribing to a notification. In this way, user will not be notified by other notifiers. Full type name of the notifier must be provided when selecting a target Notifier. It can be set using `new EmailRealTimeNotifier().GetType().FullName` and accepts comma separated multiple values. 
+
+Examples:
 
     public class MyService : ITransientDependency
     {

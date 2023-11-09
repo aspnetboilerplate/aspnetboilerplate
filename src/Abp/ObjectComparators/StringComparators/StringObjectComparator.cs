@@ -1,5 +1,5 @@
 ﻿using System;
-using Castle.Core.Internal;
+using Abp.Extensions;
 
 namespace Abp.ObjectComparators.StringComparators
 {

@@ -14,7 +14,6 @@ using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 [MSBuildVerbosityMapping]
 [AzurePipelines(
@@ -51,7 +50,7 @@ class Build : NukeBuild
                     "*/src/*/bin",
                     "*/test/*/obj",
                     "*/test/*/bin")
-                .ForEach(DeleteDirectory);
+                .ForEach(path => path.DeleteDirectory());
         });
 
     Target Restore => _ => _
@@ -98,7 +97,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var allTestConfigurations =
-                from project in Solution.GetProjects("*Tests")
+                from project in Solution.GetAllProjects("*Tests")
                 from targetFramework in project.GetTargetFrameworks()
                 select (project, targetFramework);
             var relevantTestConfigurations = Partition.GetCurrent(allTestConfigurations);
