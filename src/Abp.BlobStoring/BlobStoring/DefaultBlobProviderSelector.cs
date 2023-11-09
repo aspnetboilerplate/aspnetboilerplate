@@ -15,10 +15,10 @@ namespace Abp.BlobStoring
 
         public DefaultBlobProviderSelector(
             IBlobContainerConfigurationProvider configurationProvider,
-            IEnumerable<IBlobProvider> blobProviders)
+            IIocResolver iocResolver)
         {
             ConfigurationProvider = configurationProvider;
-            BlobProviders = blobProviders;
+            BlobProviders = iocResolver.ResolveAll<IBlobProvider>();
         }
 
         [NotNull]

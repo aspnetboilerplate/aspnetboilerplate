@@ -22,11 +22,6 @@ namespace Abp.BlobStoring.Tests.Abp.BlobStoring
 
         public override void PreInitialize()
         {
-            //to solve  IEnumerable<IBlobProvider> dependencies in DefaultBlobProviderSelector
-            //https://stackoverflow.com/questions/10452155/castle-windsor-how-do-i-inject-all-implementations-of-interface-into-a-ctor
-            //IocManager after CreateContainer
-            IocManager.IocContainer.Kernel.Resolver.AddSubResolver(new CollectionResolver(IocManager.IocContainer.Kernel));
-
             IocManager.IocContainer.Register(
                 Component.For<ICancellationTokenProvider>().Instance(NullCancellationTokenProvider.Instance)
                     .LifestyleSingleton()
