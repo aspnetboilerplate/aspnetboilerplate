@@ -348,9 +348,14 @@ namespace Abp.Runtime.Caching.Redis
 
         public override void Clear()
         {
-            _database.KeyDeleteWithPrefix(GetLocalizedRedisKey("*"));
+            ClearRedisCacheInternal();
         }
 
+        protected virtual void ClearRedisCacheInternal()
+        {
+            _database.KeyDeleteWithPrefix(GetLocalizedRedisKey("*"));
+        }
+        
         protected virtual Type GetSerializableType(object value)
         {
             //TODO: This is a workaround for serialization problems of entities.
