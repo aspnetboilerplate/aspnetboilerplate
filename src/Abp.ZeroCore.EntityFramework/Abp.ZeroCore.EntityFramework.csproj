@@ -14,7 +14,7 @@
     <ProjectReference Include="..\Abp.EntityFramework\Abp.EntityFramework.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />

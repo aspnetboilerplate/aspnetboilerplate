@@ -18,5 +18,18 @@ namespace Abp.IO
                 Directory.CreateDirectory(directory);
             }
         }
+
+        /// <summary>
+        /// Delete directory if exists.
+        /// </summary>
+        /// <param name="directory">Directory to create</param>
+        /// <param name="recursive">Delete sub-directory</param>
+        public static void DeleteIfExists(string directory, bool recursive)
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, recursive);
+            }
+        }
     }
 }

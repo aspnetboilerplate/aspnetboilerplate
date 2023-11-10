@@ -13,10 +13,23 @@ namespace Abp.IO
         /// <param name="filePath">Path of the file</param>
         public static void DeleteIfExists(string filePath)
         {
-            if (File.Exists(filePath))
+            TryToDeleteIfExists(filePath);
+        }
+
+        /// <summary>
+        /// Checks and deletes given file if it does exists.
+        /// </summary>
+        /// <param name="filePath">Path of the file</param>
+        /// <returns>return if file was deleted</returns>
+        public static bool TryToDeleteIfExists(string filePath)
+        {
+            if (!File.Exists(filePath))
             {
-                File.Delete(filePath);
+                return false;
             }
+
+            File.Delete(filePath);
+            return true;
         }
     }
 }
