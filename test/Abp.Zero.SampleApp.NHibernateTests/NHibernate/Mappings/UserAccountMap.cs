@@ -1,5 +1,6 @@
 ﻿using Abp.Authorization.Users;
 using Abp.NHibernate.EntityMappings;
+using Abp.Zero.SampleApp.EntityHistory;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
@@ -17,6 +18,15 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
             Map(x => x.UserLinkId);
 
             this.MapFullAudited();
+        }
+    }
+
+    public class FooMap : EntityMap<Foo>
+    {
+        public FooMap() : base("Foos")
+        {
+            Map(f => f.Audited);
+            Map(f => f.NonAudited);
         }
     }
 }
