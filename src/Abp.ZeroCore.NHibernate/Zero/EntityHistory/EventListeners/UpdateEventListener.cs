@@ -15,7 +15,7 @@ public class UpdateEventListener : IPreUpdateEventListener
     public async Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
     {
         _entityHistoryHelper.AddEntityToChangeSet(@event);
-        return false;
+        return await Task.FromResult(false);
     }
 
     public bool OnPreUpdate(PreUpdateEvent @event)

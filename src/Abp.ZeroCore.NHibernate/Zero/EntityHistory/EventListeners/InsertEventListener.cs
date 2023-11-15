@@ -16,7 +16,7 @@ public class InsertEventListener : IPreInsertEventListener
     public async Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
     {
         _entityHistoryHelper.AddEntityToChangeSet(@event);
-        return false;
+        return await Task.FromResult(false);
     }
 
     public bool OnPreInsert(PreInsertEvent @event)

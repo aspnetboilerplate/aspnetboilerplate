@@ -53,12 +53,6 @@ public class AbpZeroCoreNHibernateModule : AbpModule
 
     public override void Initialize()
     {
-
-
-        //Configuration.Modules.AbpNHibernate().FluentConfiguration
-
-
-
         IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
     }
 }
