@@ -24,6 +24,12 @@ namespace Abp.BackgroundJobs
         /// </summary>
         TimeSpan? UserTokenExpirationPeriod { get; set; }
 
+        
+        /// <summary>
+        /// Maximum number of waiting jobs to process per period.
+        /// </summary>
+        int MaxWaitingJobToProcessPerPeriod { get; set; }
+        
         /// <summary>
         /// Gets the ABP configuration object.
         /// </summary>
