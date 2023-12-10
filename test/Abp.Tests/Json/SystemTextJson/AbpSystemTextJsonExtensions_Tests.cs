@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Abp.Tests.Json.SystemTextJson
 {
-    [Collection("Kind")]
+    [Collection("Clock.Provider")]
     public class AbpSystemTextJsonExtensionsTests
     {
         [Fact]
@@ -160,7 +160,7 @@ namespace Abp.Tests.Json.SystemTextJson
         }
     }
 
-    [Collection("Kind")]
+    [Collection("Clock.Provider")]
     public abstract class AbpSystemTextJsonExtensions_Datetime_Kind_Tests
     {
         protected DateTimeKind Kind { get; set; } = DateTimeKind.Unspecified;
@@ -174,7 +174,6 @@ namespace Abp.Tests.Json.SystemTextJson
         }
     }
 
-    [Collection("Kind")]
     public class AbpSystemTextJsonExtensionsDatetimeKindUtcTests : AbpSystemTextJsonExtensions_Datetime_Kind_Tests
     {
         public AbpSystemTextJsonExtensionsDatetimeKindUtcTests()
@@ -184,7 +183,6 @@ namespace Abp.Tests.Json.SystemTextJson
         }
     }
 
-    [Collection("Kind")]
     public class AbpSystemTextJsonExtensionsDatetimeKindLocalTests : AbpSystemTextJsonExtensions_Datetime_Kind_Tests
     {
         public AbpSystemTextJsonExtensionsDatetimeKindLocalTests()
@@ -194,7 +192,6 @@ namespace Abp.Tests.Json.SystemTextJson
         }
     }
 
-    [Collection("Kind")]
     public class AbpSystemTextJsonExtensionsDatetimeKindUnspecifiedTests : AbpSystemTextJsonExtensions_Datetime_Kind_Tests
     {
         public AbpSystemTextJsonExtensionsDatetimeKindUnspecifiedTests()

@@ -12,6 +12,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AbpAspNetCoreDemo.IntegrationTests.Tests
 {
+    [Collection("Clock.Provider")]
     public class InputAndOutputDateTimeFormat_Tests
     {
         [Fact]
