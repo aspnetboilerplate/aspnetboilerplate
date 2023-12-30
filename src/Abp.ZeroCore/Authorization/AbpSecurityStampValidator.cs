@@ -3,7 +3,6 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Domain.Uow;
 using Abp.MultiTenancy;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -21,13 +20,11 @@ namespace Abp.Authorization
         public AbpSecurityStampValidator(
             IOptions<SecurityStampValidatorOptions> options,
             AbpSignInManager<TTenant, TRole, TUser> signInManager,
-            ISystemClock systemClock,
             ILoggerFactory loggerFactory,
             IUnitOfWorkManager unitOfWorkManager)
             : base(
                 options,
                 signInManager,
-                systemClock,
                 loggerFactory)
         {
             _unitOfWorkManager = unitOfWorkManager;

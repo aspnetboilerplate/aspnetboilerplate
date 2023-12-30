@@ -12,7 +12,6 @@ using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Linq;
 using Abp.MultiTenancy;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
@@ -208,10 +207,9 @@ namespace Abp.ZeroCore.SampleApp.Core
         public SecurityStampValidator(
             IOptions<SecurityStampValidatorOptions> options,
             SignInManager signInManager,
-            ISystemClock systemClock,
             ILoggerFactory loggerFactory,
             IUnitOfWorkManager unitOfWorkManager)
-            : base(options, signInManager, systemClock, loggerFactory, unitOfWorkManager)
+            : base(options, signInManager, loggerFactory, unitOfWorkManager)
         {
         }
     }
