@@ -262,16 +262,16 @@ namespace Abp.Authorization
                     var loginAttempt = new UserLoginAttempt
                     {
                         TenantId = tenantId,
-                        TenancyName = tenancyName,
+                        TenancyName = tenancyName.TruncateWithPostfix(UserLoginAttempt.MaxTenancyNameLength),
 
                         UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
-                        UserNameOrEmailAddress = userNameOrEmailAddress,
+                        UserNameOrEmailAddress = userNameOrEmailAddress.TruncateWithPostfix(UserLoginAttempt.MaxUserNameOrEmailAddressLength),
 
                         Result = loginResult.Result,
 
-                        BrowserInfo = ClientInfoProvider.BrowserInfo,
-                        ClientIpAddress = ClientInfoProvider.ClientIpAddress,
-                        ClientName = ClientInfoProvider.ComputerName,
+                        BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(UserLoginAttempt.MaxBrowserInfoLength),
+                        ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(UserLoginAttempt.MaxClientIpAddressLength),
+                        ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(UserLoginAttempt.MaxClientNameLength),
                     };
 
                     await UserLoginAttemptRepository.InsertAsync(loginAttempt);
@@ -293,16 +293,16 @@ namespace Abp.Authorization
                     var loginAttempt = new UserLoginAttempt
                     {
                         TenantId = tenantId,
-                        TenancyName = tenancyName,
+                        TenancyName = tenancyName.TruncateWithPostfix(UserLoginAttempt.MaxTenancyNameLength),
 
                         UserId = loginResult.User != null ? loginResult.User.Id : (long?) null,
-                        UserNameOrEmailAddress = userNameOrEmailAddress,
+                        UserNameOrEmailAddress = userNameOrEmailAddress.TruncateWithPostfix(UserLoginAttempt.MaxUserNameOrEmailAddressLength),
 
                         Result = loginResult.Result,
 
-                        BrowserInfo = ClientInfoProvider.BrowserInfo,
-                        ClientIpAddress = ClientInfoProvider.ClientIpAddress,
-                        ClientName = ClientInfoProvider.ComputerName,
+                        BrowserInfo = ClientInfoProvider.BrowserInfo.TruncateWithPostfix(UserLoginAttempt.MaxBrowserInfoLength),
+                        ClientIpAddress = ClientInfoProvider.ClientIpAddress.TruncateWithPostfix(UserLoginAttempt.MaxClientIpAddressLength),
+                        ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(UserLoginAttempt.MaxClientNameLength),
                     };
 
                     UserLoginAttemptRepository.Insert(loginAttempt);
