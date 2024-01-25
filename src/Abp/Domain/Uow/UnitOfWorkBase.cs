@@ -246,6 +246,10 @@ namespace Abp.Domain.Uow
                 {
                     SetFilterParameter(filterName, parameterName, oldValue);
                 }
+                else
+                {
+                    _filters.RemoveAt(filterIndex);
+                }
             });
         }
 
