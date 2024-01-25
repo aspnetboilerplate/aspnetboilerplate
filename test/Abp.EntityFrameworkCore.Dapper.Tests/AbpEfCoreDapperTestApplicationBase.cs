@@ -7,9 +7,11 @@ using Abp.TestBase;
 using Abp.Timing;
 
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace Abp.EntityFrameworkCore.Dapper.Tests
 {
+    [Collection("Clock.Provider")]
     public class AbpEfCoreDapperTestApplicationBase : AbpIntegratedTestBase<AbpEfCoreDapperTestModule>
     {
         protected AbpEfCoreDapperTestApplicationBase()

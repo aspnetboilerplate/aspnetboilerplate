@@ -5,9 +5,11 @@ using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.TestBase;
 using Abp.Timing;
+using Xunit;
 
 namespace Abp.EntityFrameworkCore.Tests
 {
+    [Collection("Clock.Provider")]
     public abstract class EntityFrameworkCoreModuleTestBase : AbpIntegratedTestBase<EntityFrameworkCoreTestModule>
     {
         protected EntityFrameworkCoreModuleTestBase()

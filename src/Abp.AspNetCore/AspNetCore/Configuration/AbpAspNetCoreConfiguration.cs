@@ -31,10 +31,14 @@ namespace Abp.AspNetCore.Configuration
 
         public bool UseMvcDateTimeFormatForAppServices { get; set; }
 
+        public List<string> InputDateTimeFormats { get; set; }
+
+        public string OutputDateTimeFormat { get; set; }
+
         public List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
         public WrapResultFilterCollection WrapResultFilters { get; }
-        
+
         public AbpAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
@@ -49,8 +53,10 @@ namespace Abp.AspNetCore.Configuration
             SetNoCacheForAjaxResponses = true;
             IsAuditingEnabled = true;
             UseMvcDateTimeFormatForAppServices = false;
+            InputDateTimeFormats = null;
+            OutputDateTimeFormat  = null;
         }
-       
+
         public AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
             Assembly assembly,
             string moduleName = AbpControllerAssemblySetting.DefaultServiceModuleName,
