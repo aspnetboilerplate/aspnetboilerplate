@@ -1,7 +1,7 @@
 <i id="abp-title" data-title="Developing a Multi-Tenant SaaS Application with ASP.NET Core, Entity Framework and Angular"></i>
 
 <ul class="download">
-	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular">GitHub repository.</a></li>
+	<li>Get the source code from the <a href="https://github.com/aspnetboilerplate/eventcloud">GitHub repository.</a></li>
 </ul>
 
 <h2 id="introduction">Introduction</h2>
@@ -596,67 +596,82 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
 
 <p>We directly use <code>EventAppService</code> to get list of events. Here is the <strong>events.component.ts</strong> to create this page:</p>
 
-<pre><code class="ts language-ts">import { Component, Injector, ViewChild } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { EventServiceProxy, EventListDto, ListResultDtoOfEventListDto, EntityDtoOfGuid } from '@shared/service-proxies/service-proxies';
-import { PagedListingComponentBase, PagedRequestDto } from 'shared/paged-listing-component-base';
-import { CreateEventComponent } from 'app/events/create-event/create-event.component';
+<pre><code class="ts language-ts">
+import { Component, Injector, ViewChild } from "@angular/core";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { EventServiceProxy, EventListDto, EventListDtoListResultDto,} from "@shared/service-proxies/service-proxies";
+import { PagedListingComponentBase, PagedRequestDto,} from "shared/paged-listing-component-base";
+import { CreateEventComponent } from "app/events/create-event/create-event.component";
+import { appModuleAnimation } from "@shared/animations/routerTransition";
 
 @Component({
-    templateUrl: './events.component.html',
-    animations: [appModuleAnimation()]
+    templateUrl: "./events.component.html",
+    animations: [appModuleAnimation()],
 })
-export class EventsComponent extends PagedListingComponentBase&lt;EventListDto&gt; {
-
-    @ViewChild('createEventModal') createEventModal: CreateEventComponent;
+export class EventsComponent extends PagedListingComponentBase<EventListDto> {
+    @ViewChild("createEventModal") createEventModal: CreateEventComponent;
 
     active: boolean = false;
     events: EventListDto[] = [];
-    includeCanceledEvents:boolean=false;
+    includeCanceledEvents: boolean = false;
 
     constructor(
-        injector: Injector,
-        private _eventService: EventServiceProxy
+    injector: Injector,
+    private _eventService: EventServiceProxy,
+    private _modalService: BsModalService
     ) {
-        super(injector);
+    super(injector);
     }
 
-    protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
-        this.loadEvent();
-        finishedCallback();
+    protected list(
+    request: PagedRequestDto,
+    pageNumber: number,
+    finishedCallback: Function
+    ): void {
+    this.loadEvent();
+    finishedCallback();
     }
 
-    protected delete(event: EntityDtoOfGuid): void {
-        abp.message.confirm(
-            'Are you sure you want to cancel this event?',
-            (result: boolean) =&gt; {
-                if (result) {
-                    this._eventService.cancelAsync(event)
-                        .subscribe(() =&gt; {
-                            abp.notify.info('Event is deleted');
-                            this.refresh();
-                        });
-                }
-            }
-        );
+    delete(event: EventListDto): void {
+    abp.message.confirm(
+        "Are you sure you want to cancel this event?",
+        undefined,
+        (result: boolean) => {
+        if (result) {
+            this._eventService.cancel(event);
+            abp.notify.success("Event is deleted");
+            this.refresh();
+        }
+        }
+    );
     }
 
     includeCanceledEventsCheckboxChanged() {
-        this.loadEvent();
-    };
+    this.loadEvent();
+    }
 
-    // Show Modals
     createEvent(): void {
-        this.createEventModal.show();
+    this.showCreateOrEditEventDialog();
     }
 
-    loadEvent() {
-        this._eventService.getListAsync(this.includeCanceledEvents)
-            .subscribe((result: ListResultDtoOfEventListDto) =&gt; {
-                this.events = result.items;
-            });
+    showCreateOrEditEventDialog(): void {
+    let createOrEditEventDialog: BsModalRef;
+    createOrEditEventDialog = this._modalService.show(CreateEventComponent, {
+        class: "modal-lg",
+    });
+    createOrEditEventDialog.content.onSave.subscribe(() => {
+        this.refresh();
+    });
     }
-}
+
+    loadEvent(): void {
+    this._eventService
+        .getList(this.includeCanceledEvents)
+        .subscribe((result: EventListDtoListResultDto) => {
+        this.events = result.items;
+        });
+    }
+}    
 </code></pre>
 
 <p>We inject <code>EventServiceProxy</code> into <strong>events.component.ts</strong> component. We used dynamic web api layer feature of <strong>ABP</strong>. It creates needed Web API controller and Angular service automatically and dynamically. So, we can use application service methods like calling regular typescript functions. So, to call <code>EventAppService.GetListAsync</code> C# method, we simple call <code>_eventService.getListAsync</code> typescript function.</p>
@@ -671,11 +686,12 @@ export class EventsComponent extends PagedListingComponentBase&lt;EventListDto&g
 
 <p>Here, we see event details with registered users. We can register to the event or cancel registration. This view's component is defined in <strong>event-detail.component.ts</strong> as shown below:</p>
 
-<pre><code class="ts language-ts">import { Component, OnInit, Injector } from '@angular/core';
+<pre><code class="ts language-ts">
+import { Component, OnInit, Injector } from '@angular/core';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { EventDetailOutput, EventServiceProxy, EntityDtoOfGuid, EventRegisterOutput } from '@shared/service-proxies/service-proxies';
+import { EventDetailOutput, EventServiceProxy, EventRegisterOutput, GuidEntityDto } from '@shared/service-proxies/service-proxies';
 
 import * as _ from 'lodash';
 
@@ -699,40 +715,39 @@ export class EventDetailComponent extends AppComponentBase implements OnInit {
     }
 
     ngOnInit(): void {
-        this._activatedRoute.params.subscribe((params: Params) =&gt; {
+        this._activatedRoute.params.subscribe((params: Params) => {
             this.eventId = params['eventId'];
             this.loadEvent();
         });
     }
 
     registerToEvent(): void {
-        var input = new EntityDtoOfGuid();
+        var input = new GuidEntityDto();
         input.id = this.event.id;
-
-        this._eventService.registerAsync(input)
-            .subscribe((result: EventRegisterOutput) =&gt; {
+        this._eventService.register(input)
+            .subscribe((result: EventRegisterOutput) => {
                 abp.notify.success('Successfully registered to event. Your registration id: ' + result.registrationId + ".");
                 this.loadEvent();
             });
     };
 
     cancelRegistrationFromEvent(): void {
-        var input = new EntityDtoOfGuid();
+        var input = new GuidEntityDto();
         input.id = this.event.id;
-
-        this._eventService.cancelRegistrationAsync(input)
-            .subscribe(() =&gt; {
+        
+        this._eventService.cancelRegistration(input)
+            .subscribe(() => {
                 abp.notify.info('Canceled your registration.');
                 this.loadEvent();
             });
     };
 
     cancelEvent(): void {
-        var input = new EntityDtoOfGuid();
+        var input = new GuidEntityDto();
         input.id = this.event.id;
 
-        this._eventService.cancelAsync(input)
-            .subscribe(() =&gt; {
+        this._eventService.cancel(input)
+            .subscribe(() => {
                 abp.notify.info('Canceled the event.');
                 this.backToEventsPage();
             });
@@ -747,9 +762,9 @@ export class EventDetailComponent extends AppComponentBase implements OnInit {
     };
 
     loadEvent() {
-        this._eventService.getDetailAsync(this.eventId)
-            .subscribe((result: EventDetailOutput) =&gt; {
-                this.event = result;
+        this._eventService.getDetail(this.eventId)
+            .subscribe((result: EventDetailOutput) => {
+                this.event = result;       
             });
     }
 
@@ -763,32 +778,37 @@ export class EventDetailComponent extends AppComponentBase implements OnInit {
 
 <h4 id="mainmenu">Main Menu</h4>
 
-<p>Top menu is automatically created by <strong>ABP template</strong>. We define menu items in <code>sidebar-nav.component.ts</code> class:</p>
+<p>Top menu is automatically created by <strong>ABP template</strong>. We define menu items in <code>sidebar-menu.component.ts</code> class:</p>
 
-<pre><code class="ts language-ts">@Component({
-    templateUrl: './sidebar-nav.component.html',
-    selector: 'sidebar-nav',
-    encapsulation: ViewEncapsulation.None
+<pre><code class="ts language-ts">
+@Component({
+    selector: 'sidebar-menu',
+    templateUrl: './sidebar-menu.component.html'
 })
-export class SideBarNavComponent extends AppComponentBase {
+export class SidebarMenuComponent extends AppComponentBase implements OnInit {
 
-    menuItems: MenuItem[] = [
-        new MenuItem(this.l("HomePage"), "", "home", "/app/home"),
+    getMenuItems(): MenuItem[] {
+        return [
+            new MenuItem(this.l('About'), '/app/about', 'fas fa-info-circle'),
+            new MenuItem(this.l('HomePage'), '/app/home', 'fas fa-home'),
+            new MenuItem(this.l('Roles'), '/app/roles', 'fas fa-theater-masks', 'Pages.Roles'),
+            new MenuItem(this.l('Tenants'), '/app/tenants', 'fas fa-building', 'Pages.Tenants'),
+            new MenuItem(this.l('Users'), '/app/users', 'fas fa-users', 'Pages.Users'),
+            new MenuItem(this.l('Events'), '/app/events', 'fas fa-calendar-days', 'Pages.Events'),
+            
+            //...
+    }
 
-        new MenuItem(this.l("Tenants"), "Pages.Tenants", "business", "/app/tenants"),
-        new MenuItem(this.l("Users"), "Pages.Users", "people", "/app/users"),
-        new MenuItem(this.l("Roles"), "Pages.Roles", "local_offer", "/app/roles"),
-        new MenuItem(this.l("Events"), "Pages.Events", "event", "/app/events"),
-        new MenuItem(this.l("About"), "", "info", "/app/about"),
-
-...
+    //...
+}
 </code></pre>
 
 <h4 id="angularroute">Angular Route</h4>
 
 <p>Defining the menu only shows it on the page. Angular has its own route system. Routes are defined in app-routing-module.ts as shown below:</p>
 
-<pre><code class="ts language-ts">import { NgModule } from '@angular/core';
+<pre><code class="ts language-ts">
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
@@ -797,8 +817,9 @@ import { AboutComponent } from './about/about.component';
 import { UsersComponent } from './users/users.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
-import { EventsComponent } from 'app/events/events.component';
-import { EventDetailComponent } from 'app/events/event-detail/event-detail.component';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { EventsComponent } from './events/event.component';
+import { EventDetailComponent } from './events/event-detail/event-detail.component';
 
 @NgModule({
     imports: [
@@ -807,13 +828,14 @@ import { EventDetailComponent } from 'app/events/event-detail/event-detail.compo
                 path: '',
                 component: AppComponent,
                 children: [
-                    { path: 'home', component: HomeComponent, canActivate: [AppRouteGuard] },
+                    { path: 'home', component: HomeComponent,  canActivate: [AppRouteGuard] },
                     { path: 'users', component: UsersComponent, data: { permission: 'Pages.Users' }, canActivate: [AppRouteGuard] },
                     { path: 'roles', component: RolesComponent, data: { permission: 'Pages.Roles' }, canActivate: [AppRouteGuard] },
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'events', component: EventsComponent, data: { permission: 'Pages.Events' }, canActivate: [AppRouteGuard] },
                     { path: 'events/:eventId', component: EventDetailComponent },
-                    { path: 'about', component: AboutComponent }
+                    { path: 'about', component: AboutComponent, canActivate: [AppRouteGuard] },
+                    { path: 'update-password', component: ChangePasswordComponent, canActivate: [AppRouteGuard] }
                 ]
             }
         ])
@@ -821,19 +843,23 @@ import { EventDetailComponent } from 'app/events/event-detail/event-detail.compo
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
 </code></pre>
 
 <h3 id="unitandintegrationtests">Unit and Integration Tests</h3>
 
 <p><strong>ASP.NET Boilerplate</strong> provides tools to make unit and integration tests easier. You can find all test code from source code of the project. Here, I will briefly explain basic tests. Solution includes <code>EventAppService_Tests</code> class which tests the <code>EventAppService</code>. See 2 tests from this class:</p>
 
-<pre><code class="c# language-c#">public class EventAppService_Tests : EventCloudTestBase
+<pre><code class="c# language-c#">
+public class EventAppService_Tests : EventCloudTestBase
 {
+    public const string TestEventTitle = "Test event title";
+
     private readonly IEventAppService _eventAppService;
 
     public EventAppService_Tests()
     {
-        _eventAppService = Resolve&lt;IEventAppService&gt;();
+        _eventAppService = Resolve<IEventAppService>();
     }
 
     [Fact]
@@ -846,21 +872,19 @@ export class AppRoutingModule { }
     [Fact]
     public async Task Should_Create_Event()
     {
-        //Arrange
-        var eventTitle = Guid.NewGuid().ToString();
-
         //Act
         await _eventAppService.CreateAsync(new CreateEventInput
         {
-            Title = eventTitle,
+            Title = TestEventTitle,
             Description = "A description",
-            Date = Clock.Now.AddDays(2)
+            Date = Clock.Now.AddDays(2),
+            MaxRegistrationCount = 50,
         });
 
         //Assert
-        UsingDbContext(context =&gt;
+        UsingDbContext(context =>
         {
-            context.Events.FirstOrDefault(e =&gt; e.Title == eventTitle).ShouldNotBe(null);
+            context.Events.FirstOrDefault(e => e.Title == TestEventTitle).ShouldNotBe(null);
         });
     }
 
@@ -871,7 +895,7 @@ export class AppRoutingModule { }
         var eventTitle = Guid.NewGuid().ToString();
 
         //Act
-        await Assert.ThrowsAsync&lt;UserFriendlyException&gt;(async () =&gt;
+        await Assert.ThrowsAsync<UserFriendlyException>(async () =>
         {
             await _eventAppService.CreateAsync(new CreateEventInput
             {
@@ -886,7 +910,7 @@ export class AppRoutingModule { }
     public async Task Should_Cancel_Event()
     {
         //Act
-        await _eventAppService.CancelAsync(new EntityDto&lt;Guid&gt;(GetTestEvent().Id));
+        await _eventAppService.CancelAsync(new EntityDto<Guid>(GetTestEvent().Id));
 
         //Assert
         GetTestEvent().IsCancelled.ShouldBeTrue();
@@ -899,15 +923,15 @@ export class AppRoutingModule { }
         var testEvent = GetTestEvent();
 
         //Act
-        var output = await _eventAppService.RegisterAsync(new EntityDto&lt;Guid&gt;(testEvent.Id));
+        var output = await _eventAppService.RegisterAsync(new EntityDto<Guid>(testEvent.Id));
 
         //Assert
         output.RegistrationId.ShouldBeGreaterThan(0);
 
-        UsingDbContext(context =&gt;
+        UsingDbContext(context =>
         {
             var currentUserId = AbpSession.GetUserId();
-            var registration = context.EventRegistrations.FirstOrDefault(r =&gt; r.EventId == testEvent.Id &amp;&amp; r.UserId == currentUserId);
+            var registration = context.EventRegistrations.FirstOrDefault(r => r.EventId == testEvent.Id && r.UserId == currentUserId);
             registration.ShouldNotBeNull();
         });
     }
@@ -917,39 +941,39 @@ export class AppRoutingModule { }
     {
         //Arrange
         var currentUserId = AbpSession.GetUserId();
-        await UsingDbContext(async context =&gt;
+        await UsingDbContext(async context =>
         {
             var testEvent = GetTestEvent(context);
-            var currentUser = await context.Users.SingleAsync(u =&gt; u.Id == currentUserId);
+            var currentUser = await context.Users.SingleAsync(u => u.Id == currentUserId);
             var testRegistration = await EventRegistration.CreateAsync(
                 testEvent,
                 currentUser,
-                Substitute.For&lt;IEventRegistrationPolicy&gt;()
+                Substitute.For<IEventRegistrationPolicy>()
                 );
 
             context.EventRegistrations.Add(testRegistration);
         });
 
         //Act
-        await _eventAppService.CancelRegistrationAsync(new EntityDto&lt;Guid&gt;(GetTestEvent().Id));
+        await _eventAppService.CancelRegistrationAsync(new EntityDto<Guid>(GetTestEvent().Id));
 
         //Assert
-        UsingDbContext(context =&gt;
+        UsingDbContext(context =>
         {
             var testEvent = GetTestEvent(context);
-            var testRegistration = context.EventRegistrations.FirstOrDefault(r =&gt; r.EventId == testEvent.Id &amp;&amp; r.UserId == currentUserId);
+            var testRegistration = context.EventRegistrations.FirstOrDefault(r => r.EventId == testEvent.Id && r.UserId == currentUserId);
             testRegistration.ShouldBeNull();
         });
     }
 
     private Event GetTestEvent()
     {
-        return UsingDbContext(context =&gt; GetTestEvent(context));
+        return UsingDbContext(context => GetTestEvent(context));
     }
 
     private static Event GetTestEvent(EventCloudDbContext context)
     {
-        return context.Events.Single(e =&gt; e.Title == TestDataBuilder.TestEventTitle);
+        return context.Events.Single(e => e.Title == TestEventTitle);
     }
 }
 </code></pre>
@@ -966,7 +990,7 @@ export class AppRoutingModule { }
 
 <h4 id="authentication">Authentication</h4>
 
-<p>Just send a POST request to http://localhost:21021/api/TokenAuth/Authenticate with the <strong>Context-Type="application/json"</strong> header as shown below:</p>
+<p>Just send a POST request to https://localhost:44311/api/services/app/TokenAuth/Authenticate with the <strong>Context-Type="application/json"</strong> header as shown below:</p>
 
 <p><img src="swagger-ui-angular-auth.png" alt="Swagger UI" class="img-thumbnail" /></p>
 
@@ -978,11 +1002,11 @@ export class AppRoutingModule { }
 
 <p><img src="swagger-ui-angular-api-v2.png" alt="Using API" class="img-thumbnail" /></p>
 
-<p>Just made a <strong>GET</strong> request to <strong>http://localhost:21021/api/services/app/user/getAll</strong> with <strong>Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
+<p>Just made a <strong>GET</strong> request to <strong>https://localhost:44311/api/services/app/User/GetAll</strong> with <strong>Content-Type="application/json"</strong> and <strong>Authorization="Bearer <em>
 [your-</em>auth-token]"</strong>. All functionality available on UI is also available as API.</p>
 
 <p>Almost all operations available on UI also available as Web API (since UI uses the same Web API) and can be consumed easily.</p>
 
 <h3 id="sourcecode">Source Code</h3>
 
-<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/eventcloud/tree/master/aspnet-core-angular">Event Cloud Source</a></p>
+<p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/eventcloud">Event Cloud Source</a></p>
