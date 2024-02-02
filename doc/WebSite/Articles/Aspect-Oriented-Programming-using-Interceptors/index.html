@@ -172,22 +172,20 @@ namespace InterceptionDemo.Interceptors
 <p>There are some alternative ways of registering interceptors. But, it&#39;s the most proper way in ABP to handle <code>ComponentRegistered</code> event of Castle Windsors <code>Kernel</code>:</p>
 
 <pre lang="cs">
-public static class MeasureDurationInterceptorRegistrar
-{
-    public static void Initialize(IKernel kernel)
+    internal static class MeasureDurationInterceptorRegistrar
     {
-        <strong>kernel.ComponentRegistered += Kernel_ComponentRegistered;</strong>
-    }
-
-    private static void Kernel_ComponentRegistered(string key, IHandler handler)
-    {
-<strong>        if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
+        public static void Initialize(IIocManager iocManager)
         {
-            handler.ComponentModel.Interceptors.Add
-            (new InterceptorReference(typeof(MeasureDurationInterceptor)));
-        }</strong>
+            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
+            {
+                if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
+                {
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>)));
+                }
+            };
+        }
     }
-}</pre>
+</pre>
 
 <p>In this way, whenever a class is registered to dependency injection system (IOC), we can handle the event, check if this class is one of those classes we want to intercept and add interceptor if so.</p>
 
@@ -198,36 +196,45 @@ public class InterceptionDemoApplicationModule : AbpModule
 {
     public override void PreInitialize()
     {
-        <strong>MeasureDurationInterceptorRegistrar.Initialize(IocManager.IocContainer.Kernel);</strong>
+        MeasureDurationInterceptorRegistrar.Initialize(IocManager);
+        //...
     }
 
+    public override void Initialize()
+    {
+        //...
+        IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>), DependencyLifeStyle.Transient);
+    }
+    
     //...
+
 }</pre>
 
 <p>After these steps, I run and login to the application. Then, I check log file and see logs:</p>
 
 <pre>
-INFO 2016-02-23 14:59:28,611 [63 ] .Interceptors.MeasureDurationInterceptor - 
-<strong>GetCurrentLoginInformations executed in 4,939 milliseconds</strong>.</pre>
+INFO  2024-02-01 10:28:07,657 [orker] .Interceptors.MeasureDurationInterceptor - MeasureDurationInterceptor:
+<strong>GetCurrentLoginInformations executed in 3.633 milliseconds</strong>.</pre>
 
 <p>Note: GetCurrentLoginInformations is a method of SessionAppService class. You can check it in source code, but it&#39;s not important since our interceptor does not know details of intercepted methods.</p>
 
 <h2 id="ArticleInterceptAsync">Intercepting Async Methods</h2>
 
-<p>Intercepting an async method is different than intercepting a sync method. For example, <code>MeasureDurationInterceptor</code> defined above does not work properly for async methods. Because, an async method immediately returns a <code>Task</code> and it&#39;s executed asynchronously. So, we can not measure when it&#39;s actually completed (Actually, the example <code>GetCurrentLoginInformations</code> above was also an async method and 4,939 ms was a wrong value).</p>
+<p>Intercepting an async method is different than intercepting a sync method. For example, <code>MeasureDurationInterceptor</code> defined above does not work properly for async methods. Because, an async method immediately returns a <code>Task</code> and it&#39;s executed asynchronously. So, we can not measure when it&#39;s actually completed (Actually, the example <code>GetCurrentLoginInformations</code> above was also an async method and 3,633 ms was a wrong value).</p>
 
 <p>Let&#39;s change MeasureDurationInterceptor to support async methods, then explain how we implemented it:</p>
 
 <pre lang="cs">
+using Abp.Dependency;
+using Castle.Core.Logging;
+using Castle.DynamicProxy;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
-using Castle.DynamicProxy;
 
 namespace InterceptionDemo.Interceptors
 {
-    public class MeasureDurationAsyncInterceptor : IInterceptor
+    public class MeasureDurationAsyncInterceptor : AbpInterceptorBase, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
@@ -236,41 +243,7 @@ namespace InterceptionDemo.Interceptors
             Logger = NullLogger.Instance;
         }
 
-        public void Intercept(IInvocation invocation)
-        {
-            if (IsAsyncMethod(invocation.Method))
-            {
-                InterceptAsync(invocation);
-            }
-            else
-            {
-                InterceptSync(invocation);
-            }
-        }
-
-        private void InterceptAsync(IInvocation invocation)
-        {
-            //Before method execution
-            var stopwatch = Stopwatch.StartNew();
-
-            //Calling the actual method, but execution has not been finished yet
-            invocation.Proceed();
-
-            //We should wait for finishing of the method execution
-            ((Task) invocation.ReturnValue)
-                .ContinueWith(task =&gt;
-                {
-                    //After method execution
-                    stopwatch.Stop();
-                    Logger.InfoFormat(
-                        &quot;MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.&quot;,
-                        invocation.MethodInvocationTarget.Name,
-                        stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
-                        );
-                });
-        }
-
-        private void InterceptSync(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             //Before method execution
             var stopwatch = Stopwatch.StartNew();
@@ -281,43 +254,79 @@ namespace InterceptionDemo.Interceptors
             //After method execution
             stopwatch.Stop();
             Logger.InfoFormat(
-                &quot;MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.&quot;,
+                "MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.",
                 invocation.MethodInvocationTarget.Name,
-                stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+                stopwatch.Elapsed.TotalMilliseconds.ToString("0.000")
                 );
         }
-        
-        public static bool IsAsyncMethod(MethodInfo method)
+
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
-            return (
-                method.ReturnType == typeof(Task) ||
-                (method.ReturnType.IsGenericType &amp;&amp; method.ReturnType.GetGenericTypeDefinition() == typeof(Task&lt;&gt;))
+            var proceedInfo = invocation.CaptureProceedInfo();
+
+            //Before method execution
+            var stopwatch = Stopwatch.StartNew();
+
+            proceedInfo.Invoke();
+            var task = (Task)invocation.ReturnValue;
+            await task;
+
+            //After method execution
+            stopwatch.Stop();
+            Logger.InfoFormat(
+                "MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.",
+                invocation.MethodInvocationTarget.Name,
+                stopwatch.Elapsed.TotalMilliseconds.ToString("0.000")
                 );
+        }
+
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        {
+            var proceedInfo = invocation.CaptureProceedInfo();
+
+            //Before method execution
+            var stopwatch = Stopwatch.StartNew();
+
+            proceedInfo.Invoke();
+
+            var taskResult = (Task<TResult>)invocation.ReturnValue;
+            var result = await taskResult;
+
+            //After method execution
+            stopwatch.Stop();
+            Logger.InfoFormat(
+                "MeasureDurationAsyncInterceptor: {0} executed in {1} milliseconds.",
+                invocation.MethodInvocationTarget.Name,
+                stopwatch.Elapsed.TotalMilliseconds.ToString("0.000")
+                );
+
+            return result;
         }
     }
-}</pre>
+}
+
+</pre>
 
 <p>Since sync and async execution logic is completely different, I checked if current method is async or sync (<code>IsAsyncMethod</code> does it). I moved previous code to <code>InterceptSync</code> method and introduced new <code> InterceptAsync</code> method. I used <code>Task.ContinueWith(...)</code> method to perform action after task complete. <code>ContinueWith</code> method works even if intercepted method throws <strong>exception</strong>.</p>
 
 <p>Now, I&#39;m registering <code>MeasureDurationAsyncInterceptor</code> as a second interceptor for application services by modifying <code>MeasureDurationInterceptorRegistrar</code> defined above:</p>
 
 <pre lang="cs">
-public static class MeasureDurationInterceptorRegistrar
+internal static class MeasureDurationInterceptorRegistrar
 {
-    public static void Initialize(IKernel kernel)
+    public static void Initialize(IIocManager iocManager)
     {
-        kernel.ComponentRegistered += Kernel_ComponentRegistered;
-    }
-
-    private static void Kernel_ComponentRegistered(string key, IHandler handler)
-    {
-        if (typeof(IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
+        iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
         {
-            handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MeasureDurationInterceptor)));
-            handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(MeasureDurationAsyncInterceptor)));
-        }
+            if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
+            {
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationAsyncInterceptor>)));
+            }
+        };
     }
-}</pre>
+}
+</pre>
 
 <p>If we run the application again, we will see that <code> MeasureDurationAsyncInterceptor</code> measured much more longer than <code> MeasureDurationInterceptor</code>, since it actually waits until method completely executed.</p>
 
