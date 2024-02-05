@@ -133,7 +133,7 @@ using Castle.DynamicProxy;
 
 namespace InterceptionDemo.Interceptors
 {
-    public class MeasureDurationInterceptor : IInterceptor
+    public class MeasureDurationInterceptor : AbpInterceptorBase, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
@@ -142,26 +142,28 @@ namespace InterceptionDemo.Interceptors
             Logger = NullLogger.Instance;
         }
 
-        public void Intercept(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             //Before method execution
             var stopwatch = Stopwatch.StartNew();
-
+       
             //Executing the actual method
             invocation.Proceed();
-
+       
             //After method execution
             stopwatch.Stop();
             Logger.InfoFormat(
-                &quot;MeasureDurationInterceptor: {0} executed in {1} milliseconds.&quot;,
+                "MeasureDurationInterceptor: {0} executed in {1} milliseconds.",
                 invocation.MethodInvocationTarget.Name,
-                stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+                stopwatch.Elapsed.TotalMilliseconds.ToString("0.000")
                 );
         }
+
+        //...
     }
 }</pre>
 
-<p>An interceptor is a class that implements <code>IInterceptor</code> interface (of Castle Windsor). It defines the <code>Intercept</code> method which gets an <code>IInvocation</code> argument. With this invocation argument, we can investigate the executing method, method arguments, return value, method&#39;s declared class, assembly and much more. <code>Intercept</code> method is called whenever a <strong>registered</strong> method is called (see registration section below). <code>Proceed()</code> method executes the actual intercepted method. We can write code <strong>before</strong> and <strong>after</strong> the actual method execution, as shown in this example.</p>
+<p>An interceptor is a class that implements <code>AbpInterceptorBase</code> abstract class (of ABP). It defines the <code>InterceptSynchronous</code> method which gets an <code>IInvocation</code> argument. With this invocation argument, we can investigate the executing method, method arguments, return value, method&#39;s declared class, assembly and much more. <code>InterceptSynchronous</code> method is called whenever a <strong>registered</strong> method is called (see registration section below). <code>Proceed()</code> method executes the actual intercepted method. We can write code <strong>before</strong> and <strong>after</strong> the actual method execution, as shown in this example.</p>
 
 <p>An <code>Interceptor</code> class can also inject its dependencies like other classes. In this example, we <a href="https://aspnetboilerplate.com/Pages/Documents/Dependency-Injection#DocPropertyInjection" target="_blank"> property-injected</a> an <code>ILogger</code> to write method execution duration to the log.</p>
 
@@ -176,13 +178,13 @@ namespace InterceptionDemo.Interceptors
     {
         public static void Initialize(IIocManager iocManager)
         {
-            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
+            <strong>iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
                 if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
                 {
                     handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>)));
                 }
-            };
+            };</strong>
         }
     }
 </pre>
@@ -307,7 +309,7 @@ namespace InterceptionDemo.Interceptors
 
 </pre>
 
-<p>Since sync and async execution logic is completely different, I checked if current method is async or sync (<code>IsAsyncMethod</code> does it). I moved previous code to <code>InterceptSync</code> method and introduced new <code> InterceptAsync</code> method. I used <code>Task.ContinueWith(...)</code> method to perform action after task complete. <code>ContinueWith</code> method works even if intercepted method throws <strong>exception</strong>.</p>
+<p>The method within the <code>AbpAsyncDeterminationInterceptor</code> is used to determine whether a method is asynchronous or not. This interceptor checks whether methods are asynchronous or not. I moved previous code to <code>InterceptSync</code> method and introduced new <code> InternalInterceptAsynchronous</code> method.</p>
 
 <p>Now, I&#39;m registering <code>MeasureDurationAsyncInterceptor</code> as a second interceptor for application services by modifying <code>MeasureDurationInterceptorRegistrar</code> defined above:</p>
 
@@ -331,26 +333,26 @@ internal static class MeasureDurationInterceptorRegistrar
 <p>If we run the application again, we will see that <code> MeasureDurationAsyncInterceptor</code> measured much more longer than <code> MeasureDurationInterceptor</code>, since it actually waits until method completely executed.</p>
 
 <pre>
-INFO  2016-03-01 10:29:07,592 [10   ] .Interceptors.MeasureDurationInterceptor - <strong>MeasureDurationInterceptor: GetCurrentLoginInformations executed in 4.964 milliseconds.</strong>
-INFO  2016-03-01 10:29:07,693 [7    ] rceptors.MeasureDurationAsyncInterceptor - <strong>MeasureDurationAsyncInterceptor: GetCurrentLoginInformations executed in 104,994 milliseconds</strong>.
+INFO  2024-02-01 09:11:15,467 [orker] .Interceptors.MeasureDurationInterceptor - <strong>MeasureDurationInterceptor: GetCurrentLoginInformations executed in 2.010 milliseconds.</strong>
+INFO  2024-02-01 09:11:15,563 [orker] rceptors.MeasureDurationAsyncInterceptor - <strong>MeasureDurationAsyncInterceptor: GetCurrentLoginInformations executed in 1.201 milliseconds</strong>.
 </pre>
 
-<p>This way, we can properly intercept async methods to run code before and after. But, if our before and after code involve another async method calls, things get a bit complicated.</p>
+<p>This way, we can properly intercept async methods to run code before and after.</p>
 
-<p>First of all, I could not find a way of executing async code before <code> invocation.Proceed()</code>. Because Castle Windsor does not support async naturally (other IOC managers also don&#39;t support as I know). So, if you need to run code before the actual method execution, do it synchronously. If you find a way of it, please share your solution as comment to this article.</p>
-
-<p>We can execute async code after method execution. I changed <code> InterceptAsync</code> like that to support it:</p>
+<p>We can execute async code after method execution. I changed <code> InternalInterceptAsynchronous</code> like that to support it:</p>
 
 <pre lang="cs">
+using Abp.Dependency;
+using Castle.Core.Logging;
+using Castle.DynamicProxy;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
-using Castle.DynamicProxy;
 
 namespace InterceptionDemo.Interceptors
 {
-    public class MeasureDurationWithPostAsyncActionInterceptor : IInterceptor
+    public class MeasureDurationWithPostAsyncActionInterceptor : AbpInterceptorBase, ITransientDependency
     {
         public ILogger Logger { get; set; }
 
@@ -359,51 +361,7 @@ namespace InterceptionDemo.Interceptors
             Logger = NullLogger.Instance;
         }
 
-        public void Intercept(IInvocation invocation)
-        {
-            if (IsAsyncMethod(invocation.Method))
-            {
-                InterceptAsync(invocation);
-            }
-            else
-            {
-                InterceptSync(invocation);
-            }
-        }
-
-        private void InterceptAsync(IInvocation invocation)
-        {
-            //Before method execution
-            var stopwatch = Stopwatch.StartNew();
-
-            //Calling the actual method, but execution has not been finished yet
-            invocation.Proceed();
-
-            //Wait task execution and modify return value
-            if (invocation.Method.ReturnType == typeof(Task))
-            {
-                invocation.ReturnValue = InternalAsyncHelper.AwaitTaskWithPostActionAndFinally(
-                    (Task) invocation.ReturnValue,
-                    async () =&gt; await TestActionAsync(invocation),
-                    ex =&gt;
-                    {
-                        LogExecutionTime(invocation, stopwatch);
-                    });
-            }
-            else //Task&lt;TResult&gt;
-            {
-                invocation.ReturnValue = InternalAsyncHelper.CallAwaitTaskWithPostActionAndFinallyAndGetResult(
-                    invocation.Method.ReturnType.GenericTypeArguments[0],
-                    invocation.ReturnValue,
-                    async () =&gt; await TestActionAsync(invocation),
-                    ex =&gt;
-                    {
-                        LogExecutionTime(invocation, stopwatch);
-                    });
-            }
-        }
-
-        private void InterceptSync(IInvocation invocation)
+        public override void InterceptSynchronous(IInvocation invocation)
         {
             //Before method execution
             var stopwatch = Stopwatch.StartNew();
@@ -415,88 +373,61 @@ namespace InterceptionDemo.Interceptors
             LogExecutionTime(invocation, stopwatch);
         }
 
-        public static bool IsAsyncMethod(MethodInfo method)
+        protected override async Task InternalInterceptAsynchronous(IInvocation invocation)
         {
-            return (
-                method.ReturnType == typeof(Task) ||
-                (method.ReturnType.IsGenericType &amp;&amp; method.ReturnType.GetGenericTypeDefinition() == typeof(Task&lt;&gt;))
-                );
+            var proceedInfo = invocation.CaptureProceedInfo();
+
+            //Before method execution
+            var stopwatch = Stopwatch.StartNew();
+
+            proceedInfo.Invoke();
+            var task = (Task)invocation.ReturnValue;
+            await TestActionAsync(invocation.MethodInvocationTarget.Name);
+            await task;
+
+            //After method execution
+            LogExecutionTime(invocation, stopwatch);
         }
 
-        private async Task TestActionAsync(IInvocation invocation)
+        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            Logger.Info(&quot;Waiting after method execution for &quot; + invocation.MethodInvocationTarget.Name);
-            await Task.Delay(200); //Here, we can await another methods. This is just for test.
-            Logger.Info(&quot;Waited after method execution for &quot; + invocation.MethodInvocationTarget.Name);
+            var proceedInfo = invocation.CaptureProceedInfo();
+
+            //Before method execution
+            var stopwatch = Stopwatch.StartNew();
+
+            proceedInfo.Invoke();
+
+            var taskResult = (Task<TResult>)invocation.ReturnValue;
+            await TestActionAsync(invocation.MethodInvocationTarget.Name);
+            var result = await taskResult;
+
+            //After method execution
+            LogExecutionTime(invocation, stopwatch);
+
+            return result;
+        }
+
+        private async Task TestActionAsync(string methodName)
+        {
+            Logger.Info($"Waiting after method execution for {methodName}");
+            await Task.Delay(200); // Here, we can await other methods. This is just for test.
+            Logger.Info($"Waited after method execution for {methodName}");
         }
 
         private void LogExecutionTime(IInvocation invocation, Stopwatch stopwatch)
         {
             stopwatch.Stop();
             Logger.InfoFormat(
-                &quot;MeasureDurationWithPostAsyncActionInterceptor: {0} executed in {1} milliseconds.&quot;,
+                "MeasureDurationWithPostAsyncActionInterceptor: {0} executed in {1} milliseconds.",
                 invocation.MethodInvocationTarget.Name,
-                stopwatch.Elapsed.TotalMilliseconds.ToString(&quot;0.000&quot;)
+                stopwatch.Elapsed.TotalMilliseconds.ToString("0.000")
                 );
         }
     }
-}</pre>
+}
+    </pre>
 
-<p>If we want to execute an async method after method execution, we should replace the return value with the second method&#39;s return value. I created a magical <code>InternalAsyncHelper</code> class to accomplish it. <code>InternalAsyncHelper</code> is shown below:</p>
-
-<pre lang="cs">
-internal static class InternalAsyncHelper
-{
-    public static async Task AwaitTaskWithPostActionAndFinally(Task actualReturnValue, Func&lt;Task&gt; postAction, Action&lt;Exception&gt; finalAction)
-    {
-        Exception exception = null;
-
-        try
-        {
-            await actualReturnValue;
-            await postAction();
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-            throw;
-        }
-        finally
-        {
-            finalAction(exception);
-        }
-    }
-
-    public static async Task&lt;T&gt; AwaitTaskWithPostActionAndFinallyAndGetResult&lt;T&gt;(Task&lt;T&gt; actualReturnValue, Func&lt;Task&gt; postAction, Action&lt;Exception&gt; finalAction)
-    {
-        Exception exception = null;
-
-        try
-        {
-            var result = await actualReturnValue;
-            await postAction();
-            return result;
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-            throw;
-        }
-        finally
-        {
-            finalAction(exception);
-        }
-    }
-
-    public static object CallAwaitTaskWithPostActionAndFinallyAndGetResult(Type taskReturnType, object actualReturnValue, Func&lt;Task&gt; action, Action&lt;Exception&gt; finalAction)
-    {
-        return typeof (InternalAsyncHelper)
-            .GetMethod(&quot;AwaitTaskWithPostActionAndFinallyAndGetResult&quot;, BindingFlags.Public | BindingFlags.Static)
-            .MakeGenericMethod(taskReturnType)
-            .Invoke(null, new object[] { actualReturnValue, action, finalAction });
-    }
-}</pre>
- 
 <h2 id="ArticleSourceCode">Source Code</h2>
 
 <p>You can get the latest source code here <a href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/InterceptionDemo"> https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/InterceptionDemo</a></p> 
