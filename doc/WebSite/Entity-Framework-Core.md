@@ -121,50 +121,80 @@ implement repositories easily. To implement the **IRepository** interface,
 you can simply derive your repository from this class. It's better to
 create your own base class that extends EfRepositoryBase. This way, you can
 easily add shared and common methods to your repositories. Here's an example base
-class for all the repositories of a *SimpleTaskSystem* application:
+class for all the repositories of a *Support* application:
 
-    //Base class for all repositories in my application
-    public class SimpleTaskSystemRepositoryBase<TEntity, TPrimaryKey> : EfCoreRepositoryBase<SimpleTaskSystemDbContext, TEntity, TPrimaryKey>
+    public interface ISupportRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public SimpleTaskSystemRepositoryBase(IDbContextProvider<SimpleTaskSystemDbContext> dbContextProvider)
-            : base(dbContextProvider)
-        {
-        }
-    
-        //add common methods for all repositories
+        //A new custom method
+        List<TEntity> GetActiveList();
     }
-    
-    //A shortcut for entities which have an integer Id
-    public class SimpleTaskSystemRepositoryBase<TEntity> : SimpleTaskSystemRepositoryBase<TEntity, int>
+
+    public interface ISupportRepository<TEntity> : ISupportRepository<TEntity, int>, IRepository<TEntity>
         where TEntity : class, IEntity<int>
     {
-        public SimpleTaskSystemRepositoryBase(IDbContextProvider<SimpleTaskSystemDbContext> dbContextProvider)
+
+    }
+
+    public class SupportRepositoryBase<TEntity, TPrimaryKey> : EfCoreRepositoryBase<SupportDbContext, TEntity, TPrimaryKey>, ISupportRepository<TEntity, TPrimaryKey>
+        where TEntity : class, IEntity<TPrimaryKey>
+    {
+        public SupportRepositoryBase(IDbContextProvider<SupportDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
+
         }
-    
-        //do not add a method here, add it to the class above (because this class inherits it)
+
+        //A new custom method
+        public List<TEntity> GetActiveList()
+        {
+            if (typeof(IPassivable).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
+            {
+                return GetAll()
+                    .Where(e => ((IPassivable)e).IsActive)
+                    .Cast<TEntity>()
+                    .ToList();
+            }
+
+            return GetAllList();
+        }
+
+        //An override of a default method
+        public override int Count()
+        {
+            throw new Exception("can not get count!");
+        }
+    }
+
+    public class SupportRepositoryBase<TEntity> : SupportRepositoryBase<TEntity, int>, ISupportRepository<TEntity>
+        where TEntity : class, IEntity<int>
+    {
+        public SupportRepositoryBase(IDbContextProvider<SupportDbContext> dbContextProvider)
+            : base(dbContextProvider)
+        {
+
+        }
     }
 
 Note that we're inheriting from
-EfCoreRepositoryBase&lt;**SimpleTaskSystemDbContext**, TEntity,
+EfCoreRepositoryBase&lt;**SupportDbContext**, TEntity,
 TPrimaryKey&gt;. This sets ASP.NET Boilerplate to use the
-SimpleTaskSystemDbContext in our repositories.
+SupportDbContext in our repositories.
 
 By default, all repositories for your given DbContext
-(SimpleTaskSystemDbContext in this example) are implemented using
+(SupportDbContext in this example) are implemented using
 EfCoreRepositoryBase. You can replace it with your own repository base
 class by adding the **AutoRepositoryTypes** attribute to your
 DbContext as shown below:
 
     [AutoRepositoryTypes(
-        typeof(IRepository<>),
-        typeof(IRepository<,>),
-        typeof(SimpleTaskSystemEfRepositoryBase<>),
-        typeof(SimpleTaskSystemEfRepositoryBase<,>)
+        typeof(ISupportRepository<>),
+        typeof(ISupportRepository<,>),
+        typeof(SupportRepositoryBase<>),
+        typeof(SupportRepositoryBase<,>),
+        WithDefaultRepositoryInterfaces = true
     )]
-    public class SimpleTaskSystemDbContext : AbpDbContext
+    public class SupportDbContext : AbpDbContext
     {
         ...
     }
@@ -180,14 +210,14 @@ We may need to write a custom method to get the list of Tasks with some
 conditions and include the AssisgnedPerson property, pre-fetched (included), in a
 single database query. See the following code:
 
-    public interface ITaskRepository : IRepository<Task, long>
+    public interface ITaskRepository : ISupportRepository<Task, long>
     {
         List<Task> GetAllWithPeople(int? assignedPersonId, TaskState? state);
     }
     
-    public class TaskRepository : SimpleTaskSystemRepositoryBase<Task, long>, ITaskRepository
+    public class TaskRepository : SupportRepositoryBase<Task, long>, ITaskRepository
     {
-        public TaskRepository(IDbContextProvider<SimpleTaskSystemDbContext> dbContextProvider)
+        public TaskRepository(IDbContextProvider<SupportDbContext> dbContextProvider)
             : base(dbContextProvider)
         {
         }
