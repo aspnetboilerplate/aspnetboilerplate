@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.EmbeddedResources;
 using Abp.AspNetCore.Mvc;
 using Abp.Dependency;
@@ -12,12 +14,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Abp.AspNetCore.Mvc.Providers;
 using Abp.AspNetCore.Webhook;
 using Abp.Auditing;
-using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Json;
+using Abp.Json.SystemTextJson;
 using Abp.Modules;
 using Abp.Runtime.Validation;
-using Abp.Threading;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -25,7 +25,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 
 namespace Abp.AspNetCore
@@ -48,7 +47,7 @@ namespace Abp.AspNetCore
             {
                 RemoveConventionalInterceptionSelectors();
             }
-            
+
             var abpBootstrapper = AddAbpBootstrapper<TStartupModule>(services, optionsAction);
             ConfigureAspNetCore(services, abpBootstrapper.IocManager);
 
@@ -104,13 +103,22 @@ namespace Abp.AspNetCore
             var partManager = services.GetSingletonServiceOrNull<ApplicationPartManager>();
             partManager?.FeatureProviders.Add(new AbpAppServiceControllerFeatureProvider(iocResolver));
 
-            //Configure JSON serializer
-            services.Configure<MvcNewtonsoftJsonOptions>(jsonOptions =>
+            //Configure System Text JSON serializer
+            services.AddOptions<JsonOptions>()
+                .Configure<IServiceProvider>((options, rootServiceProvider) =>
             {
-                jsonOptions.SerializerSettings.ContractResolver = new AbpMvcContractResolver(iocResolver)
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
+                options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+                options.JsonSerializerOptions.AllowTrailingCommas = true;
+
+                options.JsonSerializerOptions.Converters.Add(new AbpStringToEnumFactory());
+                options.JsonSerializerOptions.Converters.Add(new AbpStringToBooleanConverter());
+                options.JsonSerializerOptions.Converters.Add(new AbpStringToGuidConverter());
+                options.JsonSerializerOptions.Converters.Add(new AbpNullableStringToGuidConverter());
+                options.JsonSerializerOptions.Converters.Add(new AbpNullableFromEmptyStringConverterFactory());
+                options.JsonSerializerOptions.Converters.Add(new ObjectToInferredTypesConverter());
+
+                var aspNetCoreConfiguration = rootServiceProvider.GetRequiredService<IAbpAspNetCoreConfiguration>();
+                options.JsonSerializerOptions.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver(aspNetCoreConfiguration.InputDateTimeFormats, aspNetCoreConfiguration.OutputDateTimeFormat);
             });
 
             //Configure MVC

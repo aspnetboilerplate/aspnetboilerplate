@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Abp.AspNetCore.Tests
 {
+    [Collection("Clock.Provider")]
     public class DateTimeModelBinder_Tests : AppTestBase
     {
         [Theory]

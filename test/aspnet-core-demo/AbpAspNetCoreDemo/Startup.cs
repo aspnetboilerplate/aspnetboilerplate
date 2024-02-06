@@ -10,6 +10,7 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Dependency;
 using Abp.HtmlSanitizer;
 using Abp.Json;
+using Abp.Json.SystemTextJson;
 using Abp.PlugIns;
 using AbpAspNetCoreDemo.Controllers;
 using AbpAspNetCoreDemo.Core.Domain;
@@ -25,7 +26,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OData.ModelBuilder;
-using Newtonsoft.Json.Serialization;
 
 namespace AbpAspNetCoreDemo
 {
@@ -63,40 +63,56 @@ namespace AbpAspNetCoreDemo
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
                 options.AddAbpHtmlSanitizer();
-            }).AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ContractResolver = new AbpMvcContractResolver(IocManager.Value)
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
-                
-                options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
-                options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
-                options.SerializerSettings.Converters.Add(new DateOnlyJsonConverter());
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
                 builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
                 builder.EntitySet<Product>("ProductsDto").EntityType.Expand().Filter().OrderBy().Page().Select();
                 var edmModel = builder.GetEdmModel();
-                
+
                 opts.AddRouteComponents("odata", edmModel);
             });
-            
-            
+
+            services.Configure<JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new CultureInvariantDecimalJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDecimalJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new CultureInvariantDoubleJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDoubleJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new Abp.Json.SystemTextJson.DateOnlyJsonConverter());
+            });
+
+            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
+
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
             {
                 options.IocManager = IocManager.Value ?? new IocManager();
 
                 string plugDllInPath = "";
+
+                var currentDirectory = _env.ContentRootPath;
+                for (var i = 0; i < 10; i++)
+                {
+                    var parentDirectory = new DirectoryInfo(currentDirectory).Parent;
+                    if (parentDirectory == null)
+                    {
+                        break;
+                    }
+
+                    if (parentDirectory.Name == "test")
+                    {
 #if DEBUG
-                plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Debug\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
+                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Debug", "net8.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #else
-                plugDllInPath = Path.Combine(_env.ContentRootPath,
-                    @"..\AbpAspNetCoreDemo.PlugIn\bin\Release\net7.0\AbpAspNetCoreDemo.PlugIn.dll");
+                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Release", "net8.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #endif
+                        break;
+                    }
+
+                    currentDirectory = parentDirectory.FullName;
+                }
+
                 if (!File.Exists(plugDllInPath))
                 {
                     throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);

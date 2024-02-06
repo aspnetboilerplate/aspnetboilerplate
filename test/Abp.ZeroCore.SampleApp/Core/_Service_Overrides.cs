@@ -208,10 +208,9 @@ namespace Abp.ZeroCore.SampleApp.Core
         public SecurityStampValidator(
             IOptions<SecurityStampValidatorOptions> options,
             SignInManager signInManager,
-            ISystemClock systemClock,
             ILoggerFactory loggerFactory,
             IUnitOfWorkManager unitOfWorkManager)
-            : base(options, signInManager, systemClock, loggerFactory, unitOfWorkManager)
+            : base(options, signInManager, loggerFactory, unitOfWorkManager)
         {
         }
     }

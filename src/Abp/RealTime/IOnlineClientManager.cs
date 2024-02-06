@@ -1,6 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
@@ -26,31 +27,32 @@ namespace Abp.RealTime
         /// Adds a client.
         /// </summary>
         /// <param name="client">The client.</param>
-        void Add(IOnlineClient client);
+        /// <returns>The task to handle async operation</returns>
+        Task AddAsync(IOnlineClient client);
 
         /// <summary>
         /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
         /// <returns>True, if a client is removed</returns>
-        bool Remove(string connectionId);
+        Task<bool> RemoveAsync(string connectionId);
 
         /// <summary>
         /// Tries to find a client by connection id.
         /// Returns null if not found.
         /// </summary>
         /// <param name="connectionId">connection id</param>
-        IOnlineClient GetByConnectionIdOrNull(string connectionId);
+        Task<IOnlineClient> GetByConnectionIdOrNullAsync(string connectionId);
 
         /// <summary>
-        /// Gets all online clients.
+        /// Gets all online clients asynchronously.
         /// </summary>
-        IReadOnlyList<IOnlineClient> GetAllClients();
+        Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync();
 
         /// <summary>
-        /// Gets all online clients by user id.
+        /// Gets all online clients by user id asynchronously.
         /// </summary>
         /// <param name="user">user identifier</param>
-        IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user);
+        Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync([NotNull] IUserIdentifier user);
     }
 }

@@ -1,38 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Abp</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore\Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Abp.ZeroCore.Tests\Abp.ZeroCore.Tests.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.0.0" />
-    <PackageReference Include="xunit" Version="2.5.0" />
-    <PackageReference Include="xunit.extensibility.execution" Version="2.5.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
+    <PackageReference Include="xunit" Version="2.6.6" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.6.6" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="NSubstitute" Version="5.0.0" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>

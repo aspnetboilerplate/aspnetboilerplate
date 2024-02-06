@@ -47,7 +47,7 @@ namespace Abp.Web.SignalR.Notifications
             {
                 try
                 {
-                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
+                    var onlineClients = await _onlineClientManager.GetAllByUserIdAsync(userNotification);
                     foreach (var onlineClient in onlineClients)
                     {
                         var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
@@ -58,34 +58,6 @@ namespace Abp.Web.SignalR.Notifications
                         }
 
                         await signalRClient.getNotification(userNotification);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn("Could not send notification to user: " + userNotification.ToUserIdentifier());
-                    Logger.Warn(ex.ToString(), ex);
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        public void SendNotifications(UserNotification[] userNotifications)
-        {
-            foreach (var userNotification in userNotifications)
-            {
-                try
-                {
-                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
-                    foreach (var onlineClient in onlineClients)
-                    {
-                        var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);
-                        if (signalRClient == null)
-                        {
-                            Logger.Debug("Can not get user " + userNotification.ToUserIdentifier() + " with connectionId " + onlineClient.ConnectionId + " from SignalR hub!");
-                            continue;
-                        }
-
-                        signalRClient.getNotification(userNotification);
                     }
                 }
                 catch (Exception ex)
