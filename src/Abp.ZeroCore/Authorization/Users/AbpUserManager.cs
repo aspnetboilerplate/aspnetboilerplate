@@ -966,7 +966,7 @@ namespace Abp.Authorization.Users
 
         public virtual async Task InitializeOptionsAsync(int? tenantId)
         {
-            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(JsonConvert.SerializeObject(_optionsAccessor.Value));
 
             //Lockout
             Options.Lockout.AllowedForNewUsers = await IsTrueAsync(
@@ -1015,7 +1015,7 @@ namespace Abp.Authorization.Users
 
         public virtual void InitializeOptions(int? tenantId)
         {
-            Options = JsonConvert.DeserializeObject<IdentityOptions>(_optionsAccessor.Value.ToJsonString());
+            Options = JsonConvert.DeserializeObject<IdentityOptions>(JsonConvert.SerializeObject(_optionsAccessor.Value));
 
             //Lockout
             Options.Lockout.AllowedForNewUsers = IsTrue(
@@ -1157,7 +1157,7 @@ namespace Abp.Authorization.Users
                     AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled,
                     user.TenantId
                 );
-                
+
                 if (provider == "Phone" && !isSmsProviderEnabled)
                 {
                     continue;
@@ -1260,7 +1260,7 @@ namespace Abp.Authorization.Users
         {
             AbpUserStore.AddTokenValidityKey(user, tokenValidityKey, expireDate, cancellationToken);
         }
-        
+
         public virtual async Task<bool> IsTokenValidityKeyValidAsync(
             TUser user,
             string tokenValidityKey,

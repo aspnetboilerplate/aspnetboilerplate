@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Abp.Web.Mvc.Tests.ModelBinders.Binders
 {
+    [Collection("Clock.Provider")]
     public class AbpMvcDateTimeBinder_Tests
     {
         [Theory]

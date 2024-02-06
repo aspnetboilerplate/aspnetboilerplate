@@ -39,7 +39,18 @@ namespace Abp.AspNetCore.Configuration
         /// <summary>
         /// Default: false.
         /// </summary>
+        [Obsolete("Use InputDateTimeFormats and OutputDateTimeFormat instead.")]
         bool UseMvcDateTimeFormatForAppServices { get; set; }
+
+        /// <summary>
+        /// Formats of input JSON date, Empty string means default format.
+        /// </summary>
+        List<string> InputDateTimeFormats { get; set; }
+
+        /// <summary>
+        /// Format of output json date, Null or empty string means default format.
+        /// </summary>
+        string OutputDateTimeFormat { get; set; }
 
         /// <summary>
         /// Used to add route config for modules.
