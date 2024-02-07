@@ -78,7 +78,12 @@ namespace Abp.AspNetCore.Localization
                 }
             }
 
-            if (!cultureName.IsNullOrEmpty() && cultureName != await GetDefaultCulture(abpSession, settingManager))
+            if (cultureName.IsNullOrEmpty() || cultureName == await GetDefaultCulture(abpSession, settingManager))
+            {
+                return result;
+            }
+
+            if (GlobalizationHelper.IsValidCultureCode(cultureName))
             {
                 // Try to set user's language setting from cookie/header if available and not default.
                 await settingManager.ChangeSettingForUserAsync(
