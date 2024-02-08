@@ -4,8 +4,9 @@
       "src": [
         {
           "files": [
-            "src/**.csproj"
-          ]
+            "**/bin/Release/**/Abp*.dll"
+          ],
+		  "src": "D:/GitHub/aspnetboilerplate/doc/api/docfx/docfx_project/src/aspnetboilerplate/src/"
         }
       ],
       "dest": "api",
