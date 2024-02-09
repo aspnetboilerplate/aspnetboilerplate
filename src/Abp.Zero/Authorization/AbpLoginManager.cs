@@ -13,6 +13,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.IdentityFramework;
+using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Timing;
 using Abp.Zero.Configuration;
@@ -253,6 +254,13 @@ namespace Abp.Authorization
                         ClientName = ClientInfoProvider.ComputerName.TruncateWithPostfix(UserLoginAttempt.MaxClientNameLength),
                     };
 
+                    using (var localizationContext = IocResolver.ResolveAsDisposable<ILocalizationContext>())
+                    {
+                        loginAttempt.FailReason = loginResult
+                            .GetFailReason(localizationContext.Object)
+                            .TruncateWithPostfix(UserLoginAttempt.MaxFailReasonLength);
+                    }
+                    
                     await UserLoginAttemptRepository.InsertAsync(loginAttempt);
                     await UnitOfWorkManager.Current.SaveChangesAsync();
 
