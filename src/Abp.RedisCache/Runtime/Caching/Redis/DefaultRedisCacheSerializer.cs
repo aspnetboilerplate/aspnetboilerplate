@@ -1,8 +1,9 @@
 ﻿using Abp.Dependency;
 using Abp.Json;
-using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -19,10 +20,10 @@ namespace Abp.Runtime.Caching.Redis
         /// <seealso cref="IRedisCacheSerializer{TSource, TDestination}.Serialize" />
         public virtual object Deserialize(RedisValue objbyte)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+            var serializerSettings = new JsonSerializerOptions();
+            serializerSettings.Converters.Insert(0, new Abp.Json.SystemTextJson.AbpDateTimeConverter());
 
-            AbpCacheData cacheData = AbpCacheData.Deserialize(objbyte);
+            var cacheData = AbpCacheData.Deserialize(objbyte);
 
             return cacheData.Payload.FromJsonString(
                 Type.GetType(cacheData.Type, true, true),
@@ -38,7 +39,11 @@ namespace Abp.Runtime.Caching.Redis
         /// <seealso cref="IRedisCacheSerializer{TSource, TDestination}.Deserialize" />
         public virtual RedisValue Serialize(object value, Type type)
         {
-            return JsonConvert.SerializeObject(AbpCacheData.Serialize(value));
+            var json = AbpCacheData.Serialize(value);
+            return JsonSerializer.Serialize(json, new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
         }
     }
 }

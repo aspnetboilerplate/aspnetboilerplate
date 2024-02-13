@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json;
 using Abp.Collections;
-using Newtonsoft.Json;
 
 namespace Abp.Webhooks
 {
@@ -12,7 +12,7 @@ namespace Abp.Webhooks
 
         public ITypeList<WebhookDefinitionProvider> Providers { get; }
 
-        public JsonSerializerSettings JsonSerializerSettings { get; set; } = null;
+        public JsonSerializerOptions JsonSerializerOptions { get; set; } = null;
 
         public bool IsAutomaticSubscriptionDeactivationEnabled { get; set; } = false;
 
