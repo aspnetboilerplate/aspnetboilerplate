@@ -20,6 +20,8 @@ namespace Abp.Runtime.Caching.Redis
 
         public string KeyPrefix { get; set; }
 
+        public bool TenantKeyEnabled { get; set; }
+
         public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
         {
             AbpStartupConfiguration = abpStartupConfiguration;
@@ -27,6 +29,7 @@ namespace Abp.Runtime.Caching.Redis
             ConnectionString = GetDefaultConnectionString();
             DatabaseId = GetDefaultDatabaseId();
             KeyPrefix = "";
+            TenantKeyEnabled = false;
         }
 
         private static int GetDefaultDatabaseId()
