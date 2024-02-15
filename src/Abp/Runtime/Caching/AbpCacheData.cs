@@ -26,12 +26,19 @@ namespace Abp.Runtime.Caching
         public string Type { get; set; }
 
         public static AbpCacheData Deserialize(string serializedCacheData) => serializedCacheData.FromJsonString<AbpCacheData>();
+        public static AbpCacheData Deserialize(string serializedCacheData, JsonSerializerSettings settings) => serializedCacheData.FromJsonString<AbpCacheData>(settings);
 
         public static AbpCacheData Serialize(object obj, bool withAssemblyName = true)
         {
             return new AbpCacheData(
                 SerializeType(obj.GetType(), withAssemblyName).ToString(),
                 obj.ToJsonString());
+        }
+
+        public static AbpCacheData Serialize(object obj, JsonSerializerSettings settings, bool withAssemblyName = true) {
+                return new AbpCacheData(
+                SerializeType(obj.GetType(), withAssemblyName).ToString(),
+                obj.ToJsonString(settings));
         }
 
         private static StringBuilder SerializeType(Type type, bool withAssemblyName = true, StringBuilder typeNameBuilder = null)
