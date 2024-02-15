@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text.Json;
 using Abp.Collections;
 using Abp.Json;
-using Newtonsoft.Json;
 
 namespace Abp.Webhooks
 {
@@ -20,7 +20,7 @@ namespace Abp.Webhooks
         /// <summary>
         /// Json serializer settings for converting webhook data to json, If this is null default settings will be used. <see cref="JsonExtensions.ToJsonString(object,bool,bool)"/>
         /// </summary>
-        JsonSerializerSettings JsonSerializerSettings { get; set; }
+        JsonSerializerOptions JsonSerializerOptions { get; set; }
 
         /// <summary>
         /// Webhook providers.

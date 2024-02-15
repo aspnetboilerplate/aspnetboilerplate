@@ -46,5 +46,10 @@ namespace Abp.Authorization.Users
             
             FailReason = failReason;
         }
+        
+        public string GetFailReason(ILocalizationContext localizationContext)
+        {
+            return FailReason == null ? string.Empty : FailReason?.Localize(localizationContext);
+        }
     }
 }
