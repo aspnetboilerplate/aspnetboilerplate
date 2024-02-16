@@ -35,14 +35,16 @@ namespace Abp.Tests.Runtime.Caching
             };
 
             var result = AbpCacheData.Serialize(source);
-            result.Type.ShouldBe("Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            result.Type.ShouldBe(
+                "Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
             result.Payload.ShouldBe("{\"Field1\":42,\"Field2\":\"Stranger Things\"}");
         }
 
         [Fact]
         public void Deserialize_List_Test()
         {
-            var json = "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
+            var json =
+                "{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}";
             var cacheData = AbpCacheData.Deserialize(json);
 
             cacheData.ShouldNotBeNull();
@@ -51,11 +53,52 @@ namespace Abp.Tests.Runtime.Caching
         [Fact]
         public void Deserialize_Class_Test()
         {
-            var json = "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests\"}";
+            var json =
+                "{\"Payload\": \"{\\\"Field1\\\": 42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClass, Abp.Tests\"}";
 
             var cacheData = AbpCacheData.Deserialize(json);
 
             cacheData.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Serialize_Class_With_Type_Field_Test()
+        {
+            var source = new MyTestClassWithType
+            {
+                Name = "MyTestClassWithType",
+                ObjectType = typeof(MyTestClassWithType)
+            };
+
+            var result = AbpCacheData.Serialize(source);
+            result.Type.ShouldBe(
+                "Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            result.Payload.ShouldBe(
+                "{\"Name\":\"MyTestClassWithType\",\"ObjectType\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
+        }
+
+        [Fact]
+        public void Deserialize_Class_With_Type_Field_Test()
+        {
+            var json =
+                "{\"Payload\": \"{\\\"Name\\\":\\\"MyTestClassWithType\\\",\\\"ObjectType\\\":\\\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}";
+
+            var cacheData = AbpCacheData.Deserialize(json);
+            cacheData.ShouldNotBeNull();
+        }
+        
+        [Fact]
+        public void Deserialize_Class_With_Type_Field_Test_2()
+        {
+            var json =
+                "{\"Payload\": \"{\\\"Name\\\":\\\"MyTestClassWithType\\\",\\\"ObjectType\\\":\\\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\\\"}\",\"Type\":\"Abp.Tests.Runtime.Caching.AbpCacheData_Tests+MyTestClassWithType, Abp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}";
+
+            var cacheData = AbpCacheData.Deserialize(json);
+            cacheData.ShouldNotBeNull();
+            
+            var cachedObject = cacheData.Payload.FromJsonString<MyTestClassWithType>();
+            cachedObject.Name.ShouldBe("MyTestClassWithType");
+            cachedObject.ObjectType.ShouldBe(typeof(MyTestClassWithType));
         }
 
         class MyTestClass
@@ -63,6 +106,13 @@ namespace Abp.Tests.Runtime.Caching
             public int Field1 { get; set; }
 
             public string Field2 { get; set; }
+        }
+
+        class MyTestClassWithType
+        {
+            public string Name { get; set; }
+
+            public Type ObjectType { get; set; }
         }
     }
 }
