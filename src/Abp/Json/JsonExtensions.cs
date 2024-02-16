@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Abp.Json.SystemTextJson;
@@ -13,7 +14,9 @@ namespace Abp.Json
     {
         public static bool UseNewtonsoft { get; set; }
 
-        private static readonly AbpCamelCasePropertyNamesContractResolver SharedAbpCamelCasePropertyNamesContractResolver;
+        private static readonly AbpCamelCasePropertyNamesContractResolver
+            SharedAbpCamelCasePropertyNamesContractResolver;
+
         private static readonly AbpContractResolver SharedAbpContractResolver;
         private static readonly ConcurrentDictionary<object, JsonSerializerOptions> JsonSerializerOptionsCache;
 
@@ -31,7 +34,9 @@ namespace Abp.Json
         /// <returns></returns>
         public static string ToJsonString(this object obj, bool camelCase = false, bool indented = false)
         {
-            return UseNewtonsoft ? ToJsonStringWithNewtonsoft(obj, camelCase, indented) : ToJsonStringWithSystemTextJson(obj, camelCase, indented);
+            return UseNewtonsoft
+                ? ToJsonStringWithNewtonsoft(obj, camelCase, indented)
+                : ToJsonStringWithSystemTextJson(obj, camelCase, indented);
         }
 
         /// <summary>
@@ -63,7 +68,8 @@ namespace Abp.Json
         /// Converts given object to JSON string.
         /// </summary>
         /// <returns></returns>
-        private static string ToJsonStringWithSystemTextJson(this object obj, bool camelCase = false, bool indented = false)
+        private static string ToJsonStringWithSystemTextJson(this object obj, bool camelCase = false,
+            bool indented = false)
         {
             var options = CreateJsonSerializerOptions(camelCase, indented);
             return ToJsonString(obj, options);
@@ -80,7 +86,8 @@ namespace Abp.Json
                 var options = new JsonSerializerOptions
                 {
                     ReadCommentHandling = JsonCommentHandling.Skip,
-                    AllowTrailingCommas = true
+                    AllowTrailingCommas = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 };
 
                 options.Converters.Add(new AbpStringToEnumFactory());
@@ -89,6 +96,7 @@ namespace Abp.Json
                 options.Converters.Add(new AbpNullableStringToGuidConverter());
                 options.Converters.Add(new AbpNullableFromEmptyStringConverterFactory());
                 options.Converters.Add(new ObjectToInferredTypesConverter());
+                options.Converters.Add(new AbpJsonConverterForType());
 
                 options.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver();
 
@@ -136,7 +144,9 @@ namespace Abp.Json
         /// <returns></returns>
         public static T FromJsonString<T>(this string value)
         {
-            return UseNewtonsoft ? value.FromJsonString<T>(new JsonSerializerSettings()) : value.FromJsonString<T>(CreateJsonSerializerOptions()) ;
+            return UseNewtonsoft
+                ? value.FromJsonString<T>(new JsonSerializerSettings())
+                : value.FromJsonString<T>(CreateJsonSerializerOptions());
         }
 
         /// <summary>
