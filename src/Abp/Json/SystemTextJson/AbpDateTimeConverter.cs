@@ -42,9 +42,10 @@ namespace Abp.Json.SystemTextJson
                 }
             }
 
-            if (reader.TryGetDateTime(out var dateTime))
+            var dateText = reader.GetString();
+            if (DateTime.TryParse(dateText, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var date))
             {
-                return Clock.Normalize(dateTime);
+                return Clock.Normalize(date);    
             }
 
             throw new JsonException("Can't get datetime from the reader!");
@@ -73,8 +74,7 @@ namespace Abp.Json.SystemTextJson
             InputDateTimeFormats = inputDateTimeFormats ?? new List<string>();
             OutputDateTimeFormat = outputDateTimeFormat;
         }
-
-
+        
         public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (!InputDateTimeFormats.IsNullOrEmpty())
@@ -82,6 +82,11 @@ namespace Abp.Json.SystemTextJson
                 if (reader.TokenType == JsonTokenType.String)
                 {
                     var s = reader.GetString();
+                    if (s.IsNullOrEmpty())
+                    {
+                        return null;
+                    }
+                    
                     foreach (var format in InputDateTimeFormats)
                     {
                         if (DateTime.TryParseExact(s, format, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var outDateTime))
@@ -96,9 +101,15 @@ namespace Abp.Json.SystemTextJson
                 }
             }
 
-            if (reader.TryGetDateTime(out var dateTime))
+            var dateText = reader.GetString();
+            if (dateText.IsNullOrEmpty())
             {
-                return Clock.Normalize(dateTime);
+                return null;
+            }
+
+            if (DateTime.TryParse(dateText, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var date))
+            {
+                return Clock.Normalize(date);    
             }
 
             return null;
