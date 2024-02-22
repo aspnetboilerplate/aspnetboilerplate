@@ -44,7 +44,7 @@ namespace Abp.Runtime.Caching.Redis
         {
             return KeyNormalizer.NormalizeKey(
                 new AbpRedisCacheKeyNormalizeArgs(
-                    key.ToString(),
+                    key,
                     Name,
                     MultiTenancyConfig.IsEnabled
                 )
