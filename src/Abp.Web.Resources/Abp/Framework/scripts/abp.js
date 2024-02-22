@@ -655,6 +655,19 @@
         return str.substr(0, maxLength - postfix.length) + postfix;
       };
 
+      abp.utils.ensureEndsWith = function (str, c) {
+        if (!str) {
+          return str;
+        }
+
+        if (str.endsWith(c))
+        {
+          return str;
+        }
+
+        return str + c;
+      };      
+
       abp.utils.isFunction = function (obj) {
         if ($) {
           //Prefer to use jQuery if possible
