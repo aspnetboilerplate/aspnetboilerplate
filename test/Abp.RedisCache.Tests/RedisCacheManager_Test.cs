@@ -9,6 +9,7 @@ using NSubstitute;
 using Xunit;
 using Shouldly;
 using StackExchange.Redis;
+using Microsoft.Extensions.Options;
 
 namespace Abp.RedisCache.Tests
 {
@@ -34,6 +35,11 @@ namespace Abp.RedisCache.Tests
             _redisSerializer = LocalIocManager.Resolve<IRedisCacheSerializer>();
 
             LocalIocManager.IocContainer.Register(Component.For<IAbpStartupConfiguration>().Instance(Substitute.For<IAbpStartupConfiguration>()));
+
+            LocalIocManager.Register<IAbpRedisCacheKeyNormalizer, AbpRedisCacheKeyNormalizer>();
+            LocalIocManager.Register<IOptions<AbpRedisCacheOptions>,OptionsWrapper<AbpRedisCacheOptions>>();
+            LocalIocManager.Register<IMultiTenancyConfig, MultiTenancyConfig>();
+
 
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache =>
             {
