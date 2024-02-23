@@ -17,13 +17,19 @@ namespace Abp.Runtime.Caching.Redis
         public int DatabaseId { get; set; }
 
         public string OnlineClientsStoreKey = "Abp.RealTime.OnlineClients";
-        
+
+        public string KeyPrefix { get; set; }
+
+        public bool TenantKeyEnabled { get; set; }
+
         public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
         {
             AbpStartupConfiguration = abpStartupConfiguration;
 
             ConnectionString = GetDefaultConnectionString();
             DatabaseId = GetDefaultDatabaseId();
+            KeyPrefix = "";
+            TenantKeyEnabled = false;
         }
 
         private static int GetDefaultDatabaseId()
@@ -53,5 +59,7 @@ namespace Abp.Runtime.Caching.Redis
 
             return connStr.ConnectionString;
         }
+
+        
     }
 }
