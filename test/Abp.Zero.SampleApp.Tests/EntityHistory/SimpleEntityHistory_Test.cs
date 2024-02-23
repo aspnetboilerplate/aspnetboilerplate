@@ -18,10 +18,14 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
+using Abp.Authorization.Users;
 using Abp.Zero.SampleApp.TPH;
+using Abp.Zero.SampleApp.Users;
+using Microsoft.AspNet.Identity;
 using Xunit;
 
 namespace Abp.Zero.SampleApp.Tests.EntityHistory
@@ -35,6 +39,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         private readonly IRepository<Student> _studentRepository;
         private readonly IRepository<Foo> _fooRepository;
         private readonly IRepository<Employee> _employeeRepository;
+        private readonly UserManager _userManager;
         
         private IEntityHistoryStore _entityHistoryStore;
 
@@ -47,6 +52,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _studentRepository = Resolve<IRepository<Student>>();
             _fooRepository = Resolve<IRepository<Foo>>();
             _employeeRepository = Resolve<IRepository<Employee>>();
+            _userManager = Resolve<UserManager>();
 
             var user = GetDefaultTenantAdmin();
             AbpSession.TenantId = user.TenantId;
@@ -58,10 +64,11 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
         protected override void PreInitialize()
         {
             base.PreInitialize();
-            _entityHistoryStore = Substitute.For<IEntityHistoryStore>();
-            LocalIocManager.IocContainer.Register(
-                Component.For<IEntityHistoryStore>().Instance(_entityHistoryStore).LifestyleSingleton()
-            );
+            _entityHistoryStore = new NullEntityHistoryStore();
+            // _entityHistoryStore = Substitute.For<IEntityHistoryStore>();
+            // LocalIocManager.IocContainer.Register(
+            //     Component.For<IEntityHistoryStore>().Instance(_entityHistoryStore).LifestyleSingleton()
+            // );
         }
 
         #region CASES WRITE HISTORY
@@ -142,6 +149,42 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 context.EntityChangeSets.Single().CreationTime.ShouldBeGreaterThan(justNow);
                 context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(1);
             });
+        }
+        
+        [Fact]
+        public void Should_Write_History_For_TPH_Tracked_User_Entities_Create()
+        {
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(User));
+            
+            WithUnitOfWork(() =>
+            {
+                var adminUser = _userManager.FindByName("admin");
+
+                adminUser.UserName = "tuana";
+
+                _userManager.Update(adminUser);
+            });
+            
+            Predicate<EntityChangeSet> predicate = s =>
+            {
+                s.EntityChanges.Count.ShouldBe(1);
+                
+                var entityChange =
+                    s.EntityChanges.Single(ec => ec.EntityTypeFullName == typeof(User).FullName);
+                entityChange.ChangeType.ShouldBe(EntityChangeType.Updated);
+                entityChange.EntityId.ShouldBe(entityChange.EntityEntry.As<DbEntityEntry>().Entity.As<IEntity>().Id
+                    .ToJsonString());
+                entityChange.PropertyChanges.Count.ShouldBe(1);
+            
+                var propertyChange =
+                    entityChange.PropertyChanges.Single(pc => pc.PropertyName == nameof(User.UserName));
+                propertyChange.PropertyTypeFullName.ShouldBe(typeof(User)
+                    .GetProperty(nameof(User.UserName)).PropertyType.FullName);
+            
+                return true;
+            };
+            
+            _entityHistoryStore.Received().Save(Arg.Is<EntityChangeSet>(s => predicate(s)));
         }
 
         [Fact]
