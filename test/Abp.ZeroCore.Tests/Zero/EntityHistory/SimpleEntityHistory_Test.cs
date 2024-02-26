@@ -140,7 +140,6 @@ namespace Abp.Zero.EntityHistory
         [Fact]
         public async Task Should_Write_History_When_Tracked_User_Entity_Is_Updated()
         {
-            /* Advertisement does not have Audited attribute. */
             Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(User));
 
             await WithUnitOfWorkAsync(async () =>
