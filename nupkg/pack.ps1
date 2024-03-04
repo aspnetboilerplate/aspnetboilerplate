@@ -56,6 +56,8 @@ $projects = (
     "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore",
     "Abp.ZeroCore.NHibernate",
 	"Abp.ZeroCore.OpenIddict",
+	"Abp.ZeroCore.OpenIddict.EntityFrameworkCore",
+	"Abp.AspNetCore.OpenIddict"
 )
 
 # Rebuild solution
