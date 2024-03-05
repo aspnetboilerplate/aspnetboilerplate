@@ -18,7 +18,7 @@
         <Description>Abp.ZeroCore.OpenIddict</Description>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Abp\Abp.csproj" />
+        <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="OpenIddict.Core" Version="5.1.0" />
