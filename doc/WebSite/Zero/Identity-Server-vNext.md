@@ -1,5 +1,7 @@
 ### Introduction
 
+**Identity Server** changed its license model, so we suggest using [OpenIddict](OpenIddict.md) for new projects.
+
 [Identity Server](http://identityserver.io/) is an open source **OpenID
 Connect** and **OAuth 2.0** framework. It can be used to make your
 application an **authentication / single sign on server**. It can also
