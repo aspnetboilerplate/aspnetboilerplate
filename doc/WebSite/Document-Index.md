@@ -119,6 +119,7 @@ Features
   -   [Organization Unit Management](/Pages/Documents/Zero/Organization-Units)
   -   [Permission Management](/Pages/Documents/Zero/Permission-Management)
   -   [Language Management](/Pages/Documents/Zero/Language-Management)
+  -   [OpenIddict Integration](Zero/OpenIddict.md)
   -   [Identity Server Integration](Zero/Identity-Server-vNext.md)
 
 Releases
