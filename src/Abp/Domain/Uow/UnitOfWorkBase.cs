@@ -248,7 +248,7 @@ namespace Abp.Domain.Uow
                 }
                 else
                 {
-                    _filters.RemoveAt(filterIndex);
+                    _filters[filterIndex].FilterParameters[parameterName] = default;
                 }
             });
         }
