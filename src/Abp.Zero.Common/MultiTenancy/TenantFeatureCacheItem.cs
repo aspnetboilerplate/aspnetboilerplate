@@ -22,7 +22,7 @@ namespace Abp.MultiTenancy
         /// <summary>
         /// Feature values.
         /// </summary>
-        public IDictionary<string, string> FeatureValues { get; private set; }
+        public IDictionary<string, string> FeatureValues { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureCacheItem"/> class.
