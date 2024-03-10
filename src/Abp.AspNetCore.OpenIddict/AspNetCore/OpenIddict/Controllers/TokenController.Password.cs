@@ -9,7 +9,6 @@ using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.Runtime.Security;
 using Abp.Runtime.Session;
-using Castle.Core.Logging;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
@@ -21,8 +20,6 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
 {
     public partial class TokenController<TTenant, TRole, TUser>
     {
-        ILogger Logger { get; set; }
-        
         protected virtual async Task<IActionResult> HandlePasswordAsync(OpenIddictRequest request)
         {
             // TODO@OIDDICT: Should we use session here to switch to target tenant ?
@@ -118,7 +115,7 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         
-        protected virtual async Task<IEnumerable<string>> GetResourcesAsync(ImmutableArray<string> scopes)
+        protected override async Task<IEnumerable<string>> GetResourcesAsync(ImmutableArray<string> scopes)
         {
             var resources = new List<string>();
             if (!scopes.Any())

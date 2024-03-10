@@ -39,8 +39,7 @@ namespace Abp.AspNetCore.Configuration
         /// <summary>
         /// Default: false.
         /// </summary>
-        [Obsolete("Use InputDateTimeFormats and OutputDateTimeFormat instead.")]
-        bool UseMvcDateTimeFormatForAppServices { get; set; }
+        bool UseMvcDateTimeFormatForAppServices { get; [Obsolete("Use InputDateTimeFormats and OutputDateTimeFormat instead.")] set; }
 
         /// <summary>
         /// Formats of input JSON date, Empty string means default format.
