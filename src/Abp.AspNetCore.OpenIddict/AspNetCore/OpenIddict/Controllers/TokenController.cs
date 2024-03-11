@@ -69,17 +69,17 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
             throw new AbpException($"The specified grant type {request.GrantType} is not implemented!");
         }
 
-        private int? FindTenantId(ClaimsPrincipal? principal)
+        private int? FindTenantId(ClaimsPrincipal principal)
         {
             Check.NotNull(principal, nameof(principal));
 
-            var tenantIdOrNull = principal.Claims?.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
+            var tenantIdOrNull = principal.Claims.FirstOrDefault(c => c.Type == AbpClaimTypes.TenantId);
             if (tenantIdOrNull == null || tenantIdOrNull.Value.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            if (Int32.TryParse(tenantIdOrNull.Value, out var guid))
+            if (int.TryParse(tenantIdOrNull.Value, out var guid))
             {
                 return guid;
             }
