@@ -59,16 +59,28 @@ namespace Abp.Zero.NHibernate.EntityMappings
 
 
             HasMany(x => x.Tokens)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(UserToken.UserId));
             HasMany(x => x.Logins)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(UserLogin.UserId));
             HasMany(x => x.Roles)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(UserRole.UserId));
             HasMany(x => x.Claims)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(UserClaim.UserId));
             HasMany(x => x.Permissions)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(UserPermissionSetting.UserId));
             HasMany(x => x.Settings)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn(nameof(Setting.UserId));
 
             this.MapFullAudited();
