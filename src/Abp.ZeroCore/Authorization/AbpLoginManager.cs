@@ -77,11 +77,12 @@ namespace Abp.Authorization
             {
                 var result = await LoginAsyncInternal(login, tenancyName);
 
-                if (!result.User.IsTwoFactorEnabled)
+                if (result.Result == AbpLoginResultType.Success && result.User.IsTwoFactorEnabled)
                 {
-                    await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
+                    return result;
                 }
                 
+                await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
                 return result;
             });
         }
@@ -142,12 +143,13 @@ namespace Abp.Authorization
                     tenancyName,
                     shouldLockout
                 );
-
-                if (!result.User.IsTwoFactorEnabled)
+                
+                if (result.Result == AbpLoginResultType.Success && result.User.IsTwoFactorEnabled)
                 {
-                    await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
+                    return result;
                 }
-
+                
+                await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
                 return result;
             });
         }
