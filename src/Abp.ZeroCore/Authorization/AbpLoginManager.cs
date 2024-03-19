@@ -76,7 +76,12 @@ namespace Abp.Authorization
             return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 var result = await LoginAsyncInternal(login, tenancyName);
-                await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
+
+                if (!result.User.IsTwoFactorEnabled)
+                {
+                    await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
+                }
+                
                 return result;
             });
         }
@@ -138,7 +143,11 @@ namespace Abp.Authorization
                     shouldLockout
                 );
 
-                await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
+                if (!result.User.IsTwoFactorEnabled)
+                {
+                    await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
+                }
+
                 return result;
             });
         }
@@ -255,7 +264,8 @@ namespace Abp.Authorization
             );
         }
 
-        protected virtual async Task SaveLoginAttemptAsync(
+        // Can be used after two-factor login
+        public virtual async Task SaveLoginAttemptAsync(
             AbpLoginResult<TTenant, TUser> loginResult,
             string tenancyName,
             string userNameOrEmailAddress)
@@ -301,7 +311,7 @@ namespace Abp.Authorization
             }
         }
 
-        protected virtual void SaveLoginAttempt(
+        public virtual void SaveLoginAttempt(
             AbpLoginResult<TTenant, TUser> loginResult,
             string tenancyName,
             string userNameOrEmailAddress)
