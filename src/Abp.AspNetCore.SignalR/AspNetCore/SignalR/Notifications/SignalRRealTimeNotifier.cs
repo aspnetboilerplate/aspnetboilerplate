@@ -44,7 +44,7 @@ namespace Abp.AspNetCore.SignalR.Notifications
             {
                 try
                 {
-                    var onlineClients = await _onlineClientManager.GetAllByUserIdAsync(userNotification);
+                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
                     foreach (var onlineClient in onlineClients)
                     {
                         var signalRClient = _hubContext.Clients.Client(onlineClient.ConnectionId);

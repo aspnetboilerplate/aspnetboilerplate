@@ -1,6 +1,5 @@
-﻿using JetBrains.Annotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace Abp.RealTime
 {
@@ -14,21 +13,21 @@ namespace Abp.RealTime
         /// </summary>
         /// <param name="onlineClientManager">The online client manager.</param>
         /// <param name="user">User.</param>
-        public static async Task<bool> IsOnlineAsync(
+        public static bool IsOnline(
             [NotNull] this IOnlineClientManager onlineClientManager,
             [NotNull] UserIdentifier user)
         {
-            return (await onlineClientManager.GetAllByUserIdAsync(user)).Any();
+            return onlineClientManager.GetAllByUserId(user).Any();
         }
 
-        public static async Task<bool> RemoveAsync(
+        public static bool Remove(
             [NotNull] this IOnlineClientManager onlineClientManager,
             [NotNull] IOnlineClient client)
         {
             Check.NotNull(onlineClientManager, nameof(onlineClientManager));
             Check.NotNull(client, nameof(client));
 
-            return await onlineClientManager.RemoveAsync(client.ConnectionId);
+            return onlineClientManager.Remove(client.ConnectionId);
         }
     }
 }

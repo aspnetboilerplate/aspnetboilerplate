@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Abp.Data;
 
 namespace Abp.RealTime
 {
@@ -15,42 +14,40 @@ namespace Abp.RealTime
         /// Adds a client.
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <returns>The task to handle async operation</returns>
-        Task AddAsync(IOnlineClient client);
+        void Add(IOnlineClient client);
 
         /// <summary>
         /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
         /// <returns>true if the client is removed, otherwise, false</returns>
-        Task<bool> RemoveAsync(string connectionId);
+        bool Remove(string connectionId);
 
         /// <summary>
         /// Removes a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
-        /// <param name="clientAction">The Action for setup value for client.</param>
+        /// <param name="client">The client.</param>
         /// <returns>true if the client is removed, otherwise, false</returns>
-        Task<bool> TryRemoveAsync(string connectionId, Action<IOnlineClient> clientAction);
+        bool TryRemove(string connectionId, out IOnlineClient client);
 
         /// <summary>
         /// Gets a client by connection id.
         /// </summary>
         /// <param name="connectionId">The connection id.</param>
-        /// <param name="clientAction">The Action for setup value for client.</param>
+        /// <param name="client">The client.</param>
         /// <returns>true if the client exists, otherwise, false</returns>
-        Task<bool> TryGetAsync(string connectionId, Action<IOnlineClient> clientAction);
+        bool TryGet(string connectionId, out IOnlineClient client);
+
+        /// <summary>
+        /// Determines if store contains client with connection id.
+        /// </summary>
+        /// <param name="connectionId">The connection id.</param>
+        bool Contains(string connectionId);
 
         /// <summary>
         /// Gets all online clients.
         /// </summary>
-        Task<IReadOnlyList<IOnlineClient>> GetAllAsync();
-
-
-        /// <summary>
-        /// Gets all online clients by user identifier.
-        /// </summary>
-        /// <param name="userIdentifier">user identifier with tenant id and user id</param>
-        Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier);
+        IReadOnlyList<IOnlineClient> GetAll();
     }
 }

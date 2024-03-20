@@ -36,7 +36,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
 
             Logger.Debug("A client is connected: " + client);
 
-            await OnlineClientManager.AddAsync(client);
+            OnlineClientManager.Add(client);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -47,7 +47,7 @@ namespace Abp.AspNetCore.SignalR.Hubs
 
             try
             {
-                await OnlineClientManager.RemoveAsync(Context.ConnectionId);
+                OnlineClientManager.Remove(Context.ConnectionId);
             }
             catch (Exception ex)
             {
