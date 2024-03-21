@@ -22,6 +22,14 @@ namespace Abp.Runtime.Caching.Redis
 
         public bool TenantKeyEnabled { get; set; }
 
+        /// <summary>
+        /// Required for serialization
+        /// </summary>
+        public AbpRedisCacheOptions()
+        {
+            
+        }
+        
         public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
         {
             AbpStartupConfiguration = abpStartupConfiguration;
