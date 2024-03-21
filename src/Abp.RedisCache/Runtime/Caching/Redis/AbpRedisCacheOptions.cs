@@ -17,6 +17,14 @@ namespace Abp.Runtime.Caching.Redis
         public int DatabaseId { get; set; }
 
         public string OnlineClientsStoreKey = "Abp.RealTime.OnlineClients";
+
+        /// <summary>
+        /// Required for serialization
+        /// </summary>
+        public AbpRedisCacheOptions()
+        {
+            
+        }
         
         public AbpRedisCacheOptions(IAbpStartupConfiguration abpStartupConfiguration)
         {

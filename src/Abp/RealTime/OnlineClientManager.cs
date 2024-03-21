@@ -7,14 +7,6 @@ using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
-    public class OnlineClientManager<T> : OnlineClientManager, IOnlineClientManager<T>
-    {
-        public OnlineClientManager(IOnlineClientStore<T> store) : base(store)
-        {
-
-        }
-    }
-
     /// <summary>
     /// Implements <see cref="IOnlineClientManager"/>.
     /// </summary>
@@ -40,22 +32,15 @@ namespace Abp.RealTime
 
         public virtual async Task AddAsync(IOnlineClient client)
         {
-            var userWasAlreadyOnline = false;
             var user = client.ToUserIdentifierOrNull();
 
-            if (user != null)
-            {
-                userWasAlreadyOnline = await this.IsOnlineAsync(user);
-            }
-
-            await Store.AddAsync(client);
-
-            ClientConnected.InvokeSafely(this, new OnlineClientEventArgs(client));
-
-            if (user != null && !userWasAlreadyOnline)
+            if (user != null && !await this.IsOnlineAsync(user))
             {
                 UserConnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
             }
+            
+            await Store.AddAsync(client);
+            ClientConnected.InvokeSafely(this, new OnlineClientEventArgs(client));
         }
 
         public virtual async Task<bool> RemoveAsync(string connectionId)

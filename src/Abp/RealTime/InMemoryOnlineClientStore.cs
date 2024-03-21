@@ -9,10 +9,6 @@ using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
-    public class InMemoryOnlineClientStore<T> : InMemoryOnlineClientStore, IOnlineClientStore<T>
-    {
-    }
-
     public class InMemoryOnlineClientStore : IOnlineClientStore, ISingletonDependency
     {
         /// <summary>
