@@ -76,9 +76,20 @@ namespace Abp.Authorization
             return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 var result = await LoginAsyncInternal(login, tenancyName);
+
+                if (ShouldPreventSavingLoginAttempt(result))
+                {
+                    return result;
+                }
+                
                 await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
                 return result;
             });
+        }
+
+        protected virtual bool ShouldPreventSavingLoginAttempt(AbpLoginResult<TTenant,TUser> loginResult)
+        {
+            return loginResult.Result == AbpLoginResultType.Success && loginResult.User.IsTwoFactorEnabled;
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(UserLoginInfo login,
@@ -137,7 +148,12 @@ namespace Abp.Authorization
                     tenancyName,
                     shouldLockout
                 );
-
+                
+                if (ShouldPreventSavingLoginAttempt(result))
+                {
+                    return result;    
+                }
+                
                 await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
                 return result;
             });
@@ -255,7 +271,8 @@ namespace Abp.Authorization
             );
         }
 
-        protected virtual async Task SaveLoginAttemptAsync(
+        // Can be used after two-factor login
+        public virtual async Task SaveLoginAttemptAsync(
             AbpLoginResult<TTenant, TUser> loginResult,
             string tenancyName,
             string userNameOrEmailAddress)
@@ -301,7 +318,7 @@ namespace Abp.Authorization
             }
         }
 
-        protected virtual void SaveLoginAttempt(
+        public virtual void SaveLoginAttempt(
             AbpLoginResult<TTenant, TUser> loginResult,
             string tenancyName,
             string userNameOrEmailAddress)
@@ -430,8 +447,7 @@ namespace Abp.Authorization
 
             return false;
         }
-
-
+        
         protected virtual async Task<TTenant> GetDefaultTenantAsync()
         {
             var tenant = await TenantRepository.FirstOrDefaultAsync(
@@ -444,18 +460,7 @@ namespace Abp.Authorization
 
             return tenant;
         }
-
-        protected virtual TTenant GetDefaultTenant()
-        {
-            var tenant = TenantRepository.FirstOrDefault(t => t.TenancyName == AbpTenant<TUser>.DefaultTenantName);
-            if (tenant == null)
-            {
-                throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");
-            }
-
-            return tenant;
-        }
-
+        
         protected virtual async Task<bool> IsEmailConfirmationRequiredForLoginAsync(int? tenantId)
         {
             if (tenantId.HasValue)
@@ -471,29 +476,9 @@ namespace Abp.Authorization
             );
         }
 
-        protected virtual bool IsEmailConfirmationRequiredForLogin(int? tenantId)
-        {
-            if (tenantId.HasValue)
-            {
-                return SettingManager.GetSettingValueForTenant<bool>(
-                    AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin,
-                    tenantId.Value
-                );
-            }
-
-            return SettingManager.GetSettingValueForApplication<bool>(
-                AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin
-            );
-        }
-
         protected virtual Task<bool> IsPhoneConfirmationRequiredForLoginAsync(int? tenantId)
         {
             return Task.FromResult(false);
-        }
-
-        protected virtual bool IsPhoneConfirmationRequiredForLogin(int? tenantId)
-        {
-            return false;
         }
     }
 }
