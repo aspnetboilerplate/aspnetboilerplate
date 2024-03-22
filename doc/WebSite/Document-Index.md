@@ -10,7 +10,7 @@ Overall
 -   [Multi Tenancy](Multi-Tenancy.md)
 -   [OWIN Integration](OWIN.md)
 -   [Debugging](Debugging.md)
--   [API Reference](/api-docs/index.html)
+-   [API Reference](https://aspnetboilerplate.com/api-docs/api/index.html)
 
 Common Structures
 
