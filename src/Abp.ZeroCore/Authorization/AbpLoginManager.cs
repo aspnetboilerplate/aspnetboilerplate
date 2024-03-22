@@ -77,7 +77,7 @@ namespace Abp.Authorization
             {
                 var result = await LoginAsyncInternal(login, tenancyName);
 
-                if (result.Result == AbpLoginResultType.Success && result.User.IsTwoFactorEnabled)
+                if (ShouldPreventSavingLoginAttempt(result))
                 {
                     return result;
                 }
@@ -85,6 +85,11 @@ namespace Abp.Authorization
                 await SaveLoginAttemptAsync(result, tenancyName, login.ProviderKey + "@" + login.LoginProvider);
                 return result;
             });
+        }
+
+        protected virtual bool ShouldPreventSavingLoginAttempt(AbpLoginResult<TTenant,TUser> loginResult)
+        {
+            return loginResult.Result == AbpLoginResultType.Success && loginResult.User.IsTwoFactorEnabled;
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(UserLoginInfo login,
@@ -144,9 +149,9 @@ namespace Abp.Authorization
                     shouldLockout
                 );
                 
-                if (result.Result == AbpLoginResultType.Success && result.User.IsTwoFactorEnabled)
+                if (ShouldPreventSavingLoginAttempt(result))
                 {
-                    return result;
+                    return result;    
                 }
                 
                 await SaveLoginAttemptAsync(result, tenancyName, userNameOrEmailAddress);
