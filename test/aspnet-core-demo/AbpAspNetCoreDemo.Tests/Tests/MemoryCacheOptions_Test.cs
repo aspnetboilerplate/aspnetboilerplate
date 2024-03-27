@@ -39,5 +39,14 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             memoryCacheOptions.ShouldNotBeNull();
             memoryCacheOptions.Value.SizeLimit.ShouldBe(2048);
         }
+
+        [Fact]
+        public void MemoryCacheOption_SizeLimit_Test()
+        {
+            new AbpMemoryCache("test", new MemoryCacheOptions
+            {
+                SizeLimit = 256,
+            }).Set("test", "test");
+        }
     }
 }
