@@ -8,6 +8,7 @@ using Abp.Dependency;
 using AbpAspNetCoreDemo.Core.Domain;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NSubstitute;
 using Shouldly;
@@ -35,6 +36,7 @@ namespace AbpAspNetCoreDemo.IntegrationTests.Tests
             _permissionChecker = Substitute.For<IPermissionChecker>();
             _permissionChecker.IsGrantedAsync(Arg.Any<string>()).Returns(false);
             _permissionChecker.IsGranted(Arg.Any<string>()).Returns(false);
+
 
             Startup.IocManager.Value.IocContainer.Register(
                 Component.For<IPermissionChecker>().Instance(

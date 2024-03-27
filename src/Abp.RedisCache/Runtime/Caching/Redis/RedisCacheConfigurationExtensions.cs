@@ -31,7 +31,6 @@ namespace Abp.Runtime.Caching.Redis
 
             iocManager.RegisterIfNot<ICacheManager, AbpRedisCacheManager>();
             iocManager.RegisterIfNot<IOnlineClientStore, RedisOnlineClientStore>();
-            iocManager.RegisterIfNot(typeof(IOnlineClientStore<>), typeof(RedisOnlineClientStore<>));
             
             optionsAction(iocManager.Resolve<AbpRedisCacheOptions>());
         }
