@@ -149,7 +149,7 @@ namespace Abp.Authorization
             {
                 var permission = unfilteredPermissions[i];
 
-                if (!await permission.FeatureDependency.IsSatisfiedAsync(featureDependencyContextObject))
+                if (permission.FeatureDependency != null && !await permission.FeatureDependency.IsSatisfiedAsync(featureDependencyContextObject))
                 {
                     continue;
                 }
