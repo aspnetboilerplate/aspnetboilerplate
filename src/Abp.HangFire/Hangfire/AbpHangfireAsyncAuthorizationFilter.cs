@@ -50,11 +50,11 @@ namespace Abp.Hangfire
         /// </summary>
         /// <param name="requiredPermissionName"></param>
         /// <returns></returns>
-        private Task<bool> IsPermissionGrantedAsync(string requiredPermissionName)
+        private async Task<bool> IsPermissionGrantedAsync(string requiredPermissionName)
         {
             using (var permissionChecker = _iocResolver.ResolveAsDisposable<IPermissionChecker>())
             {
-                return permissionChecker.Object.IsGrantedAsync(requiredPermissionName);
+                return await permissionChecker.Object.IsGrantedAsync(requiredPermissionName);
             }
         }
     }
