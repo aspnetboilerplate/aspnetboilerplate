@@ -30,6 +30,12 @@ namespace Abp.Domain.Repositories
         IQueryable<TEntity> GetAllReadonly();
 
         /// <summary>
+        /// Used to get async IQueryable that is used to retrieve readonly entities from entire table.
+        /// </summary>
+        /// <returns>IQueryable to be used to select entities from database</returns>
+        Task<IQueryable<TEntity>> GetAllReadonlyAsync();
+
+        /// <summary>
         /// Used to get a IQueryable that is used to retrieve entities from entire table.
         /// One or more 
         /// </summary>
@@ -43,6 +49,14 @@ namespace Abp.Domain.Repositories
         /// <param name="propertySelectors">A list of include expressions.</param>
         /// <returns>Readonly IQueryable to be used to select entities from database</returns>
         IQueryable<TEntity> GetAllReadonlyIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
+
+        /// <summary>
+        /// Used to get async IQueryable that is used to retrieve entities from entire table.
+        /// One or more 
+        /// </summary>
+        /// <param name="propertySelectors">A list of include expressions.</param>
+        /// <returns>IQueryable to be used to select entities from database</returns>
+        Task<IQueryable<TEntity>> GetAllReadonlyIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors);
 
         /// <summary>
         /// Used to get all entities.
