@@ -48,11 +48,21 @@ namespace Abp.Domain.Repositories
 
         public abstract IQueryable<TEntity> GetAll();
 
+        public virtual IQueryable<TEntity> GetAllReadonly()
+        {
+            return GetAll();
+        }
+
         public abstract Task<IQueryable<TEntity>> GetAllAsync();
 
         public virtual IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             return GetAll();
+        }
+
+        public virtual IQueryable<TEntity> GetAllReadonlyIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            return GetAllReadonly();
         }
 
         public virtual Task<IQueryable<TEntity>> GetAllIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors)

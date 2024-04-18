@@ -79,6 +79,11 @@ namespace Abp.EntityFramework.Repositories
             return Table;
         }
 
+        public override IQueryable<TEntity> GetAllReadonly()
+        {
+            return GetAll().AsNoTracking();
+        }
+
         public override Task<IQueryable<TEntity>> GetAllAsync()
         {
             return Task.FromResult(Table.AsQueryable());

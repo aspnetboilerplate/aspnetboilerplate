@@ -40,6 +40,11 @@ namespace Abp.NHibernate.Repositories
             return Session.Query<TEntity>();
         }
 
+        public override IQueryable<TEntity> GetAllReadonly()
+        {
+            return GetAll().WithOptions(o => o.SetReadOnly(true));
+        }
+
         public override Task<IQueryable<TEntity>> GetAllAsync()
         {
             return Task.FromResult(Session.Query<TEntity>());
