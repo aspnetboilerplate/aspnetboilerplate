@@ -261,6 +261,9 @@ namespace Abp.EntityFramework.Repositories
             return Context;
         }
 
+        public async Task<DbContext> GetDbContextAsync()
+            => await _dbContextProvider.GetDbContextAsync(MultiTenancySide);
+
         public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken) where TProperty : class
         {
