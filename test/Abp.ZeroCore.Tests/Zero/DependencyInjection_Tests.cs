@@ -7,8 +7,9 @@ using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 using Abp.ZeroCore.SampleApp.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 using Xunit;
-
 using SecurityStampValidator = Abp.ZeroCore.SampleApp.Core.SecurityStampValidator;
 
 namespace Abp.Zero
@@ -113,6 +114,13 @@ namespace Abp.Zero
         public void Should_Resolve_LazyRoleStore()
         {
             LocalIocManager.Resolve<Lazy<RoleStore>>();
+        }
+
+        [Fact]
+        public void Should_Resolve_IServiceProviderIsService()
+        {
+            var serviceProviderIsService = LocalIocManager.Resolve<IServiceProviderIsService>();
+            serviceProviderIsService.ShouldNotBeNull();
         }
     }
 }

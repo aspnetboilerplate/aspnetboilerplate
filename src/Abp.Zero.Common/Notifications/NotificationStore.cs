@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Extensions;
 using Abp.Linq;
 using Abp.Linq.Expressions;
 using Abp.Linq.Extensions;
@@ -18,7 +19,7 @@ namespace Abp.Notifications
     public class NotificationStore : INotificationStore, ITransientDependency
     {
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
-        
+
         private readonly IRepository<NotificationInfo, Guid> _notificationRepository;
         private readonly IRepository<TenantNotificationInfo, Guid> _tenantNotificationRepository;
         private readonly IRepository<UserNotificationInfo, Guid> _userNotificationRepository;
@@ -40,7 +41,7 @@ namespace Abp.Notifications
             _userNotificationRepository = userNotificationRepository;
             _notificationSubscriptionRepository = notificationSubscriptionRepository;
             _unitOfWorkManager = unitOfWorkManager;
-            
+
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
 
@@ -185,17 +186,21 @@ namespace Abp.Notifications
         public virtual async Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    return await _notificationSubscriptionRepository.GetAllListAsync(s =>
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
                     );
+
+                    return await _notificationSubscriptionRepository.GetAllListAsync(predicate);
                 }
             });
         }
@@ -203,17 +208,21 @@ namespace Abp.Notifications
         public virtual List<NotificationSubscriptionInfo> GetSubscriptions(
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
                 {
-                    return _notificationSubscriptionRepository.GetAllList(s =>
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
                     );
+
+                    return _notificationSubscriptionRepository.GetAllList(predicate);
                 }
             });
         }
@@ -222,7 +231,8 @@ namespace Abp.Notifications
             int?[] tenantIds,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
@@ -230,8 +240,15 @@ namespace Abp.Notifications
 
                 foreach (var tenantId in tenantIds)
                 {
-                    subscriptions.AddRange(await GetSubscriptionsAsync(tenantId, notificationName, entityTypeName,
-                        entityId));
+                    subscriptions.AddRange(
+                        await GetSubscriptionsAsync(
+                            tenantId,
+                            notificationName,
+                            entityTypeName,
+                            entityId,
+                            targetNotifiers
+                        )
+                    );
                 }
 
                 return subscriptions;
@@ -242,7 +259,8 @@ namespace Abp.Notifications
             int?[] tenantIds,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
@@ -250,7 +268,15 @@ namespace Abp.Notifications
 
                 foreach (var tenantId in tenantIds)
                 {
-                    subscriptions.AddRange(GetSubscriptions(tenantId, notificationName, entityTypeName, entityId));
+                    subscriptions.AddRange(
+                        GetSubscriptions(
+                            tenantId,
+                            notificationName,
+                            entityTypeName,
+                            entityId,
+                            targetNotifiers
+                        )
+                    );
                 }
 
                 return subscriptions;
@@ -283,36 +309,68 @@ namespace Abp.Notifications
             int? tenantId,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return await _notificationSubscriptionRepository.GetAllListAsync(s =>
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
                     );
+
+                    return await _notificationSubscriptionRepository.GetAllListAsync(predicate);
                 }
             });
+        }
+
+        protected virtual ExpressionStarter<NotificationSubscriptionInfo> GetNotificationSubscriptionPredicate(
+            string notificationName, string entityTypeName,
+            string entityId, string targetNotifiers)
+        {
+            var predicate = PredicateBuilder.New<NotificationSubscriptionInfo>();
+            predicate = predicate.And(e => e.NotificationName == notificationName);
+            predicate = predicate.And(e => e.EntityTypeName == entityTypeName);
+            predicate = predicate.And(e => e.EntityId == entityId);
+
+            if (!targetNotifiers.IsNullOrEmpty())
+            {
+                var targetNotifierPredicate = PredicateBuilder.New<NotificationSubscriptionInfo>();
+                var targetNotifierList = targetNotifiers.Split(NotificationInfo.NotificationTargetSeparator);
+                foreach (var targetNotifier in targetNotifierList)
+                {
+                    targetNotifierPredicate = targetNotifierPredicate.Or(e => e.TargetNotifiers.Contains(targetNotifier));
+                }
+                
+                predicate = predicate.And(targetNotifierPredicate);
+            }
+
+            return predicate;
         }
 
         protected virtual List<NotificationSubscriptionInfo> GetSubscriptions(
             int? tenantId,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    return _notificationSubscriptionRepository.GetAllList(s =>
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
                     );
+
+                    return _notificationSubscriptionRepository.GetAllList(predicate);
                 }
             });
         }
@@ -321,18 +379,23 @@ namespace Abp.Notifications
             UserIdentifier user,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    return await _notificationSubscriptionRepository.CountAsync(s =>
-                        s.UserId == user.UserId &&
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
-                    ) > 0;
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
+                    );
+
+                    predicate = predicate.And(e => e.UserId == user.UserId);
+
+                    return await _notificationSubscriptionRepository.CountAsync(predicate) > 0;
                 }
             });
         }
@@ -341,18 +404,23 @@ namespace Abp.Notifications
             UserIdentifier user,
             string notificationName,
             string entityTypeName,
-            string entityId)
+            string entityId,
+            string targetNotifiers)
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    return _notificationSubscriptionRepository.Count(s =>
-                        s.UserId == user.UserId &&
-                        s.NotificationName == notificationName &&
-                        s.EntityTypeName == entityTypeName &&
-                        s.EntityId == entityId
-                    ) > 0;
+                    var predicate = GetNotificationSubscriptionPredicate(
+                        notificationName,
+                        entityTypeName,
+                        entityId,
+                        targetNotifiers
+                    );
+
+                    predicate = predicate.And(e => e.UserId == user.UserId);
+
+                    return _notificationSubscriptionRepository.Count(predicate) > 0;
                 }
             });
         }
@@ -756,18 +824,17 @@ namespace Abp.Notifications
 
         public virtual async Task DeleteNotificationAsync(NotificationInfo notification)
         {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => await _notificationRepository.DeleteAsync(notification));
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _notificationRepository.DeleteAsync(notification));
         }
 
         public virtual void DeleteNotification(NotificationInfo notification)
         {
-            _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                _notificationRepository.Delete(notification);
-            });
+            _unitOfWorkManager.WithUnitOfWork(() => { _notificationRepository.Delete(notification); });
         }
 
-        public async Task<List<GetNotificationsCreatedByUserOutput>> GetNotificationsPublishedByUserAsync(UserIdentifier user, string notificationName, DateTime? startDate, DateTime? endDate)
+        public async Task<List<GetNotificationsCreatedByUserOutput>> GetNotificationsPublishedByUserAsync(
+            UserIdentifier user, string notificationName, DateTime? startDate, DateTime? endDate)
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
@@ -789,25 +856,26 @@ namespace Abp.Notifications
                     }
 
                     var result = new List<GetNotificationsCreatedByUserOutput>();
-                    
-                    var unPublishedNotifications = await AsyncQueryableExecuter.ToListAsync(queryForNotPublishedNotifications
-                        .Select(x =>
-                            new GetNotificationsCreatedByUserOutput()
-                            {
-                                Data = x.Data,
-                                Severity = x.Severity,
-                                NotificationName = x.NotificationName,
-                                DataTypeName = x.DataTypeName,
-                                IsPublished = false,
-                                CreationTime = x.CreationTime
-                            })
+
+                    var unPublishedNotifications = await AsyncQueryableExecuter.ToListAsync(
+                        queryForNotPublishedNotifications
+                            .Select(x =>
+                                new GetNotificationsCreatedByUserOutput()
+                                {
+                                    Data = x.Data,
+                                    Severity = x.Severity,
+                                    NotificationName = x.NotificationName,
+                                    DataTypeName = x.DataTypeName,
+                                    IsPublished = false,
+                                    CreationTime = x.CreationTime
+                                })
                     );
-                    
+
                     result.AddRange(unPublishedNotifications);
 
                     var queryForPublishedNotifications = _tenantNotificationRepository.GetAll()
                         .Where(n => n.CreatorUserId == user.UserId && n.NotificationName == notificationName);
-                    
+
                     if (startDate.HasValue)
                     {
                         queryForPublishedNotifications = queryForPublishedNotifications
@@ -822,7 +890,7 @@ namespace Abp.Notifications
 
                     queryForPublishedNotifications = queryForPublishedNotifications
                         .OrderByDescending(n => n.CreationTime);
-                    
+
                     var publishedNotifications = await AsyncQueryableExecuter.ToListAsync(queryForPublishedNotifications
                         .Select(x =>
                             new GetNotificationsCreatedByUserOutput()

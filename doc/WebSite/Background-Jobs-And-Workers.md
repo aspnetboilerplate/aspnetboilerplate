@@ -226,7 +226,7 @@ other problems. To prevent it, you have two options:
     application and create a separated, standalone application (example:
     a Windows Service) that executes background jobs.
 
-#### User token removal period
+##### User token removal period
 
 ABP Framework defines a background worker named UserTokenExpirationWorker which cleans the records in table AbpUserTokens. If you disable background job execution, this worker will not run. By default, UserTokenExpirationWorker runs every one hour. If you want to change this period, you can configure it like below:
 
@@ -239,6 +239,23 @@ ABP Framework defines a background worker named UserTokenExpirationWorker which 
     
         //...
     }
+
+##### Max Waiting Jobs To Process
+
+By default, ABP Framework processes 1000 waiting background jobs. You can change it using the configuration below;
+
+```csharp
+public class MyProjectWebModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        Configuration.BackgroundJobs.MaxWaitingJobToProcessPerPeriod = 10;
+    }
+
+    //...
+}
+```
+
 #### Exception Handling
 
 Since the default background job manager should re-try failed jobs, it

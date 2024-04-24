@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Abp.NHibernate.Tests
 {
+    [Collection("Clock.Provider")]
     public class AbpNHibernateInterceptor_Tests : NHibernateTestBase
     {
         private readonly IRepository<Hotel> _hotelRepository;

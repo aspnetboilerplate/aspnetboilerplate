@@ -1,4 +1,5 @@
-﻿using Abp.Data;
+﻿using Abp.Configuration.Startup;
+using Abp.Data;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,10 @@ namespace Abp.Runtime.Caching.Redis
             string name,
             IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider,
             IRedisCacheSerializer redisCacheSerializer,
-            IHttpContextAccessor httpContextAccessor)
-            : base(name, redisCacheDatabaseProvider, redisCacheSerializer)
+            IHttpContextAccessor httpContextAccessor,
+            IMultiTenancyConfig multiTenancyConfig,
+            IAbpRedisCacheKeyNormalizer abpRedisCacheKeyNormalizer)
+            : base(name, redisCacheDatabaseProvider, redisCacheSerializer, abpRedisCacheKeyNormalizer, multiTenancyConfig)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -80,7 +83,8 @@ namespace Abp.Runtime.Caching.Redis
                     httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
                 }
 
-                return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+                return localizedKeys.Keys
+                    .Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
             }
             catch (ObjectDisposedException exception)
             {
@@ -97,14 +101,14 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return await base.TryGetValueAsync(key);
             }
-            
+
             var localizedKey = GetPerRequestRedisCacheKey(key);
 
             try
             {
-                if (httpContext.Items.ContainsKey(localizedKey))
+                if (httpContext.Items.TryGetValue(localizedKey, out var item))
                 {
-                    var conditionalValue = (ConditionalValue<object>) httpContext.Items[localizedKey];
+                    var conditionalValue = (ConditionalValue<object>) item;
                     return conditionalValue;
                 }
                 else
@@ -113,7 +117,7 @@ namespace Abp.Runtime.Caching.Redis
                     httpContext.Items[localizedKey] = conditionalValue;
                     return conditionalValue;
                 }
-            }   
+            }
             catch (ObjectDisposedException exception)
             {
                 Logger.Warn(exception.Message, exception);
@@ -146,7 +150,8 @@ namespace Abp.Runtime.Caching.Redis
                     httpContext.Items[GetPerRequestRedisCacheKey(missingKeys[i])] = missingValues[i];
                 }
 
-                return localizedKeys.Keys.Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
+                return localizedKeys.Keys
+                    .Select(localizedKey => (ConditionalValue<object>) httpContext.Items[localizedKey]).ToArray();
             }
             catch (ObjectDisposedException exception)
             {
@@ -155,7 +160,8 @@ namespace Abp.Runtime.Caching.Redis
             }
         }
 
-        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public override void Set(string key, object value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             base.Set(key, value, slidingExpireTime, absoluteExpireTime);
 
@@ -167,7 +173,8 @@ namespace Abp.Runtime.Caching.Redis
             }
         }
 
-        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public override async Task SetAsync(string key, object value, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             await base.SetAsync(key, value, slidingExpireTime, absoluteExpireTime);
 
@@ -179,7 +186,8 @@ namespace Abp.Runtime.Caching.Redis
             }
         }
 
-        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public override void Set(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             base.Set(pairs, slidingExpireTime, absoluteExpireTime);
 
@@ -189,14 +197,16 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return;
             }
-            
+
             for (var i = 0; i < pairs.Length; i++)
             {
-                httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] = new ConditionalValue<object>(true, pairs[i].Value);
+                httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] =
+                    new ConditionalValue<object>(true, pairs[i].Value);
             }
         }
 
-        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null, DateTimeOffset? absoluteExpireTime = null)
+        public override async Task SetAsync(KeyValuePair<string, object>[] pairs, TimeSpan? slidingExpireTime = null,
+            DateTimeOffset? absoluteExpireTime = null)
         {
             await base.SetAsync(pairs, slidingExpireTime, absoluteExpireTime);
 
@@ -206,7 +216,8 @@ namespace Abp.Runtime.Caching.Redis
             {
                 for (var i = 0; i < pairs.Length; i++)
                 {
-                    httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] = new ConditionalValue<object>(true, pairs[i].Value);
+                    httpContext.Items[GetPerRequestRedisCacheKey(pairs[i].Key)] =
+                        new ConditionalValue<object>(true, pairs[i].Value);
                 }
             }
         }
@@ -221,7 +232,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return;
             }
-            
+
             var localizedKey = GetPerRequestRedisCacheKey(key);
 
             if (httpContext.Items.ContainsKey(localizedKey))
@@ -257,7 +268,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return;
             }
-            
+
             foreach (var key in keys)
             {
                 var localizedKey = GetPerRequestRedisCacheKey(key);
@@ -291,6 +302,11 @@ namespace Abp.Runtime.Caching.Redis
 
         public override void Clear()
         {
+            ClearPerRequestRedisCacheInternal();
+        }
+
+        protected virtual void ClearPerRequestRedisCacheInternal()
+        {
             base.Clear();
 
             var httpContext = _httpContextAccessor.HttpContext;
@@ -299,7 +315,7 @@ namespace Abp.Runtime.Caching.Redis
             {
                 return;
             }
-            
+
             var localizedKeyPrefix = GetPerRequestRedisCacheKey("");
 
             foreach (var key in httpContext.Items.Keys.OfType<string>().ToList())
@@ -310,10 +326,10 @@ namespace Abp.Runtime.Caching.Redis
                 }
             }
         }
-
+        
         protected virtual string GetPerRequestRedisCacheKey(string key)
         {
-            return AbpPerRequestRedisCachePrefix + GetLocalizedRedisKey(key).ToString();
+            return AbpPerRequestRedisCachePrefix + NormalizeKey(key).ToString();
         }
     }
 }

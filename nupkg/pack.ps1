@@ -12,6 +12,9 @@ $projects = (
     "Abp.AspNetCore.TestBase",
     "Abp.AspNetCore.PerRequestRedisCache",
     "Abp.AutoMapper",
+    "Abp.BlobStoring",
+    "Abp.BlobStoring.Azure",
+    "Abp.BlobStoring.FileSystem",
     "Abp.Castle.Log4Net",
     "Abp.Dapper",
     "Abp.EntityFramework",
@@ -49,11 +52,12 @@ $projects = (
     "Abp.ZeroCore",
     "Abp.ZeroCore.EntityFramework",
     "Abp.ZeroCore.EntityFrameworkCore",
-    "Abp.ZeroCore.IdentityServer4",
-    "Abp.ZeroCore.IdentityServer4.EntityFrameworkCore",
     "Abp.ZeroCore.IdentityServer4.vNext",
     "Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore",
-    "Abp.ZeroCore.NHibernate"
+    "Abp.ZeroCore.NHibernate",
+	"Abp.ZeroCore.OpenIddict",
+	"Abp.ZeroCore.OpenIddict.EntityFrameworkCore",
+	"Abp.AspNetCore.OpenIddict"
 )
 
 # Rebuild solution

@@ -41,7 +41,13 @@ var abp = abp || {};
             messageContent.title = title;
         }
 
-        messageContent.text = message;
+        options.reverseButtons = true;
+
+        if (options.isHtml) {
+            options.html = message;
+        } else {
+            options.text = message;
+        }
 
         var opts = $.extend(
             {},

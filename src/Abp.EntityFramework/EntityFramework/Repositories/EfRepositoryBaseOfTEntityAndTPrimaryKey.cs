@@ -111,6 +111,23 @@ namespace Abp.EntityFramework.Repositories
             return query;
         }
 
+        public override async Task<IQueryable<TEntity>> GetAllIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return await GetAllAsync();
+            }
+
+            var query = await GetAllAsync();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                query = query.Include(propertySelector);
+            }
+
+            return query;
+        }
+
         public override IQueryable<TEntity> GetAllReadonlyIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
         {
             if (propertySelectors.IsNullOrEmpty())
@@ -303,6 +320,9 @@ namespace Abp.EntityFramework.Repositories
         {
             return Context;
         }
+
+        public async Task<DbContext> GetDbContextAsync()
+            => await _dbContextProvider.GetDbContextAsync(MultiTenancySide);
 
         public Task EnsureCollectionLoadedAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> collectionExpression,
             CancellationToken cancellationToken) where TProperty : class

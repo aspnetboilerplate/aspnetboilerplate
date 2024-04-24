@@ -60,6 +60,17 @@ namespace Abp.Collections
             _typeList.Add(typeof(T));
         }
 
+        public bool TryAdd<T>() where T : TBaseType
+        {
+            if (Contains<T>())
+            {
+                return false;
+            }
+
+            Add<T>();
+            return true;
+        }
+
         /// <inheritdoc/>
         public void Add(Type item)
         {

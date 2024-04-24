@@ -1,5 +1,7 @@
 ### Introduction
 
+**Identity Server** changed its license model, so we suggest using [OpenIddict](OpenIddict.md) for new projects.
+
 [Identity Server](http://identityserver.io/) is an open source **OpenID
 Connect** and **OAuth 2.0** framework. It can be used to make your
 application an **authentication / single sign on server**. It can also
@@ -8,8 +10,6 @@ how you can integrate IdentityServer4 (version **2.0+**) to your
 project.
 
 #### Startup Project
-
-**This document applies to the 4.x+ version of Identity Server 4.  If you are using the 3.x version of Identity Server 4, please refer to [Identity Server 4](../Zero/Identity-Server.md)**
 
 This document assumes that you have already created an ASP.NET Core based
 project (including Module Zero) from the [startup templates](/Templates) and

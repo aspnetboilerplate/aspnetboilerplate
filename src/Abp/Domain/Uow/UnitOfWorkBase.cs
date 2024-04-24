@@ -246,6 +246,10 @@ namespace Abp.Domain.Uow
                 {
                     SetFilterParameter(filterName, parameterName, oldValue);
                 }
+                else
+                {
+                    Completed += (s, e) => _filters[filterIndex].FilterParameters[parameterName] = default;
+                }
             });
         }
 

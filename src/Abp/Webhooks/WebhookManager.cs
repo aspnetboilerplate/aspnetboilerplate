@@ -29,8 +29,8 @@ namespace Abp.Webhooks
 
         public virtual async Task<WebhookPayload> GetWebhookPayloadAsync(WebhookSenderArgs webhookSenderArgs)
         {
-            var data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
+            var data = _webhooksConfiguration.JsonSerializerOptions != null
+                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerOptions)
                 : webhookSenderArgs.Data.FromJsonString<dynamic>();
 
             var attemptNumber = await _webhookSendAttemptStore.GetSendAttemptCountAsync(
@@ -49,8 +49,8 @@ namespace Abp.Webhooks
 
         public virtual WebhookPayload GetWebhookPayload(WebhookSenderArgs webhookSenderArgs)
         {
-            var data = _webhooksConfiguration.JsonSerializerSettings != null
-                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerSettings)
+            var data = _webhooksConfiguration.JsonSerializerOptions != null
+                ? webhookSenderArgs.Data.FromJsonString<dynamic>(_webhooksConfiguration.JsonSerializerOptions)
                 : webhookSenderArgs.Data.FromJsonString<dynamic>();
 
             var attemptNumber = _webhookSendAttemptStore.GetSendAttemptCount(
@@ -103,8 +103,8 @@ namespace Abp.Webhooks
 
             var payload = GetWebhookPayload(webhookSenderArgs);
 
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+            var serializedBody = _webhooksConfiguration.JsonSerializerOptions != null
+                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerOptions)
                 : payload.ToJsonString();
 
             return serializedBody;
@@ -119,8 +119,8 @@ namespace Abp.Webhooks
 
             var payload = await GetWebhookPayloadAsync(webhookSenderArgs);
 
-            var serializedBody = _webhooksConfiguration.JsonSerializerSettings != null
-                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+            var serializedBody = _webhooksConfiguration.JsonSerializerOptions != null
+                ? payload.ToJsonString(_webhooksConfiguration.JsonSerializerOptions)
                 : payload.ToJsonString();
 
             return serializedBody;

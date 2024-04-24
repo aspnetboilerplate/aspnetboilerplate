@@ -57,8 +57,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 w.Headers.Single().Value.ShouldBe("Value");
 
                 w.WebhookSubscriptionId.ShouldBe(subscription.Id);
-                w.Data.ShouldBe(webhooksConfiguration.JsonSerializerSettings != null
-                    ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                w.Data.ShouldBe(webhooksConfiguration.JsonSerializerOptions != null
+                    ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                     : data.ToJsonString());
 
                 return true;
@@ -341,8 +341,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
                 w.WebhookSubscriptionId.ShouldBe(subscription.Id);
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;
@@ -448,8 +448,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 acceptedIds.ShouldContain(w.WebhookSubscriptionId);
 
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;
@@ -515,8 +515,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 acceptedIds.ShouldContain(w.WebhookSubscriptionId);
 
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;
@@ -1009,8 +1009,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
 
                 w.WebhookSubscriptionId.ShouldBe(subscription.Id);
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;
@@ -1067,8 +1067,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 acceptedIds.ShouldContain(w.WebhookSubscriptionId);
 
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;
@@ -1136,8 +1136,8 @@ namespace Abp.Zero.SampleApp.Tests.Webhooks
                 acceptedIds.ShouldContain(w.WebhookSubscriptionId);
 
                 w.Data.ShouldBe(
-                    webhooksConfiguration.JsonSerializerSettings != null
-                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerSettings)
+                    webhooksConfiguration.JsonSerializerOptions != null
+                        ? data.ToJsonString(webhooksConfiguration.JsonSerializerOptions)
                         : data.ToJsonString()
                 );
                 return true;

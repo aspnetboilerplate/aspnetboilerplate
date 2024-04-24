@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Abp.Web.Api.Tests.Controllers.Dynamic
 {
+    [Collection("Clock.Provider")]
     public class AbpApiDateTimeConverter_Tests
     {
         [Theory]

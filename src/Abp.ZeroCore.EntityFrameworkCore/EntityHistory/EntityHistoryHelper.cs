@@ -300,9 +300,9 @@ namespace Abp.EntityHistory
                         }
 
                         var propertyEntry = entityEntry.Property(property.Name);
-                        
-                        var newValue = propertyEntry.GetNewValue()?.ToJsonString();
-                        var oldValue = propertyEntry.GetOriginalValue()?.ToJsonString();
+
+                        var newValue = propertyEntry.GetNewValue();
+                        var oldValue = propertyEntry.GetOriginalValue();
 
                         // Add foreign key
                         entityChange.PropertyChanges.Add(CreateEntityPropertyChange(oldValue, newValue, property));
