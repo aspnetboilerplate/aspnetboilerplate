@@ -25,11 +25,25 @@ namespace Abp.Domain.Repositories
 
         /// <summary>
         /// Used to get a IQueryable that is used to retrieve entities from entire table.
+        /// </summary>
+        /// <returns>IQueryable to be used to select entities from database</returns>
+        Task<IQueryable<TEntity>> GetAllAsync();
+
+        /// <summary>
+        /// Used to get a IQueryable that is used to retrieve entities from entire table.
         /// One or more 
         /// </summary>
         /// <param name="propertySelectors">A list of include expressions.</param>
         /// <returns>IQueryable to be used to select entities from database</returns>
         IQueryable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors);
+
+        /// <summary>
+        /// Used to get a IQueryable that is used to retrieve entities from entire table.
+        /// One or more 
+        /// </summary>
+        /// <param name="propertySelectors">A list of include expressions.</param>
+        /// <returns>IQueryable to be used to select entities from database</returns>
+        Task<IQueryable<TEntity>> GetAllIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors);
 
         /// <summary>
         /// Used to get all entities.
