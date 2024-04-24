@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.Timing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.BackgroundJobs
 {
@@ -15,6 +16,7 @@ namespace Abp.BackgroundJobs
     {
         private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         public BackgroundJobStore(
             IRepository<BackgroundJobInfo, long> backgroundJobRepository,
@@ -55,18 +57,17 @@ namespace Abp.BackgroundJobs
 
         public virtual async Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWork(async() =>
             {
-                return _backgroundJobRepository.GetAll()
+                var waitingJobsQuery = (await _backgroundJobRepository.GetAllAsync())
                     .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
                     .OrderByDescending(t => t.Priority)
                     .ThenBy(t => t.TryCount)
                     .ThenBy(t => t.NextTryTime)
-                    .Take(maxResultCount)
-                    .ToList();
-            });
+                    .Take(maxResultCount);
 
-            return await Task.FromResult(waitingJobs);
+                return await _asyncQueryableExecuter.ToListAsync(waitingJobsQuery);
+            });
         }
 
         public virtual List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)

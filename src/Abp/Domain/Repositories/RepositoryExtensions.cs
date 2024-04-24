@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Abp.Collections.Extensions;
+using Abp.Dependency;
+using Abp.Domain.Entities;
+using Abp.Domain.Uow;
+using Abp.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
-using Abp.Dependency;
-using Abp.Domain.Entities;
-using Abp.Domain.Uow;
-using Abp.Reflection;
-using Abp.Runtime.Session;
-using Abp.Threading;
 
 namespace Abp.Domain.Repositories
 {
@@ -157,7 +155,7 @@ namespace Abp.Domain.Repositories
 
             if (predicate != null)
             {
-                foreach (var e in repository.GetAll().Where(predicate).ToList())
+                foreach (var e in (await repository.GetAllAsync()).Where(predicate).ToList())
                 {
                     var hardDeleteKey = EntityHelper.GetHardDeleteKey(e, tenantId);
 

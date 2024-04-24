@@ -88,9 +88,9 @@ namespace Abp.Zero.SampleApp.Tests.Roles
         public async Task Test_GetRolesInOrganizationUnit()
         {
             //Act & Assert
-            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU11"))).Count.ShouldBe(1);
-            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU1"))).Count.ShouldBe(0);
-            (await RoleManager.GetRolesInOrganizationUnit(GetOu("OU1"), true)).Count.ShouldBe(1);
+            (await RoleManager.GetRolesInOrganizationUnitAsync(GetOu("OU11"))).Count.ShouldBe(1);
+            (await RoleManager.GetRolesInOrganizationUnitAsync(GetOu("OU1"))).Count.ShouldBe(0);
+            (await RoleManager.GetRolesInOrganizationUnitAsync(GetOu("OU1"), true)).Count.ShouldBe(1);
         }
 
         private OrganizationUnit GetOu(string displayName)

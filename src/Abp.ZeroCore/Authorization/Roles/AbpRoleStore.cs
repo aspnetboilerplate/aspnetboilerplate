@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -13,6 +7,12 @@ using Abp.Zero;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Roles
 {
@@ -61,6 +61,9 @@ namespace Abp.Authorization.Roles
             ErrorDescriber = new IdentityErrorDescriber();
             Logger = NullLogger.Instance;
         }
+
+        public virtual Task<IQueryable<TRole>> GetRolesAsync()
+            => _roleRepository.GetAllAsync();
 
         /// <summary>Saves the current store.</summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>

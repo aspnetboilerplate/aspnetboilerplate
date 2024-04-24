@@ -207,7 +207,7 @@ namespace Abp.Webhooks
                     else
                     {
                         result = !await AsyncQueryableExecuter.AnyAsync(
-                            _webhookSendAttemptRepository.GetAll()
+                            (await _webhookSendAttemptRepository.GetAllAsync())
                                 .OrderByDescending(attempt => attempt.CreationTime)
                                 .Take(failCount)
                                 .Where(attempt => attempt.ResponseStatusCode == HttpStatusCode.OK)
@@ -304,7 +304,7 @@ namespace Abp.Webhooks
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
                     sendAttempts = await AsyncQueryableExecuter.ToListAsync(
-                        _webhookSendAttemptRepository.GetAll()
+                        (await _webhookSendAttemptRepository.GetAllAsync())
                             .Where(attempt => attempt.WebhookEventId == webhookEventId)
                             .OrderByDescending(attempt => attempt.CreationTime)
                     );

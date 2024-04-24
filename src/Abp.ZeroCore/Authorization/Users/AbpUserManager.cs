@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Configuration;
@@ -11,7 +5,7 @@ using Abp.Configuration.Startup;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
-using Abp.Json;
+using Abp.Linq;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -24,6 +18,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Users
 {
@@ -67,6 +67,7 @@ namespace Abp.Authorization.Users
         private readonly ISettingManager _settingManager;
         private readonly IOptions<IdentityOptions> _optionsAccessor;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         public AbpUserManager(
             AbpRoleManager<TRole, TUser> roleManager,
@@ -113,6 +114,9 @@ namespace Abp.Authorization.Users
             LocalizationManager = NullLocalizationManager.Instance;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
+
+        public virtual Task<IQueryable<TUser>> GetUsersAsync()
+            => AbpUserStore.GetUsersAsync();
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
@@ -306,7 +310,7 @@ namespace Abp.Authorization.Users
         {
             var permissionList = new List<Permission>();
 
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in await _permissionManager.GetAllPermissionsAsync())
             {
                 if (await IsGrantedAsync(user.Id, permission))
                 {
@@ -880,17 +884,15 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                    join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
+                    join ou in await _organizationUnitRepository.GetAllAsync() on uou.OrganizationUnitId equals ou.Id
                     where uou.UserId == user.Id
                     select ou;
 
-                return query.ToList();
+                return await _asyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual List<OrganizationUnit> GetOrganizationUnits(TUser user)
@@ -910,30 +912,28 @@ namespace Abp.Authorization.Users
             OrganizationUnit organizationUnit,
             bool includeChildren = false)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (!includeChildren)
                 {
-                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
                         join user in Users on uou.UserId equals user.Id
                         where uou.OrganizationUnitId == organizationUnit.Id
                         select user;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
                 else
                 {
-                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
                         join user in Users on uou.UserId equals user.Id
-                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        join ou in await _organizationUnitRepository.GetAllAsync() on uou.OrganizationUnitId equals ou.Id
                         where ou.Code.StartsWith(organizationUnit.Code)
                         select user;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual List<TUser> GetUsersInOrganizationUnit(

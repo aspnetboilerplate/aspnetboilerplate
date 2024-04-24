@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Transactions;
-using Abp.Authorization.Roles;
+﻿using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq;
 using Abp.Organizations;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.Authorization.Users
 {
@@ -288,36 +288,32 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
             {
-                var query = from userLogin in _userLoginRepository.GetAll()
-                    join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                var query = from userLogin in await _userLoginRepository.GetAllAsync()
+                    join user in await _userRepository.GetAllAsync() on userLogin.UserId equals user.Id
                     where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                     select user;
 
-                return query.ToList();
+                return await AsyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual async Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in _userRepository.GetAll() on userLogin.UserId equals user.Id
+                    var query = from userLogin in await _userLoginRepository.GetAllAsync()
+                        join user in await _userRepository.GetAllAsync() on userLogin.UserId equals user.Id
                         where userLogin.LoginProvider == login.LoginProvider &&
                               userLogin.ProviderKey == login.ProviderKey
                         select user;
 
-                    return query.FirstOrDefault();
+                    return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         #endregion
@@ -355,16 +351,16 @@ namespace Abp.Authorization.Users
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in await _userRoleRepository.GetAllAsync()
+                    join role in await _roleRepository.GetAllAsync() on userRole.RoleId equals role.Id
                     where userRole.UserId == user.Id
                     select role.Name);
 
                 var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
-                    from userOu in _userOrganizationUnitRepository.GetAll()
-                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    from userOu in await _userOrganizationUnitRepository.GetAllAsync()
+                    join roleOu in await _organizationUnitRoleRepository.GetAllAsync() on userOu.OrganizationUnitId equals roleOu
                         .OrganizationUnitId
-                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                    join userOuRoles in await _roleRepository.GetAllAsync() on roleOu.RoleId equals userOuRoles.Id
                     where userOu.UserId == user.Id
                     select userOuRoles.Name);
 
