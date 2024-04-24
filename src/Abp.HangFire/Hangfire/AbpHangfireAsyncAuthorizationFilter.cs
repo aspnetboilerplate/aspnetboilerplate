@@ -30,7 +30,7 @@ namespace Abp.Hangfire
         /// <returns></returns>
         public async Task<bool> AuthorizeAsync(DashboardContext context)
         {
-            return !_requiredPermissionName.IsNullOrEmpty() && IsLoggedIn() && await IsPermissionGrantedAsync(_requiredPermissionName);
+            return IsLoggedIn() && (_requiredPermissionName.IsNullOrEmpty() && await IsPermissionGrantedAsync(_requiredPermissionName));
         }
 
         /// <summary>
