@@ -66,11 +66,11 @@ namespace Abp.DynamicEntityProperties
                 val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId).ToList();
         }
 
-        public virtual Task<List<DynamicEntityPropertyValue>> GetValuesAsync(int dynamicEntityPropertyId,
+        public virtual async Task<List<DynamicEntityPropertyValue>> GetValuesAsync(int dynamicEntityPropertyId,
             string entityId)
         {
-            return _asyncQueryableExecuter.ToListAsync(
-                _dynamicEntityPropertyValueRepository.GetAll()
+            return await _asyncQueryableExecuter.ToListAsync(
+                (await _dynamicEntityPropertyValueRepository.GetAllAsync())
                     .Where(val => val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId)
             );
         }
@@ -82,13 +82,12 @@ namespace Abp.DynamicEntityProperties
                 .ToList();
         }
 
-        public Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId)
+        public virtual async Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId)
         {
-            return _asyncQueryableExecuter.ToListAsync(
-                _dynamicEntityPropertyValueRepository.GetAll()
+            return await _asyncQueryableExecuter.ToListAsync(
+                (await _dynamicEntityPropertyValueRepository.GetAllAsync())
                     .Where(val =>
-                        val.EntityId == entityId && val.DynamicEntityProperty.EntityFullName == entityFullName)
-            );
+                        val.EntityId == entityId && val.DynamicEntityProperty.EntityFullName == entityFullName));
         }
 
         public List<DynamicEntityPropertyValue> GetValues(string entityFullName, string entityId, int dynamicPropertyId)
@@ -102,17 +101,16 @@ namespace Abp.DynamicEntityProperties
                 .ToList();
         }
 
-        public Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId,
+        public virtual async Task<List<DynamicEntityPropertyValue>> GetValuesAsync(string entityFullName, string entityId,
             int dynamicPropertyId)
         {
-            return _asyncQueryableExecuter.ToListAsync(
-                _dynamicEntityPropertyValueRepository.GetAll()
+            return await _asyncQueryableExecuter.ToListAsync(
+                (await _dynamicEntityPropertyValueRepository.GetAllAsync())
                     .Where(val =>
                         val.EntityId == entityId &&
                         val.DynamicEntityProperty.EntityFullName == entityFullName &&
                         val.DynamicEntityProperty.DynamicPropertyId == dynamicPropertyId
-                    )
-            );
+                    ));
         }
 
         public virtual void CleanValues(int dynamicEntityPropertyId, string entityId)
@@ -128,9 +126,10 @@ namespace Abp.DynamicEntityProperties
 
         public virtual async Task CleanValuesAsync(int dynamicEntityPropertyId, string entityId)
         {
-            var list = await _asyncQueryableExecuter.ToListAsync(_dynamicEntityPropertyValueRepository.GetAll().Where(
-                val =>
-                    val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId));
+            var list = await _asyncQueryableExecuter.ToListAsync(
+                (await _dynamicEntityPropertyValueRepository.GetAllAsync())
+                    .Where( val =>
+                        val.EntityId == entityId && val.DynamicEntityPropertyId == dynamicEntityPropertyId));
 
             foreach (var dynamicEntityPropertyValue in list)
             {

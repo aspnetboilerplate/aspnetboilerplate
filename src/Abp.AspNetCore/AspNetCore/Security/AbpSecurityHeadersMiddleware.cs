@@ -30,7 +30,7 @@ namespace Abp.AspNetCore.Security
         {
             if (!context.Response.Headers.ContainsKey(key))
             {
-                context.Response.Headers.Add(key, value);
+                context.Response.Headers.Append(key, value);
             }
         }
     }

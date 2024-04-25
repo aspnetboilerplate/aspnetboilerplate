@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
@@ -9,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
+using Abp.Linq;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -17,6 +14,10 @@ using Abp.Runtime.Session;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Roles
 {
@@ -62,6 +63,7 @@ namespace Abp.Authorization.Roles
 
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         /// <summary>
         /// Constructor.
@@ -472,34 +474,32 @@ namespace Abp.Authorization.Roles
             return IdentityResult.Success;
         }
 
-        public virtual async Task<List<TRole>> GetRolesInOrganizationUnit(
+        public virtual async Task<List<TRole>> GetRolesInOrganizationUnitAsync(
             OrganizationUnit organizationUnit,
             bool includeChildren = false)
         {
-            var result = UnitOfWorkManager.WithUnitOfWork(() =>
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (!includeChildren)
                 {
-                    var query = from uor in _organizationUnitRoleRepository.GetAll()
+                    var query = from uor in await _organizationUnitRoleRepository.GetAllAsync()
                         join role in Roles on uor.RoleId equals role.Id
                         where uor.OrganizationUnitId == organizationUnit.Id
                         select role;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
                 else
                 {
-                    var query = from uor in _organizationUnitRoleRepository.GetAll()
+                    var query = from uor in await _organizationUnitRoleRepository.GetAllAsync()
                         join role in Roles on uor.RoleId equals role.Id
-                        join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                        join ou in await _organizationUnitRepository.GetAllAsync() on uor.OrganizationUnitId equals ou.Id
                         where ou.Code.StartsWith(organizationUnit.Code)
                         select role;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual async Task SetOrganizationUnitsAsync(int roleId, params long[] organizationUnitIds)
@@ -610,17 +610,15 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
         {
-            var result = UnitOfWorkManager.WithUnitOfWork(() =>
+            return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
+                var query = from uor in await _organizationUnitRoleRepository.GetAllAsync()
+                    join ou in await _organizationUnitRepository.GetAllAsync() on uor.OrganizationUnitId equals ou.Id
                     where uor.RoleId == role.Id
                     select ou;
 
-                return query.ToList();
+                return await _asyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         private Task<TRole> FindByDisplayNameAsync(string displayName)

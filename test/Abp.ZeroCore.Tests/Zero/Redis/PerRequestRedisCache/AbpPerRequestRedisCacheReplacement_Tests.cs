@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Caching.Redis;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Shouldly;
 using StackExchange.Redis;
@@ -16,6 +18,7 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
 
         public AbpPerRequestRedisCacheReplacement_Tests()
         {
+            LocalIocManager.Register<IOptions<AbpRedisCacheOptions>, OptionsWrapper<AbpRedisCacheOptions>>();
             _typedCache = LocalIocManager.Resolve<ICacheManager>().GetCache<string, TestCacheItem>("TestCacheItems");
         }
 

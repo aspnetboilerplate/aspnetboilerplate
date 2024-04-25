@@ -31,7 +31,7 @@ namespace Abp.Tests.Dependency
             try
             {
                 _resolver.Resolve<MyClass>();
-                Assert.False(true, "Should not resolve by class that is registered by interface");
+                Assert.Fail("Should not resolve by class that is registered by interface");
             }
             catch { }
         }
