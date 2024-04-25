@@ -8,8 +8,8 @@
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
 		<PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
 		<PackageReference Include="Castle.Windsor.Extensions.DependencyInjection" Version="6.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-		<PackageReference Include="xunit" Version="2.6.6" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="xunit" Version="2.7.1" />
 	</ItemGroup>
 	
 	<ItemGroup>
