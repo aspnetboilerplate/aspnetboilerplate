@@ -34,7 +34,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.OData" Version="7.7.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
