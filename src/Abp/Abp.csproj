@@ -30,7 +30,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.12" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.13" />
     <PackageReference Include="Castle.LoggingFacility" Version="6.0.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
