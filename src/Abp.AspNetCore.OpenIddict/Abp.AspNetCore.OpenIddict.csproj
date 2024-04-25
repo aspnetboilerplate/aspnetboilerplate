@@ -26,6 +26,12 @@
         <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.AspNetCore" Version="5.1.0" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="5.4.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 </Project>
