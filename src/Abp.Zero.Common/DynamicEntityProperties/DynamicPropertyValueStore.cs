@@ -36,9 +36,9 @@ namespace Abp.DynamicEntityProperties
                 .Where(propertyValue => propertyValue.DynamicPropertyId == dynamicPropertyId).ToList();
         }
 
-        public virtual Task<List<DynamicPropertyValue>> GetAllValuesOfDynamicPropertyAsync(int dynamicPropertyId)
+        public virtual async Task<List<DynamicPropertyValue>> GetAllValuesOfDynamicPropertyAsync(int dynamicPropertyId)
         {
-            return _asyncQueryableExecuter.ToListAsync(_dynamicPropertyValuesRepository.GetAll()
+            return await _asyncQueryableExecuter.ToListAsync((await _dynamicPropertyValuesRepository.GetAllAsync())
                 .Where(propertyValue => propertyValue.DynamicPropertyId == dynamicPropertyId));
         }
 

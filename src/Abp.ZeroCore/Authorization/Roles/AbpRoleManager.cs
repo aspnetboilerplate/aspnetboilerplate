@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Authorization.Users;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -18,6 +15,11 @@ using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Roles
 {
@@ -55,6 +57,7 @@ namespace Abp.Authorization.Roles
         private readonly IUnitOfWorkManager _unitOfWorkManager;
         private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
         private readonly IRepository<OrganizationUnitRole, long> _organizationUnitRoleRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         public AbpRoleManager(
             AbpRoleStore<TRole, TUser> store,
@@ -87,6 +90,9 @@ namespace Abp.Authorization.Roles
             LocalizationManager = NullLocalizationManager.Instance;
             LocalizationSourceName = AbpZeroConsts.LocalizationSourceName;
         }
+
+        public virtual Task<IQueryable<TRole>> GetRolesAsync()
+           => AbpStore.GetRolesAsync();
 
         /// <summary>
         /// Checks if a role is granted for a permission.
@@ -180,7 +186,7 @@ namespace Abp.Authorization.Roles
         public virtual async Task<IReadOnlyList<Permission>> GetGrantedPermissionsAsync(TRole role)
         {
             var cacheItem = await GetRolePermissionCacheItemAsync(role.Id);
-            var allPermissions = _permissionManager.GetAllPermissions();
+            var allPermissions = await _permissionManager.GetAllPermissionsAsync();
             return allPermissions.Where(x => cacheItem.GrantedPermissions.Contains(x.Name)).ToList();
         }
 
@@ -257,7 +263,7 @@ namespace Abp.Authorization.Roles
         /// <param name="role">Role</param>
         public async Task ProhibitAllPermissionsAsync(TRole role)
         {
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in await _permissionManager.GetAllPermissionsAsync())
             {
                 await ProhibitPermissionAsync(role, permission);
             }
@@ -380,7 +386,7 @@ namespace Abp.Authorization.Roles
         {
             FeatureDependencyContext.TenantId = role.TenantId;
 
-            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide())
+            var permissions = (await _permissionManager.GetAllPermissionsAsync(role.GetMultiTenancySide()))
                 .Where(permission =>
                     permission.FeatureDependency == null ||
                     permission.FeatureDependency.IsSatisfied(FeatureDependencyContext)
@@ -441,36 +447,34 @@ namespace Abp.Authorization.Roles
         /// <param name="organizationUnit">OrganizationUnit to get belonging roles </param>
         /// <param name="includeChildren">Includes roles for children organization units to result when true. Default is false</param>
         /// <returns></returns>
-        public virtual async Task<List<TRole>> GetRolesInOrganizationUnit(
+        public virtual async Task<List<TRole>> GetRolesInOrganizationUnitAsync(
             OrganizationUnit organizationUnit,
             bool includeChildren = false)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (!includeChildren)
                 {
-                    var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-                        join role in Roles on organizationUnitRole.RoleId equals role.Id
-                        where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
-                        select role;
+                    var query = from organizationUnitRole in await _organizationUnitRoleRepository.GetAllAsync()
+                                join role in await AbpStore.GetRolesAsync() on organizationUnitRole.RoleId equals role.Id
+                                where organizationUnitRole.OrganizationUnitId == organizationUnit.Id
+                                select role;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
                 else
                 {
-                    var query = from organizationUnitRole in _organizationUnitRoleRepository.GetAll()
-                        join role in Roles on organizationUnitRole.RoleId equals role.Id
-                        join ou in _organizationUnitRepository.GetAll() on organizationUnitRole.OrganizationUnitId
-                            equals
-                            ou.Id
-                        where ou.Code.StartsWith(organizationUnit.Code)
-                        select role;
+                    var query = from organizationUnitRole in await _organizationUnitRoleRepository.GetAllAsync()
+                                join role in await AbpStore.GetRolesAsync() on organizationUnitRole.RoleId equals role.Id
+                                join ou in await _organizationUnitRepository.GetAllAsync() on organizationUnitRole.OrganizationUnitId
+                                    equals
+                                    ou.Id
+                                where ou.Code.StartsWith(organizationUnit.Code)
+                                select role;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual async Task SetOrganizationUnitsAsync(int roleId, params long[] organizationUnitIds)
@@ -582,17 +586,15 @@ namespace Abp.Authorization.Roles
 
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TRole role)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var query = from uor in _organizationUnitRoleRepository.GetAll()
-                    join ou in _organizationUnitRepository.GetAll() on uor.OrganizationUnitId equals ou.Id
-                    where uor.RoleId == role.Id
-                    select ou;
+                var query = from uor in await _organizationUnitRoleRepository.GetAllAsync()
+                            join ou in await _organizationUnitRepository.GetAllAsync() on uor.OrganizationUnitId equals ou.Id
+                            where uor.RoleId == role.Id
+                            select ou;
 
-                return query.ToList();
+                return await _asyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         private Task<TRole> FindByDisplayNameAsync(string displayName)
@@ -619,7 +621,7 @@ namespace Abp.Authorization.Roles
 
                 if (staticRoleDefinition != null)
                 {
-                    foreach (var permission in _permissionManager.GetAllPermissions())
+                    foreach (var permission in await _permissionManager.GetAllPermissionsAsync())
                     {
                         if (staticRoleDefinition.IsGrantedByDefault(permission))
                         {

@@ -25,6 +25,7 @@ namespace Abp.Notifications
         private readonly IRepository<UserNotificationInfo, Guid> _userNotificationRepository;
         private readonly IRepository<NotificationSubscriptionInfo, Guid> _notificationSubscriptionRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationStore"/> class.
@@ -603,12 +604,12 @@ namespace Abp.Notifications
                 DateTime? startDate = null,
                 DateTime? endDate = null)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                        join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+                    var query = from userNotificationInfo in await _userNotificationRepository.GetAllAsync()
+                        join tenantNotificationInfo in await _tenantNotificationRepository.GetAllAsync() on userNotificationInfo
                             .TenantNotificationId equals tenantNotificationInfo.Id
                         where userNotificationInfo.UserId == user.UserId
                         orderby tenantNotificationInfo.CreationTime descending
@@ -635,7 +636,7 @@ namespace Abp.Notifications
 
                     query = query.PageBy(skipCount, maxResultCount);
 
-                    var list = query.ToList();
+                    var list = await _asyncQueryableExecuter.ToListAsync(query);
 
                     return list.Select(
                         a => new UserNotificationInfoWithNotificationInfo(
@@ -645,8 +646,6 @@ namespace Abp.Notifications
                     ).ToList();
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual List<UserNotificationInfoWithNotificationInfo> GetUserNotificationsWithNotifications(
@@ -738,12 +737,12 @@ namespace Abp.Notifications
                 int? tenantId,
                 Guid userNotificationId)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    var query = from userNotificationInfo in _userNotificationRepository.GetAll()
-                        join tenantNotificationInfo in _tenantNotificationRepository.GetAll() on userNotificationInfo
+                    var query = from userNotificationInfo in await _userNotificationRepository.GetAllAsync()
+                        join tenantNotificationInfo in await _tenantNotificationRepository.GetAllAsync() on userNotificationInfo
                             .TenantNotificationId equals tenantNotificationInfo.Id
                         where userNotificationInfo.Id == userNotificationId
                         select new
@@ -752,7 +751,7 @@ namespace Abp.Notifications
                             tenantNotificationInfo
                         };
 
-                    var item = query.FirstOrDefault();
+                    var item = await _asyncQueryableExecuter.FirstOrDefaultAsync(query);
                     if (item == null)
                     {
                         return null;
@@ -764,8 +763,6 @@ namespace Abp.Notifications
                     );
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual UserNotificationInfoWithNotificationInfo GetUserNotificationWithNotificationOrNull(
@@ -840,7 +837,7 @@ namespace Abp.Notifications
             {
                 using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
                 {
-                    var queryForNotPublishedNotifications = _notificationRepository.GetAll()
+                    var queryForNotPublishedNotifications = (await _notificationRepository.GetAllAsync())
                         .Where(n => n.CreatorUserId == user.UserId && n.NotificationName == notificationName);
 
                     if (startDate.HasValue)

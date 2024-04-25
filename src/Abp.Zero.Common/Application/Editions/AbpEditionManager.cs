@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Editions
 {
@@ -32,6 +32,9 @@ namespace Abp.Application.Editions
             _unitOfWorkManager = unitOfWorkManager;
             EditionRepository = editionRepository;
         }
+
+        public Task<IQueryable<Edition>> GetEditionsAsync 
+            => EditionRepository.GetAllAsync();
 
         public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
         {
