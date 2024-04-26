@@ -27,7 +27,7 @@ namespace Abp.HtmlSanitizer
 
                 if (!typeof(T).IsAssignableFrom(type) || !type.IsClass) return false;
 
-                var instance = (T) Activator.CreateInstance(type, nonPublic: true);
+                var instance = (T) FormatterServices.GetUninitializedObject(type);
 
                 var param = selector(instance);
 

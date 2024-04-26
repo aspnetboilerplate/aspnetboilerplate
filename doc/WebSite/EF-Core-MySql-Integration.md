@@ -38,7 +38,7 @@ public static class MySqlDemoDbContextConfigurer
 
     public static void Configure(DbContextOptionsBuilder<MySqlDemoDbContext> builder, DbConnection connection)
     {
-        var serverVersion = ServerVersion.AutoDetect(connection.ConnectionString)
+        var serverVersion = ServerVersion.AutoDetect(connection.ConnectionString);
         builder.UseMySql(connection, serverVersion);
     }
  }
