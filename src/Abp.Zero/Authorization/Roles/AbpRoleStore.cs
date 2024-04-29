@@ -5,6 +5,7 @@ using Abp.Authorization.Users;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Runtime.Session;
 using Microsoft.AspNet.Identity;
 
 namespace Abp.Authorization.Roles
@@ -24,7 +25,7 @@ namespace Abp.Authorization.Roles
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
 
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-
+        public IAbpSession AbpSession { get; set; }
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -38,6 +39,7 @@ namespace Abp.Authorization.Roles
             _userRoleRepository = userRoleRepository;
             _rolePermissionSettingRepository = rolePermissionSettingRepository;
             _unitOfWorkManager = unitOfWorkManager;
+            AbpSession = NullAbpSession.Instance;
         }
 
         public virtual IQueryable<TRole> Roles
@@ -85,7 +87,7 @@ namespace Abp.Authorization.Roles
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 return await _roleRepository.FirstOrDefaultAsync(
-                    role => role.NormalizedName == normalizedName
+                    role => role.NormalizedName == normalizedName && role.TenantId == AbpSession.TenantId
                 );
             });
         }
@@ -97,7 +99,7 @@ namespace Abp.Authorization.Roles
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
                 return _roleRepository.FirstOrDefault(
-                    role => role.NormalizedName == normalizedName
+                    role => role.NormalizedName == normalizedName && role.TenantId == AbpSession.TenantId
                 );
             });
         }
