@@ -16,7 +16,8 @@ namespace Abp.Zero.SampleApp.Authorization
             context.CreatePermission("Permission4", new FixedLocalizableString("Permission4"));
             context.CreatePermission("Permission5", new FixedLocalizableString("Permission5"), multiTenancySides: MultiTenancySides.Host);
             context.CreatePermission("PermissionWithFeatureDependency", new FixedLocalizableString("PermissionWithFeatureDependency"), featureDependency: new SimpleFeatureDependency(AppFeatureProvider.MyBoolFeature));
-
+            context.CreatePermission("PermissionWithFeatureDependency2", new FixedLocalizableString("PermissionWithFeatureDependency2"), featureDependency: new SimpleFeatureDependency(AppFeatureProvider.MyGrantedBoolFeature), multiTenancySides: MultiTenancySides.Tenant);
+            
             var firstLevelChilPermission1 = permission1.CreateChildPermission("FirstLevelChilPermission1", new FixedLocalizableString("FirstLevelChilPermission1"));
             firstLevelChilPermission1.CreateChildPermission("SecondLevelChildPermission1", new FixedLocalizableString("SecondLevelChildPermission1"));
         }
