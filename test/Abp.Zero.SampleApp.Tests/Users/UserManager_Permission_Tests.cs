@@ -119,6 +119,17 @@ namespace Abp.Zero.SampleApp.Tests.Users
                 (await IsGrantedAsync(permission.Name)).ShouldBe(false);
             }
         }
+        
+        [Fact]
+        public async Task GetAllPermissions_Test()
+        {
+            AbpSession.TenantId = 1;
+            var permissions = await PermissionManager.GetAllPermissionsAsync();
+            permissions.Count.ShouldBe(7);
+            
+            permissions = PermissionManager.GetAllPermissions();
+            permissions.Count.ShouldBe(7);
+        }
 
         private async Task<bool> IsGrantedAsync(string permissionName)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -91,10 +92,13 @@ namespace Abp.Authorization
 
                 var permissions = Permissions.Values
                     .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
-                    .Where(p => p.FeatureDependency == null || GetCurrentMultiTenancySide() == MultiTenancySides.Host)
                     .ToList();
 
-                var result = await FilterSatisfiedPermissionsAsync(featureDependencyContextObject, permissions);
+                var result = await FilterSatisfiedPermissionsAsync(
+                    featureDependencyContextObject,
+                    permissions,
+                    p => p.FeatureDependency == null || GetCurrentMultiTenancySide() == MultiTenancySides.Host
+                );
 
                 return result.ToImmutableList();
             }
@@ -128,32 +132,37 @@ namespace Abp.Authorization
 
                 var permissions = Permissions.Values
                     .Where(p => p.MultiTenancySides.HasFlag(multiTenancySides))
-                    .Where(p =>
+                    .ToList();
+
+                var result = await FilterSatisfiedPermissionsAsync(
+                    featureDependencyContextObject,
+                    permissions,
+                    p =>
                         p.FeatureDependency == null ||
                         GetCurrentMultiTenancySide() == MultiTenancySides.Host ||
                         (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
                          multiTenancySides.HasFlag(MultiTenancySides.Host))
-                    ).ToList();
-
-                var result = await FilterSatisfiedPermissionsAsync(featureDependencyContextObject, permissions);
+                );
 
                 return result.ToImmutableList();
             }
         }
 
-        private async Task<IList<Permission>> FilterSatisfiedPermissionsAsync(FeatureDependencyContext featureDependencyContextObject, IList<Permission> unfilteredPermissions)
+        private async Task<IList<Permission>> FilterSatisfiedPermissionsAsync(
+            FeatureDependencyContext featureDependencyContextObject,
+            IList<Permission> unfilteredPermissions,
+            Func<Permission, bool> filter)
         {
             var filteredPermissions = new List<Permission>();
 
-            for (var i = 0; i < unfilteredPermissions.Count; i++)
+            foreach (var permission in unfilteredPermissions)
             {
-                var permission = unfilteredPermissions[i];
-
-                if (permission.FeatureDependency != null && !await permission.FeatureDependency.IsSatisfiedAsync(featureDependencyContextObject))
+                if (!filter.Invoke(permission) &&
+                    !await permission.FeatureDependency.IsSatisfiedAsync(featureDependencyContextObject))
                 {
                     continue;
                 }
-
+                
                 filteredPermissions.Add(permission);
             }
 
