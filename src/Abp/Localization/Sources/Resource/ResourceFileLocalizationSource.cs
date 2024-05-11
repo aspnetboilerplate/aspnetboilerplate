@@ -49,6 +49,11 @@ namespace Abp.Localization.Sources.Resource
                 : NullLogger.Instance;
         }
 
+        public string FindKeyOrNull(string value, CultureInfo culture, bool tryDefaults = true)
+        {
+            return null;
+        }
+
         public virtual string GetString(string name)
         {
             var value = GetStringOrNull(name);

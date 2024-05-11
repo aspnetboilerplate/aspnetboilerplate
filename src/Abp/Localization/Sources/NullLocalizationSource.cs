@@ -29,6 +29,11 @@ namespace Abp.Localization.Sources
 
         }
 
+        public string FindKeyOrNull(string value, CultureInfo culture, bool tryDefaults = true)
+        {
+            return null;
+        }
+
         public string GetString(string name)
         {
             return name;

@@ -13,6 +13,11 @@ namespace Abp.Localization
             CultureInfo = cultureInfo;
         }
 
+        public string TryGetKey(string value)
+        {
+            return null;
+        }
+
         public LocalizedString GetOrNull(string name)
         {
             return null;
