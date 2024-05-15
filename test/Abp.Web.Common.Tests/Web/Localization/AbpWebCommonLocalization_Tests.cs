@@ -21,7 +21,7 @@ namespace Abp.Web.Common.Tests.Web.Localization
             using (CultureInfoHelper.Use("en"))
             {
                 _localizationManager
-                    .GetSource(AbpWebConsts.LocalizaionSourceName)
+                    .GetSource(AbpWebConsts.LocalizationSourceName)
                     .GetString("ValidationError")
                     .ShouldBe("Your request is not valid!");
             }
@@ -33,7 +33,7 @@ namespace Abp.Web.Common.Tests.Web.Localization
             using (CultureInfoHelper.Use("en"))
             {
                 var texts = _localizationManager
-                    .GetSource(AbpWebConsts.LocalizaionSourceName)
+                    .GetSource(AbpWebConsts.LocalizationSourceName)
                     .GetStrings(new List<string> {"ValidationError", "InternalServerError"});
 
                 texts.ShouldContain(x => x == "Your request is not valid!");

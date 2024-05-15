@@ -25,7 +25,7 @@ namespace Abp.AspNetCore.Mvc.Models
                 }
             }
 
-            var errorInfo = new ErrorInfo(localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "ValidationError"))
+            var errorInfo = new ErrorInfo(localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "ValidationError"))
             {
                 ValidationErrors = validationErrors.ToArray()
             };
