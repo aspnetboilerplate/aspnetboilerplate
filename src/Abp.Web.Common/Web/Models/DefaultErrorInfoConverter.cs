@@ -215,7 +215,7 @@ namespace Abp.Web.Models
         {
             try
             {
-                return _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, name);
+                return _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, name);
             }
             catch (Exception)
             {
