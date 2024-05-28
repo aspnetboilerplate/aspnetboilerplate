@@ -16,7 +16,6 @@ namespace Abp.BackgroundJobs
     {
         private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         public BackgroundJobStore(
             IRepository<BackgroundJobInfo, long> backgroundJobRepository,
@@ -57,17 +56,18 @@ namespace Abp.BackgroundJobs
 
         public virtual async Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            return await _unitOfWorkManager.WithUnitOfWork(async() =>
+            var waitingJobs = _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                var waitingJobsQuery = (await _backgroundJobRepository.GetAllAsync())
+                return _backgroundJobRepository.GetAll()
                     .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
                     .OrderByDescending(t => t.Priority)
                     .ThenBy(t => t.TryCount)
                     .ThenBy(t => t.NextTryTime)
-                    .Take(maxResultCount);
-
-                return await _asyncQueryableExecuter.ToListAsync(waitingJobsQuery);
+                    .Take(maxResultCount)
+                    .ToList();
             });
+            
+            return await Task.FromResult(waitingJobs);
         }
 
         public virtual List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
