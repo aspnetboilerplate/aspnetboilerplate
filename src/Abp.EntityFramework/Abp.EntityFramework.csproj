@@ -2,7 +2,7 @@
   <Import Project="..\..\common.props" />
   <Import Project="..\..\configureawait.props" />
   <PropertyGroup>
-    <TargetFrameworks>net462;net8.0</TargetFrameworks>
+    <TargetFrameworks>net462;net9.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFramework</AssemblyName>
     <PackageId>Abp.EntityFramework</PackageId>
