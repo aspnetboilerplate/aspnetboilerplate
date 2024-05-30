@@ -21,7 +21,6 @@ $projects = (
     "Abp.EntityFramework.Common",
     "Abp.EntityFramework.GraphDiff",
     "Abp.EntityFrameworkCore",
-    "Abp.EntityFrameworkCore.EFPlus",
     "Abp.FluentMigrator",
     "Abp.FluentValidation",
     "Abp.HangFire",
