@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,6 +27,8 @@ using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -114,6 +117,10 @@ namespace Abp.EntityFrameworkCore
         {
             base.OnModelCreating(modelBuilder);
 
+            ConfigureMustHaveTenantDbFunction(modelBuilder);
+            ConfigureMayHaveTenantDbFunction(modelBuilder);
+            ConfigureSoftDeleteDbFunction(modelBuilder);
+            
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 ConfigureGlobalFiltersMethodInfo
@@ -124,6 +131,69 @@ namespace Abp.EntityFrameworkCore
                     .MakeGenericMethod(entityType.ClrType)
                     .Invoke(this, new object[] { modelBuilder, entityType });
             }
+        }
+
+        protected virtual void ConfigureSoftDeleteDbFunction(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(SoftDeletePredicate)))
+                .HasTranslation(args =>
+                {
+                    if (IsSoftDeleteFilterEnabled)
+                    {
+                        // IsDeleted == false
+                        return new SqlBinaryExpression(
+                            ExpressionType.Equal,
+                            args.First(),
+                            args.Skip(1).First(),
+                            args.First().Type,
+                            args.First().TypeMapping);
+                    }
+
+                    // empty where sql
+                    return new SqlConstantExpression(Expression.Constant(true), new BoolTypeMapping("bool", DbType.Boolean));
+                });
+        }
+
+        protected virtual void ConfigureMayHaveTenantDbFunction(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantPredicate)))
+                .HasTranslation(args =>
+                {
+                    if (IsMayHaveTenantFilterEnabled)
+                    {
+                        // TenantId == CurrentTenantId
+                        return new SqlBinaryExpression(
+                            ExpressionType.Equal,
+                            args.First(),
+                            args.Skip(1).First(),
+                            args.First().Type,
+                            args.First().TypeMapping);
+                    }
+
+                    // empty where sql
+                    return new SqlConstantExpression(Expression.Constant(true), new BoolTypeMapping("bool", DbType.Boolean));
+                });
+        }
+
+        protected virtual void ConfigureMustHaveTenantDbFunction(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantPredicate)))
+                .HasTranslation(args =>
+                {
+                    if (IsMustHaveTenantFilterEnabled)
+                    {
+                        // TenantId == CurrentTenantId
+                        return new SqlBinaryExpression(
+                            ExpressionType.Equal,
+                            args.First(),
+                            args.Skip(1).First(),
+                            args.First().Type,
+                            args.First().TypeMapping);
+                    }
+
+                    // empty where sql
+                    return new SqlConstantExpression(Expression.Constant(true), new BoolTypeMapping("bool", DbType.Boolean));
+                });
         }
 
         protected void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
@@ -159,6 +229,21 @@ namespace Abp.EntityFrameworkCore
             return false;
         }
 
+        public static bool MustHaveTenantPredicate(int tenantId, int? currentTenantId)
+        {
+            throw new NotSupportedException("This method should be replaced by the database function call.");
+        }
+        
+        public static bool MayHaveTenantPredicate(int? tenantId, int? currentTenantId)
+        {
+            throw new NotSupportedException("This method should be replaced by the database function call.");
+        }
+        
+        public static bool SoftDeletePredicate(bool isDeleted, bool isDeletedFilter)
+        {
+            throw new NotSupportedException("This method should be replaced by the database function call.");
+        }
+        
         protected virtual Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
             where TEntity : class
         {
@@ -166,19 +251,19 @@ namespace Abp.EntityFrameworkCore
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => SoftDeletePredicate(((ISoftDelete) e).IsDeleted, false);
                 expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
+                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => MayHaveTenantPredicate(((IMayHaveTenant)e).TenantId, CurrentTenantId);
                 expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
             }
-
+            
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
+                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => MustHaveTenantPredicate(((IMustHaveTenant)e).TenantId, CurrentTenantId);
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 

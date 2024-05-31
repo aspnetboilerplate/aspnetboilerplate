@@ -77,6 +77,19 @@ namespace Abp.Zero.Repository
 
             using (var uow = uowManager.Begin())
             {
+                using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                {
+                    var tenantId = uowManager.Current.GetTenantId();
+                    var roles = await _roleRepository.GetAllListAsync();
+                    roles.Count.ShouldBe(1);
+                    roles.First().NormalizedName.ShouldBe("ADMIN");
+                }
+
+                await uow.CompleteAsync();
+            }
+            
+            using (var uow = uowManager.Begin())
+            {
                 await _roleRepository.HardDeleteAsync(r => r.Id > 0);
                 await uow.CompleteAsync();
             }
@@ -86,8 +99,7 @@ namespace Abp.Zero.Repository
                 using (uowManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
                     var roles = await _roleRepository.GetAllListAsync();
-                    roles.Count.ShouldBe(1);
-                    roles.First().NormalizedName.ShouldBe("ADMIN");
+                    roles.Count.ShouldBe(0);
                 }
 
                 await uow.CompleteAsync();

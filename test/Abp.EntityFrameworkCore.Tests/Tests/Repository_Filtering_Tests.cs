@@ -60,9 +60,9 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
             var postsDefault = await _postRepository.GetAllListAsync();
             postsDefault.Any(p => p.TenantId == null).ShouldBeTrue();
 
-            //Switch to tenant 42
+            // Switch to tenant 42
             AbpSession.TenantId = 42;
-
+            
             var posts1 = await _postRepository.GetAllListAsync();
             posts1.All(p => p.TenantId == 42).ShouldBeTrue();
 
