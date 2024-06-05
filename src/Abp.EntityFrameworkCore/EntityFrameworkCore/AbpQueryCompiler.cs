@@ -64,7 +64,8 @@ namespace Abp.EntityFrameworkCore
             var globalFilters = (string)null;
             if (_currentDbContext.Context is AbpDbContext abpDbContext)
             {
-                globalFilters = string.Join("|", abpDbContext.CurrentUnitOfWorkProvider?.Current.Filters.Select(s => $"{s.FilterName}:{s.IsEnabled}"));
+                var list = abpDbContext.CurrentUnitOfWorkProvider?.Current?.Filters?.Select(s => $"{s.FilterName}:{s.IsEnabled}");
+                globalFilters = list == null ? "" : string.Join("|", list);
             }
             var compiledQueryCacheKey = new CompiledQueryCacheKey(_defaultCompiledQueryCacheKey, globalFilters);
 
