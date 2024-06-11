@@ -51,6 +51,7 @@ namespace Abp.ZeroCore.SampleApp.EntityFramework
         public SampleAppDbContext(DbContextOptions<SampleAppDbContext> options) 
             : base(options)
         {
+            CurrentUnitOfWorkProvider = new AsyncLocalCurrentUnitOfWorkProvider();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
