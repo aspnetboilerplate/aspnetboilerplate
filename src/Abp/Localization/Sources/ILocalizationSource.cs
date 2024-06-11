@@ -21,6 +21,17 @@ namespace Abp.Localization.Sources
         void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver);
 
         /// <summary>
+        /// Gets key for given value.
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="tryDefaults">
+        /// True: Fallbacks to default language if not found in current culture.
+        /// </param>
+        /// <returns>Key</returns>
+        string FindKeyOrNull(string value, CultureInfo culture, bool tryDefaults = true);
+
+        /// <summary>
         /// Gets localized string for given name in current language.
         /// Fallbacks to default language if not found in current culture.
         /// </summary>

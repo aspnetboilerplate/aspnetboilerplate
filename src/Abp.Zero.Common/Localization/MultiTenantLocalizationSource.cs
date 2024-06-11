@@ -36,6 +36,60 @@ namespace Abp.Localization
             }
         }
 
+        public string FindKeyOrNull(int? tenantId, string value, CultureInfo culture, bool tryDefaults = true)
+        {
+            var cultureName = culture.Name;
+            var dictionaries = DictionaryProvider.Dictionaries;
+
+            //Try to get from original dictionary (with country code)
+            ILocalizationDictionary originalDictionary;
+            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
+            {
+                var keyOriginal = originalDictionary
+                    .As<IMultiTenantLocalizationDictionary>()
+                    .TryGetKey(tenantId, value);
+
+                if (keyOriginal != null)
+                {
+                    return keyOriginal;
+                }
+            }
+
+            if (!tryDefaults)
+            {
+                return null;
+            }
+
+            //Try to get from same language dictionary (without country code)
+            if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
+            {
+                ILocalizationDictionary langDictionary;
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
+                {
+                    var keyLang = langDictionary.As<IMultiTenantLocalizationDictionary>().TryGetKey(tenantId, value);
+                    if (keyLang != null)
+                    {
+                        return keyLang;
+                    }
+                }
+            }
+
+            //Try to get from default language
+            var defaultDictionary = DictionaryProvider.DefaultDictionary;
+            if (defaultDictionary == null)
+            {
+                return null;
+            }
+
+            var keyDefault = defaultDictionary.As<IMultiTenantLocalizationDictionary>().TryGetKey(tenantId, value);
+            if (keyDefault == null)
+            {
+                return null;
+            }
+
+            return keyDefault;
+        }
+
         public string GetString(int? tenantId, string name, CultureInfo culture)
         {
             var value = GetStringOrNull(tenantId, name, culture);
