@@ -51,7 +51,11 @@ namespace Abp.Localization.Sources.Resource
 
         public string FindKeyOrNull(string value, CultureInfo culture, bool tryDefaults = true)
         {
-            return null;
+            var resource = ResourceManager.GetResourceSet(culture, true, tryDefaults)
+                .Cast<DictionaryEntry>()
+                .FirstOrDefault(x => x.Value.ToString() == value);
+
+            return resource.Key?.ToString();
         }
 
         public virtual string GetString(string name)
@@ -94,7 +98,8 @@ namespace Abp.Localization.Sources.Resource
             var nullValues = values.Where(x => x.Value == null).ToList();
             if (nullValues.Any())
             {
-                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(), CultureInfo.CurrentUICulture);
+                return ReturnGivenNamesOrThrowException(nullValues.Select(x => x.Name).ToList(),
+                    CultureInfo.CurrentUICulture);
             }
 
             return values.Select(x => x.Value).ToList();
