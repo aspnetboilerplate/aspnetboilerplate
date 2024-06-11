@@ -96,7 +96,7 @@ git clone https://github.com/aspnetboilerplate/aspnetboilerplate.git
 
 cd aspnetboilerplate
 dotnet restore Abp.sln
-dotnet build Abp.sln
+dotnet build Abp.sln -c Release
 
 "-BUILD COMPLETED-{0}" -f [environment]::NewLine
 

@@ -16,6 +16,26 @@ namespace AbpAspNetCoreDemo.Core.Application
                 OrderDate = input.OrderDate.ToString(),
             };
         }
+
+        public string TestDate(TestDateDto input)
+        {
+            return input.TestDate.ToString();
+        }
+        
+        public string NullableTestDate(NullableTestDateDto input)
+        {
+            if (!input.TestDate.HasValue)
+            {
+                return string.Empty;
+            }
+            
+            return input.TestDate.ToString();
+        }
+        
+        public string DateOnlyTestDate(DateOnlyTestDateDateDto input)
+        {
+            return input.TestDate.ToString();
+        }
     }
 
     public class CalculatePriceDto
@@ -31,5 +51,20 @@ namespace AbpAspNetCoreDemo.Core.Application
         public string OrderDate { get; set; }
 
         public string Culture { get; set; }
+    }
+
+    public class TestDateDto
+    {
+        public DateTime TestDate { get; set; }
+    }
+    
+    public class NullableTestDateDto
+    {
+        public DateTime? TestDate { get; set; }
+    }
+    
+    public class DateOnlyTestDateDateDto
+    {
+        public DateOnly TestDate { get; set; }
     }
 }

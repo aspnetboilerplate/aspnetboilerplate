@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
@@ -73,14 +74,26 @@ namespace AbpAspNetCoreDemo
                 opts.AddRouteComponents("odata", edmModel);
             });
 
-            services.Configure<JsonOptions>(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new CultureInvariantDecimalJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDecimalJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new CultureInvariantDoubleJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new CultureInvariantNullableDoubleJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new Abp.Json.SystemTextJson.DateOnlyJsonConverter());
-            });
+            services.AddOptions<JsonOptions>()
+                .Configure<IServiceProvider>((options, rootServiceProvider) =>
+                {
+                    options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+                    options.JsonSerializerOptions.AllowTrailingCommas = true;
+
+                    options.JsonSerializerOptions.Converters.Add(new AbpStringToEnumFactory());
+                    options.JsonSerializerOptions.Converters.Add(new AbpStringToBooleanConverter());
+                    options.JsonSerializerOptions.Converters.Add(new AbpStringToGuidConverter());
+                    options.JsonSerializerOptions.Converters.Add(new AbpNullableStringToGuidConverter());
+                    options.JsonSerializerOptions.Converters.Add(new AbpNullableFromEmptyStringConverterFactory());
+                    options.JsonSerializerOptions.Converters.Add(new ObjectToInferredTypesConverter());
+                    options.JsonSerializerOptions.Converters.Add(new Abp.Json.SystemTextJson.DateOnlyJsonConverter());
+                    
+                    options.JsonSerializerOptions.Converters.Add(new CultureInvariantDecimalJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new CultureInvariantDoubleJsonConverter());
+                    
+                    var aspNetCoreConfiguration = rootServiceProvider.GetRequiredService<IAbpAspNetCoreConfiguration>();
+                    options.JsonSerializerOptions.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver(aspNetCoreConfiguration.InputDateTimeFormats, aspNetCoreConfiguration.OutputDateTimeFormat);
+                });
 
             services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
 

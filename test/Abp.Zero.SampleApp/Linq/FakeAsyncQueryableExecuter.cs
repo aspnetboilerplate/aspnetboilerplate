@@ -1,6 +1,7 @@
 ﻿using Abp.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Abp.Zero.SampleApp.Linq
@@ -12,7 +13,7 @@ namespace Abp.Zero.SampleApp.Linq
     /// </summary>
     public class FakeAsyncQueryableExecuter : IAsyncQueryableExecuter
     {
-        public async Task<bool> AnyAsync<T>(IQueryable<T> queryable)
+        public async Task<bool> AnyAsync<T>(IQueryable<T> queryable, CancellationToken cancellationToken = default)
         {
             await AsyncTask();
             return queryable.Any();
@@ -23,7 +24,7 @@ namespace Abp.Zero.SampleApp.Linq
             throw new System.NotImplementedException();
         }
 
-        public async Task<int> CountAsync<T>(IQueryable<T> queryable)
+        public async Task<int> CountAsync<T>(IQueryable<T> queryable, CancellationToken cancellationToken = default)
         {
             await AsyncTask();
             return queryable.Count();
@@ -34,7 +35,7 @@ namespace Abp.Zero.SampleApp.Linq
             throw new System.NotImplementedException();
         }
 
-        public async Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable)
+        public async Task<T> FirstOrDefaultAsync<T>(IQueryable<T> queryable, CancellationToken cancellationToken = default)
         {
             await AsyncTask();
             return queryable.FirstOrDefault();
@@ -45,7 +46,7 @@ namespace Abp.Zero.SampleApp.Linq
             throw new System.NotImplementedException();
         }
 
-        public async Task<List<T>> ToListAsync<T>(IQueryable<T> queryable)
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> queryable, CancellationToken cancellationToken = default)
         {
             await AsyncTask();
             return queryable.ToList();

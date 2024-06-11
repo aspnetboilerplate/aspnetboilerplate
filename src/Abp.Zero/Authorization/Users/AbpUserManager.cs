@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Configuration;
@@ -12,6 +6,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.IdentityFramework;
+using Abp.Linq;
 using Abp.Localization;
 using Abp.MultiTenancy;
 using Abp.Organizations;
@@ -21,6 +16,12 @@ using Abp.Runtime.Session;
 using Abp.Zero;
 using Abp.Zero.Configuration;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Abp.Authorization.Users
 {
@@ -68,6 +69,7 @@ namespace Abp.Authorization.Users
         private readonly IOrganizationUnitSettings _organizationUnitSettings;
         private readonly ISettingManager _settingManager;
         private readonly IRepository<UserLogin, long> _userLoginRepository;
+        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
 
         protected AbpUserManager(
             AbpUserStore<TRole, TUser> userStore,
@@ -680,47 +682,43 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
-                    join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
+                    join ou in await _organizationUnitRepository.GetAllAsync() on uou.OrganizationUnitId equals ou.Id
                     where uou.UserId == user.Id
                     select ou;
 
-                return query.ToList();
+                return await _asyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual async Task<List<TUser>> GetUsersInOrganizationUnit(
             OrganizationUnit organizationUnit,
             bool includeChildren = false)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 if (!includeChildren)
                 {
-                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
                         join user in AbpStore.Users on uou.UserId equals user.Id
                         where uou.OrganizationUnitId == organizationUnit.Id
                         select user;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
                 else
                 {
-                    var query = from uou in _userOrganizationUnitRepository.GetAll()
+                    var query = from uou in await _userOrganizationUnitRepository.GetAllAsync()
                         join user in AbpStore.Users on uou.UserId equals user.Id
-                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                        join ou in await _organizationUnitRepository.GetAllAsync() on uou.OrganizationUnitId equals ou.Id
                         where ou.Code.StartsWith(organizationUnit.Code)
                         select user;
 
-                    return query.ToList();
+                    return await _asyncQueryableExecuter.ToListAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual void RegisterTwoFactorProviders(int? tenantId)

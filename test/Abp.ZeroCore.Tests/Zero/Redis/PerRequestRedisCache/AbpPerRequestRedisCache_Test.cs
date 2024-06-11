@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Abp.Application.Editions;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Configuration.Startup;
 using Abp.Json;
 using Abp.MultiTenancy;
 using Abp.Runtime.Caching;
 using Abp.Runtime.Caching.Configuration;
 using Abp.Runtime.Caching.Redis;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Shouldly;
 using StackExchange.Redis;
@@ -24,7 +26,9 @@ namespace Abp.Zero.Redis.PerRequestRedisCache
         {
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(12); });
             LocalIocManager.Resolve<ICachingConfiguration>().Configure("MyPerRequestRedisTestCacheItems", cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(24); });
-            
+
+            LocalIocManager.Register<IOptions<AbpRedisCacheOptions>, OptionsWrapper<AbpRedisCacheOptions>>();
+
             _perRequestRedisCache = LocalIocManager.Resolve<IAbpPerRequestRedisCacheManager>().GetCache<string, MyCacheItem>("MyPerRequestRedisTestCacheItems");
             _normalRedisCache = LocalIocManager.Resolve<ICacheManager>().GetCache<string, MyCacheItem>("MyTestCacheItems");
         }

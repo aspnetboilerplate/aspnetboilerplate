@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.Timing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.BackgroundJobs
 {
@@ -65,7 +66,7 @@ namespace Abp.BackgroundJobs
                     .Take(maxResultCount)
                     .ToList();
             });
-
+            
             return await Task.FromResult(waitingJobs);
         }
 

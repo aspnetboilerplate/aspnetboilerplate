@@ -1,4 +1,5 @@
-﻿using Abp.Data;
+﻿using Abp.Configuration.Startup;
+using Abp.Data;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,10 @@ namespace Abp.Runtime.Caching.Redis
             string name,
             IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider,
             IRedisCacheSerializer redisCacheSerializer,
-            IHttpContextAccessor httpContextAccessor)
-            : base(name, redisCacheDatabaseProvider, redisCacheSerializer)
+            IHttpContextAccessor httpContextAccessor,
+            IMultiTenancyConfig multiTenancyConfig,
+            IAbpRedisCacheKeyNormalizer abpRedisCacheKeyNormalizer)
+            : base(name, redisCacheDatabaseProvider, redisCacheSerializer, abpRedisCacheKeyNormalizer, multiTenancyConfig)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -326,7 +329,7 @@ namespace Abp.Runtime.Caching.Redis
         
         protected virtual string GetPerRequestRedisCacheKey(string key)
         {
-            return AbpPerRequestRedisCachePrefix + GetLocalizedRedisKey(key).ToString();
+            return AbpPerRequestRedisCachePrefix + NormalizeKey(key).ToString();
         }
     }
 }

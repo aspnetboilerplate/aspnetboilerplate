@@ -4,11 +4,6 @@ using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
-    public interface IOnlineClientStore<T> : IOnlineClientStore
-    {
-
-    }
-
     public interface IOnlineClientStore
     {
         /// <summary>

@@ -83,6 +83,13 @@ namespace Abp.Tests.Localization
             _localizationSource.GetString("An undefined text").ShouldBe("[An undefined text]");
         }
 
+        [Fact]
+        public void Should_Get_Correct_Localization_Key()
+        {
+            _localizationSource.FindKeyOrNull("Yeryüzü", new CultureInfo("tr-TR")).ShouldBe("world");
+            _localizationSource.FindKeyOrNull("Fourty Two (42)", new CultureInfo("fr-FR")).ShouldBe("fourtyTwo");
+        }
+        
         private class FakeLocalizationDictionary : LocalizationDictionaryProviderBase
         {
             public FakeLocalizationDictionary()

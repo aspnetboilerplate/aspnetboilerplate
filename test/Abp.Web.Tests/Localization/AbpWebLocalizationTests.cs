@@ -22,7 +22,7 @@ namespace Abp.Web.Tests.Localization
         {
             var names = Assembly.GetAssembly(typeof(AbpWebModule)).GetManifestResourceNames();
 
-            var source = _localizationManager.GetSource(AbpWebConsts.LocalizaionSourceName);
+            var source = _localizationManager.GetSource(AbpWebConsts.LocalizationSourceName);
             source.GetString("Yes", new CultureInfo("en-US")).ShouldBe("Yes");
             source.GetString("Yes", new CultureInfo("tr-TR")).ShouldBe("Evet");
         }

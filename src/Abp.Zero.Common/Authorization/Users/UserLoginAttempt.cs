@@ -40,6 +40,11 @@ namespace Abp.Authorization.Users
         public const int MaxBrowserInfoLength = 512;
 
         /// <summary>
+        /// Maximum length of <see cref="ClientName"/> property.
+        /// </summary>
+        public const int MaxFailReasonLength = 1024;
+
+        /// <summary>
         /// Tenant's Id, if <see cref="TenancyName"/> was a valid tenant name.
         /// </summary>
         public virtual int? TenantId { get; set; }
@@ -83,6 +88,8 @@ namespace Abp.Authorization.Users
         /// Login attempt result.
         /// </summary>
         public virtual AbpLoginResultType Result { get; set; }
+
+        [StringLength(MaxFailReasonLength)] public virtual string FailReason { get; set; }
 
         public virtual DateTime CreationTime { get; set; }
 

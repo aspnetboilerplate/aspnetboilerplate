@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.MultiTenancy;
 
 namespace Abp.Authorization
@@ -31,7 +32,19 @@ namespace Abp.Authorization
         /// <summary>
         /// Gets all permissions.
         /// </summary>
+        /// <param name="tenancyFilter">Can be passed false to disable tenancy filter.</param>
+        Task<IReadOnlyList<Permission>> GetAllPermissionsAsync(bool tenancyFilter = true);
+
+        /// <summary>
+        /// Gets all permissions.
+        /// </summary>
         /// <param name="multiTenancySides">Multi-tenancy side to filter</param>
         IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides);
+        
+        /// <summary>
+        /// Gets all permissions.
+        /// </summary>
+        /// <param name="multiTenancySides">Multi-tenancy side to filter</param>
+        Task<IReadOnlyList<Permission>> GetAllPermissionsAsync(MultiTenancySides multiTenancySides);
     }
 }

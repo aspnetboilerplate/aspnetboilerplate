@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Transactions;
 using Abp.Authorization.Roles;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -18,6 +10,14 @@ using Abp.Zero;
 using Castle.Core.Logging;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Abp.Authorization.Users
 {
@@ -104,6 +104,9 @@ namespace Abp.Authorization.Users
             Logger = NullLogger.Instance;
             AsyncQueryableExecuter = NullAsyncQueryableExecuter.Instance;
         }
+
+        public virtual Task<IQueryable<TUser>> GetUsersAsync()
+            => UserRepository.GetAllAsync();
 
         /// <summary>Saves the current store.</summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
@@ -785,16 +788,16 @@ namespace Abp.Authorization.Users
 
                 Check.NotNull(user, nameof(user));
 
-                var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in _userRoleRepository.GetAll()
-                    join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+                var userRoles = await AsyncQueryableExecuter.ToListAsync(from userRole in await _userRoleRepository.GetAllAsync()
+                    join role in await _roleRepository.GetAllAsync() on userRole.RoleId equals role.Id
                     where userRole.UserId == user.Id
                     select role.Name);
 
                 var userOrganizationUnitRoles = await AsyncQueryableExecuter.ToListAsync(
-                    from userOu in _userOrganizationUnitRepository.GetAll()
-                    join roleOu in _organizationUnitRoleRepository.GetAll() on userOu.OrganizationUnitId equals roleOu
+                    from userOu in await _userOrganizationUnitRepository.GetAllAsync()
+                    join roleOu in await _organizationUnitRoleRepository.GetAllAsync() on userOu.OrganizationUnitId equals roleOu
                         .OrganizationUnitId
-                    join userOuRoles in _roleRepository.GetAll() on roleOu.RoleId equals userOuRoles.Id
+                    join userOuRoles in await _roleRepository.GetAllAsync() on roleOu.RoleId equals userOuRoles.Id
                     where userOu.UserId == user.Id
                     select userOuRoles.Name);
 
@@ -1298,8 +1301,8 @@ namespace Abp.Authorization.Users
                 Check.NotNull(loginProvider, nameof(loginProvider));
                 Check.NotNull(providerKey, nameof(providerKey));
 
-                var query = from userLogin in _userLoginRepository.GetAll()
-                    join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+                var query = from userLogin in await _userLoginRepository.GetAllAsync()
+                    join user in await UserRepository.GetAllAsync() on userLogin.UserId equals user.Id
                     where userLogin.LoginProvider == loginProvider &&
                           userLogin.ProviderKey == providerKey &&
                           userLogin.TenantId == AbpSession.TenantId
@@ -2227,8 +2230,8 @@ namespace Abp.Authorization.Users
 
                 Check.NotNull(claim, nameof(claim));
 
-                var query = from userclaims in _userClaimRepository.GetAll()
-                    join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
+                var query = from userclaims in await _userClaimRepository.GetAllAsync()
+                    join user in await UserRepository.GetAllAsync() on userclaims.UserId equals user.Id
                     where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type &&
                           userclaims.TenantId == AbpSession.TenantId
                     select user;
@@ -2293,8 +2296,8 @@ namespace Abp.Authorization.Users
                     return new List<TUser>();
                 }
 
-                var query = from userrole in _userRoleRepository.GetAll()
-                    join user in UserRepository.GetAll() on userrole.UserId equals user.Id
+                var query = from userrole in await _userRoleRepository.GetAllAsync()
+                    join user in await UserRepository.GetAllAsync() on userrole.UserId equals user.Id
                     where userrole.RoleId.Equals(role.Id)
                     select user;
 
@@ -2602,17 +2605,15 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWork(async () =>
             {
-                var query = from userLogin in _userLoginRepository.GetAll()
-                    join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+                var query = from userLogin in await _userLoginRepository.GetAllAsync()
+                    join user in await UserRepository.GetAllAsync() on userLogin.UserId equals user.Id
                     where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                     select user;
 
-                return query.ToList();
+                return await AsyncQueryableExecuter.ToListAsync(query);
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual List<TUser> FindAll(UserLoginInfo login)
@@ -2630,21 +2631,19 @@ namespace Abp.Authorization.Users
 
         public virtual async Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
-            var result = _unitOfWorkManager.WithUnitOfWork(() =>
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                 {
-                    var query = from userLogin in _userLoginRepository.GetAll()
-                        join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
+                    var query = from userLogin in await _userLoginRepository.GetAllAsync()
+                        join user in await UserRepository.GetAllAsync() on userLogin.UserId equals user.Id
                         where userLogin.LoginProvider == login.LoginProvider &&
                               userLogin.ProviderKey == login.ProviderKey
                         select user;
 
-                    return query.FirstOrDefault();
+                    return await AsyncQueryableExecuter.FirstOrDefaultAsync(query);
                 }
             });
-
-            return await Task.FromResult(result);
         }
 
         public virtual TUser Find(int? tenantId, UserLoginInfo login)

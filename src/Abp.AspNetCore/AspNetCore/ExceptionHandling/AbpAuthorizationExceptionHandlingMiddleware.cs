@@ -58,10 +58,10 @@ namespace Abp.AspNetCore.ExceptionHandling
         {
             if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
             {
-                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403");
+                _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError403");
             }
 
-            return _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401");
+            return _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError401");
         }
 
         protected virtual bool IsAuthorizationExceptionStatusCode(HttpContext context)

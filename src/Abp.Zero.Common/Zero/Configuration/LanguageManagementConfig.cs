@@ -24,7 +24,7 @@ namespace Abp.Zero.Configuration
 
         public void EnableDbLocalization()
         {
-            _iocManager.Register<ILanguageProvider, ApplicationLanguageProvider>(DependencyLifeStyle.Transient);
+            _iocManager.RegisterIfNot<ILanguageProvider, ApplicationLanguageProvider>(DependencyLifeStyle.Transient);
 
             var sources = _configuration
                 .Localization

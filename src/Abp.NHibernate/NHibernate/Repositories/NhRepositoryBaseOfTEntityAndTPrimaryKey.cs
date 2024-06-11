@@ -41,6 +41,11 @@ namespace Abp.NHibernate.Repositories
             return Session.Query<TEntity>();
         }
 
+        public override IQueryable<TEntity> GetAllReadonly()
+        {
+            return GetAll().WithOptions(o => o.SetReadOnly(true));
+        }
+
         public override Task<IQueryable<TEntity>> GetAllAsync()
         {
             return Task.FromResult(Session.Query<TEntity>());
@@ -54,6 +59,42 @@ namespace Abp.NHibernate.Repositories
             }
 
             var query = GetAll();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                //TODO: Test if NHibernate supports multiple fetch.
+                query = query.Fetch(propertySelector);
+            }
+
+            return query;
+        }
+        
+        public override IQueryable<TEntity> GetAllReadonlyIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return GetAllReadonly();
+            }
+
+            var query = GetAllReadonly();
+
+            foreach (var propertySelector in propertySelectors)
+            {
+                //TODO: Test if NHibernate supports multiple fetch.
+                query = query.Fetch(propertySelector);
+            }
+
+            return query;
+        }
+
+        public override async Task<IQueryable<TEntity>> GetAllReadonlyIncludingAsync(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (propertySelectors.IsNullOrEmpty())
+            {
+                return await GetAllReadonlyAsync();
+            }
+
+            var query = await GetAllReadonlyAsync();
 
             foreach (var propertySelector in propertySelectors)
             {

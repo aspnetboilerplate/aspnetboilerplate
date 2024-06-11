@@ -10,15 +10,6 @@ using System.Threading.Tasks;
 
 namespace Abp.Runtime.Caching.Redis.RealTime
 {
-    public class RedisOnlineClientStore<T> : RedisOnlineClientStore, IOnlineClientStore<T>
-    {
-        public RedisOnlineClientStore(
-            IAbpRedisCacheDatabaseProvider database,
-            AbpRedisCacheOptions options) : base(database, options)
-        {
-        }
-    }
-
     public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
     {
         private readonly IAbpRedisCacheDatabaseProvider _database;
@@ -113,44 +104,22 @@ namespace Abp.Runtime.Caching.Redis.RealTime
 
         public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
         {
-            var clients = new List<OnlineClient>();
-            if (!await IsUserOnlineAsync(userIdentifier))
-            {
-                return clients;
-            }
-
             var database = GetDatabase();
-
-            var userClientsValue = await database.HashGetAsync(_userStoreKey, userIdentifier.ToUserIdentifierString());
-            if (!userClientsValue.HasValue)
+            var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
+            var clients = new List<IOnlineClient>();
+            foreach (var entry in clientsEntries)
             {
-                return clients;
+                clients.Add(JsonConvert.DeserializeObject<OnlineClient>(entry.Value));
             }
 
-            var userClients = JsonConvert.DeserializeObject<List<string>>(userClientsValue);
-            foreach (var connectionId in userClients)
-            {
-                var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
-                if (clientValue.IsNullOrEmpty)
-                {
-                    continue;
-                }
-
-                clients.Add(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
-            }
-
-            return clients;
+            return clients
+                .Where(e => e.TenantId == userIdentifier.TenantId && e.UserId == userIdentifier.UserId)
+                .ToImmutableList();
         }
 
         private IDatabase GetDatabase()
         {
             return _database.GetDatabase();
-        }
-
-        private async Task<bool> IsUserOnlineAsync(UserIdentifier user)
-        {
-            var database = GetDatabase();
-            return await database.HashExistsAsync(_userStoreKey, user.ToUserIdentifierString());
         }
     }
 }

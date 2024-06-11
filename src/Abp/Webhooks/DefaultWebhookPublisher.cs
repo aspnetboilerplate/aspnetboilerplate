@@ -183,8 +183,8 @@ namespace Abp.Webhooks
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,
-                Data = _webhooksConfiguration.JsonSerializerSettings != null
-                    ? data.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+                Data = _webhooksConfiguration.JsonSerializerOptions != null
+                    ? data.ToJsonString(_webhooksConfiguration.JsonSerializerOptions)
                     : data.ToJsonString(),
                 TenantId = tenantId
             };
@@ -199,8 +199,8 @@ namespace Abp.Webhooks
             {
                 Id = _guidGenerator.Create(),
                 WebhookName = webhookName,
-                Data = _webhooksConfiguration.JsonSerializerSettings != null
-                    ? data.ToJsonString(_webhooksConfiguration.JsonSerializerSettings)
+                Data = _webhooksConfiguration.JsonSerializerOptions != null
+                    ? data.ToJsonString(_webhooksConfiguration.JsonSerializerOptions)
                     : data.ToJsonString(),
                 TenantId = tenantId
             };

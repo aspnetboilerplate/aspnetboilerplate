@@ -32,6 +32,11 @@ public class DateOnlyJsonConverter : JsonConverter<DateOnly>
             }
         }
 
+        if (DateOnly.TryParse(reader.GetString(), CultureInfo.CurrentUICulture, out var date))
+        {
+            return date;
+        }
+        
         return default;
     }
 
