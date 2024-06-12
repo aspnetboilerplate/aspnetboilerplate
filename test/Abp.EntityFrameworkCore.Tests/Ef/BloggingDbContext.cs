@@ -21,6 +21,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         public BloggingDbContext(DbContextOptions<BloggingDbContext> options)
             : base(options)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
