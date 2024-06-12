@@ -27,6 +27,8 @@ namespace Abp.EntityFrameworkCore
 
         private readonly ICurrentDbContext _currentDbContext;
 
+        public static AsyncLocal<AbpDbContext> CurrentAbpDbContext = new AsyncLocal<AbpDbContext>();
+
         public AbpQueryCompiler(
             IQueryContextFactory queryContextFactory,
             ICompiledQueryCache compiledQueryCache,
@@ -64,6 +66,7 @@ namespace Abp.EntityFrameworkCore
             var globalFilters = (string)null;
             if (_currentDbContext.Context is AbpDbContext abpDbContext)
             {
+                CurrentAbpDbContext.Value = abpDbContext;
                 var list = abpDbContext.CurrentUnitOfWorkProvider?.Current?.Filters?.Select(s => $"{s.FilterName}:{s.IsEnabled}");
                 globalFilters = list == null ? "" : string.Join("|", list);
             }

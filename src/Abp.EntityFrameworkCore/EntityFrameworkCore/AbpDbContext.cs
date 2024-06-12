@@ -146,7 +146,7 @@ namespace Abp.EntityFrameworkCore
             modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(SoftDeletePredicate)))
                 .HasTranslation(args =>
                 {
-                    if (IsSoftDeleteFilterEnabled)
+                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsSoftDeleteFilterEnabled)
                     {
                         // IsDeleted == false
                         return new SqlBinaryExpression(
@@ -166,7 +166,7 @@ namespace Abp.EntityFrameworkCore
             modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantPredicate)))
                 .HasTranslation(args =>
                 {
-                    if (IsMayHaveTenantFilterEnabled)
+                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsMayHaveTenantFilterEnabled)
                     {
                         // TenantId == CurrentTenantId
                         return new SqlBinaryExpression(
@@ -186,7 +186,7 @@ namespace Abp.EntityFrameworkCore
             modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantPredicate)))
                 .HasTranslation(args =>
                 {
-                    if (IsMustHaveTenantFilterEnabled)
+                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsMustHaveTenantFilterEnabled)
                     {
                         // TenantId == CurrentTenantId
                         return new SqlBinaryExpression(

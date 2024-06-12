@@ -21,7 +21,6 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         public BloggingDbContext(DbContextOptions<BloggingDbContext> options)
             : base(options)
         {
-            CurrentUnitOfWorkProvider=new AsyncLocalCurrentUnitOfWorkProvider();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

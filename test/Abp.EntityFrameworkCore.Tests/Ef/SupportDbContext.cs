@@ -28,7 +28,6 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         public SupportDbContext(DbContextOptions<SupportDbContext> options) 
             : base(options)
         {
-            CurrentUnitOfWorkProvider=new AsyncLocalCurrentUnitOfWorkProvider();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
