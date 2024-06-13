@@ -17,9 +17,10 @@ namespace Abp.Zero.SampleApp.NHibernate
         {
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             Configuration.Modules.AbpNHibernate().FluentConfiguration
-                .Database(SQLiteConfiguration.Standard.InMemory())
+                .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
                 .ExposeConfiguration(cfg => new SchemaExport(cfg).Execute(true, true, false, IocManager.Resolve<DbConnection>(), Console.Out));
+                
         }
     }
 }

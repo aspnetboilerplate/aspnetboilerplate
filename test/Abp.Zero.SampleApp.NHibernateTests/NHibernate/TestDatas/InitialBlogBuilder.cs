@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using Abp.Timing;
 using Abp.Zero.SampleApp.EntityHistory;
 using NHibernate;
 
@@ -37,10 +40,9 @@ namespace Abp.Zero.SampleApp.NHibernate.TestDatas
                     BloggerName = "blogger-1"
                 }
             };
-            
+
             _session.Save(blog1);
-            // _session.Save(new Post(blog1, "test-post-1-title", "test-post-1-body"));
-            
+
             var blog2 = new Blog
             {
                 Name = "test-blog-2",

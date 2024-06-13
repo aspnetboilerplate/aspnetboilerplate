@@ -8,13 +8,16 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
     {
         public PostMap() : base("Posts")
         {
-            Map(p => p.BlogId);
-            Map(p => p.Title);
-            Map(p => p.Body);
-            Map(x => x.TenantId).Nullable();
-         
-            HasOne(p => p.Blog).ForeignKey("BlogId");
-            HasMany(p => p.Comments);
+            References(x => x.Blog)
+                .Column("BlogId")
+                .Cascade.All();
+            
+            HasMany(f => f.Comments);
+
+            Map(x => x.Title);
+            Map(x => x.Body);
+            Map(x => x.TenantId);
+            
             
             this.MapIsDeleted();
             this.MapAudited();
