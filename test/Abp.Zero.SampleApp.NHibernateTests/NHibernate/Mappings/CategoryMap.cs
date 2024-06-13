@@ -1,9 +1,9 @@
-using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.Nhibernate;
 using FluentNHibernate.Mapping;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class CategoryMap : ClassMap<Category>
+    public class CategoryMap : ClassMap<NhCategory>
     {
         public CategoryMap()
         {

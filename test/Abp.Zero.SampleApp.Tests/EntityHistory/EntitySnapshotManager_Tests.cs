@@ -5,6 +5,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityHistory;
 using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using Shouldly;
 using Xunit;
 

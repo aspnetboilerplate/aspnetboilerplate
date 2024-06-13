@@ -1,12 +1,12 @@
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.EFCore
 {
     public class Employee : FullAuditedEntity
     {
-        public virtual string FullName { get; set; }
+        public string FullName { get; set; }
 
-        public virtual Department Department { get; set; }
+        public Department Department { get; set; }
     }
 
     public enum Department

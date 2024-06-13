@@ -1,9 +1,9 @@
 using Abp.NHibernate.EntityMappings;
-using Abp.Zero.SampleApp.TPH;
+using Abp.Zero.SampleApp.TPH.NHibernate;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class StudentMap :EntityMap<Student>
+    public class StudentMap :EntityMap<NhStudent>
     {
         public StudentMap() : base("People")
         {
@@ -16,7 +16,7 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
         }
     }
     
-    public class CitizenshipInformationMap : EntityMap<CitizenshipInformation>
+    public class CitizenshipInformationMap : EntityMap<NhCitizenshipInformation>
     {
         public CitizenshipInformationMap() : base("Citizenship")
         {
@@ -25,7 +25,7 @@ namespace Abp.Zero.SampleApp.NHibernate.Mappings
         }
     }
     
-    public class StudentLectureNoteMap : EntityMap<StudentLectureNote>
+    public class StudentLectureNoteMap : EntityMap<NhStudentLectureNote>
     {
         public StudentLectureNoteMap() : base("StudentLectureNotes")
         {

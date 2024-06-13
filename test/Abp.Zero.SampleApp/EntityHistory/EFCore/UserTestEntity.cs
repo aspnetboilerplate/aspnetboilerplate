@@ -3,7 +3,7 @@ using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.EFCore
 {
     [Audited]
     public class UserTestEntity : AggregateRoot, IHasCreationTime

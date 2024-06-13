@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
-using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.EFCore
 {
     public class Post : AuditedEntity<Guid>, ISoftDelete, IMayHaveTenant
     {
-        [Required]
-        public virtual Blog Blog { get; set; }
+        [Required] public Blog Blog { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
-        [Audited]
-        public virtual int BlogId { get; set; }
+        [Audited] public int BlogId { get; set; }
 
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
-        public virtual string Body { get; set; }
+        public string Body { get; set; }
 
-        public virtual bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
-        public virtual int? TenantId { get; set; }
+        public int? TenantId { get; set; }
 
         public Post()
         {

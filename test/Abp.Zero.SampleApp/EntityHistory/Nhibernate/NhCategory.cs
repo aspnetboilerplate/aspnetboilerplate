@@ -1,9 +1,9 @@
-﻿using Abp.Auditing;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Abp.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.Nhibernate
 {
-    public class Category
+    public class NhCategory
     {
         [Key]
         public virtual int Id { get; set; }

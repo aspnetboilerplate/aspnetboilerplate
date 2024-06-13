@@ -1,9 +1,9 @@
 using Abp.NHibernate.EntityMappings;
-using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.Nhibernate;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class AdvertisementMap : EntityMap<Advertisement>
+    public class AdvertisementMap : EntityMap<NhAdvertisement>
     {
         public AdvertisementMap() : base("Advertisements")
         {

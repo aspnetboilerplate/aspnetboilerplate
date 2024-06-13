@@ -1,10 +1,10 @@
 using System;
 using Abp.NHibernate.EntityMappings;
-using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.Nhibernate;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class PostMap : EntityMap<Post, Guid>
+    public class PostMap : EntityMap<NhPost, Guid>
     {
         public PostMap() : base("Posts")
         {

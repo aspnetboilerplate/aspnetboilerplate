@@ -1,8 +1,8 @@
 ﻿using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.Nhibernate
 {
-    public class Country : FullAuditedEntity
+    public class NhCountry : FullAuditedEntity
     {
         public virtual string CountryCode { get; set; }
     }

@@ -1,8 +1,8 @@
 ﻿using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.Nhibernate
 {
-    public class Advertisement : Entity
+    public class NhAdvertisement : Entity
     {
         public virtual string Banner { get; set; }
     }

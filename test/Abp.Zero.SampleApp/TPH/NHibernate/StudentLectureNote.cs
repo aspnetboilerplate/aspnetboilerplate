@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.NHibernate
 {
-    public class StudentLectureNote : Entity
+    public class NhStudentLectureNote : Entity
     {
         [Required]
-        public virtual Student Student { get; set; }
+        public virtual NhStudent Student { get; set; }
 
         public virtual int StudentId { get; set; }
 

@@ -1,10 +1,9 @@
 using Abp.NHibernate.EntityMappings;
-using Abp.Zero.SampleApp.EntityHistory;
-using NHibernate.Mapping;
+using Abp.Zero.SampleApp.EntityHistory.Nhibernate;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class BlogMap : EntityMap<Blog>
+    public class BlogMap : EntityMap<NhBlog>
     {
         public BlogMap() : base("BlogMaps")
         {

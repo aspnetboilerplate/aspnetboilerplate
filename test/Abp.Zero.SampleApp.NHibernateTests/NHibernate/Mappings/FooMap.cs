@@ -1,9 +1,9 @@
 using Abp.NHibernate.EntityMappings;
-using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.Nhibernate;
 
 namespace Abp.Zero.SampleApp.NHibernate.Mappings
 {
-    public class FooMap : EntityMap<Foo>
+    public class FooMap : EntityMap<NhFoo>
     {
         public FooMap() : base("Foos")
         {
