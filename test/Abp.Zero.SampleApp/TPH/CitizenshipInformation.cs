@@ -10,9 +10,9 @@ namespace Abp.Zero.SampleApp.TPH
 {
     public class CitizenshipInformation : Entity
     {
-        public string CitizenShipId { get; set; }
+        public virtual string CitizenShipId { get; set; }
 
         [Required]
-        public Student Student { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

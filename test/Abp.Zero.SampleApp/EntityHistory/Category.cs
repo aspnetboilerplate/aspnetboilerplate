@@ -6,9 +6,9 @@ namespace Abp.Zero.SampleApp.EntityHistory
     public class Category
     {
         [Key]
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Audited]
-        public string DisplayName { get; set; }
+        public virtual string DisplayName { get; set; }
     }
 }

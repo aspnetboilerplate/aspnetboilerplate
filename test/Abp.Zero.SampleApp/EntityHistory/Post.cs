@@ -15,15 +15,15 @@ namespace Abp.Zero.SampleApp.EntityHistory
         public virtual ICollection<Comment> Comments { get; set; }
 
         [Audited]
-        public int BlogId { get; set; }
+        public virtual int BlogId { get; set; }
 
-        public string Title { get; set; }
+        public virtual string Title { get; set; }
 
-        public string Body { get; set; }
+        public virtual string Body { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public virtual bool IsDeleted { get; set; }
 
-        public int? TenantId { get; set; }
+        public virtual int? TenantId { get; set; }
 
         public Post()
         {

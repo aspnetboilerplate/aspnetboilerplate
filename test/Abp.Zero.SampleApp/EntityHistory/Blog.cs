@@ -11,13 +11,13 @@ namespace Abp.Zero.SampleApp.EntityHistory
     public class Blog : AggregateRoot, IHasCreationTime
     {
         [DisableAuditing]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
-        public string Url { get; protected set; }
+        public virtual string Url { get; protected set; }
 
-        public DateTime CreationTime { get; set; }
+        public virtual DateTime CreationTime { get; set; }
 
-        public BlogEx More { get; set; }
+        public virtual BlogEx More { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
 
@@ -43,7 +43,7 @@ namespace Abp.Zero.SampleApp.EntityHistory
             More = new BlogEx { BloggerName = bloggerName };
         }
 
-        public void ChangeUrl(string url)
+        public virtual void ChangeUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -58,6 +58,6 @@ namespace Abp.Zero.SampleApp.EntityHistory
     [ComplexType]
     public class BlogEx
     {
-        public string BloggerName { get; set; }
+        public virtual string BloggerName { get; set; }
     }
 }

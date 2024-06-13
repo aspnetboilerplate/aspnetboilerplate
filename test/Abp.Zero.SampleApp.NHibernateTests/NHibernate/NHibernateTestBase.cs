@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
@@ -10,7 +9,6 @@ using Abp.Zero.SampleApp.NHibernate.TestDatas;
 using Abp.Zero.SampleApp.Users;
 using Castle.MicroKernel.Registration;
 using NHibernate;
-using NHibernate.Linq;
 
 namespace Abp.Zero.SampleApp.NHibernate
 {

@@ -4,6 +4,6 @@ namespace Abp.Zero.SampleApp.EntityHistory
 {
     public class Advertisement : Entity
     {
-        public string Banner { get; set; }
+        public virtual string Banner { get; set; }
     }
 }

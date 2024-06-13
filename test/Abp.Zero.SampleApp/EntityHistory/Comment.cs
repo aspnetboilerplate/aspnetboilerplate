@@ -8,6 +8,6 @@ namespace Abp.Zero.SampleApp.EntityHistory
     {
         public virtual Post Post { get; set; }
 
-        public string Content { get; set; }
+        public virtual string Content { get; set; }
     }
 }
