@@ -8,6 +8,7 @@ using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.Roles;
 using Abp.Zero.SampleApp.TPH;
+using Abp.Zero.SampleApp.TPH.EFCore;
 using Abp.Zero.SampleApp.Users;
 
 namespace Abp.Zero.SampleApp.EntityFramework

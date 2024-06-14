@@ -25,6 +25,7 @@ using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using Abp.Zero.SampleApp.TPH;
+using Abp.Zero.SampleApp.TPH.EFCore;
 using Abp.Zero.SampleApp.Users;
 using Microsoft.AspNet.Identity;
 using Xunit;

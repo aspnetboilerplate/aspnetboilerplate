@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.EFCore
 {
     public class Student : PersonWithIdCardAndAddress
     {

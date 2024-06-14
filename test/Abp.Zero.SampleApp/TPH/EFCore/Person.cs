@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.EFCore
 {
     public abstract class Person : Entity
     {

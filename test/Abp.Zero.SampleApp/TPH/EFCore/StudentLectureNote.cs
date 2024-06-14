@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.EFCore
 {
     public class StudentLectureNote : Entity
     {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.EFCore
 {
     public class CitizenshipInformation : Entity
     {
