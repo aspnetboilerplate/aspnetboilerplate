@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
-using Abp.Domain.Entities;
 
 namespace Abp.EntityFrameworkCore.Configuration
 {

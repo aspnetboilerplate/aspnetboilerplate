@@ -14,6 +14,8 @@ namespace Abp.EntityFrameworkCore.Configuration
             _iocManager = iocManager;
         }
 
+        public bool UseAbpQueryCompiler { get; set; } = false;
+
         public void AddDbContext<TDbContext>(Action<AbpDbContextConfiguration<TDbContext>> action) 
             where TDbContext : DbContext
         {
