@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.TPH
+namespace Abp.Zero.SampleApp.TPH.EFCore
 {
     public class StudentLectureNote : Entity
     {
-        [Required]
-        public Student Student { get; set; }
+        [Required] public Student Student { get; set; }
 
         public int StudentId { get; set; }
 

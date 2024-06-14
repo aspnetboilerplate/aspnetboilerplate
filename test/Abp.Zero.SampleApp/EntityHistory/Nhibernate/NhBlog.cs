@@ -5,28 +5,28 @@ using Abp.Auditing;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.Nhibernate
 {
     [Audited]
-    public class Blog : AggregateRoot, IHasCreationTime
+    public class NhBlog : AggregateRoot, IHasCreationTime
     {
         [DisableAuditing]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
-        public string Url { get; protected set; }
+        public virtual string Url { get; protected set; }
 
-        public DateTime CreationTime { get; set; }
+        public virtual DateTime CreationTime { get; set; }
 
-        public BlogEx More { get; set; }
+        public virtual NhBlogEx More { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<NhPost> Posts { get; set; }
 
-        public Blog()
+        public NhBlog()
         {
 
         }
 
-        public Blog(string name, string url, string bloggerName)
+        public NhBlog(string name, string url, string bloggerName)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -40,10 +40,10 @@ namespace Abp.Zero.SampleApp.EntityHistory
 
             Name = name;
             Url = url;
-            More = new BlogEx { BloggerName = bloggerName };
+            More = new NhBlogEx { BloggerName = bloggerName };
         }
 
-        public void ChangeUrl(string url)
+        public virtual void ChangeUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -56,8 +56,8 @@ namespace Abp.Zero.SampleApp.EntityHistory
     }
 
     [ComplexType]
-    public class BlogEx
+    public class NhBlogEx
     {
-        public string BloggerName { get; set; }
+        public virtual string BloggerName { get; set; }
     }
 }

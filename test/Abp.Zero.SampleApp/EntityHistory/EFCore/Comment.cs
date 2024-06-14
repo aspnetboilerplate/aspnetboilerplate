@@ -1,12 +1,12 @@
 ﻿using Abp.Auditing;
 using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.EFCore
 {
     [Audited]
     public class Comment : Entity
     {
-        public virtual Post Post { get; set; }
+        public Post Post { get; set; }
 
         public string Content { get; set; }
     }

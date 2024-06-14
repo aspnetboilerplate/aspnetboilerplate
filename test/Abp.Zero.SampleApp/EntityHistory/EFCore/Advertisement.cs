@@ -1,6 +1,6 @@
 ﻿using Abp.Domain.Entities;
 
-namespace Abp.Zero.SampleApp.EntityHistory
+namespace Abp.Zero.SampleApp.EntityHistory.EFCore
 {
     public class Advertisement : Entity
     {

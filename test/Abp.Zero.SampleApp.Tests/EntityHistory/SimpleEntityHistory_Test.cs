@@ -23,7 +23,9 @@ using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using Abp.Zero.SampleApp.TPH;
+using Abp.Zero.SampleApp.TPH.EFCore;
 using Abp.Zero.SampleApp.Users;
 using Microsoft.AspNet.Identity;
 using Xunit;
@@ -602,6 +604,7 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
                 post2KeyValue.Add("Id", post2.Id);
 
                 var comment1 = _commentRepository.Single(c => c.Content == "test-comment-1-content");
+                _commentRepository.EnsurePropertyLoaded(comment1, c => c.Post);
                 post1KeyValue.Add("Id", comment1.Post.Id);
 
                 // Change foreign key by assigning navigation property

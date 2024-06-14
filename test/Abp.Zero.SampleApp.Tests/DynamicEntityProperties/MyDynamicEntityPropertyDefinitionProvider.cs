@@ -1,6 +1,7 @@
 ﻿using Abp.DynamicEntityProperties;
 using Abp.UI.Inputs;
 using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 
 namespace Abp.Zero.SampleApp.Tests.DynamicEntityProperties
 {

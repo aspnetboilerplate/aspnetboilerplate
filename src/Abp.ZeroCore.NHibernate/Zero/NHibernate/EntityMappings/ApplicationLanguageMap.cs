@@ -8,7 +8,8 @@ namespace Abp.Zero.NHibernate.EntityMappings
         public ApplicationLanguageMap()
             : base("AbpLanguages")
         {
-            Map(x => x.TenantId);
+            Map(x => x.TenantId)
+                .Nullable();
             Map(x => x.Name)
                 .Length(ApplicationLanguage.MaxNameLength)
                 .Not.Nullable();

@@ -31,8 +31,12 @@ namespace Abp.Zero.NHibernate.EntityMappings
 
 
             HasMany(x => x.Claims)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn("RoleId");
             HasMany(x => x.Permissions)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn("RoleId");
 
             this.MapFullAudited();
