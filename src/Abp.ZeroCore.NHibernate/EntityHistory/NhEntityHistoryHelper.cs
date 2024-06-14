@@ -25,8 +25,7 @@ namespace Abp.EntityHistory
         private readonly Lazy<IClientInfoProvider> _clientInfoProvider;
         private readonly Lazy<IEntityChangeSetReasonProvider> _entityChangeSetReasonProvider;
 
-        private static readonly ConcurrentDictionary<Guid, EntityChangeSet> EntityChangeSets =
-            new ConcurrentDictionary<Guid, EntityChangeSet>();
+        private static readonly ConcurrentDictionary<Guid, EntityChangeSet> EntityChangeSets = new();
 
         public NhEntityHistoryHelper(
             IEntityHistoryConfiguration configuration,
@@ -41,6 +40,7 @@ namespace Abp.EntityHistory
                         : NullEntityHistoryStore.Instance,
                     isThreadSafe: true
                 );
+
             _abpSession =
                 new Lazy<IAbpSession>(
                     () => iocManager.IsRegistered(typeof(IAbpSession))
@@ -48,6 +48,7 @@ namespace Abp.EntityHistory
                         : NullAbpSession.Instance,
                     isThreadSafe: true
                 );
+
             _clientInfoProvider =
                 new Lazy<IClientInfoProvider>(
                     () => iocManager.IsRegistered(typeof(IClientInfoProvider))
@@ -55,6 +56,7 @@ namespace Abp.EntityHistory
                         : NullClientInfoProvider.Instance,
                     isThreadSafe: true
                 );
+
             _entityChangeSetReasonProvider =
                 new Lazy<IEntityChangeSetReasonProvider>(
                     () => iocManager.IsRegistered(typeof(IEntityChangeSetReasonProvider))
@@ -78,21 +80,13 @@ namespace Abp.EntityHistory
 
             var shouldSaveAuditedPropertiesOnly = !shouldSaveEntityHistory.HasValue;
 
-            ICollection<EntityPropertyChange> propertyChanges;
-            switch (@event)
+            var propertyChanges = @event switch
             {
-                case PreInsertEvent insert:
-                    propertyChanges = GetPropertyChanges(insert, shouldSaveAuditedPropertiesOnly);
-                    break;
-                case PreUpdateEvent update:
-                    propertyChanges = GetPropertyChanges(update, shouldSaveAuditedPropertiesOnly);
-                    break;
-                case PreDeleteEvent delete:
-                    propertyChanges = GetPropertyChanges(delete, shouldSaveAuditedPropertiesOnly);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(@event));
-            }
+                PreInsertEvent insert => GetPropertyChanges(insert, shouldSaveAuditedPropertiesOnly),
+                PreUpdateEvent update => GetPropertyChanges(update, shouldSaveAuditedPropertiesOnly),
+                PreDeleteEvent delete => GetPropertyChanges(delete, shouldSaveAuditedPropertiesOnly),
+                _ => throw new ArgumentOutOfRangeException(nameof(@event))
+            };
 
             if (propertyChanges.Count == 0)
             {
@@ -132,11 +126,9 @@ namespace Abp.EntityHistory
                 return;
             }
 
-            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
-            {
-                EntityHistoryStore.Save(changeSet);
-                uow.Complete();
-            }
+            using var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress);
+            EntityHistoryStore.Save(changeSet);
+            uow.Complete();
         }
 
         protected virtual EntityChangeSet CreateOrGetEntityChangeSet(Guid sessionId)
@@ -162,10 +154,7 @@ namespace Abp.EntityHistory
 
         protected virtual bool? ShouldSaveEntityHistory(object entityEntry)
         {
-            if (entityEntry == null)
-            {
-                throw new ArgumentNullException(nameof(entityEntry));
-            }
+            ArgumentNullException.ThrowIfNull(entityEntry);
 
             var typeOfEntity = ProxyHelper.GetUnproxiedType(entityEntry);
             var shouldTrackEntity = IsTypeOfTrackedEntity(typeOfEntity);
@@ -208,21 +197,13 @@ namespace Abp.EntityHistory
         {
             var entityId = GetEntityId(@event);
             var entityTypeFullName = ProxyHelper.GetUnproxiedType(@event.Entity).FullName;
-            EntityChangeType changeType;
-            switch (@event)
+            var changeType = @event switch
             {
-                case PreInsertEvent _:
-                    changeType = EntityChangeType.Created;
-                    break;
-                case PreUpdateEvent update:
-                    changeType = update.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated;
-                    break;
-                case PreDeleteEvent _:
-                    changeType = EntityChangeType.Deleted;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(@event));
-            }
+                PreInsertEvent => EntityChangeType.Created,
+                PreUpdateEvent update => update.IsDeleted() ? EntityChangeType.Deleted : EntityChangeType.Updated,
+                PreDeleteEvent => EntityChangeType.Deleted,
+                _ => throw new ArgumentOutOfRangeException(nameof(@event))
+            };
 
             if (entityId == null)
             {

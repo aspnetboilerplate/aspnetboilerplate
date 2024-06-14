@@ -12,6 +12,7 @@ namespace Abp.EntityHistory.EventListeners
         {
             _entityHistoryHelper = entityHistoryHelper;
         }
+
         public async Task<bool> OnPreDeleteAsync(PreDeleteEvent @event, CancellationToken cancellationToken)
         {
             _entityHistoryHelper.AddEntityToChangeSet(@event);

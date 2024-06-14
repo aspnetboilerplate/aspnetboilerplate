@@ -15,20 +15,27 @@ namespace Abp.EntityHistory
             : base(entityChangeRepository)
         {
         }
+
         protected override Task<TEntity> GetEntityById<TEntity, TPrimaryKey>(TPrimaryKey id)
         {
-            var nhRepository = (NhRepositoryBase<TEntity, TPrimaryKey>)EntityChangeRepository;
-            return nhRepository.Session.Query<TEntity>().FirstOrDefaultAsync(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
+            var nhRepository = (NhRepositoryBase<TEntity, TPrimaryKey>) EntityChangeRepository;
+            return nhRepository.Session.Query<TEntity>()
+                .FirstOrDefaultAsync(CreateEqualityExpressionForId<TEntity, TPrimaryKey>(id));
         }
 
-        protected override IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id, DateTime snapshotTime)
+        protected override IQueryable<EntityChange> GetEntityChanges<TEntity, TPrimaryKey>(TPrimaryKey id,
+            DateTime snapshotTime)
         {
-            string fullName = typeof(TEntity).FullName;
+            var fullName = typeof(TEntity).FullName;
             var idJson = id.ToJsonString();
 
             return EntityChangeRepository.GetAll() //select all changes which created after snapshot time 
-                .Where(x => x.EntityTypeFullName == fullName && x.EntityId == idJson && x.ChangeTime > snapshotTime &&
-                            x.ChangeType != EntityChangeType.Created)
+                .Where(x =>
+                    x.EntityTypeFullName == fullName &&
+                    x.EntityId == idJson &&
+                    x.ChangeTime > snapshotTime &&
+                    x.ChangeType != EntityChangeType.Created
+                )
                 .OrderByDescending(x => x.ChangeTime);
         }
     }

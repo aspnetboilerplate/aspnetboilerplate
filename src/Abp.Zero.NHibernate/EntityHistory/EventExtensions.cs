@@ -15,16 +15,22 @@ namespace Abp.EntityHistory
                 var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
                     .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[dirtyFieldIndex]);
 
-                if (dirtyFieldProperty != null && dirtyFieldProperty.Name.Equals("IsDeleted", StringComparison.InvariantCultureIgnoreCase))
+                if (dirtyFieldProperty == null ||
+                    !dirtyFieldProperty.Name.Equals("IsDeleted", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var newValue = @event.State[dirtyFieldIndex]?.ToString() ?? string.Empty;
-                    var oldValue = @event.OldState[dirtyFieldIndex]?.ToString() ?? string.Empty;
-
-                    if (!oldValue.Equals(newValue, StringComparison.InvariantCultureIgnoreCase) && newValue.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return true;
-                    }
+                    continue;
                 }
+                
+                var newValue = @event.State[dirtyFieldIndex]?.ToString() ?? string.Empty;
+                var oldValue = @event.OldState[dirtyFieldIndex]?.ToString() ?? string.Empty;
+
+                if (oldValue.Equals(newValue, StringComparison.InvariantCultureIgnoreCase) ||
+                    !newValue.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+                
+                return true;
             }
 
             return false;
