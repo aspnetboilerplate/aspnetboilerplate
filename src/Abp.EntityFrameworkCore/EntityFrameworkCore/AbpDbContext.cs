@@ -1,4 +1,12 @@
-﻿using Abp.Collections.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Domain.Entities;
@@ -6,6 +14,7 @@ using Abp.Domain.Entities.Auditing;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFramework;
+using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Extensions;
 using Abp.EntityFrameworkCore.Utils;
 using Abp.EntityFrameworkCore.ValueConverters;
@@ -18,19 +27,11 @@ using Abp.Timing;
 using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Abp.EntityFrameworkCore.Configuration;
 
 namespace Abp.EntityFrameworkCore
 {
@@ -74,6 +75,9 @@ namespace Abp.EntityFrameworkCore
         /// </summary>
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
+        /// <summary>
+        /// Reference to the ABP entity configuration.
+        /// </summary>
         public IAbpEfCoreConfiguration AbpEfCoreConfiguration { get; set; }
 
         /// <summary>
@@ -84,23 +88,15 @@ namespace Abp.EntityFrameworkCore
 
         protected virtual int? CurrentTenantId => GetCurrentTenantIdOrNull();
 
-        protected virtual bool IsSoftDeleteFilterEnabled =>
-            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
+        protected virtual bool IsSoftDeleteFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.SoftDelete) == true;
 
-        protected virtual bool IsMayHaveTenantFilterEnabled =>
-            CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
+        protected virtual bool IsMayHaveTenantFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MayHaveTenant) == true;
 
-        protected virtual bool IsMustHaveTenantFilterEnabled => CurrentTenantId != null &&
-                                                                CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(
-                                                                    AbpDataFilters.MustHaveTenant) == true;
+        protected virtual bool IsMustHaveTenantFilterEnabled => CurrentTenantId != null && CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled(AbpDataFilters.MustHaveTenant) == true;
 
-        private static MethodInfo ConfigureGlobalFiltersMethodInfo =
-            typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters),
-                BindingFlags.Instance | BindingFlags.NonPublic);
+        private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static MethodInfo ConfigureGlobalValueConverterMethodInfo =
-            typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalValueConverter),
-                BindingFlags.Instance | BindingFlags.NonPublic);
+        private static MethodInfo ConfigureGlobalValueConverterMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalValueConverter), BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
         /// Constructor.
@@ -142,86 +138,96 @@ namespace Abp.EntityFrameworkCore
 
             if (AbpEfCoreConfiguration.UseAbpQueryCompiler)
             {
-                ConfigureMustHaveTenantDbFunction(modelBuilder);
+                ConfigureSoftDeleteDbFunction(modelBuilder);
                 ConfigureMayHaveTenantDbFunction(modelBuilder);
-                ConfigureSoftDeleteDbFunction(modelBuilder);   
+                ConfigureMustHaveTenantDbFunction(modelBuilder);
             }
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 ConfigureGlobalFiltersMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] {modelBuilder, entityType});
+                    .Invoke(this, new object[] { modelBuilder, entityType });
 
                 ConfigureGlobalValueConverterMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] {modelBuilder, entityType});
+                    .Invoke(this, new object[] { modelBuilder, entityType });
             }
         }
 
         protected virtual void ConfigureSoftDeleteDbFunction(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(SoftDeletePredicate)))
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(SoftDeleteFilter), new []{ typeof(bool), typeof(bool) })!)
                 .HasTranslation(args =>
                 {
-                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsSoftDeleteFilterEnabled)
+                    var isDeleted = args[0];
+                    var boolParam = args[1];
+
+                    if (IsSoftDeleteFilterEnabled)
                     {
                         // IsDeleted == false
                         return new SqlBinaryExpression(
                             ExpressionType.Equal,
-                            args.First(),
-                            args.Skip(1).First(),
-                            args.First().Type,
-                            args.First().TypeMapping);
+                            isDeleted,
+                            new SqlConstantExpression(Expression.Constant(false), boolParam.TypeMapping),
+                            boolParam.Type,
+                            boolParam.TypeMapping);
                     }
 
                     // empty where sql
-                    return new SqlConstantExpression(Expression.Constant(true),
-                        new BoolTypeMapping("bool", DbType.Boolean));
+                    return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
                 });
         }
 
         protected virtual void ConfigureMayHaveTenantDbFunction(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantPredicate)))
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantFilter), new []{ typeof(int?), typeof(int?), typeof(bool) })!)
                 .HasTranslation(args =>
                 {
-                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsMayHaveTenantFilterEnabled)
+                    // (int? tenantId, int? currentTenantId)
+                    var tenantId = args[0];
+                    var currentTenantId = args[1];
+                    var boolParam = args[2];
+
+                    if (IsMayHaveTenantFilterEnabled)
                     {
                         // TenantId == CurrentTenantId
                         return new SqlBinaryExpression(
                             ExpressionType.Equal,
-                            args.First(),
-                            args.Skip(1).First(),
-                            args.First().Type,
-                            args.First().TypeMapping);
+                            tenantId,
+                            currentTenantId,
+                            boolParam.Type,
+                            boolParam.TypeMapping);
                     }
 
                     // empty where sql
-                    return new SqlConstantExpression(Expression.Constant(true),
-                        new BoolTypeMapping("bool", DbType.Boolean));
+                    return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
                 });
         }
 
         protected virtual void ConfigureMustHaveTenantDbFunction(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantPredicate)))
+            modelBuilder.HasDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantFilter), new []{ typeof(int), typeof(int?), typeof(bool) })!)
                 .HasTranslation(args =>
                 {
-                    if (AbpQueryCompiler.CurrentAbpDbContext.Value.IsMustHaveTenantFilterEnabled)
+                    // (int tenantId, int? currentTenantId)
+                    var tenantId = args[0];
+                    var currentTenantId = args[1];
+                    var boolParam = args[2];
+
+                    if (IsMustHaveTenantFilterEnabled)
                     {
                         // TenantId == CurrentTenantId
                         return new SqlBinaryExpression(
                             ExpressionType.Equal,
-                            args.First(),
-                            args.Skip(1).First(),
-                            args.First().Type,
-                            args.First().TypeMapping);
+                            tenantId,
+                            currentTenantId,
+                            boolParam.Type,
+                            boolParam.TypeMapping);
                     }
 
                     // empty where sql
-                    return new SqlConstantExpression(Expression.Constant(true),
-                        new BoolTypeMapping("bool", DbType.Boolean));
+                    return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
                 });
         }
 
@@ -258,88 +264,52 @@ namespace Abp.EntityFrameworkCore
             return false;
         }
 
-        public static bool MustHaveTenantPredicate(int tenantId, int? currentTenantId)
-        {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
-        }
-
-        public static bool MayHaveTenantPredicate(int? tenantId, int? currentTenantId)
-        {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
-        }
-
-        public static bool SoftDeletePredicate(bool isDeleted, bool isDeletedFilter)
-        {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
-        }
-
         protected virtual Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
             where TEntity : class
         {
-
-            if (AbpEfCoreConfiguration.UseAbpQueryCompiler)
-            {
-                return CreateFilterExpressionUsingAbpQueryCompiler<TEntity>();
-            }
-            
-            return CreateFilterExpressionWihtoutAbpQueryCompiler<TEntity>();
-        }
-
-        protected virtual Expression<Func<TEntity,bool>> CreateFilterExpressionWihtoutAbpQueryCompiler<TEntity>() where TEntity : class
-        {
             Expression<Func<TEntity, bool>> expression = null;
-            
+
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
+                Expression<Func<TEntity, bool>> softDeleteFilter = AbpEfCoreConfiguration.UseAbpQueryCompiler
+                    ? e => SoftDeleteFilter(((ISoftDelete) e).IsDeleted, true)
+                    : e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
                 expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
             }
 
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
+                Expression<Func<TEntity, bool>> mayHaveTenantFilter = AbpEfCoreConfiguration.UseAbpQueryCompiler ?
+                    e => MayHaveTenantFilter(((IMayHaveTenant) e).TenantId, CurrentTenantId, true) :
+                    e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
                 expression = expression == null ? mayHaveTenantFilter : CombineExpressions(expression, mayHaveTenantFilter);
             }
 
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
+                Expression<Func<TEntity, bool>> mustHaveTenantFilter = AbpEfCoreConfiguration.UseAbpQueryCompiler
+                    ? e => MustHaveTenantFilter(((IMustHaveTenant) e).TenantId, CurrentTenantId, true)
+                    : e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant) e).TenantId == CurrentTenantId;
+
                 expression = expression == null ? mustHaveTenantFilter : CombineExpressions(expression, mustHaveTenantFilter);
             }
 
             return expression;
         }
 
-        protected virtual Expression<Func<TEntity, bool>> CreateFilterExpressionUsingAbpQueryCompiler<TEntity>() where TEntity : class
+        public static bool SoftDeleteFilter(bool isDeleted, bool boolParam)
         {
-            Expression<Func<TEntity, bool>> expression = null;
-            
-            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> softDeleteFilter =
-                    e => SoftDeletePredicate(((ISoftDelete) e).IsDeleted, false);
-                expression = expression == null ? softDeleteFilter : CombineExpressions(expression, softDeleteFilter);
-            }
+            throw new NotSupportedException("This method should be replaced by the database function call.");
+        }
 
-            if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> mayHaveTenantFilter =
-                    e => MayHaveTenantPredicate(((IMayHaveTenant) e).TenantId, CurrentTenantId);
-                expression = expression == null
-                    ? mayHaveTenantFilter
-                    : CombineExpressions(expression, mayHaveTenantFilter);
-            }
+        public static bool MustHaveTenantFilter(int tenantId, int? currentTenantId, bool boolParam)
+        {
+            throw new NotSupportedException("This method should be replaced by the database function call.");
+        }
 
-            if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> mustHaveTenantFilter = e =>
-                    MustHaveTenantPredicate(((IMustHaveTenant) e).TenantId, CurrentTenantId);
-                expression = expression == null
-                    ? mustHaveTenantFilter
-                    : CombineExpressions(expression, mustHaveTenantFilter);
-            }
-
-            return expression;
+        public static bool MayHaveTenantFilter(int? tenantId, int? currentTenantId, bool boolParam)
+        {
+            throw new NotSupportedException("This method should be replaced by the database function call.");
         }
 
         protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
@@ -377,8 +347,7 @@ namespace Abp.EntityFrameworkCore
             }
         }
 
-        public override async Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -443,8 +412,7 @@ namespace Abp.EntityFrameworkCore
             AddDomainEvents(changeReport.DomainEvents, entry.Entity);
         }
 
-        protected virtual void ApplyAbpConceptsForAddedEntity(EntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyAbpConceptsForAddedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             CheckAndSetId(entry);
             CheckAndSetMustHaveTenantIdProperty(entry.Entity);
@@ -453,8 +421,7 @@ namespace Abp.EntityFrameworkCore
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
         }
 
-        protected virtual void ApplyAbpConceptsForModifiedEntity(EntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyAbpConceptsForModifiedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             SetModificationAuditProperties(entry.Entity, userId);
             if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
@@ -468,8 +435,7 @@ namespace Abp.EntityFrameworkCore
             }
         }
 
-        protected virtual void ApplyAbpConceptsForDeletedEntity(EntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyAbpConceptsForDeletedEntity(EntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             if (IsHardDeleteEntity(entry))
             {
@@ -523,8 +489,7 @@ namespace Abp.EntityFrameworkCore
                 return;
             }
 
-            domainEvents.AddRange(generatesDomainEventsEntity.DomainEvents.Select(eventData =>
-                new DomainEventEntry(entityAsObj, eventData)));
+            domainEvents.AddRange(generatesDomainEventsEntity.DomainEvents.Select(eventData => new DomainEventEntry(entityAsObj, eventData)));
             generatesDomainEventsEntity.DomainEvents.Clear();
         }
 
@@ -675,8 +640,7 @@ namespace Abp.EntityFrameworkCore
             return AbpSession.TenantId;
         }
 
-        protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1,
-            Expression<Func<T, bool>> expression2)
+        protected virtual Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1, Expression<Func<T, bool>> expression2)
         {
             return ExpressionCombiner.Combine(expression1, expression2);
         }
