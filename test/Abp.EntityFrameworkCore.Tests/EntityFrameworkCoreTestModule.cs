@@ -9,6 +9,7 @@ using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.EntityFrameworkCore.Configuration;
 using Abp.Reflection.Extensions;
 using Microsoft.Data.Sqlite;
 
@@ -26,7 +27,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
             //SupportDbContext
             RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-            
+
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
@@ -38,6 +39,7 @@ namespace Abp.EntityFrameworkCore.Tests
             });
 
             Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
+            Configuration.Modules.AbpEfCore().UseAbpQueryCompiler = true;
         }
 
         public override void Initialize()

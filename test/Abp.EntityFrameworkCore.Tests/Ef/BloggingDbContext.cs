@@ -1,6 +1,7 @@
 ﻿using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.ValueConverters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Abp.EntityFrameworkCore.Tests.Ef
 {
@@ -21,7 +22,13 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
         public BloggingDbContext(DbContextOptions<BloggingDbContext> options)
             : base(options)
         {
-            
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ReplaceService<IModelCacheKeyFactory, NonCachedModelCacheKeyFactory>();
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
