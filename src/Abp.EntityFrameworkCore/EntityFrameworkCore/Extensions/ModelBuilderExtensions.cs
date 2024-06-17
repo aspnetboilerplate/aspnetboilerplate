@@ -15,8 +15,7 @@ public static class ModelBuilderExtensions
                 var isDeleted = args[0];
                 var boolParam = args[1];
 
-                if (abpEfCoreCurrentDbContext.Current.Value != null &&
-                    abpEfCoreCurrentDbContext.Current.Value.IsSoftDeleteFilterEnabled)
+                if (abpEfCoreCurrentDbContext.Current.Value?.IsSoftDeleteFilterEnabled == true)
                 {
                     // IsDeleted == false
                     return new SqlBinaryExpression(
@@ -44,8 +43,7 @@ public static class ModelBuilderExtensions
                 var currentTenantId = args[1];
                 var boolParam = args[2];
 
-                if (abpEfCoreCurrentDbContext.Current.Value != null &&
-                    abpEfCoreCurrentDbContext.Current.Value.IsMayHaveTenantFilterEnabled)
+                if (abpEfCoreCurrentDbContext.Current.Value?.IsMayHaveTenantFilterEnabled == true)
                 {
                     // TenantId == CurrentTenantId
                     return new SqlBinaryExpression(
@@ -73,8 +71,7 @@ public static class ModelBuilderExtensions
                 var currentTenantId = args[1];
                 var boolParam = args[2];
 
-                if (abpEfCoreCurrentDbContext.Current.Value != null &&
-                    abpEfCoreCurrentDbContext.Current.Value.IsMustHaveTenantFilterEnabled)
+                if (abpEfCoreCurrentDbContext.Current.Value?.IsMustHaveTenantFilterEnabled == true)
                 {
                     // TenantId == CurrentTenantId
                     return new SqlBinaryExpression(
