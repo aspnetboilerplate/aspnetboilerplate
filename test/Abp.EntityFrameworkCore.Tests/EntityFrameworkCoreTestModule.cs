@@ -61,7 +61,7 @@ namespace Abp.EntityFrameworkCore.Tests
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite).AddAbpOptionsExtension();
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component
@@ -79,7 +79,7 @@ namespace Abp.EntityFrameworkCore.Tests
             var builder = new DbContextOptionsBuilder<SupportDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite).AddAbpOptionsExtension();
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component

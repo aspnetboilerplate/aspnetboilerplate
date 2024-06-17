@@ -30,7 +30,7 @@ namespace Abp.Zero
             var builder = new DbContextOptionsBuilder<SampleAppDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite).AddAbpOptionsExtension();
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component

@@ -10,7 +10,7 @@ namespace AbpAspNetCoreDemo.Db
         public MyDbContext CreateDbContext(string[] args)
         {
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            var builder = new DbContextOptionsBuilder<MyDbContext>().UseSqlite(inMemorySqlite).AddAbpOptionsExtension();
+            var builder = new DbContextOptionsBuilder<MyDbContext>().UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             var dbContext = new MyDbContext(builder.Options);
 

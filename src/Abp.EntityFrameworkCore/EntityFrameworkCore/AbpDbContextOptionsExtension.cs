@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Abp.EntityFrameworkCore;
 
-public class AbpOptionsExtension : IDbContextOptionsExtension
+public class AbpDbContextOptionsExtension : IDbContextOptionsExtension
 {
     public void ApplyServices(IServiceCollection services)
     {

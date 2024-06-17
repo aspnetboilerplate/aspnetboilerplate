@@ -45,7 +45,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite).AddAbpOptionsExtension();
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             IocManager.IocContainer.Register(
                 Component

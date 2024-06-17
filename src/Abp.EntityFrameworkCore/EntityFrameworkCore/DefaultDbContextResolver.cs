@@ -93,12 +93,12 @@ namespace Abp.EntityFrameworkCore
                     configurer.Object.Configure(configuration);
                 }
 
-                return configuration.DbContextOptions.AddAbpOptionsExtension().Options;
+                return configuration.DbContextOptions.AddAbpDbContextOptionsExtension().Options;
             }
 
             if (_iocResolver.IsRegistered<DbContextOptions<TDbContext>>())
             {
-                return _iocResolver.Resolve<DbContextOptions<TDbContext>>().WithExtension(new AbpOptionsExtension()).As<DbContextOptions<TDbContext>>();;
+                return _iocResolver.Resolve<DbContextOptions<TDbContext>>().WithExtension(new AbpDbContextOptionsExtension()).As<DbContextOptions<TDbContext>>();;
             }
 
             throw new AbpException($"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");
