@@ -211,7 +211,7 @@ namespace Abp.EntityFrameworkCore
 
         public virtual string GetGlobalFilterCompiledQueryCacheKey()
         {
-            return $"{CurrentTenantId}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
+            return $"{CurrentTenantId?.ToString() ?? "Null"}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
         }
 
         public static bool SoftDeleteFilter(bool isDeleted, bool boolParam)
