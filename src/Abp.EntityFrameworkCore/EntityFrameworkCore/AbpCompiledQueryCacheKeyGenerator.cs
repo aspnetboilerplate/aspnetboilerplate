@@ -27,10 +27,7 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
         if (CurrentContext.Context is AbpDbContext abpDbContext)
         {
             AbpEfCoreCurrentDbContext.Current.Value = abpDbContext;
-
-            var currentTenantId = abpDbContext.CurrentTenantId;
-            var currentFilterStatus = $"{abpDbContext.IsSoftDeleteFilterEnabled}:{abpDbContext.IsMayHaveTenantFilterEnabled}:{abpDbContext.IsMustHaveTenantFilterEnabled}";
-            return new AbpCompiledQueryCacheKey(cacheKey, currentTenantId, currentFilterStatus);
+            return new AbpCompiledQueryCacheKey(cacheKey, abpDbContext.GetGlobalFilterCompiledQueryCacheKey());
         }
 
         return cacheKey;
@@ -39,14 +36,12 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
     private readonly struct AbpCompiledQueryCacheKey : IEquatable<AbpCompiledQueryCacheKey>
     {
         private readonly object _compiledQueryCacheKey;
-        private readonly int? _currentTenantId;
-        private readonly string _currentFilterStatus;
+        private readonly string _currentFilterCacheKey;
 
-        public AbpCompiledQueryCacheKey(object compiledQueryCacheKey, int? currentTenantId, string currentFilterStatus)
+        public AbpCompiledQueryCacheKey(object compiledQueryCacheKey, string currentFilterCacheKey)
         {
             _compiledQueryCacheKey = compiledQueryCacheKey;
-            _currentTenantId = currentTenantId;
-            _currentFilterStatus = currentFilterStatus;
+            _currentFilterCacheKey = currentFilterCacheKey;
         }
 
         public override bool Equals(object obj)
@@ -57,13 +52,12 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
         public bool Equals(AbpCompiledQueryCacheKey other)
         {
             return _compiledQueryCacheKey.Equals(other._compiledQueryCacheKey) &&
-                   _currentTenantId == other._currentTenantId &&
-                   _currentFilterStatus == other._currentFilterStatus;
+                   _currentFilterCacheKey == other._currentFilterCacheKey;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_compiledQueryCacheKey, _currentTenantId, _currentFilterStatus);
+            return HashCode.Combine(_compiledQueryCacheKey, _currentFilterCacheKey);
         }
     }
 }

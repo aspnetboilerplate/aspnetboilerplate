@@ -209,6 +209,11 @@ namespace Abp.EntityFrameworkCore
             return expression;
         }
 
+        public virtual string GetGlobalFilterCompiledQueryCacheKey()
+        {
+            return $"{CurrentTenantId}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
+        }
+
         public static bool SoftDeleteFilter(bool isDeleted, bool boolParam)
         {
             throw new NotSupportedException("This method should be replaced by the database function call.");

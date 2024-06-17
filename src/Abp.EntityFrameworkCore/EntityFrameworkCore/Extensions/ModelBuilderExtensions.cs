@@ -12,6 +12,7 @@ public static class ModelBuilderExtensions
         modelBuilder.HasDbFunction(methodInfo)
             .HasTranslation(args =>
             {
+                // (bool isDeleted, bool boolParam)
                 var isDeleted = args[0];
                 var boolParam = args[1];
 
@@ -38,7 +39,7 @@ public static class ModelBuilderExtensions
         modelBuilder.HasDbFunction(methodInfo)
             .HasTranslation(args =>
             {
-                // (int? tenantId, int? currentTenantId)
+                // (int? tenantId, int? currentTenantId, bool boolParam)
                 var tenantId = args[0];
                 var currentTenantId = args[1];
                 var boolParam = args[2];
@@ -66,7 +67,7 @@ public static class ModelBuilderExtensions
         modelBuilder.HasDbFunction(methodInfo)
             .HasTranslation(args =>
             {
-                // (int tenantId, int? currentTenantId)
+                // (int tenantId, int? currentTenantId, bool boolParam)
                 var tenantId = args[0];
                 var currentTenantId = args[1];
                 var boolParam = args[2];
