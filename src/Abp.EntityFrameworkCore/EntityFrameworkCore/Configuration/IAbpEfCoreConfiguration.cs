@@ -6,7 +6,7 @@ namespace Abp.EntityFrameworkCore.Configuration
     public interface IAbpEfCoreConfiguration
     {
         public bool UseAbpQueryCompiler { get; set; }
-        
+
         void AddDbContext<TDbContext>(Action<AbpDbContextConfiguration<TDbContext>> action)
             where TDbContext : DbContext;
     }
@@ -17,12 +17,12 @@ namespace Abp.EntityFrameworkCore.Configuration
         /// Gets single instance of <see cref="NullAbpEfCoreConfiguration"/> class.
         /// </summary>
         public static NullAbpEfCoreConfiguration Instance { get; } = new NullAbpEfCoreConfiguration();
-        
-        public bool UseAbpQueryCompiler { get; set; }
-        
+
+        public bool UseAbpQueryCompiler { get; set; } = true;
+
         public void AddDbContext<TDbContext>(Action<AbpDbContextConfiguration<TDbContext>> action) where TDbContext : DbContext
         {
-        
+
         }
     }
 }

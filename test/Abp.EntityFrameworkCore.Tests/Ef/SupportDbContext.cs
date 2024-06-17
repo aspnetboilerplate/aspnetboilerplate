@@ -7,7 +7,6 @@ using Abp.Domain.Repositories;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Abp.EntityFrameworkCore.Tests.Ef
 {
@@ -26,16 +25,10 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
 
         public const string TicketViewSql = @"CREATE VIEW TicketListItemView AS SELECT Id, EmailAddress, TenantId, IsActive FROM Tickets";
 
-        public SupportDbContext(DbContextOptions<SupportDbContext> options)
+        public SupportDbContext(DbContextOptions<SupportDbContext> options) 
             : base(options)
         {
 
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.ReplaceService<IModelCacheKeyFactory, NonCachedModelCacheKeyFactory>();
-            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,7 +67,7 @@ namespace Abp.EntityFrameworkCore.Tests.Ef
             if (typeof(IPassivable).GetTypeInfo().IsAssignableFrom(typeof(TEntity)))
             {
                 return GetAll()
-                    //.Cast<IPassivable>()
+                    //.Cast<IPassivable>() 
                     //TODO: Core3.0 update, see https://github.com/aspnet/EntityFrameworkCore/issues/17794
                     .Where(e => ((IPassivable)e).IsActive)
                     .Cast<TEntity>()

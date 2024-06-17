@@ -10,13 +10,16 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
 {
     protected ICompiledQueryCacheKeyGenerator InnerCompiledQueryCacheKeyGenerator { get; }
     protected ICurrentDbContext CurrentContext { get; }
+    protected AbpEfCoreCurrentDbContext AbpEfCoreCurrentDbContext { get; }
 
     public AbpCompiledQueryCacheKeyGenerator(
         ICompiledQueryCacheKeyGenerator innerCompiledQueryCacheKeyGenerator,
-        ICurrentDbContext currentContext)
+        ICurrentDbContext currentContext,
+        AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext)
     {
         InnerCompiledQueryCacheKeyGenerator = innerCompiledQueryCacheKeyGenerator;
         CurrentContext = currentContext;
+        AbpEfCoreCurrentDbContext = abpEfCoreCurrentDbContext;
     }
 
     public virtual object GenerateCacheKey(Expression query, bool async)
@@ -24,22 +27,27 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
         var cacheKey = InnerCompiledQueryCacheKeyGenerator.GenerateCacheKey(query, async);
         if (CurrentContext.Context is AbpDbContext abpDbContext)
         {
-            var filter = string.Join("|", abpDbContext.CurrentUnitOfWorkProvider?.Current?.Filters?.Select(x => $"{x.FilterName}:{x.IsEnabled}") ?? Array.Empty<string>());
-            return new AbpCompiledQueryCacheKey(cacheKey, filter);
+            AbpEfCoreCurrentDbContext.Current.Value = abpDbContext;
+
+            var currentTenantId = abpDbContext.CurrentTenantId;
+            var currentFilterStatus = $"{abpDbContext.IsSoftDeleteFilterEnabled}:{abpDbContext.IsMayHaveTenantFilterEnabled}:{abpDbContext.IsMustHaveTenantFilterEnabled}";
+            return new AbpCompiledQueryCacheKey(cacheKey, currentTenantId, currentFilterStatus);
         }
 
         return cacheKey;
     }
 
-    protected readonly struct AbpCompiledQueryCacheKey : IEquatable<AbpCompiledQueryCacheKey>
+    private readonly struct AbpCompiledQueryCacheKey : IEquatable<AbpCompiledQueryCacheKey>
     {
         private readonly object _compiledQueryCacheKey;
-        private readonly string _currentFilter;
+        private readonly int? _currentTenantId;
+        private readonly string _currentFilterStatus;
 
-        public AbpCompiledQueryCacheKey(object compiledQueryCacheKey, string currentFilter)
+        public AbpCompiledQueryCacheKey(object compiledQueryCacheKey, int? currentTenantId, string currentFilterStatus)
         {
             _compiledQueryCacheKey = compiledQueryCacheKey;
-            _currentFilter = currentFilter;
+            _currentTenantId = currentTenantId;
+            _currentFilterStatus = currentFilterStatus;
         }
 
         public override bool Equals(object obj)
@@ -49,12 +57,14 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
 
         public bool Equals(AbpCompiledQueryCacheKey other)
         {
-            return _compiledQueryCacheKey.Equals(other._compiledQueryCacheKey) && _currentFilter == other._currentFilter;
+            return _compiledQueryCacheKey.Equals(other._compiledQueryCacheKey) &&
+                   _currentTenantId == other._currentTenantId &&
+                   _currentFilterStatus == other._currentFilterStatus;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_compiledQueryCacheKey, _currentFilter);
+            return HashCode.Combine(_compiledQueryCacheKey, _currentTenantId, _currentFilterStatus);
         }
     }
 }
