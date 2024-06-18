@@ -179,7 +179,7 @@ namespace Abp.EntityFrameworkCore
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> softDeleteFilter = e => !IsSoftDeleteFilterEnabled || !((ISoftDelete) e).IsDeleted;
-                if (AbpEfCoreConfiguration.UseAbpQueryCompiler)
+                if (UseAbpQueryCompiler())
                 {
                     softDeleteFilter = e => SoftDeleteFilter(((ISoftDelete)e).IsDeleted, true);
                     modelBuilder.ConfigureSoftDeleteDbFunction(typeof(AbpDbContext).GetMethod(nameof(SoftDeleteFilter), new []{ typeof(bool), typeof(bool) })!, abpCurrentDbContext);
@@ -190,7 +190,7 @@ namespace Abp.EntityFrameworkCore
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
-                if (DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler)
+                if (UseAbpQueryCompiler())
                 {
                     mayHaveTenantFilter = e => MayHaveTenantFilter(((IMayHaveTenant)e).TenantId, CurrentTenantId, true);
                     modelBuilder.ConfigureMayHaveTenantDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantFilter), new []{ typeof(int?), typeof(int?), typeof(bool) })!, abpCurrentDbContext);
@@ -201,7 +201,7 @@ namespace Abp.EntityFrameworkCore
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
-                if (DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler)
+                if (UseAbpQueryCompiler())
                 {
                     mustHaveTenantFilter = e => MustHaveTenantFilter(((IMustHaveTenant)e).TenantId, CurrentTenantId, true);
                     modelBuilder.ConfigureMustHaveTenantDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantFilter), new []{ typeof(int), typeof(int?), typeof(bool) })!, abpCurrentDbContext);
@@ -210,6 +210,11 @@ namespace Abp.EntityFrameworkCore
             }
 
             return expression;
+        }
+
+        protected virtual bool UseAbpQueryCompiler()
+        {
+            return DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler;
         }
 
         public virtual string GetCompiledQueryCacheKey()
