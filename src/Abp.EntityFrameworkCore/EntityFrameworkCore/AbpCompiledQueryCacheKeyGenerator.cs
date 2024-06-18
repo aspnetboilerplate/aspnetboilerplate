@@ -9,16 +9,13 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
 {
     protected ICompiledQueryCacheKeyGenerator InnerCompiledQueryCacheKeyGenerator { get; }
     protected ICurrentDbContext CurrentContext { get; }
-    protected AbpEfCoreCurrentDbContext AbpEfCoreCurrentDbContext { get; }
 
     public AbpCompiledQueryCacheKeyGenerator(
         ICompiledQueryCacheKeyGenerator innerCompiledQueryCacheKeyGenerator,
-        ICurrentDbContext currentContext,
-        AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext)
+        ICurrentDbContext currentContext)
     {
         InnerCompiledQueryCacheKeyGenerator = innerCompiledQueryCacheKeyGenerator;
         CurrentContext = currentContext;
-        AbpEfCoreCurrentDbContext = abpEfCoreCurrentDbContext;
     }
 
     public virtual object GenerateCacheKey(Expression query, bool async)
@@ -26,8 +23,7 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
         var cacheKey = InnerCompiledQueryCacheKeyGenerator.GenerateCacheKey(query, async);
         if (CurrentContext.Context is AbpDbContext abpDbContext)
         {
-            AbpEfCoreCurrentDbContext.Current.Value = abpDbContext;
-            return new AbpCompiledQueryCacheKey(cacheKey, abpDbContext.GetGlobalFilterCompiledQueryCacheKey());
+            return new AbpCompiledQueryCacheKey(cacheKey, abpDbContext.GetCompiledQueryCacheKey());
         }
 
         return cacheKey;

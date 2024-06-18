@@ -209,7 +209,7 @@ namespace Abp.EntityFrameworkCore
             return expression;
         }
 
-        public virtual string GetGlobalFilterCompiledQueryCacheKey()
+        public virtual string GetCompiledQueryCacheKey()
         {
             return $"{CurrentTenantId?.ToString() ?? "Null"}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
         }

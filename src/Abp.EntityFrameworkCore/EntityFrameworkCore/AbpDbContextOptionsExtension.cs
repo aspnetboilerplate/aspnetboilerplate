@@ -4,6 +4,7 @@ using Abp.Extensions;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Abp.EntityFrameworkCore;
 
@@ -22,6 +23,7 @@ public class AbpDbContextOptionsExtension : IDbContextOptionsExtension
                         .As<ICompiledQueryCacheKeyGenerator>())));
         }
 
+        services.Replace(ServiceDescriptor.Scoped<IAsyncQueryProvider, AbpEntityQueryProvider>());
         services.AddSingleton<AbpEfCoreCurrentDbContext>();
     }
 
