@@ -94,12 +94,15 @@ namespace Abp.EntityFrameworkCore
 
         private static MethodInfo ConfigureGlobalValueConverterMethodInfo = typeof(AbpDbContext).GetMethod(nameof(ConfigureGlobalValueConverter), BindingFlags.Instance | BindingFlags.NonPublic);
 
+        protected readonly DbContextOptions DbContextOptions;
+
         /// <summary>
         /// Constructor.
         /// </summary>
         protected AbpDbContext(DbContextOptions options)
             : base(options)
         {
+            DbContextOptions = options;
             InitializeDbContext();
         }
 
@@ -187,7 +190,7 @@ namespace Abp.EntityFrameworkCore
             if (typeof(IMayHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> mayHaveTenantFilter = e => !IsMayHaveTenantFilterEnabled || ((IMayHaveTenant)e).TenantId == CurrentTenantId;
-                if (AbpEfCoreConfiguration.UseAbpQueryCompiler)
+                if (DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler)
                 {
                     mayHaveTenantFilter = e => MayHaveTenantFilter(((IMayHaveTenant)e).TenantId, CurrentTenantId, true);
                     modelBuilder.ConfigureMayHaveTenantDbFunction(typeof(AbpDbContext).GetMethod(nameof(MayHaveTenantFilter), new []{ typeof(int?), typeof(int?), typeof(bool) })!, abpCurrentDbContext);
@@ -198,7 +201,7 @@ namespace Abp.EntityFrameworkCore
             if (typeof(IMustHaveTenant).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> mustHaveTenantFilter = e => !IsMustHaveTenantFilterEnabled || ((IMustHaveTenant)e).TenantId == CurrentTenantId;
-                if (AbpEfCoreConfiguration.UseAbpQueryCompiler)
+                if (DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler)
                 {
                     mustHaveTenantFilter = e => MustHaveTenantFilter(((IMustHaveTenant)e).TenantId, CurrentTenantId, true);
                     modelBuilder.ConfigureMustHaveTenantDbFunction(typeof(AbpDbContext).GetMethod(nameof(MustHaveTenantFilter), new []{ typeof(int), typeof(int?), typeof(bool) })!, abpCurrentDbContext);
@@ -214,19 +217,23 @@ namespace Abp.EntityFrameworkCore
             return $"{CurrentTenantId?.ToString() ?? "Null"}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
         }
 
+        private const string DbFunctionNotSupportedExceptionMessage = "Your EF Core database provider does not support 'User-defined function mapping'." +
+                                                            "Please set 'UseAbpQueryCompiler' of 'IAbpEfCoreConfiguration' to false to disable it." +
+                                                            "See https://learn.microsoft.com/en-us/ef/core/querying/user-defined-function-mapping for more information." ;
+
         public static bool SoftDeleteFilter(bool isDeleted, bool boolParam)
         {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
+            throw new NotSupportedException(DbFunctionNotSupportedExceptionMessage);
         }
 
         public static bool MustHaveTenantFilter(int tenantId, int? currentTenantId, bool boolParam)
         {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
+            throw new NotSupportedException(DbFunctionNotSupportedExceptionMessage);
         }
 
         public static bool MayHaveTenantFilter(int? tenantId, int? currentTenantId, bool boolParam)
         {
-            throw new NotSupportedException("This method should be replaced by the database function call.");
+            throw new NotSupportedException(DbFunctionNotSupportedExceptionMessage);
         }
 
         protected void ConfigureGlobalValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
