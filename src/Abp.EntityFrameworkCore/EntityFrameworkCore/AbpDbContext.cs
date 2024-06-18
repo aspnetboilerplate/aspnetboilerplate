@@ -221,7 +221,7 @@ namespace Abp.EntityFrameworkCore
             return $"{CurrentTenantId?.ToString() ?? "Null"}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
         }
 
-        private const string DbFunctionNotSupportedExceptionMessage = "Your EF Core database provider does not support 'User-defined function mapping'." +
+        protected const string DbFunctionNotSupportedExceptionMessage = "Your EF Core database provider does not support 'User-defined function mapping'." +
                                                             "Please set 'UseAbpQueryCompiler' of 'IAbpEfCoreConfiguration' to false to disable it." +
                                                             "See https://learn.microsoft.com/en-us/ef/core/querying/user-defined-function-mapping for more information." ;
 
