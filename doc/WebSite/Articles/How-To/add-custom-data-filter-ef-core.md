@@ -175,9 +175,9 @@ protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityTyp
 Then, override `CreateFilterExpression` method like below;
 
 ````csharp
-protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>(ModelBuilder modelBuilder)
 {
-    var expression = base.CreateFilterExpression<TEntity>();
+    var expression = base.CreateFilterExpression<TEntity>(modelBuilder);
 
     if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
     {
@@ -214,12 +214,12 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
         {
             return true;
         }
-         return base.ShouldFilterEntity<TEntity>(entityType);
+        return base.ShouldFilterEntity<TEntity>(entityType);
     }
 	
-    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>()
+    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>(ModelBuilder modelBuilder)
     {
-        var expression = base.CreateFilterExpression<TEntity>();
+        var expression = base.CreateFilterExpression<TEntity>(modelBuilder);
         if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
         {
             Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId || (((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId) == IsOUFilterEnabled;
@@ -227,6 +227,102 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
         }
 		
         return expression;
+    }
+	
+    protected virtual int? GetCurrentUsersOuIdOrNull()
+    {
+        var userOuClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == "Application_OrganizationUnitId");
+        if (string.IsNullOrEmpty(userOuClaim?.Value))
+        {
+            return null;
+        }
+		
+        return Convert.ToInt32(userOuClaim.Value);
+    }
+}
+````
+
+#### Using User-defined function mapping for global filters
+
+Using [User-defined function mapping](https://learn.microsoft.com/en-us/ef/core/querying/user-defined-function-mapping) for global filters will gain performance improvements. 
+
+To use this feature, you need to change your DbContext like below:
+
+````csharp
+public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, CustomFilterSampleDbContext>
+{
+    public DbSet<Document> Documents { get; set; }
+	
+    public IPrincipalAccessor PrincipalAccessor { get; set; }
+	
+    protected virtual int? CurrentOUId => GetCurrentUsersOuIdOrNull();
+	
+    protected virtual bool IsOUFilterEnabled => CurrentUnitOfWorkProvider?.Current?.IsFilterEnabled("MayHaveOrganizationUnit") == true;
+	
+    public CustomFilterSampleDbContext(DbContextOptions<CustomFilterSampleDbContext> options)
+        : base(options)
+    {
+        
+    }
+	
+    protected override bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+    {
+        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+        {
+            return true;
+        }
+        return base.ShouldFilterEntity<TEntity>(entityType);
+    }
+	
+    protected override Expression<Func<TEntity, bool>> CreateFilterExpression<TEntity>(ModelBuilder modelBuilder)
+    {
+        var expression = base.CreateFilterExpression<TEntity>(modelBuilder);
+        if (typeof(IMayHaveOrganizationUnit).IsAssignableFrom(typeof(TEntity)))
+        {
+            Expression<Func<TEntity, bool>> mayHaveOUFilter = e => ((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId || (((IMayHaveOrganizationUnit)e).OrganizationUnitId == CurrentOUId) == IsOUFilterEnabled;
+
+            if (UseAbpQueryCompiler())
+            {
+                var abpEfCoreCurrentDbContext = this.GetService<AbpEfCoreCurrentDbContext>();
+                mayHaveOUFilter = e => MayHaveOrganizationUnitFilter(((IMayHaveOrganizationUnit)e).OrganizationUnitId, CurrentOUId, true);
+                modelBuilder.HasDbFunction(typeof(AbpProjectNameDbContext).GetMethod(nameof(MayHaveOrganizationUnitFilter), new []{ typeof(long?), typeof(long?), typeof(bool) })!)
+                    .HasTranslation(args =>
+                    {
+                        // (long? organizationUnitId, long? currentOUId, bool boolParam)
+                        var organizationUnitId = args[0];
+                        var currentOUId = args[1];
+                        var boolParam = args[2];
+
+                        if (abpEfCoreCurrentDbContext.Context?.As<AbpProjectNameDbContext>().IsOUFilterEnabled == true)
+                        {
+                            // organizationUnitId == currentOUId
+                            return new SqlBinaryExpression(
+                                ExpressionType.Equal,
+                                organizationUnitId,
+                                currentOUId,
+                                boolParam.Type,
+                                boolParam.TypeMapping);
+                        }
+
+                        // empty where sql
+                        return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
+                    });
+            }
+
+            expression = expression == null ? mayHaveOUFilter : CombineExpressions(expression, mayHaveOUFilter);
+        }
+
+        return expression;
+    }
+
+    public static bool MayHaveOrganizationUnitFilter(long? organizationUnitId, long? currentOUId, bool boolParam)
+    {
+        throw new NotSupportedException(DbFunctionNotSupportedExceptionMessage);
+    }
+
+    public override string GetCompiledQueryCacheKey()
+    {
+        return $"{base.GetCompiledQueryCacheKey()}:{CurrentOUId}:{IsOUFilterEnabled}";
     }
 	
     protected virtual int? GetCurrentUsersOuIdOrNull()

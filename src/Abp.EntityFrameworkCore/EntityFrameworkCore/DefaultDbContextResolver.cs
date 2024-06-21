@@ -7,6 +7,9 @@ using System.Data.Common;
 using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq;
+using Abp.EntityFrameworkCore.Extensions;
+using Abp.Extensions;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace Abp.EntityFrameworkCore
@@ -90,12 +93,12 @@ namespace Abp.EntityFrameworkCore
                     configurer.Object.Configure(configuration);
                 }
 
-                return configuration.DbContextOptions.Options;
+                return configuration.DbContextOptions.AddAbpDbContextOptionsExtension().Options;
             }
 
             if (_iocResolver.IsRegistered<DbContextOptions<TDbContext>>())
             {
-                return _iocResolver.Resolve<DbContextOptions<TDbContext>>();
+                return _iocResolver.Resolve<DbContextOptions<TDbContext>>().WithExtension(new AbpDbContextOptionsExtension()).As<DbContextOptions<TDbContext>>();;
             }
 
             throw new AbpException($"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");

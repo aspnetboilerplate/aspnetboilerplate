@@ -9,6 +9,8 @@ using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.EntityFrameworkCore.Configuration;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.Reflection.Extensions;
 using Microsoft.Data.Sqlite;
 
@@ -26,7 +28,7 @@ namespace Abp.EntityFrameworkCore.Tests
 
             //SupportDbContext
             RegisterSupportDbContextToSqliteInMemoryDb(IocManager);
-            
+
             //Custom repository
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
@@ -38,6 +40,7 @@ namespace Abp.EntityFrameworkCore.Tests
             });
 
             Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
+            Configuration.Modules.AbpEfCore().UseAbpQueryCompiler = true;
         }
 
         public override void Initialize()
@@ -58,7 +61,7 @@ namespace Abp.EntityFrameworkCore.Tests
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component
@@ -76,7 +79,7 @@ namespace Abp.EntityFrameworkCore.Tests
             var builder = new DbContextOptionsBuilder<SupportDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component

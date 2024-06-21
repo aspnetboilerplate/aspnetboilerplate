@@ -7,6 +7,7 @@ using Abp.Dapper;
 using Abp.Domain.Repositories;
 using Abp.EntityFrameworkCore.Dapper.Tests.Domain;
 using Abp.EntityFrameworkCore.Dapper.Tests.Ef;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;
@@ -28,7 +29,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests
             Configuration.UnitOfWork.IsolationLevel = IsolationLevel.Unspecified;
 
             DapperExtensions.DapperExtensions.SqlDialect = new SqliteDialect();
-            
+
             Configuration.ReplaceService<IRepository<Post, Guid>>(() =>
             {
                 IocManager.IocContainer.Register(
@@ -44,7 +45,7 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests
             var builder = new DbContextOptionsBuilder<BloggingDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             IocManager.IocContainer.Register(
                 Component

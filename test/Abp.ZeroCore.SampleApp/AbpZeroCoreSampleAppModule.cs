@@ -42,6 +42,8 @@ namespace Abp.ZeroCore.SampleApp
 
             Configuration.CustomConfigProviders.Add(new TestCustomConfigProvider());
             Configuration.CustomConfigProviders.Add(new TestCustomConfigProvider2());
+
+            Configuration.Modules.AbpEfCore().UseAbpQueryCompiler = true;
         }
 
         public override void Initialize()
@@ -82,7 +84,7 @@ namespace Abp.ZeroCore.SampleApp
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration, MultiLingualMapContext context)
         {
-            // Product 
+            // Product
             configuration.CreateMultiLingualMap<Product, ProductTranslation, ProductListDto>(context, true);
             configuration.CreateMap<ProductCreateDto, Product>();
             configuration.CreateMap<ProductUpdateDto, Product>();

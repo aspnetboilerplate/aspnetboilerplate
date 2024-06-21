@@ -1,4 +1,5 @@
 ﻿using Abp.Dependency;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.ZeroCore.SampleApp.Core;
 using Abp.ZeroCore.SampleApp.EntityFramework;
 using Castle.MicroKernel.Registration;
@@ -29,7 +30,7 @@ namespace Abp.Zero
             var builder = new DbContextOptionsBuilder<SampleAppDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component
