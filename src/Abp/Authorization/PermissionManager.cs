@@ -91,7 +91,6 @@ namespace Abp.Authorization
 
                 var permissions = Permissions.Values
                     .WhereIf(tenancyFilter, p => p.MultiTenancySides.HasFlag(GetCurrentMultiTenancySide()))
-                    .Where(p => p.FeatureDependency == null || GetCurrentMultiTenancySide() == MultiTenancySides.Host)
                     .ToList();
 
                 var result = await FilterSatisfiedPermissionsAsync(featureDependencyContextObject, permissions);
