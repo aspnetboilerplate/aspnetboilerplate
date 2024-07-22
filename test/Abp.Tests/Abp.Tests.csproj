@@ -34,14 +34,14 @@
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.8">
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="NSubstitute" Version="5.1.0" />
 		<PackageReference Include="Shouldly" Version="4.2.1" />
-		<PackageReference Include="xunit" Version="2.7.1" />
+		<PackageReference Include="xunit" Version="2.9.0" />
 		<PackageReference Include="TimeZoneConverter" Version="6.1.0" />
 	</ItemGroup>
 	<ItemGroup>
