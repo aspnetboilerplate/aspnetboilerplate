@@ -19,14 +19,14 @@
     <Description>Abp.EntityFrameworkCore.EFPlus</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="8.102.2.3" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="8.103.0" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.8.0">
+    <PackageReference Update="Fody" Version="6.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

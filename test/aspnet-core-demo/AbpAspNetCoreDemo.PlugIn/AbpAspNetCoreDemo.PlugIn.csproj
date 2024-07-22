@@ -22,6 +22,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.7" />
   </ItemGroup>
 </Project>
