@@ -1138,6 +1138,49 @@ namespace Abp.Zero.SampleApp.Tests.EntityHistory
             _entityHistoryStore.DidNotReceive().Save(Arg.Any<EntityChangeSet>());
         }
 
+        [Fact]
+        public void Should_Not_Write_History_When_Transaction_Failed()
+        {
+            // Forward calls from substitute to implementation
+            var entityHistoryStore = Resolve<EntityHistoryStore>();
+            _entityHistoryStore.When(x => x.SaveAsync(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.SaveAsync(callback.Arg<EntityChangeSet>()));
+
+            _entityHistoryStore.When(x => x.Save(Arg.Any<EntityChangeSet>()))
+                .Do(callback => entityHistoryStore.Save(callback.Arg<EntityChangeSet>()));
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+            });
+
+            /* Advertisement does not have Audited attribute. */
+            Resolve<IEntityHistoryConfiguration>().Selectors.Add("Selected", typeof(Advertisement));
+
+            try
+            {
+                WithUnitOfWork(() =>
+                {
+                    _advertisementRepository.Insert(new Advertisement {Banner = "tracked-advertisement"});
+                    throw new AbpException("This exception is thrown to rollback the transaction!");
+                });
+            }
+            catch
+            {
+                // ignored
+            }
+
+
+            UsingDbContext((context) =>
+            {
+                context.EntityChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityChangeSets.Count(e => e.TenantId == 1).ShouldBe(0);
+                context.EntityPropertyChanges.Count(e => e.TenantId == 1).ShouldBe(0);
+            });
+        }
+        
         #endregion
 
         private int CreateBlogAndGetId()

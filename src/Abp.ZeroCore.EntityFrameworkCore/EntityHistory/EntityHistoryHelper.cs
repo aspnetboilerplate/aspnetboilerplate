@@ -90,7 +90,7 @@ namespace Abp.EntityHistory
                 return;
             }
 
-            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 await EntityHistoryStore.SaveAsync(changeSet);
                 await uow.CompleteAsync();
@@ -111,7 +111,7 @@ namespace Abp.EntityHistory
                 return;
             }
 
-            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.RequiresNew))
             {
                 EntityHistoryStore.Save(changeSet);
                 uow.Complete();
