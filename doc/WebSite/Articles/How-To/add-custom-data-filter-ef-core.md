@@ -338,9 +338,9 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 }
 ````
 
-##### Compatible with [DevExtreme.AspNet.Data's](https://github.com/DevExpress/DevExtreme.AspNet.Data) `IAsyncAdapter`
+##### Make User-defined function mapping compatible with [DevExtreme.AspNet.Data's](https://github.com/DevExpress/DevExtreme.AspNet.Data) `IAsyncAdapter`
 
-If you are using [DevExtreme.AspNet.Data](https://github.com/DevExpress/DevExtreme.AspNet.Data) you need to create a custom adapter to support async operations.
+If you are using [DevExtreme.AspNet.Data](https://github.com/DevExpress/DevExtreme.AspNet.Data) and `User-defined function mapping`, You need to create a custom adapter to compatible with `IAsyncAdapter`.
 
 ````csharp
 var adapter = new AbpDevExtremeAsyncAdapter();
