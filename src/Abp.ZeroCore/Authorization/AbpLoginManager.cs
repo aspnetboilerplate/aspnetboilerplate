@@ -71,11 +71,11 @@ namespace Abp.Authorization
         }
 
         public virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsync(UserLoginInfo login,
-            string tenancyName = null)
+            string tenancyName = null, bool shouldLockout = true)
         {
             return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                var result = await LoginAsyncInternal(login, tenancyName);
+                var result = await LoginAsyncInternal(login, tenancyName, shouldLockout);
 
                 if (ShouldPreventSavingLoginAttempt(result))
                 {
@@ -93,7 +93,7 @@ namespace Abp.Authorization
         }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> LoginAsyncInternal(UserLoginInfo login,
-            string tenancyName)
+            string tenancyName, bool shouldLockout)
         {
             if (login == null || login.LoginProvider.IsNullOrEmpty() || login.ProviderKey.IsNullOrEmpty())
             {
@@ -127,6 +127,13 @@ namespace Abp.Authorization
                 if (user == null)
                 {
                     return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.UnknownExternalLogin, tenant);
+                }
+                if (shouldLockout)
+                {
+                    if (await TryLockOutAsync(tenantId, user.Id))
+                    {
+                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                    }
                 }
 
                 return await CreateLoginResultAsync(user, tenant);
@@ -225,15 +232,7 @@ namespace Abp.Authorization
                 {
                     if (!await UserManager.CheckPasswordAsync(user, plainPassword))
                     {
-                        if (shouldLockout)
-                        {
-                            if (await TryLockOutAsync(tenantId, user.Id))
-                            {
-                                return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
-                            }
-                        }
-
-                        return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
+                        await GetFailedPasswordValidationAsLoginResultAsync(user, tenant, shouldLockout);
                     }
 
                     await UserManager.ResetAccessFailedCountAsync(user);
@@ -243,6 +242,18 @@ namespace Abp.Authorization
             }
         }
 
+        protected virtual async Task<AbpLoginResult<TTenant, TUser>> GetFailedPasswordValidationAsLoginResultAsync(TUser user, TTenant tenant = null, bool shouldLockout = false)
+        {
+            if (shouldLockout)
+            {
+                if (await TryLockOutAsync(user.TenantId, user.Id))
+                {
+                    return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.LockedOut, tenant, user);
+                }
+            }
+
+            return new AbpLoginResult<TTenant, TUser>(AbpLoginResultType.InvalidPassword, tenant, user);
+        }
 
         protected virtual async Task<AbpLoginResult<TTenant, TUser>> CreateLoginResultAsync(TUser user,
             TTenant tenant = null)
