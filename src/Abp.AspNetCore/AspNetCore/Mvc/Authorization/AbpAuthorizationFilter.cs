@@ -61,19 +61,28 @@ namespace Abp.AspNetCore.Mvc.Authorization
                 Logger.Warn(ex.ToString(), ex);
 
                 await _eventBus.TriggerAsync(this, new AbpHandledExceptionData(ex));
+                
+                var isAuthenticated = context.HttpContext.User.Identity.IsAuthenticated;
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
                     context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
                     {
-                        StatusCode = context.HttpContext.User.Identity.IsAuthenticated
+                        StatusCode = isAuthenticated
                             ? (int) System.Net.HttpStatusCode.Forbidden
                             : (int) System.Net.HttpStatusCode.Unauthorized
                     };
                 }
                 else
                 {
-                    context.Result = new ChallengeResult();
+                    if (isAuthenticated)
+                    {
+                        context.Result = new ForbidResult();
+                    }
+                    else
+                    {
+                        context.Result = new ChallengeResult();
+                    }
                 }
             }
             catch (Exception ex)
