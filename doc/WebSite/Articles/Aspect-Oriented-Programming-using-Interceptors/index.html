@@ -182,7 +182,7 @@ namespace InterceptionDemo.Interceptors
             {
                 if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
                 {
-                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>)));
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor&lt;MeasureDurationInterceptor&gt;)));
                 }
             };</strong>
         }
@@ -205,7 +205,7 @@ public class InterceptionDemoApplicationModule : AbpModule
     public override void Initialize()
     {
         //...
-        IocManager.Register(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>), DependencyLifeStyle.Transient);
+        IocManager.Register(typeof(AbpAsyncDeterminationInterceptor&lt;MeasureDurationInterceptor&gt;), DependencyLifeStyle.Transient);
     }
     
     //...
@@ -282,7 +282,7 @@ namespace InterceptionDemo.Interceptors
                 );
         }
 
-        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task&lt;TResult&gt; InternalInterceptAsynchronous&lt;TResult&gt;(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
@@ -291,7 +291,7 @@ namespace InterceptionDemo.Interceptors
 
             proceedInfo.Invoke();
 
-            var taskResult = (Task<TResult>)invocation.ReturnValue;
+            var taskResult = (Task&lt;TResult&gt;)invocation.ReturnValue;
             var result = await taskResult;
 
             //After method execution
@@ -322,8 +322,8 @@ internal static class MeasureDurationInterceptorRegistrar
         {
             if (typeof (IApplicationService).IsAssignableFrom(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationInterceptor>)));
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<MeasureDurationAsyncInterceptor>)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor&lt;MeasureDurationInterceptor&gt;)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor&lt;MeasureDurationAsyncInterceptor&gt;)));
             }
         };
     }
@@ -389,7 +389,7 @@ namespace InterceptionDemo.Interceptors
             LogExecutionTime(invocation, stopwatch);
         }
 
-        protected override async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        protected override async Task&lt;TResult&gt; InternalInterceptAsynchronous&lt;TResult&gt;(IInvocation invocation)
         {
             var proceedInfo = invocation.CaptureProceedInfo();
 
@@ -398,7 +398,7 @@ namespace InterceptionDemo.Interceptors
 
             proceedInfo.Invoke();
 
-            var taskResult = (Task<TResult>)invocation.ReturnValue;
+            var taskResult = (Task&lt;TResult&gt;)invocation.ReturnValue;
             await TestActionAsync(invocation.MethodInvocationTarget.Name);
             var result = await taskResult;
 
