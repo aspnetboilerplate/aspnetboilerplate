@@ -21,7 +21,7 @@
         <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.Core" Version="5.7.0" />
+        <PackageReference Include="OpenIddict.Core" Version="5.8.0" />
         <PackageReference Update="Fody" Version="6.8.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
