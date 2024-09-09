@@ -1,9 +1,7 @@
-﻿using System;
-using Abp.AspNetCore.Uow;
+﻿using Abp.HtmlSanitizer.ActionFilter;
+using Abp.HtmlSanitizer.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Abp.HtmlSanitizer
 {

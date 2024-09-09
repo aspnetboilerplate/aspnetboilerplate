@@ -94,7 +94,7 @@ namespace AbpAspNetCoreDemo
                     options.JsonSerializerOptions.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver(aspNetCoreConfiguration.InputDateTimeFormats, aspNetCoreConfiguration.OutputDateTimeFormat);
                 });
 
-            // services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
+            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
