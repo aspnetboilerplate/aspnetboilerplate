@@ -63,7 +63,6 @@ namespace AbpAspNetCoreDemo
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
-                options.AddAbpHtmlSanitizer();
             }).AddRazorRuntimeCompilation().AddOData(opts =>
             {
                 var builder = new ODataConventionModelBuilder();
@@ -95,7 +94,7 @@ namespace AbpAspNetCoreDemo
                     options.JsonSerializerOptions.TypeInfoResolver = new AbpDateTimeJsonTypeInfoResolver(aspNetCoreConfiguration.InputDateTimeFormats, aspNetCoreConfiguration.OutputDateTimeFormat);
                 });
 
-            services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
+            // services.Configure<MvcOptions>(x => x.AddAbpHtmlSanitizer());
 
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<AbpAspNetCoreDemoModule>(options =>
@@ -126,12 +125,12 @@ namespace AbpAspNetCoreDemo
                     currentDirectory = parentDirectory.FullName;
                 }
 
-                if (!File.Exists(plugDllInPath))
-                {
-                    throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
-                }
+                // if (!File.Exists(plugDllInPath))
+                // {
+                //     throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
+                // }
 
-                options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
+                // options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
 
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(
@@ -152,6 +151,8 @@ namespace AbpAspNetCoreDemo
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
+
+            app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
 
             // Return IQueryable from controllers
             app.UseUnitOfWork(options =>

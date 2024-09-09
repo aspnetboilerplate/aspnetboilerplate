@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.HtmlSanitizer.Configuration;
 using Ganss.Xss;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.HtmlSanitizer
@@ -73,6 +78,23 @@ namespace Abp.HtmlSanitizer
             return methodInfo.IsDefined(typeof(HtmlSanitizerAttribute), true);
         }
 
+        public bool ShouldSanitizeContext(HttpContext context)
+        {
+            if (_configuration == null)
+            {
+                return false;
+            }
+
+            if (!_configuration.IsEnabledForGetRequests &&
+                context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            // İlgili sanitize kontrol işlemleri burada eklenebilir. Örneğin, belirli rotalar veya istek türleri için.
+            return true;
+        }
+
         public void SanitizeContext(ActionExecutingContext context)
         {
             foreach (var item in context.ActionDescriptor.Parameters)
@@ -99,6 +121,29 @@ namespace Abp.HtmlSanitizer
 
                 SanitizeObject(argumentItem);
             }
+        }
+
+        public async Task SanitizeContext(HttpContext context)
+        {
+            if (!context.Request.Body.CanRead) return;
+
+
+            using var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true);
+            var bodyStr = await reader.ReadToEndAsync();
+            
+            var sanitizedContent = SanitizeHtml(bodyStr);
+
+            var newBody = new MemoryStream();
+            var writer = new StreamWriter(newBody);
+
+            var testStr =
+                "{\n  \"htmlInput\": \"hello\",\n  \"secondInput\": null\n}";
+
+            await writer.WriteAsync(testStr);
+            await writer.FlushAsync();
+
+            newBody.Position = 0;
+            context.Request.Body = newBody;
         }
 
         private void SanitizeObject(object item)
