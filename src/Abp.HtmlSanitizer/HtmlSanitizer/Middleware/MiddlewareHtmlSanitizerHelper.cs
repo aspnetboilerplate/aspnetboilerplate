@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Abp.AspNetCore.Mvc.Extensions;
 using Abp.HtmlSanitizer.Configuration;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
 
 namespace Abp.HtmlSanitizer.Middleware
@@ -19,18 +23,47 @@ namespace Abp.HtmlSanitizer.Middleware
 
         public bool ShouldSanitizeContext(HttpContext context)
         {
-            if (_configuration == null)
-            {
-                return false;
-            }
+            var endpoint = context.GetEndpoint();
+            var actionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
             
-            if (!_configuration.IsEnabledForGetRequests &&
-                context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+            var methodInfo = actionDescriptor?.GetMethodInfo();
+
+            if (methodInfo == null)
             {
                 return false;
             }
 
-            return true;
+            if (!methodInfo.IsPublic)
+            {
+                return false;
+            }
+
+            var classType = methodInfo.DeclaringType;
+
+            if (methodInfo.IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
+            {
+                return false;
+            }
+
+            if (classType != null)
+            {
+                if (classType.GetTypeInfo().IsDefined(typeof(DisableHtmlSanitizerAttribute), true))
+                {
+                    return false;
+                }
+
+                if (classType.GetTypeInfo().IsDefined(typeof(HtmlSanitizerAttribute), true))
+                {
+                    return true;
+                }
+
+                if (_configuration.Selectors.Any(selector => selector.Invoke(methodInfo)))
+                {
+                    return true;
+                }
+            }
+
+            return methodInfo.IsDefined(typeof(HtmlSanitizerAttribute), true);
         }
 
         public async Task SanitizeContext(HttpContext context)

@@ -152,8 +152,6 @@ namespace AbpAspNetCoreDemo
         {
             app.UseAbp(); //Initializes ABP framework. Should be called first.
 
-            app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
-
             // Return IQueryable from controllers
             app.UseUnitOfWork(options =>
             {
@@ -174,6 +172,7 @@ namespace AbpAspNetCoreDemo
             app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
             app.UseRouting();
+            app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
 
             app.UseEndpoints(endpoints =>
             {
