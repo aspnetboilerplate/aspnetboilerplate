@@ -232,7 +232,7 @@ namespace Abp.Authorization
                 {
                     if (!await UserManager.CheckPasswordAsync(user, plainPassword))
                     {
-                        await GetFailedPasswordValidationAsLoginResultAsync(user, tenant, shouldLockout);
+                        return await GetFailedPasswordValidationAsLoginResultAsync(user, tenant, shouldLockout);
                     }
 
                     await UserManager.ResetAccessFailedCountAsync(user);
