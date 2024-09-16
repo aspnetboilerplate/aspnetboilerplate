@@ -975,4 +975,4 @@ Almost all operations available on UI also available as Web API (since UI uses t
 
 ### Source Code
 
-You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
+You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloud)

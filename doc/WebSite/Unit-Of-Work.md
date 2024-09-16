@@ -225,7 +225,7 @@ manages the connection and then the other methods reuse it.
 You can create a different and isolated transaction in another
 transaction or you can create a non-transactional scope in a transaction.
 .NET defines
-[TransactionScopeOption](https://msdn.microsoft.com/en-us/library/system.transactions.transactionscopeoption(v=vs.110).aspx)
+[TransactionScopeOption](https://learn.microsoft.com/en-us/dotnet/api/system.transactions.transactionscopeoption?view=net-8.0)
 for that. You can set the Scope option of the unit of work to control it.
 
 #### Automatically Saving Changes
