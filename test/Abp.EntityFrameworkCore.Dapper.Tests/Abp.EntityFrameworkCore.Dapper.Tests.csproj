@@ -11,8 +11,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0-preview.4.24267.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-preview.4.24267.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0-rc.1.24451.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.1.24451.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.Dapper\Abp.Dapper.csproj" />

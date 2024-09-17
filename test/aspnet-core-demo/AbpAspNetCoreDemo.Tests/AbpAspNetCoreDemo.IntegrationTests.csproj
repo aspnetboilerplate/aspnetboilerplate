@@ -16,8 +16,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="AngleSharp" Version="1.2.0-beta.423" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-preview.4.24267.6" />
+    <PackageReference Include="AngleSharp" Version="1.2.0-beta.431" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-rc.1.24452.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbpAspNetCoreDemo\AbpAspNetCoreDemo.csproj" />
