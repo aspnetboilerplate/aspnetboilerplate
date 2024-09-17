@@ -28,7 +28,6 @@ namespace Abp.EntityFrameworkCore.Dapper.Tests
                 bloggingDbContext.Database.OpenConnection();
                 bloggingDbContext.Database.EnsureDeleted();
                 bloggingDbContext.Database.EnsureCreated();
-                bloggingDbContext.Database.Migrate();
             }
 
             UsingDbContext(
