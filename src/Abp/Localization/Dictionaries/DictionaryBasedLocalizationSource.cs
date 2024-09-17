@@ -7,7 +7,6 @@ using Abp.Collections.Extensions;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Extensions;
-using Castle.Core.Internal;
 using Castle.Core.Logging;
 
 namespace Abp.Localization.Dictionaries
@@ -56,6 +55,56 @@ namespace Abp.Localization.Dictionaries
         }
 
         /// <inheritdoc/>
+        public string FindKeyOrNull(string value, CultureInfo culture, bool tryDefaults = true)
+        {
+            var cultureName = culture.Name;
+            var dictionaries = DictionaryProvider.Dictionaries;
+
+            //Try to get from original dictionary (with country code)
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
+            {
+                var keyOriginal = originalDictionary.TryGetKey(value);
+                if (keyOriginal != null)
+                {
+                    return keyOriginal;
+                }
+            }
+
+            if (!tryDefaults)
+            {
+                return null;
+            }
+
+            //Try to get from same language dictionary (without country code)
+            if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
+            {
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
+                {
+                    var keyLang = langDictionary.TryGetKey(value);
+                    if (keyLang != null)
+                    {
+                        return keyLang;
+                    }
+                }
+            }
+
+            //Try to get from default language
+            var defaultDictionary = DictionaryProvider.DefaultDictionary;
+            if (defaultDictionary == null)
+            {
+                return null;
+            }
+
+            var keyDefault = defaultDictionary.TryGetKey(value);
+            if (keyDefault == null)
+            {
+                return null;
+            }
+
+            return keyDefault;
+        }
+
+        /// <inheritdoc/>
         public string GetString(string name)
         {
             return GetString(name, CultureInfo.CurrentUICulture);
@@ -85,8 +134,7 @@ namespace Abp.Localization.Dictionaries
             var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
-            ILocalizationDictionary originalDictionary;
-            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
             {
                 var strOriginal = originalDictionary.GetOrNull(name);
                 if (strOriginal != null)
@@ -103,8 +151,7 @@ namespace Abp.Localization.Dictionaries
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
             {
-                ILocalizationDictionary langDictionary;
-                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
                 {
                     var strLang = langDictionary.GetOrNull(name);
                     if (strLang != null)
@@ -163,8 +210,7 @@ namespace Abp.Localization.Dictionaries
             var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
-            ILocalizationDictionary originalDictionary;
-            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
             {
                 var strOriginal = originalDictionary.GetStringsOrNull(names);
                 if (!(strOriginal.IsNullOrEmpty()))
@@ -181,8 +227,7 @@ namespace Abp.Localization.Dictionaries
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
             {
-                ILocalizationDictionary langDictionary;
-                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
                 {
                     var strLang = langDictionary.GetStringsOrNull(names);
                     if (!strLang.IsNullOrEmpty())
@@ -239,8 +284,7 @@ namespace Abp.Localization.Dictionaries
                 //Overwrite all strings from the language based on country culture
                 if (culture.Name.Contains("-"))
                 {
-                    ILocalizationDictionary langDictionary;
-                    if (dictionaries.TryGetValue(GetBaseCultureName(culture.Name), out langDictionary))
+                    if (dictionaries.TryGetValue(GetBaseCultureName(culture.Name), out var langDictionary))
                     {
                         foreach (var langString in langDictionary.GetAllStrings())
                         {
@@ -251,8 +295,7 @@ namespace Abp.Localization.Dictionaries
             }
 
             //Overwrite all strings from the original dictionary
-            ILocalizationDictionary originalDictionary;
-            if (dictionaries.TryGetValue(culture.Name, out originalDictionary))
+            if (dictionaries.TryGetValue(culture.Name, out var originalDictionary))
             {
                 foreach (var originalLangString in originalDictionary.GetAllStrings())
                 {

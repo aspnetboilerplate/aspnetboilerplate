@@ -6,7 +6,6 @@ using Abp.Domain.Repositories;
 using Abp.EntityFramework.Repositories;
 using Abp.Events.Bus.Entities;
 using Abp.Json;
-using Abp.Linq;
 
 namespace Abp.EntityHistory
 {

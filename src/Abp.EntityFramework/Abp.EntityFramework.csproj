@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
-    <PackageReference Include="EntityFramework" Version="6.5.0-preview2-24180-01" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
   </ItemGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<Reference Include="System" />

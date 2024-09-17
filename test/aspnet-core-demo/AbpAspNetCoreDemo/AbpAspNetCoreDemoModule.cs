@@ -8,6 +8,7 @@ using Abp.Castle.Logging.Log4Net;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.EntityFrameworkCore;
+using Abp.EntityFrameworkCore.Extensions;
 using Abp.HtmlSanitizer;
 using Abp.HtmlSanitizer.Configuration;
 using Abp.Modules;
@@ -75,7 +76,7 @@ namespace AbpAspNetCoreDemo
             var builder = new DbContextOptionsBuilder<MyDbContext>();
 
             var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            builder.UseSqlite(inMemorySqlite);
+            builder.UseSqlite(inMemorySqlite).AddAbpDbContextOptionsExtension();
 
             iocManager.IocContainer.Register(
                 Component

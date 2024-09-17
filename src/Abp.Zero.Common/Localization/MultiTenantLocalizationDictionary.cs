@@ -54,6 +54,46 @@ namespace Abp.Localization
             set { _internalDictionary[name] = value; }
         }
 
+        public string TryGetKey(int? tenantId, string value)
+        {
+            //Get cache
+            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+
+            //Get for current tenant
+            var dictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
+            var foundValue = dictionary.Values.FirstOrDefault(x => x == value);
+            if (foundValue != null)
+            {
+                return foundValue;
+            }
+
+            //Fall back to host
+            if (tenantId != null)
+            {
+                dictionary = cache.Get(CalculateCacheKey(null), () => GetAllValuesFromDatabase(null));
+                foundValue = dictionary.Values.FirstOrDefault(x => x == value);
+                if (foundValue != null)
+                {
+                    return foundValue;
+                }
+            }
+
+            //Not found in database, fall back to internal dictionary
+            var internalLocalizedString = _internalDictionary.TryGetKey(value);
+            if (internalLocalizedString != null)
+            {
+                return internalLocalizedString;
+            }
+
+            //Not found at all
+            return null;
+        }
+
+        public string TryGetKey(string value)
+        {
+            return TryGetKey(_session.TenantId, value);
+        }
+
         public LocalizedString GetOrNull(string name)
         {
             return GetOrNull(_session.TenantId, name);

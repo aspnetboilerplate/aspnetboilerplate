@@ -5,6 +5,7 @@ using Abp.Domain.Uow;
 using Abp.DynamicEntityProperties;
 using Abp.Runtime.Caching;
 using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using NSubstitute;
 using Shouldly;
 using Xunit;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
@@ -7,9 +6,9 @@ using Abp.MultiTenancy;
 using Abp.TestBase;
 using Abp.Zero.SampleApp.MultiTenancy;
 using Abp.Zero.SampleApp.NHibernate.TestDatas;
+using Abp.Zero.SampleApp.Users;
 using Castle.MicroKernel.Registration;
 using NHibernate;
-using NHibernate.Linq;
 
 namespace Abp.Zero.SampleApp.NHibernate
 {
@@ -68,6 +67,16 @@ namespace Abp.Zero.SampleApp.NHibernate
                 session =>
                 {
                     return session.Query<Tenant>().Single(t => t.TenancyName == AbpTenantBase.DefaultTenantName);
+                });
+        }
+        
+        protected User GetDefaultTenantAdmin()
+        {
+            var defaultTenant = GetDefaultTenant();
+            return UsingSession(
+                context =>
+                {
+                    return context.Query<User>().Single(u => u.UserName == User.AdminUserName && u.TenantId == defaultTenant.Id);
                 });
         }
 
