@@ -1,27 +1,26 @@
-﻿using FluentMigrator.Runner.VersionTableInfo;
+using FluentMigrator.Runner.VersionTableInfo;
 using System;
 
-namespace Abp.Zero.FluentMigrator
+namespace Abp.Zero.FluentMigrator;
+
+[VersionTableMetaData]
+public class VersionTable : DefaultVersionTableMetaData
 {
-    [VersionTableMetaData]
-    public class VersionTable : DefaultVersionTableMetaData
+    [Obsolete("Use dependency injection")]
+    public VersionTable() : base()
     {
-        [Obsolete("Use dependency injection")]
-        public VersionTable() : base()
-        {
-        }
+    }
 
-        [Obsolete("Use dependency injection")]
-        public VersionTable(string schemaName) : base(schemaName)
-        {
-        }
+    [Obsolete("Use dependency injection")]
+    public VersionTable(string schemaName) : base(schemaName)
+    {
+    }
 
-        public override string TableName
+    public override string TableName
+    {
+        get
         {
-            get
-            {
-                return "AbpVersionInfo";
-            }
+            return "AbpVersionInfo";
         }
     }
 }

@@ -1,34 +1,33 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Abp.Domain.Uow;
 using Abp.ZeroCore.SampleApp.Core;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.Roles
+namespace Abp.Zero.Roles;
+
+public class RoleStore_Tests : AbpZeroTestBase
 {
-    public class RoleStore_Tests : AbpZeroTestBase
+    private readonly RoleStore _roleStore;
+
+    public RoleStore_Tests()
     {
-        private readonly RoleStore _roleStore;
+        _roleStore = Resolve<RoleStore>();
+    }
 
-        public RoleStore_Tests()
+    [Fact]
+    public async Task Should_Get_Role_Claims()
+    {
+        using (var uow = Resolve<IUnitOfWorkManager>().Begin())
         {
-            _roleStore = Resolve<RoleStore>();
-        }
+            var role = await _roleStore.FindByNameAsync("ADMIN");
+            role.ShouldNotBeNull();
 
-        [Fact]
-        public async Task Should_Get_Role_Claims()
-        {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var role = await _roleStore.FindByNameAsync("ADMIN");
-                role.ShouldNotBeNull();
+            var claims = await _roleStore.GetClaimsAsync(role);
 
-                var claims = await _roleStore.GetClaimsAsync(role);
+            claims.ShouldNotBeNull();
 
-                claims.ShouldNotBeNull();
-
-                await uow.CompleteAsync();
-            }
+            await uow.CompleteAsync();
         }
     }
 }

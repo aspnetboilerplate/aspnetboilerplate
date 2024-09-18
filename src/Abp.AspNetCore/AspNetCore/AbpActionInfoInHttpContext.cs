@@ -1,7 +1,6 @@
-﻿namespace Abp.AspNetCore
+namespace Abp.AspNetCore;
+
+public class AbpActionInfoInHttpContext //Rename?
 {
-    public class AbpActionInfoInHttpContext //Rename?
-    {
-        public bool IsObjectResult { get; set; }
-    }
+    public bool IsObjectResult { get; set; }
 }

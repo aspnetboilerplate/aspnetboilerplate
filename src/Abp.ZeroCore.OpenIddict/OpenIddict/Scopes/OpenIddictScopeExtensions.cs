@@ -1,6 +1,6 @@
-namespace Abp.OpenIddict.Scopes
-{
-    public static class OpenIddictScopeExtensions
+namespace Abp.OpenIddict.Scopes;
+
+public static class OpenIddictScopeExtensions
 {
     public static OpenIddictScope ToEntity(this OpenIddictScopeModel model)
     {
@@ -38,7 +38,7 @@ namespace Abp.OpenIddict.Scopes
 
     public static OpenIddictScopeModel ToModel(this OpenIddictScope entity)
     {
-        if(entity == null)
+        if (entity == null)
         {
             return null;
         }
@@ -57,5 +57,4 @@ namespace Abp.OpenIddict.Scopes
 
         return model;
     }
-}
 }

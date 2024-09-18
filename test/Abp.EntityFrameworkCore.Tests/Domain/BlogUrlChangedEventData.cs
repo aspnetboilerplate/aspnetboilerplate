@@ -1,17 +1,16 @@
-﻿using Abp.Events.Bus;
+using Abp.Events.Bus;
 
-namespace Abp.EntityFrameworkCore.Tests.Domain
+namespace Abp.EntityFrameworkCore.Tests.Domain;
+
+public class BlogUrlChangedEventData : EventData
 {
-    public class BlogUrlChangedEventData : EventData
+    public Blog Blog { get; private set; }
+
+    public string OldUrl { get; private set; }
+
+    public BlogUrlChangedEventData(Blog blog, string oldUrl)
     {
-        public Blog Blog { get; private set; }
-
-        public string OldUrl { get; private set; }
-
-        public BlogUrlChangedEventData(Blog blog, string oldUrl)
-        {
-            Blog = blog;
-            OldUrl = oldUrl;
-        }
+        Blog = blog;
+        OldUrl = oldUrl;
     }
 }

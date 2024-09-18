@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetCoreDemo.Controllers;
+
+[Route("api/Custom")]
+[ApiExplorerSettings(IgnoreApi = false)]
+public class CustomController : DemoControllerBase
 {
-    [Route("api/Custom")]
-    [ApiExplorerSettings(IgnoreApi = false)]
-    public class CustomController : DemoControllerBase
+    [Route("action-one")]
+    public IActionResult Action1()
     {
-        [Route("action-one")]
-        public IActionResult Action1()
-        {
-            return Content("42");
-        }
+        return Content("42");
     }
 }

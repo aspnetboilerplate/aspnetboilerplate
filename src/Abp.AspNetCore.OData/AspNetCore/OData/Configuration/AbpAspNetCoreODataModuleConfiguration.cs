@@ -1,22 +1,21 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.ModelBuilder;
 
-namespace Abp.AspNetCore.OData.Configuration
+namespace Abp.AspNetCore.OData.Configuration;
+
+internal class AbpAspNetCoreODataModuleConfiguration : IAbpAspNetCoreODataModuleConfiguration
 {
-    internal class AbpAspNetCoreODataModuleConfiguration : IAbpAspNetCoreODataModuleConfiguration
+    public ODataConventionModelBuilder ODataModelBuilder { get; set; }
+
+    public Action<IMvcCoreBuilder> MapAction { get; set; }
+
+    public AbpAspNetCoreODataModuleConfiguration()
     {
-        public ODataConventionModelBuilder ODataModelBuilder { get; set; }
-
-        public Action<IMvcCoreBuilder> MapAction { get; set; }
-
-        public AbpAspNetCoreODataModuleConfiguration()
+        MapAction = routes =>
         {
-            MapAction = routes =>
-            {
-                routes.AddOData(opt => opt.AddRouteComponents("odata", ODataModelBuilder.GetEdmModel()));
-            };
-        }
+            routes.AddOData(opt => opt.AddRouteComponents("odata", ODataModelBuilder.GetEdmModel()));
+        };
     }
 }

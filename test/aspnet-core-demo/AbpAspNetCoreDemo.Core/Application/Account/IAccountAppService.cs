@@ -1,9 +1,8 @@
 using Abp.Application.Services;
 
-namespace AbpAspNetCoreDemo.Core.Application.Account
+namespace AbpAspNetCoreDemo.Core.Application.Account;
+
+public interface IAccountAppService : IApplicationService
 {
-    public interface IAccountAppService : IApplicationService
-    {
-        RegisterOutput Register(RegisterInput input);
-    }
+    RegisterOutput Register(RegisterInput input);
 }
