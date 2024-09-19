@@ -1,4 +1,4 @@
-﻿using Abp.HtmlSanitizer;
+using Abp.HtmlSanitizer;
 using Abp.Web.Models;
 using AbpAspNetCoreDemo.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,8 @@ public class SanitizerTestController : DemoControllerBase
     {
         return new
         {
-            firstInput, secondInput
+            firstInput,
+            secondInput
         };
     }
 
@@ -36,5 +37,5 @@ public class SanitizerTestController : DemoControllerBase
     {
         return myModel;
     }
-    
+
 }

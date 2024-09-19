@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Abp.Domain.Uow;
 
-namespace Abp.OpenIddict
+namespace Abp.OpenIddict;
+
+public interface IOpenIddictDbConcurrencyExceptionHandler
 {
-    public interface IOpenIddictDbConcurrencyExceptionHandler
-    {
-        Task HandleAsync(AbpDbConcurrencyException exception);
-    }
+    Task HandleAsync(AbpDbConcurrencyException exception);
 }

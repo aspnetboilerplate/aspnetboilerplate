@@ -1,4 +1,4 @@
-﻿using Abp.EntityHistory;
+using Abp.EntityHistory;
 using Abp.Events.Bus.Entities;
 using Abp.NHibernate.EntityMappings;
 

@@ -1,7 +1,6 @@
-namespace AbpAspNetCoreDemo.Core.Application.Account
+namespace AbpAspNetCoreDemo.Core.Application.Account;
+
+public class RegisterOutput
 {
-    public class  RegisterOutput
-    {
-        public string FullName { get; set; }
-    }
+    public string FullName { get; set; }
 }

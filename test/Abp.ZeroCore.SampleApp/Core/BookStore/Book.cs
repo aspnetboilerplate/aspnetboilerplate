@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using Abp.Domain.Entities;
 
-namespace Abp.ZeroCore.SampleApp.Core.BookStore
+namespace Abp.ZeroCore.SampleApp.Core.BookStore;
+
+public class Book : Entity<Guid>
 {
-    public class Book : Entity<Guid>
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections.Generic;
 
-namespace Abp.EntityFrameworkCore.Uow
+namespace Abp.EntityFrameworkCore.Uow;
+
+public class ActiveTransactionInfo
 {
-    public class ActiveTransactionInfo
+    public IDbContextTransaction DbContextTransaction { get; }
+
+    public DbContext StarterDbContext { get; }
+
+    public List<DbContext> AttendedDbContexts { get; }
+
+    public ActiveTransactionInfo(IDbContextTransaction dbContextTransaction, DbContext starterDbContext)
     {
-        public IDbContextTransaction DbContextTransaction { get; }
+        DbContextTransaction = dbContextTransaction;
+        StarterDbContext = starterDbContext;
 
-        public DbContext StarterDbContext { get; }
-
-        public List<DbContext> AttendedDbContexts { get; }
-
-        public ActiveTransactionInfo(IDbContextTransaction dbContextTransaction, DbContext starterDbContext)
-        {
-            DbContextTransaction = dbContextTransaction;
-            StarterDbContext = starterDbContext;
-
-            AttendedDbContexts = new List<DbContext>();
-        }
+        AttendedDbContexts = new List<DbContext>();
     }
 }

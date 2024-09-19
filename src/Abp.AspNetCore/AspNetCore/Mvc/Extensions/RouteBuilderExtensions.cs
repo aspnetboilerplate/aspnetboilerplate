@@ -1,35 +1,34 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 
-namespace Abp.AspNetCore.Mvc.Extensions
+namespace Abp.AspNetCore.Mvc.Extensions;
+
+public static class RouteBuilderExtensions
 {
-    public static class RouteBuilderExtensions
+    public static void ConfigureAll(this List<Action<IRouteBuilder>> routeBuilderActions, IRouteBuilder routes)
     {
-        public static void ConfigureAll(this List<Action<IRouteBuilder>> routeBuilderActions, IRouteBuilder routes)
+        if (routeBuilderActions == null)
         {
-            if (routeBuilderActions == null)
-            {
-                throw new ArgumentNullException(nameof(routeBuilderActions));
-            }
-
-            routeBuilderActions.ForEach(action =>
-            {
-                action(routes);
-            });
+            throw new ArgumentNullException(nameof(routeBuilderActions));
         }
 
-        public static void ConfigureAllEndpoints(this List<Action<IEndpointRouteBuilder>> routeBuilderActions, IEndpointRouteBuilder routes)
+        routeBuilderActions.ForEach(action =>
         {
-            if (routeBuilderActions == null)
-            {
-                throw new ArgumentNullException(nameof(routeBuilderActions));
-            }
+            action(routes);
+        });
+    }
 
-            routeBuilderActions.ForEach(action =>
-            {
-                action(routes);
-            });
+    public static void ConfigureAllEndpoints(this List<Action<IEndpointRouteBuilder>> routeBuilderActions, IEndpointRouteBuilder routes)
+    {
+        if (routeBuilderActions == null)
+        {
+            throw new ArgumentNullException(nameof(routeBuilderActions));
         }
+
+        routeBuilderActions.ForEach(action =>
+        {
+            action(routes);
+        });
     }
 }

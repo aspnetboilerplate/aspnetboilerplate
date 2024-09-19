@@ -1,14 +1,13 @@
-﻿using Abp.Application.Services.Dto;
+using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using AbpAspNetCoreDemo.Core.Domain;
 
-namespace AbpAspNetCoreDemo.Core.Application.Dtos
-{
-    [AutoMap(typeof(Product))]
-    public class ProductDto : EntityDto
-    {
-        public string Name { get; set; }
+namespace AbpAspNetCoreDemo.Core.Application.Dtos;
 
-        public float Price { get; set; }
-    }
+[AutoMap(typeof(Product))]
+public class ProductDto : EntityDto
+{
+    public string Name { get; set; }
+
+    public float Price { get; set; }
 }

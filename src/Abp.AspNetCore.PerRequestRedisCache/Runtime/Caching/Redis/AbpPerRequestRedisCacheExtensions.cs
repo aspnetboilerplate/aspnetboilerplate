@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
 

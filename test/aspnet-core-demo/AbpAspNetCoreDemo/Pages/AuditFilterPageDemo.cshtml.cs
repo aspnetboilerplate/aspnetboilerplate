@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AbpAspNetCoreDemo.Pages
+namespace AbpAspNetCoreDemo.Pages;
+
+[IgnoreAntiforgeryToken]
+public class AuditFilterPageDemoModel : PageModel
 {
-    [IgnoreAntiforgeryToken]
-    public class AuditFilterPageDemoModel : PageModel
+    [BindProperty]
+    public string Message { get; set; }
+
+    public void OnGet()
     {
-        [BindProperty]
-        public string Message { get; set; }
 
-        public void OnGet()
-        {
-            
-        }
+    }
 
-        public void OnPost()
-        {
+    public void OnPost()
+    {
 
-        }
     }
 }

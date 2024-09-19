@@ -1,11 +1,10 @@
-﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities;
 
-namespace Abp.EntityFrameworkCore.Tests.Domain
+namespace Abp.EntityFrameworkCore.Tests.Domain;
+
+public class Comment : Entity
 {
-    public class Comment : Entity
-    {
-        public Post Post { get; set; }
+    public Post Post { get; set; }
 
-        public string Content { get; set; }
-    }
+    public string Content { get; set; }
 }
