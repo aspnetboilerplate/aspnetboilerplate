@@ -10,6 +10,18 @@ namespace Abp.Localization
     public interface IMultiTenantLocalizationSource : ILocalizationSource
     {
         /// <summary>
+        /// Gets key for given value.
+        /// </summary>
+        /// <param name="tenantId">TenantId or null for host.</param>
+        /// <param name="value">Value</param>
+        /// <param name="culture">culture information</param>
+        /// <param name="tryDefaults">
+        /// True: Fallbacks to default language if not found in current culture.
+        /// </param>
+        /// <returns>Key</returns>
+        string FindKeyOrNull(int? tenantId, string value, CultureInfo culture, bool tryDefaults = true);
+
+        /// <summary>
         /// Gets a <see cref="LocalizedString"/>.
         /// </summary>
         /// <param name="tenantId">TenantId or null for host.</param>

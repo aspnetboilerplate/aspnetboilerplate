@@ -1,32 +1,32 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using IdentityServer4.Models;
 
-namespace Abp.IdentityServer4
+namespace Abp.IdentityServer4;
+
+public static class IdentityServerConfig
 {
-    public static class IdentityServerConfig
+    public static IEnumerable<ApiResource> GetApiResources()
     {
-        public static IEnumerable<ApiResource> GetApiResources()
-        {
-            return new List<ApiResource>
+        return new List<ApiResource>
             {
                 new ApiResource("default-api", "Default (all) API")
             };
-        }
+    }
 
-        public static IEnumerable<IdentityResource> GetIdentityResources()
-        {
-            return new List<IdentityResource>
+    public static IEnumerable<IdentityResource> GetIdentityResources()
+    {
+        return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
                 new IdentityResources.Phone()
             };
-        }
+    }
 
-        public static IEnumerable<Client> GetClients()
-        {
-            return new List<Client>
+    public static IEnumerable<Client> GetClients()
+    {
+        return new List<Client>
             {
                 new Client
                 {
@@ -37,6 +37,5 @@ namespace Abp.IdentityServer4
                     AllowedScopes = new List<string> { "default-api" }
                 }
             };
-        }
     }
 }

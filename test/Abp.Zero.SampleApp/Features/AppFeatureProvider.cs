@@ -8,6 +8,7 @@ namespace Abp.Zero.SampleApp.Features
     public class AppFeatureProvider : FeatureProvider
     {
         public const string MyBoolFeature = "MyBoolFeature";
+        public const string MyGrantedBoolFeature = "MyGrantedBoolFeature";
         public const string MyNumericFeature = "MyNumericFeature";
 
         private readonly IIocResolver _iocResolver; //Just for injection testing
@@ -21,6 +22,8 @@ namespace Abp.Zero.SampleApp.Features
         {
             var boolFeature = context.Create(MyBoolFeature, "false", inputType: new CheckboxInputType());
             var numericFrature = boolFeature.CreateChildFeature(MyNumericFeature, "42", inputType: new SingleLineStringInputType(new NumericValueValidator(1,99)));
+            
+            context.Create(MyGrantedBoolFeature, "true", inputType: new CheckboxInputType());
         }
     }
 }

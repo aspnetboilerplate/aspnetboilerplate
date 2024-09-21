@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4" />
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
   </ItemGroup>
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
 		<Reference Include="System" />
@@ -32,7 +32,7 @@
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.8.0">
+    <PackageReference Update="Fody" Version="6.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

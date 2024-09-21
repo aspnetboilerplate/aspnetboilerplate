@@ -22,6 +22,7 @@ Common Structures
 -   [Timing](Timing.md)
 -   [Object To Object Mapping (and AutoMapper Integration)](Object-To-Object-Mapping.md)
 -   [Email Sending (and MailKit Integration)](Email-Sending.md)
+-   [BLOB Storage](BLOB-Storing.md)
 
 Domain Layer
 

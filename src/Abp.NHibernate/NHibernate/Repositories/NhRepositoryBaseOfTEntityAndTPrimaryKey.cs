@@ -6,6 +6,7 @@ using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -121,11 +122,29 @@ namespace Abp.NHibernate.Repositories
 
         public override TEntity FirstOrDefault(TPrimaryKey id)
         {
+            var entityType = typeof(TEntity);
+
+            if (typeof(ISoftDelete).IsAssignableFrom(entityType) ||
+                typeof(IMayHaveTenant).IsAssignableFrom(entityType) ||
+                typeof(IMustHaveTenant).IsAssignableFrom(entityType))
+            {
+                return GetAll().SingleOrDefault(CreateEqualityExpressionForId(id));
+            }
+
             return Session.Get<TEntity>(id);
         }
 
         public override Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id)
         {
+            var entityType = typeof(TEntity);
+
+            if (typeof(ISoftDelete).IsAssignableFrom(entityType) ||
+                typeof(IMayHaveTenant).IsAssignableFrom(entityType) ||
+                typeof(IMustHaveTenant).IsAssignableFrom(entityType))
+            {
+                return GetAll().SingleOrDefaultAsync(CreateEqualityExpressionForId(id), CancellationTokenProvider.Token);
+            }
+
             return Session.GetAsync<TEntity>(id, CancellationTokenProvider.Token);
         }
 
@@ -133,11 +152,6 @@ namespace Abp.NHibernate.Repositories
         {
             var query = await GetAllAsync();
             return await query.FirstOrDefaultAsync(predicate, CancellationTokenProvider.Token);
-        }
-
-        public override TEntity Load(TPrimaryKey id)
-        {
-            return Session.Load<TEntity>(id);
         }
 
         public override TEntity Insert(TEntity entity)

@@ -122,14 +122,14 @@ namespace Abp.WebApi.Authorization
             if (statusCode == HttpStatusCode.Forbidden)
             {
                 return new ErrorInfo(
-                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403"),
-                    _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
+                    _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError403"),
+                    _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultErrorDetail403")
                 );
             }
 
             return new ErrorInfo(
-                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401"),
-                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
+                _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError401"),
+                _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultErrorDetail401")
             );
         }
 

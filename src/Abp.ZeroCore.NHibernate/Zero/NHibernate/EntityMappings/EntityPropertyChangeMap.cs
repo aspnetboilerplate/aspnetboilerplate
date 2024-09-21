@@ -1,4 +1,4 @@
-﻿using Abp.EntityHistory;
+using Abp.EntityHistory;
 using Abp.NHibernate.EntityMappings;
 
 namespace Abp.Zero.NHibernate.EntityMappings;

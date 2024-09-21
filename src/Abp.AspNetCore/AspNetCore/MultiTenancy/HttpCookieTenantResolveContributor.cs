@@ -4,36 +4,35 @@ using Abp.Extensions;
 using Abp.MultiTenancy;
 using Microsoft.AspNetCore.Http;
 
-namespace Abp.AspNetCore.MultiTenancy
+namespace Abp.AspNetCore.MultiTenancy;
+
+public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
 {
-    public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMultiTenancyConfig _multiTenancyConfig;
+
+    public HttpCookieTenantResolveContributor(
+        IHttpContextAccessor httpContextAccessor,
+        IMultiTenancyConfig multiTenancyConfig)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
+        _httpContextAccessor = httpContextAccessor;
+        _multiTenancyConfig = multiTenancyConfig;
+    }
 
-        public HttpCookieTenantResolveContributor(
-            IHttpContextAccessor httpContextAccessor, 
-            IMultiTenancyConfig multiTenancyConfig)
+    public int? ResolveTenantId()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _multiTenancyConfig = multiTenancyConfig;
+            return null;
         }
 
-        public int? ResolveTenantId()
+        var tenantIdValue = httpContext.Request.Cookies[_multiTenancyConfig.TenantIdResolveKey];
+        if (tenantIdValue.IsNullOrEmpty())
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null)
-            {
-                return null;
-            }
-
-            var tenantIdValue = httpContext.Request.Cookies[_multiTenancyConfig.TenantIdResolveKey];
-            if (tenantIdValue.IsNullOrEmpty())
-            {
-                return null;
-            }
-
-            return int.TryParse(tenantIdValue, out var tenantId) ? tenantId : (int?) null;
+            return null;
         }
+
+        return int.TryParse(tenantIdValue, out var tenantId) ? tenantId : (int?)null;
     }
 }

@@ -28,6 +28,8 @@ namespace Abp.Zero.NHibernate.EntityMappings
             Map(x => x.NormalizedName).Not.Nullable().Length(AbpRoleBase.MaxNameLength);
 
             HasMany(x => x.Permissions)
+                .Inverse()
+                .Cascade.AllDeleteOrphan()
                 .KeyColumn("RoleId");
 
             this.MapFullAudited();

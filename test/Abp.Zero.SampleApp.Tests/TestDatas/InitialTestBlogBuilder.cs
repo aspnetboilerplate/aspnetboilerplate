@@ -1,5 +1,6 @@
 ﻿using Abp.Zero.SampleApp.EntityFramework;
 using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 
 namespace Abp.Zero.SampleApp.Tests.TestDatas
 {

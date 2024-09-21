@@ -1,19 +1,18 @@
-﻿using Abp.Modules;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
 
-namespace Abp.Runtime.Caching.Redis
-{
-    [DependsOn(typeof(AbpRedisCacheModule))]
-    public class AbpAspNetCorePerRequestRedisCacheModule : AbpModule
-    {
-        public override void PreInitialize()
-        {
-            IocManager.Register<IAbpPerRequestRedisCacheManager, AbpPerRequestRedisCacheManager>();
-        }
+namespace Abp.Runtime.Caching.Redis;
 
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCorePerRequestRedisCacheModule).GetAssembly());
-        }
+[DependsOn(typeof(AbpRedisCacheModule))]
+public class AbpAspNetCorePerRequestRedisCacheModule : AbpModule
+{
+    public override void PreInitialize()
+    {
+        IocManager.Register<IAbpPerRequestRedisCacheManager, AbpPerRequestRedisCacheManager>();
+    }
+
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCorePerRequestRedisCacheModule).GetAssembly());
     }
 }

@@ -1,15 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Abp.EntityHistory
+namespace Abp.EntityHistory;
+
+public interface IEntityHistoryHelper
 {
-    public interface IEntityHistoryHelper
-    {
-        EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries);
+    EntityChangeSet CreateEntityChangeSet(ICollection<EntityEntry> entityEntries);
 
-        Task SaveAsync(EntityChangeSet changeSet);
+    Task SaveAsync(EntityChangeSet changeSet);
 
-        void Save(EntityChangeSet changeSet);
-    }
+    void Save(EntityChangeSet changeSet);
 }

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Dependency;
@@ -11,63 +11,62 @@ using Abp.Web.Models;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
 
-namespace Abp.AspNetCore.ExceptionHandling
+namespace Abp.AspNetCore.ExceptionHandling;
+
+public class AbpAuthorizationExceptionHandlingMiddleware : IMiddleware, ITransientDependency
 {
-    public class AbpAuthorizationExceptionHandlingMiddleware : IMiddleware, ITransientDependency
+    private readonly IErrorInfoBuilder _errorInfoBuilder;
+    private readonly ILocalizationManager _localizationManager;
+
+    public ILogger Logger { get; set; }
+
+    public IEventBus EventBus { get; set; }
+
+    public AbpAuthorizationExceptionHandlingMiddleware(
+        IErrorInfoBuilder errorInfoBuilder,
+        ILocalizationManager localizationManager)
     {
-        private readonly IErrorInfoBuilder _errorInfoBuilder;
-        private readonly ILocalizationManager _localizationManager;
+        _errorInfoBuilder = errorInfoBuilder;
+        _localizationManager = localizationManager;
 
-        public ILogger Logger { get; set; }
+        EventBus = NullEventBus.Instance;
+        Logger = NullLogger.Instance;
+    }
 
-        public IEventBus EventBus { get; set; }
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        await next(context);
 
-        public AbpAuthorizationExceptionHandlingMiddleware(
-            IErrorInfoBuilder errorInfoBuilder,
-            ILocalizationManager localizationManager)
+        if (IsAuthorizationExceptionStatusCode(context))
         {
-            _errorInfoBuilder = errorInfoBuilder;
-            _localizationManager = localizationManager;
+            var exception = new AbpAuthorizationException(GetAuthorizationExceptionMessage(context));
 
-            EventBus = NullEventBus.Instance;
-            Logger = NullLogger.Instance;
+            Logger.Error(exception.Message);
+
+            await context.Response.WriteAsync(
+                new AjaxResponse(
+                    _errorInfoBuilder.BuildForException(exception),
+                    true
+                ).ToJsonString()
+            );
+
+            await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
+        }
+    }
+
+    protected virtual string GetAuthorizationExceptionMessage(HttpContext context)
+    {
+        if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
+        {
+            _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError403");
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-        {
-            await next(context);
+        return _localizationManager.GetString(AbpWebConsts.LocalizationSourceName, "DefaultError401");
+    }
 
-            if (IsAuthorizationExceptionStatusCode(context))
-            {
-                var exception = new AbpAuthorizationException(GetAuthorizationExceptionMessage(context));
-
-                Logger.Error(exception.Message);
-
-                await context.Response.WriteAsync(
-                    new AjaxResponse(
-                        _errorInfoBuilder.BuildForException(exception),
-                        true
-                    ).ToJsonString()
-                );
-
-                await EventBus.TriggerAsync(this, new AbpHandledExceptionData(exception));
-            }
-        }
-
-        protected virtual string GetAuthorizationExceptionMessage(HttpContext context)
-        {
-            if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden)
-            {
-                _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError403");
-            }
-
-            return _localizationManager.GetString(AbpWebConsts.LocalizaionSourceName, "DefaultError401");
-        }
-
-        protected virtual bool IsAuthorizationExceptionStatusCode(HttpContext context)
-        {
-            return context.Response.StatusCode == (int)HttpStatusCode.Forbidden
-                   || context.Response.StatusCode == (int)HttpStatusCode.Unauthorized;
-        }
+    protected virtual bool IsAuthorizationExceptionStatusCode(HttpContext context)
+    {
+        return context.Response.StatusCode == (int)HttpStatusCode.Forbidden
+               || context.Response.StatusCode == (int)HttpStatusCode.Unauthorized;
     }
 }

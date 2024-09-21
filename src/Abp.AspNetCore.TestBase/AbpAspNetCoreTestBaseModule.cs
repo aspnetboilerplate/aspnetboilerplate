@@ -1,15 +1,14 @@
-﻿using Abp.Modules;
+using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.TestBase;
 
-namespace Abp.AspNetCore.TestBase
+namespace Abp.AspNetCore.TestBase;
+
+[DependsOn(typeof(AbpTestBaseModule), typeof(AbpAspNetCoreModule))]
+public class AbpAspNetCoreTestBaseModule : AbpModule
 {
-    [DependsOn(typeof(AbpTestBaseModule), typeof(AbpAspNetCoreModule))]
-    public class AbpAspNetCoreTestBaseModule : AbpModule
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreTestBaseModule).GetAssembly());
-        }
+        IocManager.RegisterAssemblyByConvention(typeof(AbpAspNetCoreTestBaseModule).GetAssembly());
     }
 }

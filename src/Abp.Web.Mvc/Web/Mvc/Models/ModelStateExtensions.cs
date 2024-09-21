@@ -25,7 +25,7 @@ namespace Abp.Web.Mvc.Models
                 }
             }
 
-            var errorInfo = new ErrorInfo(SingletonDependency<ILocalizationManager>.Instance.GetString(AbpWebConsts.LocalizaionSourceName, "ValidationError"))
+            var errorInfo = new ErrorInfo(SingletonDependency<ILocalizationManager>.Instance.GetString(AbpWebConsts.LocalizationSourceName, "ValidationError"))
             {
                 ValidationErrors = validationErrors.ToArray()
             };

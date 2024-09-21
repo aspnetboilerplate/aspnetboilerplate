@@ -119,10 +119,10 @@ Its basic properties are:
 -   **TenantId** (nullable): Contains the related tenant's Id if this
     language is tenant-specific. It's null if this is a host language.
 -   **Name**: Name of the language. This **must be a culture code** from
-    [this list](https://msdn.microsoft.com/en-us/library/ee825488(v=cs.20).aspx).
+    [this list](https://learn.microsoft.com/en-us/previous-versions/commerce-server/ee825488(v=cs.20)).
 -   **DisplayName**: Shown name of the language. This can be an
     arbitrary name, but it generally is the
-    [CultureInfo.DisplayName](https://msdn.microsoft.com/en-us/library/system.globalization.cultureinfo.displayname(v=vs.110).aspx).
+    [CultureInfo.DisplayName](https://learn.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.displayname?view=net-8.0).
 -   **Icon**: An arbitrary icon/flag for the language. This can be used
     to show flag of the language on the UI.
 
@@ -202,7 +202,7 @@ It's basic properties are;
     localized text is tenant-specific. It's null if this is a
     host-localized text.
 -   **LanguageName**: Name of the language. This **must be a culture
-    code** from [this list](https://msdn.microsoft.com/en-us/library/ee825488(v=cs.20).aspx).
+    code** from [this list](https://learn.microsoft.com/en-us/previous-versions/commerce-server/ee825488(v=cs.20)).
     This matches to the ApplicationLanguage.Name but is not a forced foreign
     key to make it independent from the language entry. 
     IApplicationLanguageTextManager handles it properly.

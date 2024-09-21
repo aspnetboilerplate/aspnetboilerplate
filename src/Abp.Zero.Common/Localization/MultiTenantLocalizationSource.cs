@@ -36,6 +36,58 @@ namespace Abp.Localization
             }
         }
 
+        public string FindKeyOrNull(int? tenantId, string value, CultureInfo culture, bool tryDefaults = true)
+        {
+            var cultureName = culture.Name;
+            var dictionaries = DictionaryProvider.Dictionaries;
+
+            //Try to get from original dictionary (with country code)
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
+            {
+                var keyOriginal = originalDictionary
+                    .As<IMultiTenantLocalizationDictionary>()
+                    .TryGetKey(tenantId, value);
+
+                if (keyOriginal != null)
+                {
+                    return keyOriginal;
+                }
+            }
+
+            if (!tryDefaults)
+            {
+                return null;
+            }
+
+            //Try to get from same language dictionary (without country code)
+            if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
+            {
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
+                {
+                    var keyLang = langDictionary.As<IMultiTenantLocalizationDictionary>().TryGetKey(tenantId, value);
+                    if (keyLang != null)
+                    {
+                        return keyLang;
+                    }
+                }
+            }
+
+            //Try to get from default language
+            var defaultDictionary = DictionaryProvider.DefaultDictionary;
+            if (defaultDictionary == null)
+            {
+                return null;
+            }
+
+            var keyDefault = defaultDictionary.As<IMultiTenantLocalizationDictionary>().TryGetKey(tenantId, value);
+            if (keyDefault == null)
+            {
+                return null;
+            }
+
+            return keyDefault;
+        }
+
         public string GetString(int? tenantId, string name, CultureInfo culture)
         {
             var value = GetStringOrNull(tenantId, name, culture);
@@ -54,8 +106,7 @@ namespace Abp.Localization
             var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
-            ILocalizationDictionary originalDictionary;
-            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
             {
                 var strOriginal = originalDictionary
                     .As<IMultiTenantLocalizationDictionary>()
@@ -75,8 +126,7 @@ namespace Abp.Localization
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
             {
-                ILocalizationDictionary langDictionary;
-                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
                 {
                     var strLang = langDictionary.As<IMultiTenantLocalizationDictionary>().GetOrNull(tenantId, name);
                     if (strLang != null)
@@ -120,8 +170,7 @@ namespace Abp.Localization
             var dictionaries = DictionaryProvider.Dictionaries;
 
             //Try to get from original dictionary (with country code)
-            ILocalizationDictionary originalDictionary;
-            if (dictionaries.TryGetValue(cultureName, out originalDictionary))
+            if (dictionaries.TryGetValue(cultureName, out var originalDictionary))
             {
                 var strOriginal = originalDictionary
                     .As<IMultiTenantLocalizationDictionary>()
@@ -141,8 +190,7 @@ namespace Abp.Localization
             //Try to get from same language dictionary (without country code)
             if (cultureName.Contains("-")) //Example: "tr-TR" (length=5)
             {
-                ILocalizationDictionary langDictionary;
-                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out langDictionary))
+                if (dictionaries.TryGetValue(GetBaseCultureName(cultureName), out var langDictionary))
                 {
                     var strLang = langDictionary.As<IMultiTenantLocalizationDictionary>().GetStringsOrNull(tenantId, names);
                     if (!strLang.IsNullOrEmpty())

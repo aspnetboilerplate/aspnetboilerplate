@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.DynamicEntityProperties;
 using Abp.Threading;
 using Abp.Zero.SampleApp.EntityHistory;
+using Abp.Zero.SampleApp.EntityHistory.EFCore;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNet.Identity;
 using NSubstitute;
