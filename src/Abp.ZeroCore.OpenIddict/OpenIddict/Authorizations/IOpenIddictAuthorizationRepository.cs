@@ -29,5 +29,9 @@ namespace Abp.OpenIddict.Authorizations
             CancellationToken cancellationToken = default);
 
         Task<long> PruneAsync(DateTime date, CancellationToken cancellationToken = default);
+
+        Task<long> RevokeByApplicationIdAsync(Guid applicationId, CancellationToken cancellationToken = default);
+        
+        Task<long> RevokeBySubjectAsync(string subject, CancellationToken cancellationToken = default);
     }
 }

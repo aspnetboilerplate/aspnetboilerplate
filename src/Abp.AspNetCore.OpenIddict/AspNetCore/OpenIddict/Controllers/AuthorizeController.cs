@@ -46,11 +46,11 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
 
             // If prompt=login was specified by the client application,
             // immediately return the user agent to the login page.
-            if (request.HasPrompt(OpenIddictConstants.Prompts.Login))
+            if (request.HasPrompt(OpenIddictConstants.PromptValues.Login))
             {
                 // To avoid endless login -> authorization redirects, the prompt=login flag
                 // is removed from the authorization request payload before redirecting the user.
-                var prompt = string.Join(" ", request.GetPrompts().Remove(OpenIddictConstants.Prompts.Login));
+                var prompt = string.Join(" ", request.GetPrompts().Remove(OpenIddictConstants.PromptValues.Login));
 
                 var parameters = Request.HasFormContentType
                     ? Request.Form.Where(parameter => parameter.Key != OpenIddictConstants.Parameters.Prompt).ToList()
@@ -76,7 +76,7 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
             {
                 // If the client application requested promptless authentication,
                 // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(OpenIddictConstants.Prompts.None))
+                if (request.HasPrompt(OpenIddictConstants.PromptValues.None))
                 {
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
@@ -135,7 +135,7 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
                 case OpenIddictConstants.ConsentTypes.Implicit:
                 case OpenIddictConstants.ConsentTypes.External when authorizations.Any():
                 case OpenIddictConstants.ConsentTypes.Explicit
-                    when authorizations.Any() && !request.HasPrompt(OpenIddictConstants.Prompts.Consent):
+                    when authorizations.Any() && !request.HasPrompt(OpenIddictConstants.PromptValues.Consent):
                     var principal = await SignInManager.CreateUserPrincipalAsync(user);
 
                     // Note: in this sample, the granted scopes match the requested scope
@@ -165,9 +165,9 @@ namespace Abp.AspNetCore.OpenIddict.Controllers
 
                 // At this point, no authorization was found in the database and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
-                case OpenIddictConstants.ConsentTypes.Explicit when request.HasPrompt(OpenIddictConstants.Prompts.None):
+                case OpenIddictConstants.ConsentTypes.Explicit when request.HasPrompt(OpenIddictConstants.PromptValues.None):
                 case OpenIddictConstants.ConsentTypes.Systematic
-                    when request.HasPrompt(OpenIddictConstants.Prompts.None):
+                    when request.HasPrompt(OpenIddictConstants.PromptValues.None):
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string>

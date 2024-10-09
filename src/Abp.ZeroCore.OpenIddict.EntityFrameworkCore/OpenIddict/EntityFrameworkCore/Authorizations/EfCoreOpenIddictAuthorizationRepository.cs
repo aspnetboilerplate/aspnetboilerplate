@@ -138,5 +138,26 @@ namespace Abp.OpenIddict.EntityFrameworkCore.Authorizations
             return count + await (await GetDbSetAsync()).Where(x => authorizations.Contains(x.Id))
                 .ExecuteDeleteAsync(cancellationToken);
         }
+
+        public async Task<long> RevokeByApplicationIdAsync(Guid applicationId,
+            CancellationToken cancellationToken = default)
+        {
+            var query = await GetQueryableAsync();
+            return await query
+                .Where(e => e.ApplicationId == applicationId)
+                .ExecuteUpdateAsync(
+                    entity => entity.SetProperty(token => token.Status, OpenIddictConstants.Statuses.Revoked),
+                    cancellationToken);
+        }
+
+        public async Task<long> RevokeBySubjectAsync(string subject, CancellationToken cancellationToken = default)
+        {
+            var query = await GetQueryableAsync();
+            return await query
+                .Where(e => e.Subject == subject)
+                .ExecuteUpdateAsync(
+                    entity => entity.SetProperty(token => token.Status, OpenIddictConstants.Statuses.Revoked),
+                    cancellationToken);
+        }
     }
 }
