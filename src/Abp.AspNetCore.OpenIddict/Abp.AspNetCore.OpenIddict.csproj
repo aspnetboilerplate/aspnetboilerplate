@@ -26,7 +26,8 @@
         <ProjectReference Include="..\Abp.AspNetCore\Abp.AspNetCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.AspNetCore" Version="5.8.0" />
+        <PackageReference Include="FluentMigrator" Version="6.2.0" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="6.0.0-preview1.24504.78" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Update="Fody" Version="6.8.2">
