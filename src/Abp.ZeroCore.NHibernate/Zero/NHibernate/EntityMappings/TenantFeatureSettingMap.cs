@@ -1,13 +1,12 @@
-﻿using Abp.MultiTenancy;
+using Abp.MultiTenancy;
 using FluentNHibernate.Mapping;
 
-namespace Abp.Zero.NHibernate.EntityMappings
+namespace Abp.Zero.NHibernate.EntityMappings;
+
+public class TenantFeatureSettingMap : SubclassMap<TenantFeatureSetting>
 {
-    public class TenantFeatureSettingMap : SubclassMap<TenantFeatureSetting>
+    public TenantFeatureSettingMap()
     {
-        public TenantFeatureSettingMap()
-        {
-            DiscriminatorValue("TenantFeatureSetting");
-        }
+        DiscriminatorValue("TenantFeatureSetting");
     }
 }

@@ -6,109 +6,108 @@ using Abp.Events.Bus.Entities;
 using Shouldly;
 using Xunit;
 
-namespace Abp.EntityFrameworkCore.Tests.Tests
+namespace Abp.EntityFrameworkCore.Tests.Tests;
+
+public class EntityChangeEvents_Tests : EntityFrameworkCoreModuleTestBase
 {
-    public class EntityChangeEvents_Tests : EntityFrameworkCoreModuleTestBase
+    private readonly IRepository<Blog> _blogRepository;
+    private readonly IEventBus _eventBus;
+
+    public EntityChangeEvents_Tests()
     {
-        private readonly IRepository<Blog> _blogRepository;
-        private readonly IEventBus _eventBus;
+        _blogRepository = Resolve<IRepository<Blog>>();
+        _eventBus = Resolve<IEventBus>();
+    }
 
-        public EntityChangeEvents_Tests()
+    [Fact]
+    public void Complex_Event_Test()
+    {
+        var blogName = Guid.NewGuid().ToString("N");
+
+        var creatingEventTriggered = false;
+        var createdEventTriggered = false;
+        var updatingEventTriggered = false;
+        var updatedEventTriggered = false;
+        var blogUrlChangedEventTriggered = false;
+
+        _eventBus.Register<EntityCreatingEventData<Blog>>(data =>
         {
-            _blogRepository = Resolve<IRepository<Blog>>();
-            _eventBus = Resolve<IEventBus>();
-        }
+            creatingEventTriggered.ShouldBeFalse();
+            createdEventTriggered.ShouldBeFalse();
+            updatingEventTriggered.ShouldBeFalse();
+            updatedEventTriggered.ShouldBeFalse();
+            blogUrlChangedEventTriggered.ShouldBeFalse();
 
-        [Fact]
-        public void Complex_Event_Test()
+            creatingEventTriggered = true;
+
+            ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
+            data.Entity.Name.ShouldBe(blogName);
+
+            /* Want to change url from http:// to https:// (ensure to save https url always)
+             * Expect to trigger EntityUpdatingEventData, EntityUpdatedEventData and BlogUrlChangedEventData events */
+            data.Entity.Url.ShouldStartWith("http://");
+            data.Entity.ChangeUrl(data.Entity.Url.Replace("http://", "https://"));
+        });
+
+        _eventBus.Register<EntityCreatedEventData<Blog>>(data =>
         {
-            var blogName = Guid.NewGuid().ToString("N");
+            creatingEventTriggered.ShouldBeTrue();
+            createdEventTriggered.ShouldBeFalse();
+            updatingEventTriggered.ShouldBeTrue();
+            updatedEventTriggered.ShouldBeFalse();
+            blogUrlChangedEventTriggered.ShouldBeTrue();
 
-            var creatingEventTriggered = false;
-            var createdEventTriggered = false;
-            var updatingEventTriggered = false;
-            var updatedEventTriggered = false;
-            var blogUrlChangedEventTriggered = false;
+            createdEventTriggered = true;
 
-            _eventBus.Register<EntityCreatingEventData<Blog>>(data =>
-            {
-                creatingEventTriggered.ShouldBeFalse();
-                createdEventTriggered.ShouldBeFalse();
-                updatingEventTriggered.ShouldBeFalse();
-                updatedEventTriggered.ShouldBeFalse();
-                blogUrlChangedEventTriggered.ShouldBeFalse();
+            ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
+            data.Entity.Name.ShouldBe(blogName);
+        });
 
-                creatingEventTriggered = true;
+        _eventBus.Register<EntityUpdatingEventData<Blog>>(data =>
+        {
+            creatingEventTriggered.ShouldBeTrue();
+            createdEventTriggered.ShouldBeFalse();
+            updatingEventTriggered.ShouldBeFalse();
+            updatedEventTriggered.ShouldBeFalse();
+            blogUrlChangedEventTriggered.ShouldBeFalse();
 
-                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
-                data.Entity.Name.ShouldBe(blogName);
+            updatingEventTriggered = true;
 
-                /* Want to change url from http:// to https:// (ensure to save https url always)
-                 * Expect to trigger EntityUpdatingEventData, EntityUpdatedEventData and BlogUrlChangedEventData events */
-                data.Entity.Url.ShouldStartWith("http://");
-                data.Entity.ChangeUrl(data.Entity.Url.Replace("http://", "https://"));
-            });
+            ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
+            data.Entity.Name.ShouldBe(blogName);
+            data.Entity.Url.ShouldStartWith("https://");
+        });
 
-            _eventBus.Register<EntityCreatedEventData<Blog>>(data =>
-            {
-                creatingEventTriggered.ShouldBeTrue();
-                createdEventTriggered.ShouldBeFalse();
-                updatingEventTriggered.ShouldBeTrue();
-                updatedEventTriggered.ShouldBeFalse();
-                blogUrlChangedEventTriggered.ShouldBeTrue();
+        _eventBus.Register<EntityUpdatedEventData<Blog>>(data =>
+        {
+            creatingEventTriggered.ShouldBeTrue();
+            createdEventTriggered.ShouldBeTrue();
+            updatingEventTriggered.ShouldBeTrue();
+            updatedEventTriggered.ShouldBeFalse();
+            blogUrlChangedEventTriggered.ShouldBeTrue();
 
-                createdEventTriggered = true;
+            updatedEventTriggered = true;
 
-                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
-                data.Entity.Name.ShouldBe(blogName);
-            });
+            ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
+            data.Entity.Name.ShouldBe(blogName);
+            data.Entity.Url.ShouldStartWith("https://");
+        });
 
-            _eventBus.Register<EntityUpdatingEventData<Blog>>(data =>
-            {
-                creatingEventTriggered.ShouldBeTrue();
-                createdEventTriggered.ShouldBeFalse();
-                updatingEventTriggered.ShouldBeFalse();
-                updatedEventTriggered.ShouldBeFalse();
-                blogUrlChangedEventTriggered.ShouldBeFalse();
+        _eventBus.Register<BlogUrlChangedEventData>(data =>
+        {
+            creatingEventTriggered.ShouldBeTrue();
+            createdEventTriggered.ShouldBeFalse();
+            updatingEventTriggered.ShouldBeTrue();
+            updatedEventTriggered.ShouldBeFalse();
+            blogUrlChangedEventTriggered.ShouldBeFalse();
 
-                updatingEventTriggered = true;
+            blogUrlChangedEventTriggered = true;
 
-                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
-                data.Entity.Name.ShouldBe(blogName);
-                data.Entity.Url.ShouldStartWith("https://");
-            });
+            ((bool?)data.Blog.IsTransient()).ShouldNotBe(null);
+            data.Blog.Name.ShouldBe(blogName);
+            data.Blog.Url.ShouldStartWith("https://");
+        });
 
-            _eventBus.Register<EntityUpdatedEventData<Blog>>(data =>
-            {
-                creatingEventTriggered.ShouldBeTrue();
-                createdEventTriggered.ShouldBeTrue();
-                updatingEventTriggered.ShouldBeTrue();
-                updatedEventTriggered.ShouldBeFalse();
-                blogUrlChangedEventTriggered.ShouldBeTrue();
-
-                updatedEventTriggered = true;
-
-                ((bool?)data.Entity.IsTransient()).ShouldNotBe(null);
-                data.Entity.Name.ShouldBe(blogName);
-                data.Entity.Url.ShouldStartWith("https://");
-            });
-
-            _eventBus.Register<BlogUrlChangedEventData>(data =>
-            {
-                creatingEventTriggered.ShouldBeTrue();
-                createdEventTriggered.ShouldBeFalse();
-                updatingEventTriggered.ShouldBeTrue();
-                updatedEventTriggered.ShouldBeFalse();
-                blogUrlChangedEventTriggered.ShouldBeFalse();
-
-                blogUrlChangedEventTriggered = true;
-
-                ((bool?)data.Blog.IsTransient()).ShouldNotBe(null);
-                data.Blog.Name.ShouldBe(blogName);
-                data.Blog.Url.ShouldStartWith("https://");
-            });
-
-            _blogRepository.Insert(new Blog(blogName, "http://aspnetboilerplate.com"));
-        }
+        _blogRepository.Insert(new Blog(blogName, "http://aspnetboilerplate.com"));
     }
 }

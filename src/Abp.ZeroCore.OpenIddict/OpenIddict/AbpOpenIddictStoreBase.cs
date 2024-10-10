@@ -9,70 +9,69 @@ using Abp.Domain.Uow;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Abp.OpenIddict
+namespace Abp.OpenIddict;
+
+public abstract class AbpOpenIddictStoreBase<TRepository>
+    where TRepository : IRepository
 {
-    public abstract class AbpOpenIddictStoreBase<TRepository>
-        where TRepository : IRepository
+    public ILogger<AbpOpenIddictStoreBase<TRepository>> Logger { get; set; }
+
+    protected TRepository Repository { get; }
+    protected IUnitOfWorkManager UnitOfWorkManager { get; }
+    protected IGuidGenerator GuidGenerator { get; }
+    protected AbpOpenIddictIdentifierConverter IdentifierConverter { get; }
+
+    protected IOpenIddictDbConcurrencyExceptionHandler ConcurrencyExceptionHandler { get; }
+
+    protected AbpOpenIddictStoreBase(
+        TRepository repository,
+        IUnitOfWorkManager unitOfWorkManager,
+        IGuidGenerator guidGenerator,
+        IOpenIddictDbConcurrencyExceptionHandler concurrencyExceptionHandler)
     {
-        public ILogger<AbpOpenIddictStoreBase<TRepository>> Logger { get; set; }
+        Repository = repository;
+        UnitOfWorkManager = unitOfWorkManager;
+        GuidGenerator = guidGenerator;
+        ConcurrencyExceptionHandler = concurrencyExceptionHandler;
 
-        protected TRepository Repository { get; }
-        protected IUnitOfWorkManager UnitOfWorkManager { get; }
-        protected IGuidGenerator GuidGenerator { get; }
-        protected AbpOpenIddictIdentifierConverter IdentifierConverter { get; }
+        Logger = NullLogger<AbpOpenIddictStoreBase<TRepository>>.Instance;
+    }
 
-        protected IOpenIddictDbConcurrencyExceptionHandler ConcurrencyExceptionHandler { get; }
-        
-        protected AbpOpenIddictStoreBase(
-            TRepository repository, 
-            IUnitOfWorkManager unitOfWorkManager,
-            IGuidGenerator guidGenerator,
-            IOpenIddictDbConcurrencyExceptionHandler concurrencyExceptionHandler)
+    protected virtual Guid ConvertIdentifierFromString(string identifier)
+    {
+        return IdentifierConverter.FromString(identifier);
+    }
+
+    protected virtual string WriteStream(Action<Utf8JsonWriter> action)
+    {
+        using (var stream = new MemoryStream())
         {
-            Repository = repository;
-            UnitOfWorkManager = unitOfWorkManager;
-            GuidGenerator = guidGenerator;
-            ConcurrencyExceptionHandler = concurrencyExceptionHandler;
-
-            Logger = NullLogger<AbpOpenIddictStoreBase<TRepository>>.Instance;
-        }
-
-        protected virtual Guid ConvertIdentifierFromString(string identifier)
-        {
-            return IdentifierConverter.FromString(identifier);
-        }
-
-        protected virtual string WriteStream(Action<Utf8JsonWriter> action)
-        {
-            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions
             {
-                using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions
-                       {
-                           Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                           Indented = false
-                       }))
-                {
-                    action(writer);
-                    writer.Flush();
-                    return Encoding.UTF8.GetString(stream.ToArray());
-                }
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                Indented = false
+            }))
+            {
+                action(writer);
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
+    }
 
-        protected virtual async Task<string> WriteStreamAsync(Func<Utf8JsonWriter, Task> func)
+    protected virtual async Task<string> WriteStreamAsync(Func<Utf8JsonWriter, Task> func)
+    {
+        using (var stream = new MemoryStream())
         {
-            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions
             {
-                using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions
-                       {
-                           Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                           Indented = false
-                       }))
-                {
-                    await func(writer);
-                    await writer.FlushAsync();
-                    return Encoding.UTF8.GetString(stream.ToArray());
-                }
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                Indented = false
+            }))
+            {
+                await func(writer);
+                await writer.FlushAsync();
+                return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
     }

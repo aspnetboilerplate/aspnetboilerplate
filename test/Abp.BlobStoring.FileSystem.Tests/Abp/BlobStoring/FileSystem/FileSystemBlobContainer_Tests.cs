@@ -1,12 +1,11 @@
-﻿using Abp.BlobStoring.Tests.Abp.BlobStoring;
+using Abp.BlobStoring.Tests.Abp.BlobStoring;
 
-namespace Abp.BlobStoring.FileSystem.Tests.Abp.BlobStoring.FileSystem
+namespace Abp.BlobStoring.FileSystem.Tests.Abp.BlobStoring.FileSystem;
+
+public class FileSystemBlobContainer_Tests : BlobContainer_Tests<AbpBlobStoringFileSystemTestModule>
 {
-    public class FileSystemBlobContainer_Tests : BlobContainer_Tests<AbpBlobStoringFileSystemTestModule>
+    public FileSystemBlobContainer_Tests()
     {
-        public FileSystemBlobContainer_Tests()
-        {
 
-        }
     }
 }

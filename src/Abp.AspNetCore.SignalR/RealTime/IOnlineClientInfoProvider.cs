@@ -1,10 +1,9 @@
 using Abp.Dependency;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Abp.RealTime
+namespace Abp.RealTime;
+
+public interface IOnlineClientInfoProvider : ITransientDependency
 {
-    public interface IOnlineClientInfoProvider : ITransientDependency
-    {
-        IOnlineClient CreateClientForCurrentConnection(HubCallerContext context);
-    }
+    IOnlineClient CreateClientForCurrentConnection(HubCallerContext context);
 }

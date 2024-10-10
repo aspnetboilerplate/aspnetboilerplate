@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace Abp.AspNetCore.OpenIddict.Claims
+namespace Abp.AspNetCore.OpenIddict.Claims;
+
+public interface IAbpOpenIddictClaimsPrincipalHandler
 {
-    public interface IAbpOpenIddictClaimsPrincipalHandler
-    {
-        Task HandleAsync(AbpOpenIddictClaimsPrincipalHandlerContext context);
-    }
+    Task HandleAsync(AbpOpenIddictClaimsPrincipalHandlerContext context);
 }

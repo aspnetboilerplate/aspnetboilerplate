@@ -1,102 +1,101 @@
-﻿using System;
+using System;
 using Abp.ZeroCore.SampleApp.Core.BookStore;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero
+namespace Abp.Zero;
+
+public class PrimaryKey_Guid_Generation_Tests : AbpZeroTestBase
 {
-    public class PrimaryKey_Guid_Generation_Tests : AbpZeroTestBase
+    [Fact]
+    public void Guid_Id_ShouldBe_Generated_By_GuidGenerator_When_DatabaseGeneratedOption_None_Is_Used()
     {
-        [Fact]
-        public void Guid_Id_ShouldBe_Generated_By_GuidGenerator_When_DatabaseGeneratedOption_None_Is_Used()
+        var guid = Guid.NewGuid();
+
+        UsingDbContext(context =>
         {
-            var guid = Guid.NewGuid();
+            var testGuidGenerator = new TestGuidGenerator(guid);
+            context.GuidGenerator = testGuidGenerator;
 
-            UsingDbContext(context =>
+            var book = new Book
             {
-                var testGuidGenerator = new TestGuidGenerator(guid);
-                context.GuidGenerator = testGuidGenerator;
+                Name = "Hitchhiker's Guide to the Galaxy"
+            };
 
-                var book = new Book
-                {
-                    Name = "Hitchhiker's Guide to the Galaxy"
-                };
+            context.Set<Book>().Add(book);
+            context.SaveChanges();
 
-                context.Set<Book>().Add(book);
-                context.SaveChanges();
+            testGuidGenerator.CreateCalled.ShouldBeTrue();
+            guid.ShouldBe(book.Id);
+        });
 
-                testGuidGenerator.CreateCalled.ShouldBeTrue();
-                guid.ShouldBe(book.Id);
-            });
+    }
 
+    [Fact]
+    public void Guid_Id_ShouldBe_Generated_By_GuidGenerator_When_DatabaseGenerated_None_Attribute_Is_Used()
+    {
+        var guid = Guid.NewGuid();
+
+        UsingDbContext(context =>
+        {
+            var testGuidGenerator = new TestGuidGenerator(guid);
+            context.GuidGenerator = testGuidGenerator;
+
+            var author = new Author
+            {
+                Name = "Douglas Adams"
+            };
+
+            context.Set<Author>().Add(author);
+
+            context.SaveChanges();
+
+            testGuidGenerator.CreateCalled.ShouldBeTrue();
+            guid.ShouldBe(author.Id);
+        });
+
+    }
+
+    [Fact]
+    public void Guid_Id_Should_Be_Generated_By_GuidGenerator_When_Id_Field_Has_Different_Name()
+    {
+        var guid = Guid.NewGuid();
+
+        UsingDbContext(context =>
+        {
+            var testGuidGenerator = new TestGuidGenerator(guid);
+            context.GuidGenerator = testGuidGenerator;
+
+            var store = new Store
+            {
+                Name = "Tesk book store"
+            };
+
+            context.Set<Store>().Add(store);
+
+            context.SaveChanges();
+
+            testGuidGenerator.CreateCalled.ShouldBeTrue();
+            guid.ShouldBe(store.Id);
+        });
+
+    }
+
+    internal class TestGuidGenerator : IGuidGenerator
+    {
+        private readonly Guid _guid;
+
+        public TestGuidGenerator(Guid guid)
+        {
+            _guid = guid;
         }
 
-        [Fact]
-        public void Guid_Id_ShouldBe_Generated_By_GuidGenerator_When_DatabaseGenerated_None_Attribute_Is_Used()
+        public Guid Create()
         {
-            var guid = Guid.NewGuid();
-
-            UsingDbContext(context =>
-            {
-                var testGuidGenerator = new TestGuidGenerator(guid);
-                context.GuidGenerator = testGuidGenerator;
-
-                var author = new Author
-                {
-                    Name = "Douglas Adams"
-                };
-
-                context.Set<Author>().Add(author);
-
-                context.SaveChanges();
-
-                testGuidGenerator.CreateCalled.ShouldBeTrue();
-                guid.ShouldBe(author.Id);
-            });
-
+            CreateCalled = true;
+            return _guid;
         }
 
-        [Fact]
-        public void Guid_Id_Should_Be_Generated_By_GuidGenerator_When_Id_Field_Has_Different_Name()
-        {
-            var guid = Guid.NewGuid();
-
-            UsingDbContext(context =>
-            {
-                var testGuidGenerator = new TestGuidGenerator(guid);
-                context.GuidGenerator = testGuidGenerator;
-
-                var store = new Store
-                {
-                    Name = "Tesk book store"
-                };
-
-                context.Set<Store>().Add(store);
-
-                context.SaveChanges();
-
-                testGuidGenerator.CreateCalled.ShouldBeTrue();
-                guid.ShouldBe(store.Id);
-            });
-
-        }
-
-        internal class TestGuidGenerator : IGuidGenerator
-        {
-            private readonly Guid _guid;
-
-            public TestGuidGenerator(Guid guid)
-            {
-                _guid = guid;
-            }
-
-            public Guid Create()
-            {
-                CreateCalled = true;
-                return _guid;
-            }
-
-            public bool CreateCalled { get; private set; }
-        }
+        public bool CreateCalled { get; private set; }
     }
 }

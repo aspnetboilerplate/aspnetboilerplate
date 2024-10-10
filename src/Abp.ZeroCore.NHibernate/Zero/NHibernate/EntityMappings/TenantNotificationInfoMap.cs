@@ -1,4 +1,4 @@
-﻿using Abp.NHibernate.EntityMappings;
+using Abp.NHibernate.EntityMappings;
 using Abp.Notifications;
 using System;
 

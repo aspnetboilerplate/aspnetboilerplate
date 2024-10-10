@@ -1,7 +1,6 @@
-﻿namespace Abp.Zero.NHibernate.EntityMappings
+namespace Abp.Zero.NHibernate.EntityMappings;
+
+public class Extensions
 {
-    public class Extensions
-    {
-        public const int NvarcharMax = 4001;
-    }
+    public const int NvarcharMax = 4001;
 }
