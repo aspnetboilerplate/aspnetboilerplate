@@ -125,14 +125,6 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
         }
     }
 
-    public virtual async ValueTask SetApplicationIdAsync(OpenIddictAuthorizationModel authorization,
-        string identifier, CancellationToken cancellationToken)
-    {
-        Logger.LogError(e, e.Message);
-        await ConcurrencyExceptionHandler.HandleAsync(e);
-        throw new OpenIddictExceptions.ConcurrencyException(e.Message, e.InnerException);
-    }
-
     public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
