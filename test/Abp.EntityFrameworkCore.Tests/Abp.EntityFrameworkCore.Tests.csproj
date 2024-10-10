@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <AssemblyName>Abp.EntityFrameworkCore.Tests</AssemblyName>
     <PackageId>Abp.EntityFrameworkCore.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -21,19 +21,14 @@
   <ItemGroup>
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="4.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Transactions" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0-rc.2.24474.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.2.24474.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-rc.2.24473.5" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

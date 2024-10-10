@@ -85,6 +85,45 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
             throw new OpenIddictExceptions.ConcurrencyException(e.Message, e.InnerException);
         }
     }
+    public virtual async ValueTask<long> RevokeByApplicationIdAsync(string identifier,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+        {
+            Scope = TransactionScopeOption.RequiresNew,
+            IsTransactional = true,
+            IsolationLevel = IsolationLevel.RepeatableRead
+        }))
+        {
+            var count = await Repository.RevokeByApplicationIdAsync(
+                Guid.Parse(identifier),
+                cancellationToken: cancellationToken
+            );
+
+            await uow.CompleteAsync();
+            return count;
+        }
+    }
+
+    public virtual async ValueTask<long> RevokeBySubjectAsync(string subject,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+        {
+            Scope = TransactionScopeOption.RequiresNew,
+            IsTransactional = true,
+            IsolationLevel = IsolationLevel.RepeatableRead
+        }))
+        {
+            var count = await Repository.RevokeBySubjectAsync(
+                subject,
+                cancellationToken: cancellationToken
+            );
+
+            await uow.CompleteAsync();
+            return count;
+        }
+    }
 
     public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
         [EnumeratorCancellation] CancellationToken cancellationToken)
