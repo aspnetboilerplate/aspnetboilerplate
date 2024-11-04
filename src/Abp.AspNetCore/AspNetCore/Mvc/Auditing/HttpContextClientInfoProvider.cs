@@ -2,6 +2,7 @@ using Abp.Auditing;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace Abp.AspNetCore.Mvc.Auditing;
@@ -39,14 +40,44 @@ public class HttpContextClientInfoProvider : IClientInfoProvider
         try
         {
             var httpContext = _httpContextAccessor.HttpContext;
-            return httpContext?.Connection?.RemoteIpAddress?.ToString();
+            string ip = string.Empty;
 
+            // X-Forwarded-For: client, proxy1, proxy2
+            if (httpContext?.Request?.Headers != null &&
+                httpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
+            {
+                var forwardedForValue = forwardedFor.FirstOrDefault();
+                if (!string.IsNullOrEmpty(forwardedForValue))
+                {
+                    ip = forwardedForValue.Split(',')[0].Trim();
+                }
+            }
+
+            // X-Real-IP: client
+            if (string.IsNullOrEmpty(ip) &&
+                httpContext?.Request?.Headers != null &&
+                httpContext.Request.Headers.TryGetValue("X-Real-IP", out var realIp))
+            {
+                ip = realIp.FirstOrDefault();
+            }
+
+            // RemoteIpAddress
+            if (string.IsNullOrEmpty(ip) &&
+                httpContext?.Connection?.RemoteIpAddress != null)
+            {
+                ip = httpContext.Connection.RemoteIpAddress.ToString();
+            }
+
+            // Check if it's a valid IP
+            if (!string.IsNullOrEmpty(ip) && IPAddress.TryParse(ip, out _))
+            {
+                return ip;
+            }
         }
         catch (Exception ex)
         {
             Logger.Warn(ex.ToString());
         }
-
         return null;
     }
 
