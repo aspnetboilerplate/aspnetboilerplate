@@ -28,7 +28,7 @@ namespace Abp.Configuration.Startup
 
         /// <summary>
         /// TenantId resolve key
-        /// Default value: "Abp.TenantId"
+        /// Default value: "Abp-TenantId"
         /// </summary>
         string TenantIdResolveKey { get; set; }
     }

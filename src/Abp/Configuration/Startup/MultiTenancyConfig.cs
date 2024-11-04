@@ -27,7 +27,7 @@ namespace Abp.Configuration.Startup
         public MultiTenancyConfig()
         {
             Resolvers = new TypeList<ITenantResolveContributor>();
-            TenantIdResolveKey = "Abp.TenantId";
+            TenantIdResolveKey = "Abp-TenantId";
         }
     }
 }

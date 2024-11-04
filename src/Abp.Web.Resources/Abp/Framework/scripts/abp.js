@@ -34,7 +34,7 @@
         HOST: 2
       };
 
-      abp.multiTenancy.tenantIdCookieName = 'Abp.TenantId';
+      abp.multiTenancy.tenantIdCookieName = 'Abp-TenantId';
 
       abp.multiTenancy.setTenantIdCookie = function (tenantId) {
         if (tenantId) {
