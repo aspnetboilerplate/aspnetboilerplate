@@ -5,17 +5,16 @@ using Abp.ObjectMapping;
 using AbpAspNetCoreDemo.Core.Application.Dtos;
 using AbpAspNetCoreDemo.Core.Domain;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetCoreDemo.Controllers;
+
+public class ProductsDtoController : AbpODataDtoController<Product, ProductDto, ProductCreateInput>, ITransientDependency
 {
-    public class ProductsDtoController : AbpODataDtoController<Product, ProductDto, ProductCreateInput>, ITransientDependency
+    public ProductsDtoController(IRepository<Product> repository, IObjectMapper objectMapper) : base(repository, objectMapper)
     {
-        public ProductsDtoController(IRepository<Product> repository, IObjectMapper objectMapper) : base(repository, objectMapper)
-        {
-            GetPermissionName = "GetProductPermission";
-            GetAllPermissionName = "GetAllProductsPermission";
-            CreatePermissionName = "CreateProductPermission";
-            UpdatePermissionName = "UpdateProductPermission";
-            DeletePermissionName = "DeleteProductPermission";
-        }
+        GetPermissionName = "GetProductPermission";
+        GetAllPermissionName = "GetAllProductsPermission";
+        CreatePermissionName = "CreateProductPermission";
+        UpdatePermissionName = "UpdateProductPermission";
+        DeletePermissionName = "DeleteProductPermission";
     }
 }

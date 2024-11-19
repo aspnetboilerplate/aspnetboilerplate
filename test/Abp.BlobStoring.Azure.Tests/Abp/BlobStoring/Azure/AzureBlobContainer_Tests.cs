@@ -1,4 +1,1 @@
-﻿namespace Abp.BlobStoring.Azure.Tests.Abp.BlobStoring.Azure
-{
-
-}
+namespace Abp.BlobStoring.Azure.Tests.Abp.BlobStoring.Azure;

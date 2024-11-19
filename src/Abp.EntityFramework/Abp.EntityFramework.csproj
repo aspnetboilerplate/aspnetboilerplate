@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\common.props" />
-  <Import Project="..\..\configureawait.props" />
+  <Import Project="..\..\common.props"/>
+  <Import Project="..\..\configureawait.props"/>
   <PropertyGroup>
-    <TargetFrameworks>net462;net8.0</TargetFrameworks>
+    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.EntityFramework</AssemblyName>
     <PackageId>Abp.EntityFramework</PackageId>
@@ -18,25 +18,20 @@
     <Description>Abp.EntityFramework</Description>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Abp\Abp.csproj" />
-    <ProjectReference Include="..\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj" />
+    <ProjectReference Include="..\Abp\Abp.csproj"/>
+    <ProjectReference Include="..\Abp.EntityFramework.Common\Abp.EntityFramework.Common.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4" />
-    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
-    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="EntityFramework.DynamicFilters" Version="3.2.4"/>
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2"/>
+    <PackageReference Include="EntityFramework" Version="6.5.1"/>
   </ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-		<Reference Include="System" />
-		<Reference Include="System.Transactions" />
-		<Reference Include="Microsoft.CSharp" />
-	</ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.8.1">
+    <PackageReference Update="Fody" Version="6.8.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3"/>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

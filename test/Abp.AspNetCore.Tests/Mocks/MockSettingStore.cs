@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration;
 
-namespace Abp.AspNetCore.Mocks
-{
-    public class MockSettingStore : ISettingStore
+namespace Abp.AspNetCore.Mocks;
+
+public class MockSettingStore : ISettingStore
 {
     private readonly List<SettingInfo> _settings;
 
@@ -87,5 +87,4 @@ namespace Abp.AspNetCore.Mocks
 
         return allSetting;
     }
-}
 }

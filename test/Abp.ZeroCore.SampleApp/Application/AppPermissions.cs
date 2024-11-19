@@ -1,7 +1,6 @@
-﻿namespace Abp.ZeroCore.SampleApp.Application
+namespace Abp.ZeroCore.SampleApp.Application;
+
+public static class AppPermissions
 {
-    public static class AppPermissions
-    {
-        public const string TestPermission = "App.Tenant.TestPermission";
-    }
+    public const string TestPermission = "App.Tenant.TestPermission";
 }

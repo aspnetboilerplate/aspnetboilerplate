@@ -1,43 +1,42 @@
-﻿using Abp.Dependency;
+using Abp.Dependency;
 using Abp.Runtime.Caching.Configuration;
 
-namespace Abp.Runtime.Caching.Redis
+namespace Abp.Runtime.Caching.Redis;
+
+/// <summary>
+/// Used to create <see cref="AbpPerRequestRedisCache"/> instances.
+/// </summary>
+public class AbpPerRequestRedisCacheManager : CacheManagerBase<ICache>, IAbpPerRequestRedisCacheManager
 {
+    private readonly IIocManager _iocManager;
+
     /// <summary>
-    /// Used to create <see cref="AbpPerRequestRedisCache"/> instances.
+    /// Initializes a new instance of the <see cref="AbpPerRequestRedisCacheManager"/> class.
     /// </summary>
-    public class AbpPerRequestRedisCacheManager : CacheManagerBase<ICache>, IAbpPerRequestRedisCacheManager
+    public AbpPerRequestRedisCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
+        : base(configuration)
     {
-        private readonly IIocManager _iocManager;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbpPerRequestRedisCacheManager"/> class.
-        /// </summary>
-        public AbpPerRequestRedisCacheManager(IIocManager iocManager, ICachingConfiguration configuration)
-            : base(configuration)
-        {
-            _iocManager = iocManager;
-            _iocManager.RegisterIfNot<AbpPerRequestRedisCache>(DependencyLifeStyle.Transient);
-        }
-
-        protected override ICache CreateCacheImplementation(string name)
-        {
-            return _iocManager.Resolve<AbpPerRequestRedisCache>(new {name});
-        }
-
-        protected override void DisposeCaches()
-        {
-            foreach (var cache in Caches)
-            {
-                _iocManager.Release(cache.Value);
-            }
-        }
+        _iocManager = iocManager;
+        _iocManager.RegisterIfNot<AbpPerRequestRedisCache>(DependencyLifeStyle.Transient);
     }
 
-    internal class AbpPerRequestRedisCacheManagerForReplacement : AbpPerRequestRedisCacheManager
+    protected override ICache CreateCacheImplementation(string name)
     {
-        public AbpPerRequestRedisCacheManagerForReplacement(IIocManager iocManager, ICachingConfiguration configuration) : base(iocManager, configuration)
+        return _iocManager.Resolve<AbpPerRequestRedisCache>(new { name });
+    }
+
+    protected override void DisposeCaches()
+    {
+        foreach (var cache in Caches)
         {
+            _iocManager.Release(cache.Value);
         }
+    }
+}
+
+internal class AbpPerRequestRedisCacheManagerForReplacement : AbpPerRequestRedisCacheManager
+{
+    public AbpPerRequestRedisCacheManagerForReplacement(IIocManager iocManager, ICachingConfiguration configuration) : base(iocManager, configuration)
+    {
     }
 }

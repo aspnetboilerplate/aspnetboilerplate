@@ -1,14 +1,13 @@
-﻿using Abp.Configuration;
+using Abp.Configuration;
 
-namespace Abp.AutoMapper
+namespace Abp.AutoMapper;
+
+public class MultiLingualMapContext
 {
-    public class MultiLingualMapContext
-    {
-        public ISettingManager SettingManager { get; set; }
+    public ISettingManager SettingManager { get; set; }
 
-        public MultiLingualMapContext(ISettingManager settingManager)
-        {
-            SettingManager = settingManager;
-        }
+    public MultiLingualMapContext(ISettingManager settingManager)
+    {
+        SettingManager = settingManager;
     }
 }

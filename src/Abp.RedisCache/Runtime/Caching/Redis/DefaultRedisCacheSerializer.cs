@@ -1,5 +1,6 @@
 ﻿using Abp.Dependency;
 using Abp.Json;
+using Abp.Json.SystemTextJson;
 using StackExchange.Redis;
 using System;
 using System.Text.Encodings.Web;
@@ -22,6 +23,7 @@ namespace Abp.Runtime.Caching.Redis
         {
             var serializerSettings = new JsonSerializerOptions();
             serializerSettings.Converters.Insert(0, new Abp.Json.SystemTextJson.AbpDateTimeConverter());
+            serializerSettings.Converters.Add(new AbpJsonConverterForType());
 
             var cacheData = AbpCacheData.Deserialize(objbyte);
 

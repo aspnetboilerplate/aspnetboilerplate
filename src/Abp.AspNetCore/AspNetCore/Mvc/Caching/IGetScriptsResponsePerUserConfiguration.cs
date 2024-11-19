@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 
-namespace Abp.AspNetCore.Mvc.Caching
+namespace Abp.AspNetCore.Mvc.Caching;
+
+public interface IGetScriptsResponsePerUserConfiguration
 {
-    public interface IGetScriptsResponsePerUserConfiguration
-    {
-        bool IsEnabled { get; set; }
+    bool IsEnabled { get; set; }
 
-        TimeSpan MaxAge { get; set; }
-    }
+    TimeSpan MaxAge { get; set; }
 }

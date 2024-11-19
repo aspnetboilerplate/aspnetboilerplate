@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace Abp.OpenIddict.Applications
-{
-    public static class OpenIddictApplicationExtensions
+namespace Abp.OpenIddict.Applications;
+
+public static class OpenIddictApplicationExtensions
 {
     public static OpenIddictApplication ToEntity(this OpenIddictApplicationModel model)
     {
@@ -55,7 +55,7 @@ namespace Abp.OpenIddict.Applications
         entity.Settings = model.Settings;
         entity.ClientUri = model.ClientUri;
         entity.LogoUri = model.LogoUri;
-        
+
         return entity;
     }
 
@@ -66,7 +66,7 @@ namespace Abp.OpenIddict.Applications
 
     public static OpenIddictApplicationModel ToModel(this OpenIddictApplication entity)
     {
-        if(entity == null)
+        if (entity == null)
         {
             return null;
         }
@@ -94,6 +94,4 @@ namespace Abp.OpenIddict.Applications
 
         return model;
     }
-}
-
 }

@@ -1,4 +1,4 @@
-﻿using Abp.AspNetCore.App.MultiTenancy;
+using Abp.AspNetCore.App.MultiTenancy;
 using Abp.AspNetCore.App.ResultWrapping;
 using Abp.AspNetCore.TestBase;
 using Abp.Configuration.Startup;
@@ -14,47 +14,46 @@ using Abp.Reflection.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Abp.AspNetCore.App
+namespace Abp.AspNetCore.App;
+
+[DependsOn(typeof(AbpAspNetCoreTestBaseModule), typeof(AbpFluentValidationModule))]
+public class AppModule : AbpModule
 {
-    [DependsOn(typeof(AbpAspNetCoreTestBaseModule), typeof(AbpFluentValidationModule))]
-    public class AppModule : AbpModule
+    public override void PreInitialize()
     {
-        public override void PreInitialize()
+        Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+
+        Configuration.ReplaceService<IAuditingStore, MockAuditingStore>();
+        Configuration.ReplaceService<ITenantStore, TestTenantStore>();
+        Configuration.ReplaceService<ISettingStore, MockSettingStore>();
+
+        Configuration
+            .Modules.AbpAspNetCore()
+            .CreateControllersForAppServices(
+                typeof(AppModule).GetAssembly()
+            );
+
+        Configuration.Modules.AbpAspNetCore().DefaultResponseCacheAttributeForAppServices = new ResponseCacheAttribute() { NoStore = true, Location = ResponseCacheLocation.None };
+
+        Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
         {
-            Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+            endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            endpoints.MapRazorPages();
+        });
 
-            Configuration.ReplaceService<IAuditingStore, MockAuditingStore>();
-            Configuration.ReplaceService<ITenantStore, TestTenantStore>();
-            Configuration.ReplaceService<ISettingStore, MockSettingStore>();
+        Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new CustomWrapResultFilter());
+    }
 
-            Configuration
-                .Modules.AbpAspNetCore()
-                .CreateControllersForAppServices(
-                    typeof(AppModule).GetAssembly()
-                );
+    public override void Initialize()
+    {
+        IocManager.RegisterAssemblyByConvention(typeof(AppModule).GetAssembly());
+    }
 
-            Configuration.Modules.AbpAspNetCore().DefaultResponseCacheAttributeForAppServices = new ResponseCacheAttribute() { NoStore = true, Location = ResponseCacheLocation.None };
-
-            Configuration.IocManager.Resolve<IAbpAspNetCoreConfiguration>().EndpointConfiguration.Add(endpoints =>
-            {
-                endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
-            
-            Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new CustomWrapResultFilter());
-        }
-
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AppModule).GetAssembly());
-        }
-
-        public override void PostInitialize()
-        {
-            var localizationConfiguration = IocManager.IocContainer.Resolve<ILocalizationConfiguration>();
-            localizationConfiguration.Languages.Add(new LanguageInfo("en-US", "English", isDefault: true));
-            localizationConfiguration.Languages.Add(new LanguageInfo("it", "Italian"));
-        }
+    public override void PostInitialize()
+    {
+        var localizationConfiguration = IocManager.IocContainer.Resolve<ILocalizationConfiguration>();
+        localizationConfiguration.Languages.Add(new LanguageInfo("en-US", "English", isDefault: true));
+        localizationConfiguration.Languages.Add(new LanguageInfo("it", "Italian"));
     }
 }

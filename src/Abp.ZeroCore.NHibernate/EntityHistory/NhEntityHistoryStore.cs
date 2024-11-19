@@ -1,65 +1,64 @@
-﻿using Abp.Domain.Repositories;
+using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using System.Threading.Tasks;
 
-namespace Abp.EntityHistory
+namespace Abp.EntityHistory;
+
+public class NhEntityHistoryStore : EntityHistoryStore
 {
-    public class NhEntityHistoryStore : EntityHistoryStore
+    private readonly IRepository<EntityChangeSet, long> _changeSetRepository;
+    private readonly IRepository<EntityChange, long> _entityChangeRepository;
+    private readonly IRepository<EntityPropertyChange, long> _entityPropertyChangeRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public NhEntityHistoryStore(IRepository<EntityChangeSet, long> changeSetRepository,
+        IRepository<EntityChange, long> entityChangeRepository,
+        IRepository<EntityPropertyChange, long> entityPropertyChangeRepository,
+        IUnitOfWorkManager unitOfWorkManager) : base(changeSetRepository, unitOfWorkManager)
     {
-        private readonly IRepository<EntityChangeSet, long> _changeSetRepository;
-        private readonly IRepository<EntityChange, long> _entityChangeRepository;
-        private readonly IRepository<EntityPropertyChange, long> _entityPropertyChangeRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        _changeSetRepository = changeSetRepository;
+        _entityChangeRepository = entityChangeRepository;
+        _entityPropertyChangeRepository = entityPropertyChangeRepository;
+        _unitOfWorkManager = unitOfWorkManager;
+    }
 
-        public NhEntityHistoryStore(IRepository<EntityChangeSet, long> changeSetRepository,
-            IRepository<EntityChange, long> entityChangeRepository,
-            IRepository<EntityPropertyChange, long> entityPropertyChangeRepository,
-            IUnitOfWorkManager unitOfWorkManager) : base(changeSetRepository, unitOfWorkManager)
+    public override void Save(EntityChangeSet changeSet)
+    {
+        _unitOfWorkManager.WithUnitOfWork(() =>
         {
-            _changeSetRepository = changeSetRepository;
-            _entityChangeRepository = entityChangeRepository;
-            _entityPropertyChangeRepository = entityPropertyChangeRepository;
-            _unitOfWorkManager = unitOfWorkManager;
-        }
+            _changeSetRepository.Insert(changeSet);
 
-        public override void Save(EntityChangeSet changeSet)
-        {
-            _unitOfWorkManager.WithUnitOfWork(() =>
+            foreach (var entityChange in changeSet.EntityChanges)
             {
-                _changeSetRepository.Insert(changeSet);
+                entityChange.EntityChangeSetId = changeSet.Id;
+                _entityChangeRepository.Insert(entityChange);
 
-                foreach (var entityChange in changeSet.EntityChanges)
+                foreach (var propertyChange in entityChange.PropertyChanges)
                 {
-                    entityChange.EntityChangeSetId = changeSet.Id;
-                    _entityChangeRepository.Insert(entityChange);
-
-                    foreach (var propertyChange in entityChange.PropertyChanges)
-                    {
-                        propertyChange.EntityChangeId = entityChange.Id;
-                        _entityPropertyChangeRepository.Insert(propertyChange);
-                    }
+                    propertyChange.EntityChangeId = entityChange.Id;
+                    _entityPropertyChangeRepository.Insert(propertyChange);
                 }
-            });
-        }
+            }
+        });
+    }
 
-        public override async Task SaveAsync(EntityChangeSet changeSet)
+    public override async Task SaveAsync(EntityChangeSet changeSet)
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            await _changeSetRepository.InsertAsync(changeSet);
+
+            foreach (var entityChange in changeSet.EntityChanges)
             {
-                await _changeSetRepository.InsertAsync(changeSet);
+                entityChange.EntityChangeSetId = changeSet.Id;
+                await _entityChangeRepository.InsertAsync(entityChange);
 
-                foreach (var entityChange in changeSet.EntityChanges)
+                foreach (var propertyChange in entityChange.PropertyChanges)
                 {
-                    entityChange.EntityChangeSetId = changeSet.Id;
-                    await _entityChangeRepository.InsertAsync(entityChange);
-
-                    foreach (var propertyChange in entityChange.PropertyChanges)
-                    {
-                        propertyChange.EntityChangeId = entityChange.Id;
-                        await _entityPropertyChangeRepository.InsertAsync(propertyChange);
-                    }
+                    propertyChange.EntityChangeId = entityChange.Id;
+                    await _entityPropertyChangeRepository.InsertAsync(propertyChange);
                 }
-            });
-        }
+            }
+        });
     }
 }
