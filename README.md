@@ -4,6 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
 [![MyGet (with prereleases)](https://img.shields.io/myget/abp-nightly/vpre/Abp.svg?style=flat-square)](https://aspnetboilerplate.com/Pages/Documents/Nightly-Builds)
 [![NuGet Download](https://img.shields.io/nuget/dt/Abp.svg?style=flat-square)](https://www.nuget.org/packages/Abp)
+[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20ABP%20Guru-006BFF?style=flat-square)](https://gurubase.io/g/abp)
 
 ## What is ABP?
 
@@ -109,7 +110,7 @@ Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identi
 |Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)|
 
 ### Shared Packages
-
+Shared packages between the Abp.ZeroCore.* and Abp.Zero.* packages.
 Shared packages between the Abp.ZeroCore.\* and Abp.Zero.\* packages.
 
 |Package|Status|
