@@ -110,7 +110,7 @@ Packages integrated into <a href="https://docs.microsoft.com/en-us/aspnet/identi
 |Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore|[![NuGet version](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore.svg)](https://badge.fury.io/nu/Abp.ZeroCore.IdentityServer4.vNext.EntityFrameworkCore)|
 
 ### Shared Packages
-Shared packages between the Abp.ZeroCore.* and Abp.Zero.* packages.
+
 Shared packages between the Abp.ZeroCore.\* and Abp.Zero.\* packages.
 
 |Package|Status|
