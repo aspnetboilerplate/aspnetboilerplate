@@ -16,7 +16,9 @@ namespace Abp.Caching
         IEventHandler<EntityDeletedEventData<AbpUserBase>>,
         IEventHandler<EntityChangedEventData<OrganizationUnitRole>>,
         IEventHandler<EntityChangedEventData<LanguageInfo>>,
+        IEventHandler<EntityChangedEventData<ApplicationLanguageText>>,
         IEventHandler<EntityChangedEventData<SettingInfo>>,
+        IEventHandler<EntityChangedEventData<Setting>>,
         ITransientDependency
     {
         private const string CacheName = "GetScriptsResponsePerUser";
@@ -58,9 +60,33 @@ namespace Abp.Caching
             _cachedUniqueKeyPerUser.ClearCache(CacheName);
         }
 
-        public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
+        public void HandleEvent(EntityChangedEventData<ApplicationLanguageText> eventData)
         {
             _cachedUniqueKeyPerUser.ClearCache(CacheName);
+        }
+
+        public void HandleEvent(EntityChangedEventData<SettingInfo> eventData)
+        {
+            if (eventData.Entity.UserId.HasValue && eventData.Entity.TenantId.HasValue)
+            {
+                _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.UserId);
+            }
+            else
+            {
+                _cachedUniqueKeyPerUser.ClearCache(CacheName);
+            }
+        }
+
+        public void HandleEvent(EntityChangedEventData<Setting> eventData)
+        {
+            if (eventData.Entity.UserId.HasValue && eventData.Entity.TenantId.HasValue)
+            {
+                _cachedUniqueKeyPerUser.RemoveKey(CacheName, eventData.Entity.TenantId, eventData.Entity.UserId);
+            }
+            else
+            {
+                _cachedUniqueKeyPerUser.ClearCache(CacheName);
+            }
         }
     }
 }
