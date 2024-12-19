@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -32,7 +32,8 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         var content = JsonContent.Create(new
         {
-            myInputModel.HtmlInput, myInputModel.SecondInput,
+            myInputModel.HtmlInput,
+            myInputModel.SecondInput,
         });
 
         // Act
@@ -54,7 +55,7 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
     {
         // Arrange
         var client = _factory.CreateClient();
-        
+
         // Act
         var response = await client.PostAsync(BaseUrl + "sanitizeHtmlPropertyTest", new FormUrlEncodedContent(new[]
         {
@@ -66,11 +67,11 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" } );
+        var myResult = JsonConvert.DeserializeAnonymousType(json, new { firstInput = "", secondInput = "" });
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
-    
+
     [Theory]
     [MemberData(nameof(SanitizerControllerData.SanitizerTestInnerModelData),
         MemberType = typeof(SanitizerControllerData))]
@@ -90,7 +91,7 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
-    
+
     [Theory]
     [MemberData(nameof(SanitizerControllerData.SanitizerTestAttributedPropertyModelData),
         MemberType = typeof(SanitizerControllerData))]
@@ -110,7 +111,7 @@ public class SanitizerControllerTests : IClassFixture<WebApplicationFactory<Star
 
         myResult.ShouldBeEquivalentTo(myExpectedModel);
     }
-    
+
     [Theory]
     [InlineData("<a href='://malicioussite'>Please verify your email address</a>", "<a>Please verify your email address</a>")]
     [InlineData("<script>alert('test')</script>", "")]

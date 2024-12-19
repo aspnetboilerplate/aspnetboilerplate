@@ -1,18 +1,17 @@
-﻿using Abp.Configuration.Startup;
+using Abp.Configuration.Startup;
 
-namespace Abp.AspNetCore.Configuration
+namespace Abp.AspNetCore.Configuration;
+
+/// <summary>
+/// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP ASP.NET Core module.
+/// </summary>
+public static class AbpAspNetCoreConfigurationExtensions
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure ABP ASP.NET Core module.
+    /// Used to configure ABP ASP.NET Core module.
     /// </summary>
-    public static class AbpAspNetCoreConfigurationExtensions
+    public static IAbpAspNetCoreConfiguration AbpAspNetCore(this IModuleConfigurations configurations)
     {
-        /// <summary>
-        /// Used to configure ABP ASP.NET Core module.
-        /// </summary>
-        public static IAbpAspNetCoreConfiguration AbpAspNetCore(this IModuleConfigurations configurations)
-        {
-            return configurations.AbpConfiguration.Get<IAbpAspNetCoreConfiguration>();
-        }
+        return configurations.AbpConfiguration.Get<IAbpAspNetCoreConfiguration>();
     }
 }

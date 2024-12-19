@@ -1,13 +1,12 @@
-﻿using Abp.AspNetCore.Mvc.Controllers;
+using Abp.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AbpAspNetCoreDemo.PlugIn.Controllers
+namespace AbpAspNetCoreDemo.PlugIn.Controllers;
+
+public class BlogController : AbpController
 {
-    public class BlogController : AbpController
+    public ActionResult Index()
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

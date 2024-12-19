@@ -14,479 +14,478 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Abp.Authorization.Roles
+namespace Abp.Authorization.Roles;
+
+/// <summary>
+/// Creates a new instance of a persistence store for roles.
+/// </summary>
+public class AbpRoleStore<TRole, TUser> :
+    IRoleStore<TRole>,
+    IRoleClaimStore<TRole>,
+    IRolePermissionStore<TRole>,
+    IQueryableRoleStore<TRole>,
+    ITransientDependency
+    where TRole : AbpRole<TUser>
+    where TUser : AbpUser<TUser>
 {
+    public ILogger Logger { get; set; }
+
     /// <summary>
-    /// Creates a new instance of a persistence store for roles.
+    /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
     /// </summary>
-    public class AbpRoleStore<TRole, TUser> :
-        IRoleStore<TRole>,
-        IRoleClaimStore<TRole>,
-        IRolePermissionStore<TRole>,
-        IQueryableRoleStore<TRole>,
-        ITransientDependency
-        where TRole : AbpRole<TUser>
-        where TUser : AbpUser<TUser>
+    public IdentityErrorDescriber ErrorDescriber { get; set; }
+
+    /// <summary>
+    /// Gets or sets a flag indicating if changes should be persisted after CreateAsync, UpdateAsync and DeleteAsync are called.
+    /// </summary>
+    /// <value>
+    /// True if changes should be automatically persisted, otherwise false.
+    /// </value>
+    public bool AutoSaveChanges { get; set; } = true;
+
+    public IQueryable<TRole> Roles => _roleRepository.GetAll();
+
+    private readonly IRepository<TRole> _roleRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+    private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
+
+    public AbpRoleStore(
+        IUnitOfWorkManager unitOfWorkManager,
+        IRepository<TRole> roleRepository,
+        IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
     {
-        public ILogger Logger { get; set; }
+        _unitOfWorkManager = unitOfWorkManager;
+        _roleRepository = roleRepository;
+        _rolePermissionSettingRepository = rolePermissionSettingRepository;
 
-        /// <summary>
-        /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
-        /// </summary>
-        public IdentityErrorDescriber ErrorDescriber { get; set; }
+        ErrorDescriber = new IdentityErrorDescriber();
+        Logger = NullLogger.Instance;
+    }
 
-        /// <summary>
-        /// Gets or sets a flag indicating if changes should be persisted after CreateAsync, UpdateAsync and DeleteAsync are called.
-        /// </summary>
-        /// <value>
-        /// True if changes should be automatically persisted, otherwise false.
-        /// </value>
-        public bool AutoSaveChanges { get; set; } = true;
+    public virtual Task<IQueryable<TRole>> GetRolesAsync()
+        => _roleRepository.GetAllAsync();
 
-        public IQueryable<TRole> Roles => _roleRepository.GetAll();
-
-        private readonly IRepository<TRole> _roleRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
-
-        public AbpRoleStore(
-            IUnitOfWorkManager unitOfWorkManager,
-            IRepository<TRole> roleRepository,
-            IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
+    /// <summary>Saves the current store.</summary>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    protected Task SaveChanges(CancellationToken cancellationToken)
+    {
+        if (!AutoSaveChanges || _unitOfWorkManager.Current == null)
         {
-            _unitOfWorkManager = unitOfWorkManager;
-            _roleRepository = roleRepository;
-            _rolePermissionSettingRepository = rolePermissionSettingRepository;
-
-            ErrorDescriber = new IdentityErrorDescriber();
-            Logger = NullLogger.Instance;
+            return Task.CompletedTask;
         }
 
-        public virtual Task<IQueryable<TRole>> GetRolesAsync()
-            => _roleRepository.GetAllAsync();
+        return _unitOfWorkManager.Current.SaveChangesAsync();
+    }
 
-        /// <summary>Saves the current store.</summary>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        protected Task SaveChanges(CancellationToken cancellationToken)
+    /// <summary>
+    /// Creates a new role in a store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role to create in the store.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
+    public virtual async Task<IdentityResult> CreateAsync([NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            if (!AutoSaveChanges || _unitOfWorkManager.Current == null)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(role, nameof(role));
+
+            await _roleRepository.InsertAsync(role);
+            await SaveChanges(cancellationToken);
+
+            return IdentityResult.Success;
+        });
+    }
+
+    /// <summary>
+    /// Updates a role in a store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role to update in the store.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
+    public virtual async Task<IdentityResult> UpdateAsync([NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(role, nameof(role));
+
+            role.ConcurrencyStamp = Guid.NewGuid().ToString();
+            await _roleRepository.UpdateAsync(role);
+
+            try
             {
-                return Task.CompletedTask;
+                await SaveChanges(cancellationToken);
+            }
+            catch (AbpDbConcurrencyException ex)
+            {
+                Logger.Warn(ex.ToString(), ex);
+                return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
             }
 
-            return _unitOfWorkManager.Current.SaveChangesAsync();
-        }
+            await SaveChanges(cancellationToken);
 
-        /// <summary>
-        /// Creates a new role in a store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role to create in the store.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
-        public virtual async Task<IdentityResult> CreateAsync([NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
+            return IdentityResult.Success;
+        });
+    }
+
+    /// <summary>
+    /// Deletes a role from the store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role to delete from the store.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
+    public virtual async Task<IdentityResult> DeleteAsync([NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Check.NotNull(role, nameof(role));
+
+            await _roleRepository.DeleteAsync(role);
+
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                Check.NotNull(role, nameof(role));
-
-                await _roleRepository.InsertAsync(role);
                 await SaveChanges(cancellationToken);
-
-                return IdentityResult.Success;
-            });
-        }
-
-        /// <summary>
-        /// Updates a role in a store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role to update in the store.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
-        public virtual async Task<IdentityResult> UpdateAsync([NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            }
+            catch (AbpDbConcurrencyException ex)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                Logger.Warn(ex.ToString(), ex);
+                return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
+            }
 
-                Check.NotNull(role, nameof(role));
+            await SaveChanges(cancellationToken);
 
-                role.ConcurrencyStamp = Guid.NewGuid().ToString();
-                await _roleRepository.UpdateAsync(role);
+            return IdentityResult.Success;
+        });
+    }
 
-                try
-                {
-                    await SaveChanges(cancellationToken);
-                }
-                catch (AbpDbConcurrencyException ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                    return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
-                }
+    /// <summary>
+    /// Gets the ID for a role from the store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose ID should be returned.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that contains the ID of the role.</returns>
+    public Task<string> GetRoleIdAsync([NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        cancellationToken.ThrowIfCancellationRequested();
 
-                await SaveChanges(cancellationToken);
+        Check.NotNull(role, nameof(role));
 
-                return IdentityResult.Success;
-            });
-        }
+        return Task.FromResult(role.Id.ToString());
+    }
 
-        /// <summary>
-        /// Deletes a role from the store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role to delete from the store.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that represents the <see cref="IdentityResult"/> of the asynchronous query.</returns>
-        public virtual async Task<IdentityResult> DeleteAsync([NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
+    /// <summary>
+    /// Gets the name of a role from the store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose name should be returned.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that contains the name of the role.</returns>
+    public Task<string> GetRoleNameAsync([NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(role, nameof(role));
+
+        return Task.FromResult(role.Name);
+    }
+
+    /// <summary>
+    /// Sets the name of a role in the store as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose name should be set.</param>
+    /// <param name="roleName">The name of the role.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public Task SetRoleNameAsync([NotNull] TRole role, string roleName,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Check.NotNull(role, nameof(role));
+
+        role.Name = roleName;
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Finds the role who has the specified ID as an asynchronous operation.
+    /// </summary>
+    /// <param name="id">The role ID to look for.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+    public virtual async Task<TRole> FindByIdAsync(string id,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            return await _roleRepository.FirstOrDefaultAsync(id.To<int>());
+        });
+    }
 
-                Check.NotNull(role, nameof(role));
+    /// <summary>
+    /// Finds the role who has the specified ID as an asynchronous operation.
+    /// </summary>
+    /// <param name="id">The role ID to look for.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+    public virtual TRole FindById(string id, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return _unitOfWorkManager.WithUnitOfWork(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return _roleRepository.FirstOrDefault(id.To<int>());
+        });
+    }
 
-                await _roleRepository.DeleteAsync(role);
+    /// <summary>
+    /// Finds the role who has the specified normalized name as an asynchronous operation.
+    /// </summary>
+    /// <param name="normalizedName">The normalized role name to look for.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+    public virtual async Task<TRole> FindByNameAsync(
+        [NotNull] string normalizedName,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            Check.NotNull(normalizedName, nameof(normalizedName));
+            return await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
+        });
+    }
 
-                try
-                {
-                    await SaveChanges(cancellationToken);
-                }
-                catch (AbpDbConcurrencyException ex)
-                {
-                    Logger.Warn(ex.ToString(), ex);
-                    return IdentityResult.Failed(ErrorDescriber.ConcurrencyFailure());
-                }
+    /// <summary>
+    /// Finds the role who has the specified normalized name as an asynchronous operation.
+    /// </summary>
+    /// <param name="normalizedName">The normalized role name to look for.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
+    public virtual TRole FindByName(
+        [NotNull] string normalizedName,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return _unitOfWorkManager.WithUnitOfWork(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            Check.NotNull(normalizedName, nameof(normalizedName));
+            return _roleRepository.FirstOrDefault(r => r.NormalizedName == normalizedName);
+        });
+    }
 
-                await SaveChanges(cancellationToken);
+    /// <summary>
+    /// Get a role's normalized name as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose normalized name should be retrieved.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that contains the name of the role.</returns>
+    public virtual Task<string> GetNormalizedRoleNameAsync(
+        [NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        Check.NotNull(role, nameof(role));
+        return Task.FromResult(role.NormalizedName);
+    }
 
-                return IdentityResult.Success;
-            });
-        }
+    /// <summary>
+    /// Set a role's normalized name as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose normalized name should be set.</param>
+    /// <param name="normalizedName">The normalized name to set</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public virtual Task SetNormalizedRoleNameAsync(
+        [NotNull] TRole role,
+        string normalizedName,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        Check.NotNull(role, nameof(role));
+        role.NormalizedName = normalizedName;
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// Gets the ID for a role from the store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose ID should be returned.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that contains the ID of the role.</returns>
-        public Task<string> GetRoleIdAsync([NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
+    /// <summary>
+    /// Dispose the stores
+    /// </summary>
+    public void Dispose()
+    {
+    }
+
+    /// <summary>
+    /// Get the claims associated with the specified <paramref name="role"/> as an asynchronous operation.
+    /// </summary>
+    /// <param name="role">The role whose claims should be retrieved.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that contains the claims granted to a role.</returns>
+    public virtual async Task<IList<Claim>> GetClaimsAsync(
+        [NotNull] TRole role,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(role, nameof(role));
 
-            return Task.FromResult(role.Id.ToString());
-        }
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
+            return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
+        });
+    }
 
-        /// <summary>
-        /// Gets the name of a role from the store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose name should be returned.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that contains the name of the role.</returns>
-        public Task<string> GetRoleNameAsync([NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
+    /// <summary>
+    /// Adds the <paramref name="claim"/> given to the specified <paramref name="role"/>.
+    /// </summary>
+    /// <param name="role">The role to add the claim to.</param>
+    /// <param name="claim">The claim to add to the role.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public async Task AddClaimAsync(
+        [NotNull] TRole role,
+        [NotNull] Claim claim,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             Check.NotNull(role, nameof(role));
+            Check.NotNull(claim, nameof(claim));
 
-            return Task.FromResult(role.Name);
-        }
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
+            role.Claims.Add(new RoleClaim(role, claim));
+        });
+    }
 
-        /// <summary>
-        /// Sets the name of a role in the store as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose name should be set.</param>
-        /// <param name="roleName">The name of the role.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public Task SetRoleNameAsync([NotNull] TRole role, string roleName,
-            CancellationToken cancellationToken = default(CancellationToken))
+    /// <summary>
+    /// Removes the <paramref name="claim"/> given from the specified <paramref name="role"/>.
+    /// </summary>
+    /// <param name="role">The role to remove the claim from.</param>
+    /// <param name="claim">The claim to remove from the role.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+    /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public async Task RemoveClaimAsync(
+        [NotNull] TRole role,
+        [NotNull] Claim claim,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             Check.NotNull(role, nameof(role));
+            Check.NotNull(claim, nameof(claim));
 
-            role.Name = roleName;
-            return Task.CompletedTask;
-        }
+            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
-        /// <summary>
-        /// Finds the role who has the specified ID as an asynchronous operation.
-        /// </summary>
-        /// <param name="id">The role ID to look for.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
-        public virtual async Task<TRole> FindByIdAsync(string id,
-            CancellationToken cancellationToken = default(CancellationToken))
+            role.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
+        });
+    }
+
+    public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async() =>
+            return await _roleRepository.FirstOrDefaultAsync(
+                role => role.DisplayName == displayName
+            );
+        });
+    }
+
+    public virtual async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+        {
+            if (await HasPermissionAsync(role.Id, permissionGrant))
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                return await _roleRepository.FirstOrDefaultAsync(id.To<int>());
-            });
-        }
+                return;
+            }
 
-        /// <summary>
-        /// Finds the role who has the specified ID as an asynchronous operation.
-        /// </summary>
-        /// <param name="id">The role ID to look for.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
-        public virtual TRole FindById(string id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                return _roleRepository.FirstOrDefault(id.To<int>());
-            });
-        }
-
-        /// <summary>
-        /// Finds the role who has the specified normalized name as an asynchronous operation.
-        /// </summary>
-        /// <param name="normalizedName">The normalized role name to look for.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
-        public virtual async Task<TRole> FindByNameAsync(
-            [NotNull] string normalizedName,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                Check.NotNull(normalizedName, nameof(normalizedName));
-                return await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
-            });
-        }
-
-        /// <summary>
-        /// Finds the role who has the specified normalized name as an asynchronous operation.
-        /// </summary>
-        /// <param name="normalizedName">The normalized role name to look for.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that result of the look up.</returns>
-        public virtual TRole FindByName(
-            [NotNull] string normalizedName,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                Check.NotNull(normalizedName, nameof(normalizedName));
-                return _roleRepository.FirstOrDefault(r => r.NormalizedName == normalizedName);
-            });
-        }
-
-        /// <summary>
-        /// Get a role's normalized name as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose normalized name should be retrieved.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that contains the name of the role.</returns>
-        public virtual Task<string> GetNormalizedRoleNameAsync(
-            [NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            Check.NotNull(role, nameof(role));
-            return Task.FromResult(role.NormalizedName);
-        }
-
-        /// <summary>
-        /// Set a role's normalized name as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose normalized name should be set.</param>
-        /// <param name="normalizedName">The normalized name to set</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task SetNormalizedRoleNameAsync(
-            [NotNull] TRole role,
-            string normalizedName,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            Check.NotNull(role, nameof(role));
-            role.NormalizedName = normalizedName;
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Dispose the stores
-        /// </summary>
-        public void Dispose()
-        {
-        }
-
-        /// <summary>
-        /// Get the claims associated with the specified <paramref name="role"/> as an asynchronous operation.
-        /// </summary>
-        /// <param name="role">The role whose claims should be retrieved.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>A <see cref="Task{TResult}"/> that contains the claims granted to a role.</returns>
-        public virtual async Task<IList<Claim>> GetClaimsAsync(
-            [NotNull] TRole role,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                Check.NotNull(role, nameof(role));
-
-                await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-                return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
-            });
-        }
-
-        /// <summary>
-        /// Adds the <paramref name="claim"/> given to the specified <paramref name="role"/>.
-        /// </summary>
-        /// <param name="role">The role to add the claim to.</param>
-        /// <param name="claim">The claim to add to the role.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task AddClaimAsync(
-            [NotNull] TRole role,
-            [NotNull] Claim claim,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                Check.NotNull(role, nameof(role));
-                Check.NotNull(claim, nameof(claim));
-
-                await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-                role.Claims.Add(new RoleClaim(role, claim));
-            });
-        }
-
-        /// <summary>
-        /// Removes the <paramref name="claim"/> given from the specified <paramref name="role"/>.
-        /// </summary>
-        /// <param name="role">The role to remove the claim from.</param>
-        /// <param name="claim">The claim to remove from the role.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
-        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task RemoveClaimAsync(
-            [NotNull] TRole role,
-            [NotNull] Claim claim,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                Check.NotNull(role, nameof(role));
-                Check.NotNull(claim, nameof(claim));
-
-                await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
-
-                role.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
-            });
-        }
-
-        public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
-        {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                return await _roleRepository.FirstOrDefaultAsync(
-                    role => role.DisplayName == displayName
-                );
-            });
-        }
-
-        public virtual async Task AddPermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
-        {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                if (await HasPermissionAsync(role.Id, permissionGrant))
+            await _rolePermissionSettingRepository.InsertAsync(
+                new RolePermissionSetting
                 {
-                    return;
-                }
+                    TenantId = role.TenantId,
+                    RoleId = role.Id,
+                    Name = permissionGrant.Name,
+                    IsGranted = permissionGrant.IsGranted
+                });
+        });
+    }
 
-                await _rolePermissionSettingRepository.InsertAsync(
-                    new RolePermissionSetting
-                    {
-                        TenantId = role.TenantId,
-                        RoleId = role.Id,
-                        Name = permissionGrant.Name,
-                        IsGranted = permissionGrant.IsGranted
-                    });
-            });
-        }
-
-        /// <inheritdoc/>
-        public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+    /// <inheritdoc/>
+    public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                await _rolePermissionSettingRepository.DeleteAsync(
-                    permissionSetting => permissionSetting.RoleId == role.Id &&
-                                         permissionSetting.Name == permissionGrant.Name &&
-                                         permissionSetting.IsGranted == permissionGrant.IsGranted
-                );
-            });
-        }
+            await _rolePermissionSettingRepository.DeleteAsync(
+                permissionSetting => permissionSetting.RoleId == role.Id &&
+                                     permissionSetting.Name == permissionGrant.Name &&
+                                     permissionSetting.IsGranted == permissionGrant.IsGranted
+            );
+        });
+    }
 
-        /// <inheritdoc/>
-        public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
-        {
-            return GetPermissionsAsync(role.Id);
-        }
+    /// <inheritdoc/>
+    public virtual Task<IList<PermissionGrantInfo>> GetPermissionsAsync(TRole role)
+    {
+        return GetPermissionsAsync(role.Id);
+    }
 
-        /// <inheritdoc/>
-        public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
-        {
-            return GetPermissions(role.Id);
-        }
+    /// <inheritdoc/>
+    public virtual IList<PermissionGrantInfo> GetPermissions(TRole role)
+    {
+        return GetPermissions(role.Id);
+    }
 
-        public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
+    public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
-                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
-                    .ToList();
-            });
-        }
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        });
+    }
 
-        public IList<PermissionGrantInfo> GetPermissions(int roleId)
+    public IList<PermissionGrantInfo> GetPermissions(int roleId)
+    {
+        return _unitOfWorkManager.WithUnitOfWork(() =>
         {
-            return _unitOfWorkManager.WithUnitOfWork(() =>
-            {
-                return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
-                    .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
-                    .ToList();
-            });
-        }
+            return (_rolePermissionSettingRepository.GetAllList(p => p.RoleId == roleId))
+                .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
+                .ToList();
+        });
+    }
 
-        /// <inheritdoc/>
-        public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
+    /// <inheritdoc/>
+    public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
-                    p => p.RoleId == roleId &&
-                         p.Name == permissionGrant.Name &&
-                         p.IsGranted == permissionGrant.IsGranted
-                ) != null;
-            });
-        }
+            return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
+                p => p.RoleId == roleId &&
+                     p.Name == permissionGrant.Name &&
+                     p.IsGranted == permissionGrant.IsGranted
+            ) != null;
+        });
+    }
 
-        /// <inheritdoc/>
-        public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
+    /// <inheritdoc/>
+    public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
+    {
+        await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
-            {
-                await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
-            });
-        }
+            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+        });
     }
 }

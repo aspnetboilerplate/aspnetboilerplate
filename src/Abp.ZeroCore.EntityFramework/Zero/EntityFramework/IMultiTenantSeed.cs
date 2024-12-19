@@ -1,9 +1,8 @@
-﻿using Abp.MultiTenancy;
+using Abp.MultiTenancy;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFramework;
+
+public interface IMultiTenantSeed
 {
-    public interface IMultiTenantSeed
-    {
-        AbpTenantBase Tenant { get; set; }
-    }
+    AbpTenantBase Tenant { get; set; }
 }

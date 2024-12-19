@@ -1,7 +1,6 @@
-﻿namespace Abp.ZeroCore.SampleApp.Application
+namespace Abp.ZeroCore.SampleApp.Application;
+
+public static class AppConsts
 {
-    public static class AppConsts
-    {
-        public const string LocalizationSourceName = "SampleApp";
-    }
+    public const string LocalizationSourceName = "SampleApp";
 }

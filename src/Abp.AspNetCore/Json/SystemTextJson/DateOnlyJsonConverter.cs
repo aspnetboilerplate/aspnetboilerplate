@@ -36,7 +36,7 @@ public class DateOnlyJsonConverter : JsonConverter<DateOnly>
         {
             return date;
         }
-        
+
         return default;
     }
 

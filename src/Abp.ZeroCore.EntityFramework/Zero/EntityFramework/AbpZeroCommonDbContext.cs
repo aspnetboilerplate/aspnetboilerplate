@@ -15,647 +15,646 @@ using Abp.Organizations;
 using Abp.EntityFramework.Extensions;
 using Abp.Webhooks;
 
-namespace Abp.Zero.EntityFramework
+namespace Abp.Zero.EntityFramework;
+
+public abstract class AbpZeroCommonDbContext<TRole, TUser, TSelf> : AbpDbContext
+    where TRole : AbpRole<TUser>
+    where TUser : AbpUser<TUser>
+    where TSelf : AbpZeroCommonDbContext<TRole, TUser, TSelf>
 {
-    public abstract class AbpZeroCommonDbContext<TRole, TUser, TSelf> : AbpDbContext
-        where TRole : AbpRole<TUser>
-        where TUser : AbpUser<TUser>
-        where TSelf : AbpZeroCommonDbContext<TRole, TUser, TSelf>
+    /// <summary>
+    /// Roles.
+    /// </summary>
+    public virtual DbSet<TRole> Roles { get; set; }
+
+    /// <summary>
+    /// Users.
+    /// </summary>
+    public virtual DbSet<TUser> Users { get; set; }
+
+    /// <summary>
+    /// User logins.
+    /// </summary>
+    public virtual DbSet<UserLogin> UserLogins { get; set; }
+
+    /// <summary>
+    /// User login attempts.
+    /// </summary>
+    public virtual DbSet<UserLoginAttempt> UserLoginAttempts { get; set; }
+
+    /// <summary>
+    /// User roles.
+    /// </summary>
+    public virtual DbSet<UserRole> UserRoles { get; set; }
+
+    /// <summary>
+    /// User claims.
+    /// </summary>
+    public virtual DbSet<UserClaim> UserClaims { get; set; }
+
+    /// <summary>
+    /// User tokens.
+    /// </summary>
+    public virtual DbSet<UserToken> UserTokens { get; set; }
+
+    /// <summary>
+    /// Role claims.
+    /// </summary>
+    public virtual DbSet<RoleClaim> RoleClaims { get; set; }
+
+    /// <summary>
+    /// Permissions.
+    /// </summary>
+    public virtual DbSet<PermissionSetting> Permissions { get; set; }
+
+    /// <summary>
+    /// Role permissions.
+    /// </summary>
+    public virtual DbSet<RolePermissionSetting> RolePermissions { get; set; }
+
+    /// <summary>
+    /// User permissions.
+    /// </summary>
+    public virtual DbSet<UserPermissionSetting> UserPermissions { get; set; }
+
+    /// <summary>
+    /// Settings.
+    /// </summary>
+    public virtual DbSet<Setting> Settings { get; set; }
+
+    /// <summary>
+    /// Audit logs.
+    /// </summary>
+    public virtual DbSet<AuditLog> AuditLogs { get; set; }
+
+    /// <summary>
+    /// Languages.
+    /// </summary>
+    public virtual DbSet<ApplicationLanguage> Languages { get; set; }
+
+    /// <summary>
+    /// LanguageTexts.
+    /// </summary>
+    public virtual DbSet<ApplicationLanguageText> LanguageTexts { get; set; }
+
+    /// <summary>
+    /// OrganizationUnits.
+    /// </summary>
+    public virtual DbSet<OrganizationUnit> OrganizationUnits { get; set; }
+
+    /// <summary>
+    /// UserOrganizationUnits.
+    /// </summary>
+    public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
+
+    /// <summary>
+    /// OrganizationUnitRoles.
+    /// </summary>
+    public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
+
+    /// <summary>
+    /// Tenant notifications.
+    /// </summary>
+    public virtual DbSet<TenantNotificationInfo> TenantNotifications { get; set; }
+
+    /// <summary>
+    /// User notifications.
+    /// </summary>
+    public virtual DbSet<UserNotificationInfo> UserNotifications { get; set; }
+
+    /// <summary>
+    /// Notification subscriptions.
+    /// </summary>
+    public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
+
+    /// <summary>
+    /// Webhook information
+    /// </summary>
+    public virtual DbSet<WebhookEvent> WebhookEvents { get; set; }
+
+    /// <summary>
+    /// Web subscriptions
+    /// </summary>
+    public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
+
+    /// <summary>
+    /// Webhook work items
+    /// </summary>
+    public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
+
+    /// <summary>
+    /// DynamicProperties
+    /// </summary>
+    public virtual DbSet<DynamicProperty> DynamicProperties { get; set; }
+
+    /// <summary>
+    /// DynamicProperty selectable values
+    /// </summary>
+    public virtual DbSet<DynamicPropertyValue> DynamicPropertyValues { get; set; }
+
+    /// <summary>
+    /// Entities dynamic properties. Which property that entity has
+    /// </summary>
+    public virtual DbSet<DynamicEntityProperty> DynamicEntityProperties { get; set; }
+
+    /// <summary>
+    /// Entities dynamic properties values
+    /// </summary>
+    public virtual DbSet<DynamicEntityPropertyValue> DynamicEntityPropertyValues { get; set; }
+
+    /// <summary>
+    /// Default constructor.
+    /// Do not directly instantiate this class. Instead, use dependency injection!
+    /// </summary>
+    protected AbpZeroCommonDbContext()
     {
-        /// <summary>
-        /// Roles.
-        /// </summary>
-        public virtual DbSet<TRole> Roles { get; set; }
-
-        /// <summary>
-        /// Users.
-        /// </summary>
-        public virtual DbSet<TUser> Users { get; set; }
-
-        /// <summary>
-        /// User logins.
-        /// </summary>
-        public virtual DbSet<UserLogin> UserLogins { get; set; }
-
-        /// <summary>
-        /// User login attempts.
-        /// </summary>
-        public virtual DbSet<UserLoginAttempt> UserLoginAttempts { get; set; }
-
-        /// <summary>
-        /// User roles.
-        /// </summary>
-        public virtual DbSet<UserRole> UserRoles { get; set; }
-
-        /// <summary>
-        /// User claims.
-        /// </summary>
-        public virtual DbSet<UserClaim> UserClaims { get; set; }
-
-        /// <summary>
-        /// User tokens.
-        /// </summary>
-        public virtual DbSet<UserToken> UserTokens { get; set; }
-
-        /// <summary>
-        /// Role claims.
-        /// </summary>
-        public virtual DbSet<RoleClaim> RoleClaims { get; set; }
-
-        /// <summary>
-        /// Permissions.
-        /// </summary>
-        public virtual DbSet<PermissionSetting> Permissions { get; set; }
-
-        /// <summary>
-        /// Role permissions.
-        /// </summary>
-        public virtual DbSet<RolePermissionSetting> RolePermissions { get; set; }
-
-        /// <summary>
-        /// User permissions.
-        /// </summary>
-        public virtual DbSet<UserPermissionSetting> UserPermissions { get; set; }
-
-        /// <summary>
-        /// Settings.
-        /// </summary>
-        public virtual DbSet<Setting> Settings { get; set; }
-
-        /// <summary>
-        /// Audit logs.
-        /// </summary>
-        public virtual DbSet<AuditLog> AuditLogs { get; set; }
-
-        /// <summary>
-        /// Languages.
-        /// </summary>
-        public virtual DbSet<ApplicationLanguage> Languages { get; set; }
-
-        /// <summary>
-        /// LanguageTexts.
-        /// </summary>
-        public virtual DbSet<ApplicationLanguageText> LanguageTexts { get; set; }
-
-        /// <summary>
-        /// OrganizationUnits.
-        /// </summary>
-        public virtual DbSet<OrganizationUnit> OrganizationUnits { get; set; }
-
-        /// <summary>
-        /// UserOrganizationUnits.
-        /// </summary>
-        public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
-
-        /// <summary>
-        /// OrganizationUnitRoles.
-        /// </summary>
-        public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
-
-        /// <summary>
-        /// Tenant notifications.
-        /// </summary>
-        public virtual DbSet<TenantNotificationInfo> TenantNotifications { get; set; }
-
-        /// <summary>
-        /// User notifications.
-        /// </summary>
-        public virtual DbSet<UserNotificationInfo> UserNotifications { get; set; }
-
-        /// <summary>
-        /// Notification subscriptions.
-        /// </summary>
-        public virtual DbSet<NotificationSubscriptionInfo> NotificationSubscriptions { get; set; }
-
-        /// <summary>
-        /// Webhook information
-        /// </summary>
-        public virtual DbSet<WebhookEvent> WebhookEvents { get; set; }
-
-        /// <summary>
-        /// Web subscriptions
-        /// </summary>
-        public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
-
-        /// <summary>
-        /// Webhook work items
-        /// </summary>
-        public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
-
-        /// <summary>
-        /// DynamicProperties
-        /// </summary>
-        public virtual DbSet<DynamicProperty> DynamicProperties { get; set; }
-
-        /// <summary>
-        /// DynamicProperty selectable values
-        /// </summary>
-        public virtual DbSet<DynamicPropertyValue> DynamicPropertyValues { get; set; }
-
-        /// <summary>
-        /// Entities dynamic properties. Which property that entity has
-        /// </summary>
-        public virtual DbSet<DynamicEntityProperty> DynamicEntityProperties { get; set; }
-
-        /// <summary>
-        /// Entities dynamic properties values
-        /// </summary>
-        public virtual DbSet<DynamicEntityPropertyValue> DynamicEntityPropertyValues { get; set; }
-
-        /// <summary>
-        /// Default constructor.
-        /// Do not directly instantiate this class. Instead, use dependency injection!
-        /// </summary>
-        protected AbpZeroCommonDbContext()
-        {
-        }
-
-        /// <summary>
-        /// Constructor with connection string parameter.
-        /// </summary>
-        /// <param name="nameOrConnectionString">Connection string or a name in connection strings in configuration file</param>
-        protected AbpZeroCommonDbContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
-        {
-        }
-
-        protected AbpZeroCommonDbContext(DbCompiledModel model)
-            : base(model)
-        {
-        }
-
-        /// <summary>
-        /// This constructor can be used for unit tests.
-        /// </summary>
-        protected AbpZeroCommonDbContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
-        {
-        }
-
-        protected AbpZeroCommonDbContext(string nameOrConnectionString, DbCompiledModel model)
-            : base(nameOrConnectionString, model)
-        {
-        }
-
-        protected AbpZeroCommonDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
-            : base(objectContext, dbContextOwnsObjectContext)
-        {
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
-            : base(existingConnection, model, contextOwnsConnection)
-        {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            #region TUser.Set_ConcurrencyStamp
-
-            modelBuilder.Entity<TUser>()
-                .Property(e => e.ConcurrencyStamp)
-                .IsConcurrencyToken();
-
-            #endregion
-
-            #region TUser.Set_ForeignKeys
-
-            modelBuilder.Entity<TUser>()
-                .HasOptional(p => p.DeleterUser)
-                .WithMany()
-                .HasForeignKey(p => p.DeleterUserId);
-
-            modelBuilder.Entity<TUser>()
-                .HasOptional(p => p.CreatorUser)
-                .WithMany()
-                .HasForeignKey(p => p.CreatorUserId);
-
-            modelBuilder.Entity<TUser>()
-                .HasOptional(p => p.LastModifierUser)
-                .WithMany()
-                .HasForeignKey(p => p.LastModifierUserId);
+    }
+
+    /// <summary>
+    /// Constructor with connection string parameter.
+    /// </summary>
+    /// <param name="nameOrConnectionString">Connection string or a name in connection strings in configuration file</param>
+    protected AbpZeroCommonDbContext(string nameOrConnectionString)
+        : base(nameOrConnectionString)
+    {
+    }
+
+    protected AbpZeroCommonDbContext(DbCompiledModel model)
+        : base(model)
+    {
+    }
 
-            #endregion
+    /// <summary>
+    /// This constructor can be used for unit tests.
+    /// </summary>
+    protected AbpZeroCommonDbContext(DbConnection existingConnection, bool contextOwnsConnection)
+        : base(existingConnection, contextOwnsConnection)
+    {
+    }
 
-            #region TRole.Set_ConcurrencyStamp
+    protected AbpZeroCommonDbContext(string nameOrConnectionString, DbCompiledModel model)
+        : base(nameOrConnectionString, model)
+    {
+    }
 
-            modelBuilder.Entity<TRole>()
-                .Property(e => e.ConcurrencyStamp)
-                .IsConcurrencyToken();
+    protected AbpZeroCommonDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+        : base(objectContext, dbContextOwnsObjectContext)
+    {
+    }
 
-            #endregion
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    protected AbpZeroCommonDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
+        : base(existingConnection, model, contextOwnsConnection)
+    {
+    }
 
-            #region AuditLog.IX_TenantId_UserId
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="modelBuilder"></param>
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        #region TUser.Set_ConcurrencyStamp
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        modelBuilder.Entity<TUser>()
+            .Property(e => e.ConcurrencyStamp)
+            .IsConcurrencyToken();
 
-            #endregion
+        #endregion
 
-            #region AuditLog.IX_TenantId_ExecutionTime
+        #region TUser.Set_ForeignKeys
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_ExecutionTime", 1);
+        modelBuilder.Entity<TUser>()
+            .HasOptional(p => p.DeleterUser)
+            .WithMany()
+            .HasForeignKey(p => p.DeleterUserId);
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ExecutionTime)
-                .CreateIndex("IX_TenantId_ExecutionTime", 2);
+        modelBuilder.Entity<TUser>()
+            .HasOptional(p => p.CreatorUser)
+            .WithMany()
+            .HasForeignKey(p => p.CreatorUserId);
 
-            #endregion
+        modelBuilder.Entity<TUser>()
+            .HasOptional(p => p.LastModifierUser)
+            .WithMany()
+            .HasForeignKey(p => p.LastModifierUserId);
 
-            #region AuditLog.IX_TenantId_ExecutionDuration
+        #endregion
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_ExecutionDuration", 1);
+        #region TRole.Set_ConcurrencyStamp
 
-            modelBuilder.Entity<AuditLog>()
-                .Property(e => e.ExecutionDuration)
-                .CreateIndex("IX_TenantId_ExecutionDuration", 2);
+        modelBuilder.Entity<TRole>()
+            .Property(e => e.ConcurrencyStamp)
+            .IsConcurrencyToken();
 
-            #endregion
+        #endregion
 
-            #region ApplicationLanguage.IX_TenantId_Name
+        #region AuditLog.IX_TenantId_UserId
 
-            modelBuilder.Entity<ApplicationLanguage>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
 
-            modelBuilder.Entity<ApplicationLanguage>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_TenantId_Name", 2);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
 
-            #endregion
+        #endregion
 
-            #region ApplicationLanguageText.IX_TenantId_Source_LanguageName_Key
+        #region AuditLog.IX_TenantId_ExecutionTime
 
-            modelBuilder.Entity<ApplicationLanguageText>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Source_LanguageName_Key", 1);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_ExecutionTime", 1);
 
-            modelBuilder.Entity<ApplicationLanguageText>()
-                .Property(e => e.Source)
-                .CreateIndex("IX_TenantId_Source_LanguageName_Key", 2);
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ExecutionTime)
+            .CreateIndex("IX_TenantId_ExecutionTime", 2);
 
-            modelBuilder.Entity<ApplicationLanguageText>()
-                .Property(e => e.LanguageName)
-                .CreateIndex("IX_TenantId_Source_LanguageName_Key", 3);
+        #endregion
 
-            modelBuilder.Entity<ApplicationLanguageText>()
-                .Property(e => e.Key)
-                .CreateIndex("IX_TenantId_Source_LanguageName_Key", 4);
+        #region AuditLog.IX_TenantId_ExecutionDuration
 
-            #endregion
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_ExecutionDuration", 1);
 
-            #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
+        modelBuilder.Entity<AuditLog>()
+            .Property(e => e.ExecutionDuration)
+            .CreateIndex("IX_TenantId_ExecutionDuration", 2);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.NotificationName)
-                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 1);
+        #endregion
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.EntityTypeName)
-                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 2);
+        #region ApplicationLanguage.IX_TenantId_Name
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.EntityId)
-                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 3);
+        modelBuilder.Entity<ApplicationLanguage>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Name", 1);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 4);
+        modelBuilder.Entity<ApplicationLanguage>()
+            .Property(e => e.Name)
+            .CreateIndex("IX_TenantId_Name", 2);
 
-            #endregion
+        #endregion
 
-            #region NotificationSubscriptionInfo.IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId
+        #region ApplicationLanguageText.IX_TenantId_Source_LanguageName_Key
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 1);
+        modelBuilder.Entity<ApplicationLanguageText>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Source_LanguageName_Key", 1);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.NotificationName)
-                .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 2);
+        modelBuilder.Entity<ApplicationLanguageText>()
+            .Property(e => e.Source)
+            .CreateIndex("IX_TenantId_Source_LanguageName_Key", 2);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.EntityTypeName)
-                .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 3);
+        modelBuilder.Entity<ApplicationLanguageText>()
+            .Property(e => e.LanguageName)
+            .CreateIndex("IX_TenantId_Source_LanguageName_Key", 3);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.EntityId)
-                .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 4);
+        modelBuilder.Entity<ApplicationLanguageText>()
+            .Property(e => e.Key)
+            .CreateIndex("IX_TenantId_Source_LanguageName_Key", 4);
 
-            modelBuilder.Entity<NotificationSubscriptionInfo>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 5);
+        #endregion
 
-            #endregion
+        #region NotificationSubscriptionInfo.IX_NotificationName_EntityTypeName_EntityId_UserId
 
-            #region UserNotificationInfo.IX_UserId_State_CreationTime
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.NotificationName)
+            .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 1);
 
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_UserId_State_CreationTime", 1);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.EntityTypeName)
+            .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 2);
 
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.State)
-                .CreateIndex("IX_UserId_State_CreationTime", 2);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.EntityId)
+            .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 3);
 
-            modelBuilder.Entity<UserNotificationInfo>()
-                .Property(e => e.CreationTime)
-                .CreateIndex("IX_UserId_State_CreationTime", 3);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_NotificationName_EntityTypeName_EntityId_UserId", 4);
 
-            #endregion
+        #endregion
 
-            #region OrganizationUnit.IX_TenantId_Code
+        #region NotificationSubscriptionInfo.IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId
 
-            modelBuilder.Entity<OrganizationUnit>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Code", 1);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 1);
 
-            modelBuilder.Entity<OrganizationUnit>()
-                .Property(e => e.Code)
-                .CreateIndex("IX_TenantId_Code", 2);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.NotificationName)
+            .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 2);
 
-            #endregion
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.EntityTypeName)
+            .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 3);
 
-            #region PermissionSetting.IX_TenantId_Name
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.EntityId)
+            .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 4);
 
-            modelBuilder.Entity<PermissionSetting>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+        modelBuilder.Entity<NotificationSubscriptionInfo>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_NotificationName_EntityTypeName_EntityId_UserId", 5);
 
-            modelBuilder.Entity<PermissionSetting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_TenantId_Name", 2);
+        #endregion
 
-            #endregion
+        #region UserNotificationInfo.IX_UserId_State_CreationTime
 
-            #region RoleClaim.IX_RoleId
+        modelBuilder.Entity<UserNotificationInfo>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_UserId_State_CreationTime", 1);
 
-            modelBuilder.Entity<RoleClaim>()
-                .Property(e => e.RoleId)
-                .CreateIndex("IX_RoleId", 1);
+        modelBuilder.Entity<UserNotificationInfo>()
+            .Property(e => e.State)
+            .CreateIndex("IX_UserId_State_CreationTime", 2);
 
-            #endregion
+        modelBuilder.Entity<UserNotificationInfo>()
+            .Property(e => e.CreationTime)
+            .CreateIndex("IX_UserId_State_CreationTime", 3);
 
-            #region RoleClaim.IX_TenantId_ClaimType
+        #endregion
 
-            modelBuilder.Entity<RoleClaim>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_ClaimType", 1);
+        #region OrganizationUnit.IX_TenantId_Code
 
-            modelBuilder.Entity<RoleClaim>()
-                .Property(e => e.ClaimType)
-                .CreateIndex("IX_TenantId_ClaimType", 2);
+        modelBuilder.Entity<OrganizationUnit>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Code", 1);
 
-            #endregion
+        modelBuilder.Entity<OrganizationUnit>()
+            .Property(e => e.Code)
+            .CreateIndex("IX_TenantId_Code", 2);
 
-            #region Role.IX_TenantId_NormalizedName
+        #endregion
 
-            modelBuilder.Entity<TRole>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_NormalizedName", 1);
+        #region PermissionSetting.IX_TenantId_Name
 
-            modelBuilder.Entity<TRole>()
-                .Property(e => e.NormalizedName)
-                .CreateIndex("IX_TenantId_NormalizedName", 2);
+        modelBuilder.Entity<PermissionSetting>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Name", 1);
 
-            #endregion
+        modelBuilder.Entity<PermissionSetting>()
+            .Property(e => e.Name)
+            .CreateIndex("IX_TenantId_Name", 2);
 
-            #region Setting.IX_TenantId_Name
+        #endregion
 
-            modelBuilder.Entity<Setting>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+        #region RoleClaim.IX_RoleId
 
-            modelBuilder.Entity<Setting>()
-                .Property(e => e.Name)
-                .CreateIndex("IX_TenantId_Name", 2);
+        modelBuilder.Entity<RoleClaim>()
+            .Property(e => e.RoleId)
+            .CreateIndex("IX_RoleId", 1);
 
-            #endregion
+        #endregion
 
-            #region TenantNotificationInfo.IX_TenantId
+        #region RoleClaim.IX_TenantId_ClaimType
 
-            modelBuilder.Entity<TenantNotificationInfo>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_Name", 1);
+        modelBuilder.Entity<RoleClaim>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_ClaimType", 1);
 
-            #endregion
+        modelBuilder.Entity<RoleClaim>()
+            .Property(e => e.ClaimType)
+            .CreateIndex("IX_TenantId_ClaimType", 2);
 
-            #region UserClaim.IX_TenantId_ClaimType
+        #endregion
 
-            modelBuilder.Entity<UserClaim>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_ClaimType", 1);
+        #region Role.IX_TenantId_NormalizedName
 
-            modelBuilder.Entity<UserClaim>()
-                .Property(e => e.ClaimType)
-                .CreateIndex("IX_TenantId_ClaimType", 2);
+        modelBuilder.Entity<TRole>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_NormalizedName", 1);
 
-            #endregion
+        modelBuilder.Entity<TRole>()
+            .Property(e => e.NormalizedName)
+            .CreateIndex("IX_TenantId_NormalizedName", 2);
 
-            #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
+        #endregion
 
-            modelBuilder.Entity<UserLoginAttempt>()
-                .Property(e => e.TenancyName)
-                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 1);
+        #region Setting.IX_TenantId_Name
 
-            modelBuilder.Entity<UserLoginAttempt>()
-                .Property(e => e.UserNameOrEmailAddress)
-                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 2);
+        modelBuilder.Entity<Setting>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Name", 1);
 
-            modelBuilder.Entity<UserLoginAttempt>()
-                .Property(ula => ula.Result)
-                .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 3);
+        modelBuilder.Entity<Setting>()
+            .Property(e => e.Name)
+            .CreateIndex("IX_TenantId_Name", 2);
 
-            #endregion
+        #endregion
 
-            #region UserLoginAttempt.IX_UserId_TenantId
+        #region TenantNotificationInfo.IX_TenantId
 
-            modelBuilder.Entity<UserLoginAttempt>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_UserId_TenantId", 1);
+        modelBuilder.Entity<TenantNotificationInfo>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_Name", 1);
 
-            modelBuilder.Entity<UserLoginAttempt>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_UserId_TenantId", 2);
+        #endregion
 
-            #endregion
+        #region UserClaim.IX_TenantId_ClaimType
 
-            #region UserLogin.IX_TenantId_LoginProvider_ProviderKey
+        modelBuilder.Entity<UserClaim>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_ClaimType", 1);
 
-            modelBuilder.Entity<UserLogin>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 1);
+        modelBuilder.Entity<UserClaim>()
+            .Property(e => e.ClaimType)
+            .CreateIndex("IX_TenantId_ClaimType", 2);
 
-            modelBuilder.Entity<UserLogin>()
-                .Property(e => e.LoginProvider)
-                .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 2);
+        #endregion
 
-            modelBuilder.Entity<UserLogin>()
-                .Property(e => e.ProviderKey)
-                .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 3);
+        #region UserLoginAttempt.IX_TenancyName_UserNameOrEmailAddress_Result
 
-            #endregion
+        modelBuilder.Entity<UserLoginAttempt>()
+            .Property(e => e.TenancyName)
+            .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 1);
 
-            #region UserLogin.IX_TenantId_UserId
+        modelBuilder.Entity<UserLoginAttempt>()
+            .Property(e => e.UserNameOrEmailAddress)
+            .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 2);
 
-            modelBuilder.Entity<UserLogin>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        modelBuilder.Entity<UserLoginAttempt>()
+            .Property(ula => ula.Result)
+            .CreateIndex("IX_TenancyName_UserNameOrEmailAddress_Result", 3);
 
-            modelBuilder.Entity<UserLogin>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        #endregion
 
-            #endregion
+        #region UserLoginAttempt.IX_UserId_TenantId
 
-            #region UserOrganizationUnit.IX_TenantId_UserId
+        modelBuilder.Entity<UserLoginAttempt>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_UserId_TenantId", 1);
 
-            modelBuilder.Entity<UserOrganizationUnit>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        modelBuilder.Entity<UserLoginAttempt>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_UserId_TenantId", 2);
 
-            modelBuilder.Entity<UserOrganizationUnit>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        #endregion
 
-            #endregion
+        #region UserLogin.IX_TenantId_LoginProvider_ProviderKey
 
-            #region UserOrganizationUnit.IX_TenantId_OrganizationUnitId
+        modelBuilder.Entity<UserLogin>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 1);
 
-            modelBuilder.Entity<UserOrganizationUnit>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
+        modelBuilder.Entity<UserLogin>()
+            .Property(e => e.LoginProvider)
+            .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 2);
 
-            modelBuilder.Entity<UserOrganizationUnit>()
-                .Property(e => e.OrganizationUnitId)
-                .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
+        modelBuilder.Entity<UserLogin>()
+            .Property(e => e.ProviderKey)
+            .CreateIndex("IX_TenantId_LoginProvider_ProviderKey", 3);
 
-            #endregion
+        #endregion
 
-            #region OrganizationUnitRole.IX_TenantId_RoleId
+        #region UserLogin.IX_TenantId_UserId
 
-            modelBuilder.Entity<OrganizationUnitRole>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_RoleId", 1);
+        modelBuilder.Entity<UserLogin>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
 
-            modelBuilder.Entity<OrganizationUnitRole>()
-                .Property(e => e.RoleId)
-                .CreateIndex("IX_TenantId_RoleId", 2);
+        modelBuilder.Entity<UserLogin>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
 
-            #endregion
+        #endregion
 
-            #region OrganizationUnitRole.IX_TenantId_OrganizationUnitId
+        #region UserOrganizationUnit.IX_TenantId_UserId
 
-            modelBuilder.Entity<OrganizationUnitRole>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
+        modelBuilder.Entity<UserOrganizationUnit>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
 
-            modelBuilder.Entity<OrganizationUnitRole>()
-                .Property(e => e.OrganizationUnitId)
-                .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
+        modelBuilder.Entity<UserOrganizationUnit>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
 
-            #endregion
+        #endregion
 
-            #region UserRole.IX_TenantId_UserId
+        #region UserOrganizationUnit.IX_TenantId_OrganizationUnitId
 
-            modelBuilder.Entity<UserRole>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        modelBuilder.Entity<UserOrganizationUnit>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
 
-            modelBuilder.Entity<UserRole>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        modelBuilder.Entity<UserOrganizationUnit>()
+            .Property(e => e.OrganizationUnitId)
+            .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
 
-            modelBuilder.Entity<Setting>()
-                .HasIndex(e => new {e.TenantId, e.Name, e.UserId})
-                .IsUnique();
+        #endregion
 
-            #endregion
+        #region OrganizationUnitRole.IX_TenantId_RoleId
 
-            #region UserRole.IX_TenantId_RoleId
+        modelBuilder.Entity<OrganizationUnitRole>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_RoleId", 1);
 
-            modelBuilder.Entity<UserRole>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_RoleId", 1);
+        modelBuilder.Entity<OrganizationUnitRole>()
+            .Property(e => e.RoleId)
+            .CreateIndex("IX_TenantId_RoleId", 2);
 
-            modelBuilder.Entity<UserRole>()
-                .Property(e => e.RoleId)
-                .CreateIndex("IX_TenantId_RoleId", 2);
+        #endregion
 
-            #endregion
+        #region OrganizationUnitRole.IX_TenantId_OrganizationUnitId
 
-            #region TUser.IX_TenantId_NormalizedUserName
+        modelBuilder.Entity<OrganizationUnitRole>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_OrganizationUnitId", 1);
 
-            modelBuilder.Entity<TUser>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_NormalizedUserName", 1);
+        modelBuilder.Entity<OrganizationUnitRole>()
+            .Property(e => e.OrganizationUnitId)
+            .CreateIndex("IX_TenantId_OrganizationUnitId", 2);
 
-            modelBuilder.Entity<TUser>()
-                .Property(e => e.NormalizedUserName)
-                .CreateIndex("IX_TenantId_NormalizedUserName", 2);
+        #endregion
 
-            #endregion
+        #region UserRole.IX_TenantId_UserId
 
-            #region TUser.IX_TenantId_NormalizedEmailAddress
+        modelBuilder.Entity<UserRole>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
 
-            modelBuilder.Entity<TUser>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_NormalizedEmailAddress", 1);
+        modelBuilder.Entity<UserRole>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
 
-            modelBuilder.Entity<TUser>()
-                .Property(e => e.NormalizedEmailAddress)
-                .CreateIndex("IX_TenantId_NormalizedEmailAddress", 2);
+        modelBuilder.Entity<Setting>()
+            .HasIndex(e => new { e.TenantId, e.Name, e.UserId })
+            .IsUnique();
 
-            #endregion
+        #endregion
 
-            #region UserToken.IX_TenantId_UserId
+        #region UserRole.IX_TenantId_RoleId
 
-            modelBuilder.Entity<UserToken>()
-                .Property(e => e.TenantId)
-                .CreateIndex("IX_TenantId_UserId", 1);
+        modelBuilder.Entity<UserRole>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_RoleId", 1);
 
-            modelBuilder.Entity<UserToken>()
-                .Property(e => e.UserId)
-                .CreateIndex("IX_TenantId_UserId", 2);
+        modelBuilder.Entity<UserRole>()
+            .Property(e => e.RoleId)
+            .CreateIndex("IX_TenantId_RoleId", 2);
 
-            #endregion
+        #endregion
 
-            #region DynamicEntityProperties
+        #region TUser.IX_TenantId_NormalizedUserName
 
-            modelBuilder.Entity<DynamicProperty>()
-                .HasIndex(e => new {e.PropertyName, e.TenantId})
-                .IsUnique();
+        modelBuilder.Entity<TUser>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_NormalizedUserName", 1);
 
-            modelBuilder.Entity<DynamicEntityProperty>()
-                .HasIndex(e => new {e.EntityFullName, e.DynamicPropertyId, e.TenantId})
-                .IsUnique();
+        modelBuilder.Entity<TUser>()
+            .Property(e => e.NormalizedUserName)
+            .CreateIndex("IX_TenantId_NormalizedUserName", 2);
 
-            #endregion
-            
-            #region UserLogin.ProviderKey_TenantId
-            
-            modelBuilder.Entity<UserLogin>()
-                .HasIndex(e => new {e.ProviderKey, e.TenantId})
-                .IsUnique();
+        #endregion
 
-            #endregion
-        }
+        #region TUser.IX_TenantId_NormalizedEmailAddress
+
+        modelBuilder.Entity<TUser>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_NormalizedEmailAddress", 1);
+
+        modelBuilder.Entity<TUser>()
+            .Property(e => e.NormalizedEmailAddress)
+            .CreateIndex("IX_TenantId_NormalizedEmailAddress", 2);
+
+        #endregion
+
+        #region UserToken.IX_TenantId_UserId
+
+        modelBuilder.Entity<UserToken>()
+            .Property(e => e.TenantId)
+            .CreateIndex("IX_TenantId_UserId", 1);
+
+        modelBuilder.Entity<UserToken>()
+            .Property(e => e.UserId)
+            .CreateIndex("IX_TenantId_UserId", 2);
+
+        #endregion
+
+        #region DynamicEntityProperties
+
+        modelBuilder.Entity<DynamicProperty>()
+            .HasIndex(e => new { e.PropertyName, e.TenantId })
+            .IsUnique();
+
+        modelBuilder.Entity<DynamicEntityProperty>()
+            .HasIndex(e => new { e.EntityFullName, e.DynamicPropertyId, e.TenantId })
+            .IsUnique();
+
+        #endregion
+
+        #region UserLogin.ProviderKey_TenantId
+
+        modelBuilder.Entity<UserLogin>()
+            .HasIndex(e => new { e.ProviderKey, e.TenantId })
+            .IsUnique();
+
+        #endregion
     }
 }

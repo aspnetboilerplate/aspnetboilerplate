@@ -1,8 +1,7 @@
-﻿using Abp.TestBase;
+using Abp.TestBase;
 
-namespace Abp.BlobStoring.Tests.Abp.BlobStoring
+namespace Abp.BlobStoring.Tests.Abp.BlobStoring;
+
+public abstract class AbpBlobStoringTestBase : AbpIntegratedTestBase<AbpBlobStoringTestModule>
 {
-    public abstract class AbpBlobStoringTestBase : AbpIntegratedTestBase<AbpBlobStoringTestModule>
-    {
-    }
 }

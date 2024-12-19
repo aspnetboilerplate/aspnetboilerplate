@@ -2,14 +2,13 @@ using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero;
 
-namespace Abp.OpenIddict
+namespace Abp.OpenIddict;
+
+[DependsOn(typeof(AbpZeroCoreModule))]
+public class AbpZeroCoreOpenIddictModule : AbpModule
 {
-    [DependsOn(typeof(AbpZeroCoreModule))]
-    public class AbpZeroCoreOpenIddictModule : AbpModule
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreOpenIddictModule).GetAssembly());
-        }
+        IocManager.RegisterAssemblyByConvention(typeof(AbpZeroCoreOpenIddictModule).GetAssembly());
     }
 }

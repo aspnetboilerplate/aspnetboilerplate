@@ -1,44 +1,43 @@
-﻿using NHibernate.Event;
+using NHibernate.Event;
 using System;
 using System.Linq;
 
-namespace Abp.EntityHistory
+namespace Abp.EntityHistory;
+
+public static class EventExtensions
 {
-    public static class EventExtensions
+    public static bool IsDeleted(this PreUpdateEvent @event)
     {
-        public static bool IsDeleted(this PreUpdateEvent @event)
+        var dirtyFieldIndexes = @event.Persister.FindDirty(
+            @event.State,
+            @event.OldState,
+            @event.Entity,
+            @event.Session
+        );
+
+        foreach (var dirtyFieldIndex in dirtyFieldIndexes)
         {
-            var dirtyFieldIndexes = @event.Persister.FindDirty(
-                @event.State,
-                @event.OldState,
-                @event.Entity,
-                @event.Session
-            );
+            var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
+                .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[dirtyFieldIndex]);
 
-            foreach (var dirtyFieldIndex in dirtyFieldIndexes)
+            if (dirtyFieldProperty == null ||
+                !dirtyFieldProperty.Name.Equals("IsDeleted", StringComparison.InvariantCultureIgnoreCase))
             {
-                var dirtyFieldProperty = @event.Persister.EntityMetamodel.Type.GetProperties()
-                    .FirstOrDefault(p => p.Name == @event.Persister.PropertyNames[dirtyFieldIndex]);
-
-                if (dirtyFieldProperty == null ||
-                    !dirtyFieldProperty.Name.Equals("IsDeleted", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
-            
-                var newValue = @event.State[dirtyFieldIndex]?.ToString() ?? string.Empty;
-                var oldValue = @event.OldState[dirtyFieldIndex]?.ToString() ?? string.Empty;
-
-                if (oldValue.Equals(newValue, StringComparison.InvariantCultureIgnoreCase) ||
-                    !newValue.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
-            
-                return true;
+                continue;
             }
 
-            return false;
+            var newValue = @event.State[dirtyFieldIndex]?.ToString() ?? string.Empty;
+            var oldValue = @event.OldState[dirtyFieldIndex]?.ToString() ?? string.Empty;
+
+            if (oldValue.Equals(newValue, StringComparison.InvariantCultureIgnoreCase) ||
+                !newValue.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
+            {
+                continue;
+            }
+
+            return true;
         }
+
+        return false;
     }
 }

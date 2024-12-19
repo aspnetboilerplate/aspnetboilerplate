@@ -1,4 +1,4 @@
-﻿using Abp.NHibernate.EntityMappings;
+using Abp.NHibernate.EntityMappings;
 using Abp.Webhooks;
 using System;
 using System.Net;
