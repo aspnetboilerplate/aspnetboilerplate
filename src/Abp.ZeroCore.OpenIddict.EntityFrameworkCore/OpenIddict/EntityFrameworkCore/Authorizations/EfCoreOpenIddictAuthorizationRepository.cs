@@ -139,6 +139,37 @@ public class EfCoreOpenIddictAuthorizationRepository<TDbContext> :
             .ExecuteDeleteAsync(cancellationToken);
     }
 
+    public async Task<long> RevokeAsync(string subject, string client, string status, string type,
+        CancellationToken cancellationToken = default)
+    {
+        var query = await GetQueryableAsync();
+        
+        if (!string.IsNullOrEmpty(subject))
+        {
+            query = query.Where(e => e.Subject == subject);
+        }
+        
+        if (!string.IsNullOrEmpty(client))
+        {
+            query = query.Where(e => e.ApplicationId == Guid.Parse(client));
+        }
+        
+        if (!string.IsNullOrEmpty(status))
+        {
+            query = query.Where(e => e.Status == status);
+        }
+        
+        if (!string.IsNullOrEmpty(type))
+        {
+            query = query.Where(e => e.Type == type);
+        }
+        
+        return await query
+            .ExecuteUpdateAsync(
+                entity => entity.SetProperty(token => token.Status, OpenIddictConstants.Statuses.Revoked),
+                cancellationToken);
+    }
+
     public async Task<long> RevokeByApplicationIdAsync(Guid applicationId,
         CancellationToken cancellationToken = default)
     {

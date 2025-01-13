@@ -342,6 +342,26 @@ namespace Abp.OpenIddict.Tokens
             }
         }
 
+        public async ValueTask<long> RevokeAsync(string subject, string client, string status, string type,
+            CancellationToken cancellationToken)
+        {
+            using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = true,
+                       IsolationLevel = IsolationLevel.RepeatableRead
+                   }))
+            {
+                var count = await Repository.RevokeBySubjectAsync(
+                    subject,
+                    cancellationToken: cancellationToken
+                );
+
+                await uow.CompleteAsync();
+                return count;
+            }
+        }
+
         public async ValueTask<long> RevokeByApplicationIdAsync(string identifier, CancellationToken cancellationToken = new CancellationToken())
         {
             using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
