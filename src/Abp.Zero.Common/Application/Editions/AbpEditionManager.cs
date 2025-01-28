@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Application.Editions
 {
-    public class AbpEditionManager : IDomainService
+    public class AbpEditionManager : IAbpEditionManager, IDomainService
     {
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
@@ -33,7 +33,7 @@ namespace Abp.Application.Editions
             EditionRepository = editionRepository;
         }
 
-        public Task<IQueryable<Edition>> GetEditionsAsync 
+        public Task<IQueryable<Edition>> GetEditionsAsync()
             => EditionRepository.GetAllAsync();
 
         public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)

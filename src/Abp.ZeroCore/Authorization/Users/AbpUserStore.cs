@@ -38,6 +38,7 @@ public class AbpUserStore<TRole, TUser> :
     IUserPermissionStore<TUser>,
     IQueryableUserStore<TUser>,
     IUserAuthenticatorKeyStore<TUser>,
+    IAbpUserStore<TRole, TUser>,
     ITransientDependency
     where TRole : AbpRole<TUser>
     where TUser : AbpUser<TUser>
