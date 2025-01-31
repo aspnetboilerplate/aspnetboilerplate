@@ -13,9 +13,22 @@ The easiest way of starting a new project using ABP with **ASP.NET Core MVC** is
     to create your database (ensure that the Default project is selected as
     **.EntityFrameworkCore** in the Package Manager Console window).
     
-- Since it uses **libman**, go to **Web.Mvc** project. Right click to **libman.json** file. Then click to **Restore Client-Side Libraries**. 
+- To download and build the project’s client-side packages, we use **gulp**.
 
-  (If you are not using Visual Studio and/or you are on a mac you can use [Libman CLI](https://github.com/aspnet/LibraryManager/wiki/Using-LibMan-CLI) . After installing it while in **Web.Mvc** folder run `libman restore`)
+  - **For development**:  
+    Open a terminal in the **Web.Mvc** folder and run:  
+    ```bash
+    npm run create-bundles
+    ```
+
+  - **For production**:  
+    Open a terminal in the **Web.Mvc** folder and run:  
+    ```bash
+    npm run build
+    ```
+
+  These commands will download the required client-side packages and generate the necessary bundles for the application.
+
 
 -   Run the application.
 
