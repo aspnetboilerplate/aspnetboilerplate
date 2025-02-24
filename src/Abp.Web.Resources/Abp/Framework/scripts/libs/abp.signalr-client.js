@@ -69,11 +69,13 @@ var abp = abp || {};
                 .withAutomaticReconnect({
                     nextRetryDelayInMilliseconds: retryContext => {
                         abp.log.debug('Retry to connect to SignalR');
-                        if (retryContext.previousRetryCount > maxTries) {
+                        if (retryContext.previousRetryCount > abp.signalr.maxTries) {
                             abp.log.debug('Max retries reached');
                             return null;
                         }
-                        reconnectTime *= 2;
+                        
+                        var elapsedTime = retryContext.elapsedMilliseconds ?? abp.signalr.reconnectTime; 
+                        reconnectTime = abp.signalr.increaseReconnectTime(elapsedTime);
                         abp.log.debug('Waiting ' + reconnectTime + 'ms before retrying');
                         return reconnectTime;
                     }
