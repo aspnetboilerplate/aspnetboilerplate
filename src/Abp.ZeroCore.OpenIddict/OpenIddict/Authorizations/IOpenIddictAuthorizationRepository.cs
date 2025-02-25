@@ -8,12 +8,6 @@ namespace Abp.OpenIddict.Authorizations;
 
 public interface IOpenIddictAuthorizationRepository : IRepository<OpenIddictAuthorization, Guid>
 {
-    Task<List<OpenIddictAuthorization>> FindAsync(string subject, Guid client,
-        CancellationToken cancellationToken = default);
-
-    Task<List<OpenIddictAuthorization>> FindAsync(string subject, Guid client, string status,
-        CancellationToken cancellationToken = default);
-
     Task<List<OpenIddictAuthorization>> FindAsync(string subject, Guid client, string status, string type,
         CancellationToken cancellationToken = default);
 
@@ -29,6 +23,8 @@ public interface IOpenIddictAuthorizationRepository : IRepository<OpenIddictAuth
         CancellationToken cancellationToken = default);
 
     Task<long> PruneAsync(DateTime date, CancellationToken cancellationToken = default);
+    
+    Task<long> RevokeAsync(string? subject, string? client, string? status, string? type, CancellationToken cancellationToken = default);
 
     Task<long> RevokeByApplicationIdAsync(Guid applicationId, CancellationToken cancellationToken = default);
     

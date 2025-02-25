@@ -64,11 +64,11 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
         try
         {
             using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
-            {
-                IsolationLevel = IsolationLevel.RepeatableRead,
-                IsTransactional = true,
-                Scope = TransactionScopeOption.RequiresNew
-            }))
+                   {
+                       IsolationLevel = IsolationLevel.RepeatableRead,
+                       IsTransactional = true,
+                       Scope = TransactionScopeOption.RequiresNew
+                   }))
             {
                 await TokenRepository.DeleteManyByAuthorizationIdAsync(authorization.Id,
                     cancellationToken: cancellationToken);
@@ -85,15 +85,56 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
             throw new OpenIddictExceptions.ConcurrencyException(e.Message, e.InnerException);
         }
     }
+
+    public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
+        string status, string type, ImmutableArray<string>? scopes,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var authorizations = await Repository.FindAsync(subject, Guid.Parse(client), status, type,
+            cancellationToken);
+
+        foreach (var authorization in authorizations)
+        {
+            if (new HashSet<string>(await GetScopesAsync(authorization.ToModel(), cancellationToken),
+                    StringComparer.Ordinal).IsSupersetOf(scopes))
+            {
+                yield return authorization.ToModel();
+            }
+        }
+    }
+
+    public virtual async ValueTask<long> RevokeAsync(string subject, string client, string status, string type,
+        CancellationToken cancellationToken)
+    {
+        using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+               {
+                   Scope = TransactionScopeOption.RequiresNew,
+                   IsTransactional = true,
+                   IsolationLevel = IsolationLevel.RepeatableRead
+               }))
+        {
+            var count = await Repository.RevokeAsync(
+                subject,
+                client,
+                status,
+                type,
+                cancellationToken: cancellationToken
+            );
+
+            await uow.CompleteAsync();
+            return count;
+        }
+    }
+
     public virtual async ValueTask<long> RevokeByApplicationIdAsync(string identifier,
         CancellationToken cancellationToken = new CancellationToken())
     {
         using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
-        {
-            Scope = TransactionScopeOption.RequiresNew,
-            IsTransactional = true,
-            IsolationLevel = IsolationLevel.RepeatableRead
-        }))
+               {
+                   Scope = TransactionScopeOption.RequiresNew,
+                   IsTransactional = true,
+                   IsolationLevel = IsolationLevel.RepeatableRead
+               }))
         {
             var count = await Repository.RevokeByApplicationIdAsync(
                 Guid.Parse(identifier),
@@ -109,11 +150,11 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
         CancellationToken cancellationToken = new CancellationToken())
     {
         using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
-        {
-            Scope = TransactionScopeOption.RequiresNew,
-            IsTransactional = true,
-            IsolationLevel = IsolationLevel.RepeatableRead
-        }))
+               {
+                   Scope = TransactionScopeOption.RequiresNew,
+                   IsTransactional = true,
+                   IsolationLevel = IsolationLevel.RepeatableRead
+               }))
         {
             var count = await Repository.RevokeBySubjectAsync(
                 subject,
@@ -122,72 +163,6 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
 
             await uow.CompleteAsync();
             return count;
-        }
-    }
-
-    public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        Check.NotNullOrEmpty(subject, nameof(subject));
-        Check.NotNullOrEmpty(client, nameof(client));
-
-        var authorizations = await Repository.FindAsync(subject, Guid.Parse(client), cancellationToken);
-        foreach (var authorization in authorizations)
-        {
-            yield return authorization.ToModel();
-        }
-    }
-
-    public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
-        string status, [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        Check.NotNullOrEmpty(subject, nameof(subject));
-        Check.NotNullOrEmpty(client, nameof(client));
-        Check.NotNullOrEmpty(status, nameof(status));
-
-        var authorizations = await Repository.FindAsync(subject, Guid.Parse(client), status,
-            cancellationToken);
-        foreach (var authorization in authorizations)
-        {
-            yield return authorization.ToModel();
-        }
-    }
-
-    public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
-        string status, string type, [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        Check.NotNullOrEmpty(subject, nameof(subject));
-        Check.NotNullOrEmpty(client, nameof(client));
-        Check.NotNullOrEmpty(status, nameof(status));
-        Check.NotNullOrEmpty(type, nameof(type));
-
-        var authorizations = await Repository.FindAsync(subject, Guid.Parse(client), status, type,
-            cancellationToken);
-        foreach (var authorization in authorizations)
-        {
-            yield return authorization.ToModel();
-        }
-    }
-
-    public virtual async IAsyncEnumerable<OpenIddictAuthorizationModel> FindAsync(string subject, string client,
-        string status, string type, ImmutableArray<string> scopes,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        Check.NotNullOrEmpty(subject, nameof(subject));
-        Check.NotNullOrEmpty(client, nameof(client));
-        Check.NotNullOrEmpty(status, nameof(status));
-        Check.NotNullOrEmpty(type, nameof(type));
-
-        var authorizations = await Repository.FindAsync(subject, Guid.Parse(client), status, type,
-            cancellationToken);
-
-        foreach (var authorization in authorizations)
-        {
-            if (new HashSet<string>(await GetScopesAsync(authorization.ToModel(), cancellationToken),
-                    StringComparer.Ordinal).IsSupersetOf(scopes))
-            {
-                yield return authorization.ToModel();
-            }
         }
     }
 
@@ -363,11 +338,11 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
     public virtual async ValueTask<long> PruneAsync(DateTimeOffset threshold, CancellationToken cancellationToken)
     {
         using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
-        {
-            Scope = TransactionScopeOption.RequiresNew,
-            IsTransactional = true,
-            IsolationLevel = IsolationLevel.RepeatableRead
-        }))
+               {
+                   Scope = TransactionScopeOption.RequiresNew,
+                   IsTransactional = true,
+                   IsolationLevel = IsolationLevel.RepeatableRead
+               }))
         {
             var date = threshold.UtcDateTime;
             var count = await Repository.PruneAsync(date, cancellationToken: cancellationToken);

@@ -73,7 +73,9 @@ var abp = abp || {};
                             abp.log.debug('Max retries reached');
                             return null;
                         }
-                        reconnectTime *= 2;
+                        
+                        var elapsedTime = retryContext.elapsedMilliseconds ?? abp.signalr.reconnectTime; 
+                        reconnectTime = abp.signalr.increaseReconnectTime(elapsedTime);
                         abp.log.debug('Waiting ' + reconnectTime + 'ms before retrying');
                         return reconnectTime;
                     }

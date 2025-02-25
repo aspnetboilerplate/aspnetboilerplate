@@ -27,10 +27,10 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FluentMigrator" Version="6.2.0" />
-        <PackageReference Include="OpenIddict.AspNetCore" Version="6.0.0-preview1.24504.78" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="6.1.0" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Update="Fody" Version="6.8.2">
+      <PackageReference Update="Fody" Version="6.9.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       </PackageReference>
