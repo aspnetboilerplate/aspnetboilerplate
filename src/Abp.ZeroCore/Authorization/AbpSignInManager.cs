@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Abp.Authorization;
 
-public class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, ITransientDependency
+public class AbpSignInManager<TTenant, TRole, TUser> : SignInManager<TUser>, IAbpSignInManager<TTenant, TRole, TUser>, ITransientDependency
     where TTenant : AbpTenant<TUser>
     where TRole : AbpRole<TUser>, new()
     where TUser : AbpUser<TUser>

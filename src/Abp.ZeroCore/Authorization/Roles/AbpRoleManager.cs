@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Authorization.Roles;
 
-public class AbpRoleManager<TRole, TUser> : RoleManager<TRole>, IDomainService
+public class AbpRoleManager<TRole, TUser> : RoleManager<TRole>, IAbpRoleManager<TRole, TUser>, IDomainService
     where TRole : AbpRole<TUser>, new()
     where TUser : AbpUser<TUser>
 {

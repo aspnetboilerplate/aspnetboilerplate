@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Abp.Authorization.Users;
 
-public class AbpUserManager<TRole, TUser> : UserManager<TUser>, IDomainService
+public class AbpUserManager<TRole, TUser> : UserManager<TUser>, IAbpUserManager<TRole, TUser>, IDomainService
     where TRole : AbpRole<TUser>, new()
     where TUser : AbpUser<TUser>
 {
