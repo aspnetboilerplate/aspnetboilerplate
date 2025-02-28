@@ -27,7 +27,7 @@ namespace Abp.Auditing
         /// <summary>
         /// Maximum length of <see cref="Parameters"/> property.
         /// </summary>
-        public static int MaxParametersLength = 2048;
+        public static int MaxParametersLength = 4096;
 
         /// <summary>
         /// Maximum length of <see cref="ReturnValue"/> property.
