@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Abp.Authorization;
 
-public class AbpLogInManager<TTenant, TRole, TUser> : ITransientDependency
+public class AbpLogInManager<TTenant, TRole, TUser> : IAbpLogInManager<TTenant, TRole, TUser>, ITransientDependency
     where TTenant : AbpTenant<TUser>
     where TRole : AbpRole<TUser>, new()
     where TUser : AbpUser<TUser>
