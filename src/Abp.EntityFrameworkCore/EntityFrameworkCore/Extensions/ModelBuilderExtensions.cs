@@ -22,7 +22,7 @@ public static class ModelBuilderExtensions
                     return new SqlBinaryExpression(
                         ExpressionType.Equal,
                         isDeleted,
-                        new SqlConstantExpression(false, isDeleted.TypeMapping),
+                        new SqlConstantExpression(false, boolParam.TypeMapping),
                         boolParam.Type,
                         boolParam.TypeMapping);
                 }
