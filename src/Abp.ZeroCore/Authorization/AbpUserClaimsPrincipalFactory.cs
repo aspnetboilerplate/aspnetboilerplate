@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Abp.Authorization;
 
-public class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
+public class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, IAbpUserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
     where TRole : AbpRole<TUser>, new()
     where TUser : AbpUser<TUser>
 {

@@ -23,10 +23,10 @@
         <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.0.0-preview1.24504.78" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.1.0" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Update="Fody" Version="6.8.2">
+      <PackageReference Update="Fody" Version="6.9.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       </PackageReference>

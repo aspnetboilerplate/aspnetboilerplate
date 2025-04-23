@@ -31,7 +31,7 @@ namespace Abp.MailKit
                 }
             }
 
-            var message = new MimeMessage(headers.ToArray());
+            var message = new MimeMessage(headers);
             MimeEntity body = null;
 
             // Note: If the user has already sent their MailMessage via System.Net.Mail.SmtpClient,

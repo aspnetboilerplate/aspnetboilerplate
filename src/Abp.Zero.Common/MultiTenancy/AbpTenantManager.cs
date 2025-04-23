@@ -25,7 +25,7 @@ namespace Abp.MultiTenancy
     /// </summary>
     /// <typeparam name="TTenant">Type of the application Tenant</typeparam>
     /// <typeparam name="TUser">Type of the application User</typeparam>
-    public class AbpTenantManager<TTenant, TUser> : IDomainService,
+    public class AbpTenantManager<TTenant, TUser> : IAbpTenantManager<TTenant, TUser>, IDomainService,
         IEventHandler<EntityChangedEventData<TTenant>>,
         IEventHandler<EntityDeletedEventData<Edition>>
         where TTenant : AbpTenant<TUser>

@@ -10,11 +10,11 @@
     <NukeTelemetryVersion>1</NukeTelemetryVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="6.12.1">
+    <PackageReference Include="NuGet.CommandLine" Version="6.13.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Nuke.Common" Version="8.1.4" />
+    <PackageReference Include="Nuke.Common" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup>
     <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
