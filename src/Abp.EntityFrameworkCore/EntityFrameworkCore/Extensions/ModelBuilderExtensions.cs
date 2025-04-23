@@ -28,7 +28,7 @@ public static class ModelBuilderExtensions
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(true, boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
@@ -56,7 +56,7 @@ public static class ModelBuilderExtensions
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(true, boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
@@ -84,7 +84,7 @@ public static class ModelBuilderExtensions
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(true, boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
