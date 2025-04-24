@@ -321,7 +321,10 @@ public abstract class AbpZeroTestBase : AbpIntegratedTestBase<AbpZeroTestModule>
     protected async Task<User> GetCurrentUserAsync()
     {
         var userId = AbpSession.GetUserId();
-        return await UsingDbContext(context => context.Users.SingleAsync(u => u.Id == userId));
+        return await UsingDbContextAsync(async context =>
+        {
+            return await context.Users.SingleAsync(u => u.Id == userId);
+        });
     }
 
     #endregion
