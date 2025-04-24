@@ -22,13 +22,13 @@ public static class ModelBuilderExtensions
                     return new SqlBinaryExpression(
                         ExpressionType.Equal,
                         isDeleted,
-                        new SqlConstantExpression(Expression.Constant(false), boolParam.TypeMapping),
+                        new SqlConstantExpression(false, boolParam.TypeMapping),
                         boolParam.Type,
                         boolParam.TypeMapping);
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
@@ -56,7 +56,7 @@ public static class ModelBuilderExtensions
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
@@ -84,7 +84,7 @@ public static class ModelBuilderExtensions
                 }
 
                 // empty where sql
-                return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
+                return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
             });
 
         return modelBuilder;
