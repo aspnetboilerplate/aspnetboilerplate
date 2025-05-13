@@ -103,6 +103,11 @@ namespace Abp.Domain.Entities.Auditing
             }
 
             var entity = entityAsObj.As<IModificationAudited>();
+            if (entity.LastModifierUserId != null)
+            {
+                // LastModifierUserId is already set
+                return;
+            }
 
             if (multiTenancyConfig?.IsEnabled == true)
             {
