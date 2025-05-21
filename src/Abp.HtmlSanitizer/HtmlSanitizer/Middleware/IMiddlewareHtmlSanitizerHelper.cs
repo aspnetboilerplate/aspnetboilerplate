@@ -2,12 +2,11 @@
 using Abp.Dependency;
 using Microsoft.AspNetCore.Http;
 
-namespace Abp.HtmlSanitizer.Middleware
+namespace Abp.HtmlSanitizer.Middleware;
+
+public interface IMiddlewareHtmlSanitizerHelper : ISingletonDependency
 {
-    public interface IMiddlewareHtmlSanitizerHelper : ISingletonDependency
-    {
-        bool ShouldSanitizeContext(HttpContext context);
+    bool ShouldSanitizeContext(HttpContext context);
         
-        Task SanitizeContext(HttpContext context);
-    }
+    Task SanitizeContext(HttpContext context);
 }

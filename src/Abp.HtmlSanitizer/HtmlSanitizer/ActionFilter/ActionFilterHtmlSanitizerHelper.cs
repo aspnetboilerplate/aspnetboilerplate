@@ -6,21 +6,21 @@ using Abp.HtmlSanitizer.Configuration;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Abp.HtmlSanitizer.ActionFilter
-{
-    public class ActionFilterHtmlSanitizerHelper(
-        IHtmlSanitizerConfiguration configuration,
-        IHtmlSanitizer htmlSanitizer)
-        : HtmlSanitizerBase(configuration, htmlSanitizer), IActionFilterHtmlSanitizerHelper
-    {
-        private readonly IHtmlSanitizerConfiguration _configuration = configuration;
+namespace Abp.HtmlSanitizer.ActionFilter;
 
-        public bool ShouldSanitizeContext(ActionExecutingContext context)
+public class ActionFilterHtmlSanitizerHelper(
+    IHtmlSanitizerConfiguration configuration,
+    IHtmlSanitizer htmlSanitizer)
+    : HtmlSanitizerBase(configuration, htmlSanitizer), IActionFilterHtmlSanitizerHelper
+{
+    private readonly IHtmlSanitizerConfiguration _configuration = configuration;
+
+    public bool ShouldSanitizeContext(ActionExecutingContext context)
+    {
+        if (_configuration is null)
         {
-            if (_configuration is null)
-            {
-                return false;
-            }
+            return false;
+        }
 
         if (!_configuration.IsEnabledForGetRequests &&
             context.HttpContext.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
@@ -92,8 +92,7 @@ namespace Abp.HtmlSanitizer.ActionFilter
             }
 
 
-                SanitizeObject(argumentItem);
-            }
+            SanitizeObject(argumentItem);
         }
     }
 }
