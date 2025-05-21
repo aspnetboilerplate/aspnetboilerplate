@@ -21,7 +21,7 @@
     <ProjectReference Include="..\Abp.ZeroCore.IdentityServer4.vNext\Abp.ZeroCore.IdentityServer4.vNext.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.9.1">
+    <PackageReference Update="Fody" Version="6.9.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

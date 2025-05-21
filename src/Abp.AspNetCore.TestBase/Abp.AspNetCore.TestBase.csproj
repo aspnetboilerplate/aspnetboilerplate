@@ -22,10 +22,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Fody" Version="6.9.1">
+    <PackageReference Update="Fody" Version="6.9.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
