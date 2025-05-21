@@ -68,22 +68,6 @@ namespace Abp.HtmlSanitizer.ActionFilter
             return methodInfo.IsDefined(typeof(HtmlSanitizerAttribute), true);
         }
 
-        // public bool ShouldSanitizeContext(HttpContext context)
-        // {
-        //     if (_configuration == null)
-        //     {
-        //         return false;
-        //     }
-        //
-        //     if (!_configuration.IsEnabledForGetRequests &&
-        //         context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
-        //     {
-        //         return false;
-        //     }
-        //
-        //     return true;
-        // }
-
         public void SanitizeContext(ActionExecutingContext context)
         {
             foreach (var item in context.ActionDescriptor.Parameters)
@@ -111,41 +95,5 @@ namespace Abp.HtmlSanitizer.ActionFilter
                 SanitizeObject(argumentItem);
             }
         }
-
-        // public async Task SanitizeContext(HttpContext context)
-        // {
-        //     context.Request.EnableBuffering();
-        //     
-        //     if (!context.Request.Body.CanRead) return;
-        //
-        //     if (context.Request.ContentType != null && context.Request.ContentType.Contains("application/json"))
-        //     {
-        //         await SanitizeJsonBody(context);
-        //     }
-        //     
-        //     if (context.Request.ContentType != null && context.Request.ContentType.Contains("application/x-www-form-urlencoded"))
-        //     {
-        //         await SanitizeFormUrlEncodedBody(context);
-        //     }
-        //     
-        //     using var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true);
-        //     var bodyStr = await reader.ReadToEndAsync();
-        //
-        //     context.Request.Body.Position = 0;
-        //     
-        //     var decodedBodyStr = HttpUtility.UrlDecode(bodyStr);
-        //     
-        //     var sanitizedContent = SanitizeHtml(decodedBodyStr);
-        //     var encodedSanitizedContent = HttpUtility.UrlEncode(sanitizedContent);
-        //
-        //     var newBody = new MemoryStream();
-        //     var writer = new StreamWriter(newBody);
-        //     
-        //     await writer.WriteAsync(encodedSanitizedContent);
-        //     await writer.FlushAsync();
-        //
-        //     newBody.Position = 0;
-        //     context.Request.Body = newBody;
-        // }
     }
 }

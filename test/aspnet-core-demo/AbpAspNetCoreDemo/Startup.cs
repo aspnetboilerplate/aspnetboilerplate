@@ -125,12 +125,12 @@ namespace AbpAspNetCoreDemo
                     currentDirectory = parentDirectory.FullName;
                 }
 
-                // if (!File.Exists(plugDllInPath))
-                // {
-                //     throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
-                // }
+                if (!File.Exists(plugDllInPath))
+                {
+                    throw new FileNotFoundException("There is no plugin dll file in the given path.", plugDllInPath);
+                }
 
-                // options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
+                options.PlugInSources.Add(new AssemblyFileListPlugInSource(plugDllInPath));
 
                 //Configure Log4Net logging
                 options.IocManager.IocContainer.AddFacility<LoggingFacility>(

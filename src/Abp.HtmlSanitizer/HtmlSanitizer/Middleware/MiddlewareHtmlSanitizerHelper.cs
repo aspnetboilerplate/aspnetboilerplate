@@ -23,9 +23,20 @@ namespace Abp.HtmlSanitizer.Middleware
 
         public bool ShouldSanitizeContext(HttpContext context)
         {
+            if (_configuration is null)
+            {
+                return false;
+            }
+
+            if (!_configuration.IsEnabledForGetRequests &&
+                context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
             var endpoint = context.GetEndpoint();
             var actionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
-            
+
             var methodInfo = actionDescriptor?.GetMethodInfo();
 
             if (methodInfo == null)
@@ -71,7 +82,7 @@ namespace Abp.HtmlSanitizer.Middleware
             context.Request.EnableBuffering();
 
             if (!context.Request.Body.CanRead) return;
-            
+
             using var reader = new StreamReader(context.Request.Body, Encoding.UTF8, true, 1024, true);
             var bodyStr = await reader.ReadToEndAsync();
 
@@ -81,7 +92,7 @@ namespace Abp.HtmlSanitizer.Middleware
 
             if (context.Request.ContentType != null && context.Request.ContentType.Contains("application/json"))
             {
-                sanitizedContent = SanitizeJsonBody(bodyStr);
+                sanitizedContent = SanitizeJsonBody(context, bodyStr);
             }
 
             if (context.Request.ContentType != null &&
@@ -89,7 +100,7 @@ namespace Abp.HtmlSanitizer.Middleware
             {
                 sanitizedContent = SanitizeFormUrlEncodedBody(bodyStr);
             }
-            
+
             var newBody = new MemoryStream();
             var writer = new StreamWriter(newBody);
 
@@ -103,9 +114,9 @@ namespace Abp.HtmlSanitizer.Middleware
         private string SanitizeFormUrlEncodedBody(string bodyStr)
         {
             var decodedBodyStr = HttpUtility.UrlDecode(bodyStr);
-            
+
             var properties = decodedBodyStr.Split('&');
-            
+
             foreach (var property in properties)
             {
                 var keyValuePair = property.Split('=');
@@ -120,7 +131,7 @@ namespace Abp.HtmlSanitizer.Middleware
                 {
                     continue;
                 }
-                
+
                 var sanitizedValue = SanitizeHtml(value);
                 decodedBodyStr = decodedBodyStr.Replace(value, sanitizedValue);
             }
@@ -128,12 +139,43 @@ namespace Abp.HtmlSanitizer.Middleware
             return decodedBodyStr;
         }
 
-        private string SanitizeJsonBody(string bodyStr)
+        private string SanitizeJsonBody(HttpContext context, string bodyStr)
         {
+            var inputParameterType = GetActionMethodInputParameterType(context);
+            if (inputParameterType != null)
+            {
+                var inputObject = JsonConvert.DeserializeObject(bodyStr, inputParameterType);
+
+                SanitizeObject(inputObject);
+                return JsonConvert.SerializeObject(inputObject);
+            }
+
             var json = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(bodyStr));
-            
+
             var sanitizedContent = SanitizeHtml(json);
             return sanitizedContent;
+        }
+
+        private Type GetActionMethodInputParameterType(HttpContext context)
+        {
+            var endpoint = context.GetEndpoint();
+            var actionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
+            var methodInfo = actionDescriptor?.MethodInfo;
+            var parameters = methodInfo?.GetParameters();
+
+            if (parameters == null || !parameters.Any())
+            {
+                return null;
+            }
+            
+            var parameter = parameters.FirstOrDefault();
+
+            if (parameter == null)
+            {
+                return null;
+            }
+            
+            return parameter.ParameterType;
         }
     }
 }
