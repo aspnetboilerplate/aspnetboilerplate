@@ -3,14 +3,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using Abp.AspNetCore.Mvc.Extensions;
 using Abp.HtmlSanitizer.Configuration;
+using Abp.Json;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Newtonsoft.Json;
 
 namespace Abp.HtmlSanitizer.Middleware;
 
@@ -144,13 +145,16 @@ public class MiddlewareHtmlSanitizerHelper(
         var inputParameterType = GetActionMethodInputParameterType(context);
         if (inputParameterType != null)
         {
-            var inputObject = JsonConvert.DeserializeObject(bodyStr, inputParameterType);
+            var inputObject = bodyStr.FromJsonString(inputParameterType, new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
             SanitizeObject(inputObject);
-            return JsonConvert.SerializeObject(inputObject);
+            return inputObject.ToJsonString();
         }
 
-        var json = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(bodyStr));
+        var json = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(bodyStr));
 
         var sanitizedContent = SanitizeHtml(json);
         return sanitizedContent;
