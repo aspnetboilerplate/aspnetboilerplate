@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 
-namespace Abp.ZeroCore.SampleApp.Application.Shop
+namespace Abp.ZeroCore.SampleApp.Application.Shop;
+
+public interface IOrderAppService : IApplicationService
 {
-    public interface IOrderAppService : IApplicationService
-    {
-        Task<ListResultDto<OrderListDto>> GetOrders();
-    }
+    Task<ListResultDto<OrderListDto>> GetOrders();
 }

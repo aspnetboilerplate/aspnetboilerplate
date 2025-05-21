@@ -150,7 +150,7 @@ namespace Abp
 
             /// <summary>
             /// The GUID should be sequential when formatted using the
-            /// <see cref="Guid.ToByteArray" /> method.
+            /// <see cref="Guid.ToByteArray()" /> method.
             /// </summary>
             SequentialAsBinary,
 

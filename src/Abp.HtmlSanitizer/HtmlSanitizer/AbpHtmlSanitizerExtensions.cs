@@ -1,4 +1,4 @@
-﻿using Abp.HtmlSanitizer.ActionFilter;
+using Abp.HtmlSanitizer.ActionFilter;
 using Abp.HtmlSanitizer.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;

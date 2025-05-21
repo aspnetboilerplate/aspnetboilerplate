@@ -7,115 +7,114 @@ using Abp.ZeroCore.SampleApp.Core;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.Tenants
+namespace Abp.Zero.Tenants;
+
+public class TenantManagerTests : AbpZeroTestBase
 {
-    public class TenantManagerTests : AbpZeroTestBase
+    private readonly TenantManager _tenantManager;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+    private readonly IFeatureChecker _featureChecker;
+
+    public TenantManagerTests()
     {
-        private readonly TenantManager _tenantManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IFeatureChecker _featureChecker;
+        _tenantManager = Resolve<TenantManager>();
+        _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+        _featureChecker = Resolve<IFeatureChecker>();
+    }
 
-        public TenantManagerTests()
+    [Fact]
+    public async Task Should_Not_Insert_Duplicate_Features()
+    {
+        const int tenantId = 1;
+
+        UsingDbContext(tenantId, context =>
         {
-            _tenantManager = Resolve<TenantManager>();
-            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-            _featureChecker = Resolve<IFeatureChecker>();
-        }
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+        });
 
-        [Fact]
-        public async Task Should_Not_Insert_Duplicate_Features()
+        await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
+
+        UsingDbContext(tenantId, context =>
         {
-            const int tenantId = 1;
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
+        });
 
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
-            });
+        await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "2");
 
-            await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
-
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
-            });
-
-            await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "2");
-
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
-            });
-
-            await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "0");
-
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
-            });
-        }
-
-        [Fact]
-        public async Task Should_Reset_Tenant_Features()
+        UsingDbContext(tenantId, context =>
         {
-            const int tenantId = 1;
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
+        });
 
-            UsingDbContext(tenantId, context =>
+        await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "0");
+
+        UsingDbContext(tenantId, context =>
+        {
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+        });
+    }
+
+    [Fact]
+    public async Task Should_Reset_Tenant_Features()
+    {
+        const int tenantId = 1;
+
+        UsingDbContext(tenantId, context =>
+        {
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+        });
+
+        await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
+
+        UsingDbContext(tenantId, context =>
+        {
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
+        });
+
+        using (var uow = _unitOfWorkManager.Begin())
+        {
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
-            });
-
-            await ChangeTenantFeatureValueAsync(tenantId, AppFeatures.SimpleIntFeature, "1");
-
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(1);
-            });
-
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                using (_unitOfWorkManager.Current.SetTenantId(null))
-                {
-                    await _tenantManager.ResetAllFeaturesAsync(tenantId);
-                }
-
-                await uow.CompleteAsync();
+                await _tenantManager.ResetAllFeaturesAsync(tenantId);
             }
 
-            UsingDbContext(tenantId, context =>
-            {
-                context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
-            });
+            await uow.CompleteAsync();
         }
 
-
-        [Fact]
-        public async Task SetFeatureValue_Test()
+        UsingDbContext(tenantId, context =>
         {
-            var tenant = new Tenant("TestTenant", "TestTenant");
-            await _tenantManager.CreateAsync(tenant);
+            context.FeatureSettings.Count(f => f.TenantId == tenantId).ShouldBe(0);
+        });
+    }
 
-            using (var uow = _unitOfWorkManager.Begin())
-            {
-                await _tenantManager.SetFeatureValueAsync(tenant.Id, AppFeatures.SimpleBooleanFeature, "true");
-                await _unitOfWorkManager.Current.SaveChangesAsync();
 
-                (await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.SimpleBooleanFeature)).ShouldBeTrue();
+    [Fact]
+    public async Task SetFeatureValue_Test()
+    {
+        var tenant = new Tenant("TestTenant", "TestTenant");
+        await _tenantManager.CreateAsync(tenant);
 
-                await uow.CompleteAsync();
-            }
+        using (var uow = _unitOfWorkManager.Begin())
+        {
+            await _tenantManager.SetFeatureValueAsync(tenant.Id, AppFeatures.SimpleBooleanFeature, "true");
+            await _unitOfWorkManager.Current.SaveChangesAsync();
+
+            (await _featureChecker.IsEnabledAsync(tenant.Id, AppFeatures.SimpleBooleanFeature)).ShouldBeTrue();
+
+            await uow.CompleteAsync();
         }
+    }
 
-        private async Task ChangeTenantFeatureValueAsync(int tenantId, string name, string value)
+    private async Task ChangeTenantFeatureValueAsync(int tenantId, string name, string value)
+    {
+        using (var uow = _unitOfWorkManager.Begin())
         {
-            using (var uow = _unitOfWorkManager.Begin())
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                using (_unitOfWorkManager.Current.SetTenantId(null))
-                {
-                    await _tenantManager.SetFeatureValueAsync(tenantId, name, value);
-                }
-
-                await uow.CompleteAsync();
+                await _tenantManager.SetFeatureValueAsync(tenantId, name, value);
             }
+
+            await uow.CompleteAsync();
         }
     }
 }

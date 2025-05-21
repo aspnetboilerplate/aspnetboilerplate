@@ -1,4 +1,4 @@
-﻿using Abp.Dependency;
+using Abp.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Abp.HtmlSanitizer.ActionFilter

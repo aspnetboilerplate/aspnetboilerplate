@@ -96,12 +96,16 @@ namespace Abp.Domain.Entities.Auditing
                 return;
             }
 
-            var entity = entityAsObj.As<IModificationAudited>();
-
-            if (userId == null)
+            var lastModifierUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
+            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsSavingEnabled)
             {
-                //Unknown user
-                entity.LastModifierUserId = null;
+                return;
+            }
+
+            var entity = entityAsObj.As<IModificationAudited>();
+            if (entity.LastModifierUserId != null)
+            {
+                // LastModifierUserId is already set
                 return;
             }
 
@@ -121,12 +125,6 @@ namespace Abp.Domain.Entities.Auditing
                     entity.LastModifierUserId = null;
                     return;
                 }
-            }
-
-            var lastModifierUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
-            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsSavingEnabled)
-            {
-                return;
             }
 
             //Finally, set LastModifierUserId!

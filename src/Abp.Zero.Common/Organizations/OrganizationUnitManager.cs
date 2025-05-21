@@ -13,7 +13,7 @@ namespace Abp.Organizations
     /// <summary>
     /// Performs domain logic for Organization Units.
     /// </summary>
-    public class OrganizationUnitManager : DomainService
+    public class OrganizationUnitManager : DomainService, IOrganizationUnitManager
     {
         protected IRepository<OrganizationUnit, long> OrganizationUnitRepository { get; private set; }
 

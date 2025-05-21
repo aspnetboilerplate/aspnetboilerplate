@@ -1,121 +1,120 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Abp.AspNetCore.EntityHistory;
 using Abp.Dependency;
 using Abp.EntityHistory;
 using Shouldly;
 using Xunit;
 
-namespace Abp.AspNetCore.Tests
+namespace Abp.AspNetCore.Tests;
+
+public class EntityHistory_Reason_Tests : AppTestBase
 {
-    public class EntityHistory_Reason_Tests : AppTestBase
+    private readonly MyNonUseCaseMarkedClass _nonUseCaseMarkedClass;
+    private readonly MyUseCaseMarkedClass _useCaseMarkedClass;
+
+    public EntityHistory_Reason_Tests()
     {
-        private readonly MyNonUseCaseMarkedClass _nonUseCaseMarkedClass;
-        private readonly MyUseCaseMarkedClass _useCaseMarkedClass;
-
-        public EntityHistory_Reason_Tests()
-        {
-            _nonUseCaseMarkedClass = Resolve<MyNonUseCaseMarkedClass>();
-            _useCaseMarkedClass = Resolve<MyUseCaseMarkedClass>();
-        }
-
-        [Fact]
-        public void HttpRequestEntityChangeSetReasonProvider_Can_Be_Constructor_Injected()
-        {
-            _useCaseMarkedClass.ReasonProvider.ShouldBeOfType<HttpRequestEntityChangeSetReasonProvider>();
-        }
-
-        [Fact]
-        public void HttpRequestEntityChangeSetReasonProvider_Should_Be_Property_Injected()
-        {
-            _nonUseCaseMarkedClass.ReasonProvider.ShouldBeOfType<HttpRequestEntityChangeSetReasonProvider>();
-        }
-
-        [Fact]
-        public void Should_Intercept_UseCase_Marked_Classes()
-        {
-            _useCaseMarkedClass.NonUseCaseMarkedMethod();
-        }
-
-        [Fact]
-        public void Should_Intercept_UseCase_Marked_Methods()
-        {
-            _nonUseCaseMarkedClass.UseCaseMarkedMethod();
-        }
-
-        [Fact]
-        public async Task Should_Intercept_UseCase_Marked_Async_Methods()
-        {
-            await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethod();
-        }
-
-
-        [Fact]
-        public async Task Should_Intercept_UseCase_Marked_Async_Methods_WithResult()
-        {
-            await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethodWithResult();
-        }
-
-        [Fact]
-        public void Should_Not_Intercept_No_UseCase_Marked_Method()
-        {
-            _nonUseCaseMarkedClass.AnotherMethod();
-        }
+        _nonUseCaseMarkedClass = Resolve<MyNonUseCaseMarkedClass>();
+        _useCaseMarkedClass = Resolve<MyUseCaseMarkedClass>();
     }
 
-    public static class Consts
+    [Fact]
+    public void HttpRequestEntityChangeSetReasonProvider_Can_Be_Constructor_Injected()
     {
-        public const string UseCaseDescription = "UseCaseDescription";
+        _useCaseMarkedClass.ReasonProvider.ShouldBeOfType<HttpRequestEntityChangeSetReasonProvider>();
     }
 
-    public class MyNonUseCaseMarkedClass : ITransientDependency
+    [Fact]
+    public void HttpRequestEntityChangeSetReasonProvider_Should_Be_Property_Injected()
     {
-        public IEntityChangeSetReasonProvider ReasonProvider { get; set; }
+        _nonUseCaseMarkedClass.ReasonProvider.ShouldBeOfType<HttpRequestEntityChangeSetReasonProvider>();
+    }
 
-        public MyNonUseCaseMarkedClass()
-        {
-            ReasonProvider = NullEntityChangeSetReasonProvider.Instance;
-        }
+    [Fact]
+    public void Should_Intercept_UseCase_Marked_Classes()
+    {
+        _useCaseMarkedClass.NonUseCaseMarkedMethod();
+    }
 
-        [UseCase(Description = Consts.UseCaseDescription)]
-        public virtual void UseCaseMarkedMethod()
-        {
-            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
-        }
+    [Fact]
+    public void Should_Intercept_UseCase_Marked_Methods()
+    {
+        _nonUseCaseMarkedClass.UseCaseMarkedMethod();
+    }
 
-        [UseCase(Description = Consts.UseCaseDescription)]
-        public virtual async Task UseCaseMarkedAsyncMethod()
-        {
-            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+    [Fact]
+    public async Task Should_Intercept_UseCase_Marked_Async_Methods()
+    {
+        await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethod();
+    }
 
-            await Task.CompletedTask;
-        }
 
-        [UseCase(Description = Consts.UseCaseDescription)]
-        public virtual async Task<string> UseCaseMarkedAsyncMethodWithResult()
-        {
-            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
-            return await Task.FromResult("");
-        }
+    [Fact]
+    public async Task Should_Intercept_UseCase_Marked_Async_Methods_WithResult()
+    {
+        await _nonUseCaseMarkedClass.UseCaseMarkedAsyncMethodWithResult();
+    }
 
-        public virtual void AnotherMethod()
-        {
-            ReasonProvider.Reason.ShouldBeNull();
-        }
+    [Fact]
+    public void Should_Not_Intercept_No_UseCase_Marked_Method()
+    {
+        _nonUseCaseMarkedClass.AnotherMethod();
+    }
+}
+
+public static class Consts
+{
+    public const string UseCaseDescription = "UseCaseDescription";
+}
+
+public class MyNonUseCaseMarkedClass : ITransientDependency
+{
+    public IEntityChangeSetReasonProvider ReasonProvider { get; set; }
+
+    public MyNonUseCaseMarkedClass()
+    {
+        ReasonProvider = NullEntityChangeSetReasonProvider.Instance;
     }
 
     [UseCase(Description = Consts.UseCaseDescription)]
-    public class MyUseCaseMarkedClass : ITransientDependency
+    public virtual void UseCaseMarkedMethod()
     {
-        public readonly IEntityChangeSetReasonProvider ReasonProvider;
+        ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+    }
 
-        public MyUseCaseMarkedClass(IEntityChangeSetReasonProvider reasonProvider)
-        {
-            ReasonProvider = reasonProvider;
-        }
+    [UseCase(Description = Consts.UseCaseDescription)]
+    public virtual async Task UseCaseMarkedAsyncMethod()
+    {
+        ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
 
-        public virtual void NonUseCaseMarkedMethod()
-        {
-            ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
-        }
+        await Task.CompletedTask;
+    }
+
+    [UseCase(Description = Consts.UseCaseDescription)]
+    public virtual async Task<string> UseCaseMarkedAsyncMethodWithResult()
+    {
+        ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
+        return await Task.FromResult("");
+    }
+
+    public virtual void AnotherMethod()
+    {
+        ReasonProvider.Reason.ShouldBeNull();
+    }
+}
+
+[UseCase(Description = Consts.UseCaseDescription)]
+public class MyUseCaseMarkedClass : ITransientDependency
+{
+    public readonly IEntityChangeSetReasonProvider ReasonProvider;
+
+    public MyUseCaseMarkedClass(IEntityChangeSetReasonProvider reasonProvider)
+    {
+        ReasonProvider = reasonProvider;
+    }
+
+    public virtual void NonUseCaseMarkedMethod()
+    {
+        ReasonProvider.Reason.ShouldBe(Consts.UseCaseDescription);
     }
 }

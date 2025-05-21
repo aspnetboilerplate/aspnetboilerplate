@@ -326,11 +326,6 @@ namespace Abp.OpenIddict.Tokens
             throw new NotSupportedException();
         }
 
-        public virtual async ValueTask<long> RevokeByAuthorizationIdAsync(string identifier, CancellationToken cancellationToken)
-        {
-            return await Repository.RevokeByAuthorizationIdAsync(ConvertIdentifierFromString(identifier), cancellationToken);
-        }
-
         public virtual async ValueTask<long> PruneAsync(DateTimeOffset threshold, CancellationToken cancellationToken)
         {
             using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
@@ -342,6 +337,71 @@ namespace Abp.OpenIddict.Tokens
             {
                 var date = threshold.UtcDateTime;
                 var count = await Repository.PruneAsync(date, cancellationToken: cancellationToken);
+                await uow.CompleteAsync();
+                return count;
+            }
+        }
+
+        public async ValueTask<long> RevokeAsync(string subject, string client, string status, string type,
+            CancellationToken cancellationToken)
+        {
+            using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = true,
+                       IsolationLevel = IsolationLevel.RepeatableRead
+                   }))
+            {
+                var count = await Repository.RevokeBySubjectAsync(
+                    subject,
+                    cancellationToken: cancellationToken
+                );
+
+                await uow.CompleteAsync();
+                return count;
+            }
+        }
+
+        public async ValueTask<long> RevokeByApplicationIdAsync(string identifier, CancellationToken cancellationToken = new CancellationToken())
+        {
+            using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = true,
+                       IsolationLevel = IsolationLevel.RepeatableRead
+                   }))
+            {
+                var count = await Repository.RevokeByApplicationIdAsync(ConvertIdentifierFromString(identifier), cancellationToken: cancellationToken);
+                await uow.CompleteAsync();
+                return count;
+            }
+        }
+
+        public async ValueTask<long> RevokeByAuthorizationIdAsync(string identifier, CancellationToken cancellationToken)
+        {
+            using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = true,
+                       IsolationLevel = IsolationLevel.RepeatableRead
+                   }))
+            {
+                var count = await Repository.RevokeByAuthorizationIdAsync(ConvertIdentifierFromString(identifier), cancellationToken: cancellationToken);
+                await uow.CompleteAsync();
+                return count;
+            }
+        }
+
+        public virtual async ValueTask<long> RevokeBySubjectAsync(string subject, CancellationToken cancellationToken = new CancellationToken())
+        {
+            using (var uow = UnitOfWorkManager.Begin(new UnitOfWorkOptions()
+                   {
+                       Scope = TransactionScopeOption.RequiresNew,
+                       IsTransactional = true,
+                       IsolationLevel = IsolationLevel.RepeatableRead
+                   }))
+            {
+                var count = await Repository.RevokeBySubjectAsync(subject, cancellationToken: cancellationToken);
                 await uow.CompleteAsync();
                 return count;
             }

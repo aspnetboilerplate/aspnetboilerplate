@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <AssemblyName>Abp.Dapper.Tests</AssemblyName>
     <PackageId>Abp.Dapper.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -11,39 +11,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\CreateInitialTables.sql" />
+    <EmbeddedResource Include="Scripts\CreateInitialTables.sql"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj" />
-    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
-    <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
-    <ProjectReference Include="..\..\src\Abp.Dapper\Abp.Dapper.csproj" />
+    <ProjectReference Include="..\..\src\Abp.EntityFramework\Abp.EntityFramework.csproj"/>
+    <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj"/>
+    <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj"/>
+    <ProjectReference Include="..\..\src\Abp.Dapper\Abp.Dapper.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
-    <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.118" />
-    <PackageReference Include="xunit" Version="2.9.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+    <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.119" />
+    <PackageReference Include="xunit" Version="2.9.3"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Transactions" />
+    <Reference Include="System.Transactions"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}"/>
   </ItemGroup>
 
   <ItemGroup>

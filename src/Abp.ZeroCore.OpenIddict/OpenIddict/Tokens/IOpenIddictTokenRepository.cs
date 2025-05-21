@@ -43,5 +43,9 @@ namespace Abp.OpenIddict.Tokens
         Task<long> PruneAsync(DateTime date, CancellationToken cancellationToken = default);
 
         ValueTask<long> RevokeByAuthorizationIdAsync(Guid id, CancellationToken cancellationToken);
+        
+        ValueTask<long> RevokeByApplicationIdAsync(Guid id, CancellationToken cancellationToken);
+        
+        ValueTask<long> RevokeBySubjectAsync(string id, CancellationToken cancellationToken);
     }
 }

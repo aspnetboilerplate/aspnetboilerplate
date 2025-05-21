@@ -1,15 +1,14 @@
 using Abp.Application.Services;
 
-namespace AbpAspNetCoreDemo.Core.Application.Account
+namespace AbpAspNetCoreDemo.Core.Application.Account;
+
+public class AccountAppService : ApplicationService, IAccountAppService
 {
-    public class AccountAppService : ApplicationService, IAccountAppService
+    public RegisterOutput Register(RegisterInput input)
     {
-        public RegisterOutput Register(RegisterInput input)
+        return new RegisterOutput
         {
-            return new RegisterOutput
-            {
-                FullName = input.FullName
-            };
-        }
+            FullName = input.FullName
+        };
     }
 }
