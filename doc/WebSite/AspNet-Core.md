@@ -211,7 +211,9 @@ Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilte
 
 This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
 
-#### Html Sanitizer Action Filter
+### HTML Sanitization
+
+##### HTML Sanitizer Action Filter
 
 To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. ASP.NET Boilerplate provides **AbpHtmlSanitizerActionFilter** for this purpose.
 
@@ -258,6 +260,15 @@ public MyModel SanitizeHtml(MyModel myModel)
 ```
 
 > More examples can be found in the [ASP.NET Core Demo](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/test/aspnet-core-demo/AbpAspNetCoreDemo/Controllers/SanitizerTestController.cs):
+
+##### HTML Sanitizer Middleware
+
+Instead of using HTML Sanitizer action filter, you can prefer to use HTML Sanitizer middleware. This middleware should be placed after the routing middleware as shown below. Since this middleware will work before model binding, it is the suggested approach.
+
+```csharp
+app.UseRouting();
+app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
+```
 
 ### Model Binders
 

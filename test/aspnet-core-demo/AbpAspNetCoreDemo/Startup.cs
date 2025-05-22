@@ -59,17 +59,16 @@ public class Startup
         services.AddTransient<MyTransientClass2>();
         services.AddScoped<MyScopedClass>();
 
-        //Add framework services
-        services.AddMvc(options =>
-        {
-            options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
-            options.AddAbpHtmlSanitizer();
-        }).AddRazorRuntimeCompilation().AddOData(opts =>
-        {
-            var builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
-            builder.EntitySet<Product>("ProductsDto").EntityType.Expand().Filter().OrderBy().Page().Select();
-            var edmModel = builder.GetEdmModel();
+            //Add framework services
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AbpAutoValidateAntiforgeryTokenAttribute());
+            }).AddRazorRuntimeCompilation().AddOData(opts =>
+            {
+                var builder = new ODataConventionModelBuilder();
+                builder.EntitySet<Product>("Products").EntityType.Expand().Filter().OrderBy().Page().Select();
+                builder.EntitySet<Product>("ProductsDto").EntityType.Expand().Filter().OrderBy().Page().Select();
+                var edmModel = builder.GetEdmModel();
 
             opts.AddRouteComponents("odata", edmModel);
         });
@@ -172,7 +171,8 @@ public class Startup
         app.UseStaticFiles();
         app.UseEmbeddedFiles(); //Allows to expose embedded files to the web!
 
-        app.UseRouting();
+            app.UseRouting();
+            app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
 
         app.UseEndpoints(endpoints =>
         {
