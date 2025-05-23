@@ -1,125 +1,225 @@
 using Abp.Dependency;
 using Abp.RealTime;
-using Newtonsoft.Json;
 using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
+using System;
+using System.Linq;
+using System.Collections.Immutable;
+using System.Text.Json;
+using Abp.Json;
 
-namespace Abp.Runtime.Caching.Redis.RealTime
+namespace Abp.Runtime.Caching.Redis.RealTime;
+
+public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
 {
-    public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
+    private readonly IAbpRedisCacheDatabaseProvider _database;
+
+    private readonly string _clientStoreKey;
+    private readonly string _userStoreKey;
+
+    public RedisOnlineClientStore(
+        IAbpRedisCacheDatabaseProvider database,
+        AbpRedisCacheOptions options)
     {
-        private readonly IAbpRedisCacheDatabaseProvider _database;
+        _database = database;
 
-        private readonly string _clientStoreKey;
-        private readonly string _userStoreKey;
+        _clientStoreKey = options.OnlineClientsStoreKey + ".Clients";
+        _userStoreKey = options.OnlineClientsStoreKey + ".Users";
+    }
 
-        public RedisOnlineClientStore(
-            IAbpRedisCacheDatabaseProvider database,
-            AbpRedisCacheOptions options)
+    public async Task AddAsync(IOnlineClient client)
+    {
+        var database = GetDatabase();
+
+        // Store a lookup of userId's to connection ID's
+        var userIdentifier = client.ToUserIdentifierOrNull();
+        if (userIdentifier != null)
         {
-            _database = database;
+            var userIdentifierString = userIdentifier.ToUserIdentifierString();
 
-            _clientStoreKey = options.OnlineClientsStoreKey + ".Clients";
-            _userStoreKey = options.OnlineClientsStoreKey + ".Users";
-        }
-
-        public async Task AddAsync(IOnlineClient client)
-        {
-            var database = GetDatabase();
-            await database.HashSetAsync(_clientStoreKey, new[]
+            var existingUserValue = await database.HashGetAsync(_userStoreKey, userIdentifierString);
+            if (existingUserValue.IsNullOrEmpty)
             {
-                new HashEntry(client.ConnectionId, client.ToString())
-            });
+                await database.HashSetAsync(_userStoreKey,
+                [
+                    new HashEntry(userIdentifierString, new HashSet<string> {client.ConnectionId}.ToJsonString())
+                ]);
+            }
+            else
+            {
+                var connectionIds = JsonSerializer.Deserialize<HashSet<string>>(existingUserValue);
+                connectionIds.Add(client.ConnectionId);
+                await database.HashSetAsync(_userStoreKey,
+                [
+                    new HashEntry(userIdentifierString, connectionIds.ToJsonString())
+                ]);
+            }
         }
 
-        public async Task<bool> RemoveAsync(string connectionId)
+        // Store a lookup of connection ID's to OnlineClient objects
+        await database.HashSetAsync(_clientStoreKey,
+        [
+            new HashEntry(client.ConnectionId, client.ToString())
+        ]);
+    }
+
+    public async Task<bool> RemoveAsync(string connectionId)
+    {
+        var database = GetDatabase();
+
+        var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
+        if (clientValue.IsNullOrEmpty)
+        {
+            return true;
+        }
+
+        var onlineClient = JsonSerializer.Deserialize<OnlineClient>(clientValue);
+
+        var userIdentifier = onlineClient.ToUserIdentifierOrNull();
+        if (userIdentifier != null)
+        {
+            var userIdentifierString = userIdentifier.ToUserIdentifierString();
+
+            var existingUserValue = await database.HashGetAsync(_userStoreKey, userIdentifierString);
+            if (!existingUserValue.IsNullOrEmpty)
+            {
+                var connectionIds = JsonSerializer.Deserialize<HashSet<string>>(existingUserValue);
+                connectionIds.Remove(connectionId);
+                if (connectionIds.Count > 0)
+                {
+                    await database.HashSetAsync(_userStoreKey,
+                    [
+                        new HashEntry(userIdentifierString, connectionIds.ToJsonString())
+                    ]);
+                }
+                else
+                {
+                    await database.HashDeleteAsync(_userStoreKey, userIdentifierString);
+                }
+            }
+        }
+
+        await database.HashDeleteAsync(_clientStoreKey, connectionId);
+        return true;
+    }
+
+    public async Task<bool> TryRemoveAsync(string connectionId, Action<IOnlineClient> clientAction)
+    {
+        try
         {
             var database = GetDatabase();
 
             var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
             if (clientValue.IsNullOrEmpty)
             {
+                clientAction(null);
                 return true;
+            }
+
+            var onlineClient = JsonSerializer.Deserialize<OnlineClient>(clientValue);
+            clientAction(onlineClient);
+
+            var userIdentifier = onlineClient.ToUserIdentifierOrNull();
+            if (userIdentifier != null)
+            {
+                var userIdentifierString = userIdentifier.ToUserIdentifierString();
+
+                var existingUserValue = await database.HashGetAsync(_userStoreKey, userIdentifierString);
+                if (!existingUserValue.IsNullOrEmpty)
+                {
+                    var connectionIds = JsonSerializer.Deserialize<HashSet<string>>(existingUserValue);
+                    connectionIds.Remove(connectionId);
+                    if (connectionIds.Count > 0)
+                    {
+                        await database.HashSetAsync(_userStoreKey,
+                        [
+                            new HashEntry(userIdentifierString, connectionIds.ToJsonString())
+                        ]);
+                    }
+                    else
+                    {
+                        await database.HashDeleteAsync(_userStoreKey, userIdentifierString);
+                    }
+                }
             }
 
             await database.HashDeleteAsync(_clientStoreKey, connectionId);
             return true;
         }
-
-        public async Task<bool> TryRemoveAsync(string connectionId, Action<IOnlineClient> clientAction)
+        catch (Exception e)
         {
-            try
-            {
-                var database = GetDatabase();
+            Console.WriteLine(e);
+            clientAction(null);
+            return false;
+        }
+    }
 
-                var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
-                if (clientValue.IsNullOrEmpty)
-                {
-                    clientAction(null);
-                    return true;
-                }
-
-                clientAction(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
-
-                await database.HashDeleteAsync(_clientStoreKey, connectionId);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                clientAction(null);
-                return false;
-            }
+    public async Task<bool> TryGetAsync(string connectionId, Action<IOnlineClient> clientAction)
+    {
+        var database = GetDatabase();
+        var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
+        if (clientValue.IsNullOrEmpty)
+        {
+            clientAction(null);
+            return false;
         }
 
-        public async Task<bool> TryGetAsync(string connectionId, Action<IOnlineClient> clientAction)
+        clientAction(JsonSerializer.Deserialize<OnlineClient>(clientValue));
+        return true;
+    }
+
+    public async Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
+    {
+        var database = GetDatabase();
+        var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
+        var clients = clientsEntries
+            .Select(entry => JsonSerializer.Deserialize<OnlineClient>(entry.Value))
+            .Cast<IOnlineClient>()
+            .ToList();
+
+        return clients.ToImmutableList();
+    }
+
+    public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
+    {
+        var clients = new List<OnlineClient>();
+        if (!await IsUserOnlineAsync(userIdentifier))
         {
-            var database = GetDatabase();
+            return clients;
+        }
+
+        var database = GetDatabase();
+
+        var userClientsValue = await database.HashGetAsync(_userStoreKey, userIdentifier.ToUserIdentifierString());
+        if (!userClientsValue.HasValue)
+        {
+            return clients;
+        }
+
+        var userClients = JsonSerializer.Deserialize<HashSet<string>>(userClientsValue);
+        foreach (var connectionId in userClients)
+        {
             var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
             if (clientValue.IsNullOrEmpty)
             {
-                clientAction(null);
-                return false;
+                continue;
             }
 
-            clientAction(JsonConvert.DeserializeObject<OnlineClient>(clientValue));
-            return true;
+            clients.Add(JsonSerializer.Deserialize<OnlineClient>(clientValue));
         }
 
-        public async Task<IReadOnlyList<IOnlineClient>> GetAllAsync()
-        {
-            var database = GetDatabase();
-            var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
-            var clients = clientsEntries
-                .Select(entry => JsonConvert.DeserializeObject<OnlineClient>(entry.Value))
-                .Cast<IOnlineClient>()
-                .ToList();
+        return clients;
+    }
 
-            return clients.ToImmutableList();
-        }
+    private IDatabase GetDatabase()
+    {
+        return _database.GetDatabase();
+    }
 
-        public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
-        {
-            var database = GetDatabase();
-            var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
-            var clients = new List<IOnlineClient>();
-            foreach (var entry in clientsEntries)
-            {
-                clients.Add(JsonConvert.DeserializeObject<OnlineClient>(entry.Value));
-            }
-
-            return clients
-                .Where(e => e.TenantId == userIdentifier.TenantId && e.UserId == userIdentifier.UserId)
-                .ToImmutableList();
-        }
-
-        private IDatabase GetDatabase()
-        {
-            return _database.GetDatabase();
-        }
+    private async Task<bool> IsUserOnlineAsync(UserIdentifier user)
+    {
+        var database = GetDatabase();
+        return await database.HashExistsAsync(_userStoreKey, user.ToUserIdentifierString());
     }
 }
