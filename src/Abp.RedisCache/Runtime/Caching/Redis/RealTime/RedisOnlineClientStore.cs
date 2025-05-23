@@ -60,7 +60,7 @@ public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
         // Store a lookup of connection ID's to OnlineClient objects
         await database.HashSetAsync(_clientStoreKey,
         [
-            new HashEntry(client.ConnectionId, client.ToString())
+            new HashEntry(client.ConnectionId, client.ToJsonString())
         ]);
     }
 
@@ -183,31 +183,29 @@ public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
 
     public async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync(UserIdentifier userIdentifier)
     {
-        var clients = new List<OnlineClient>();
-        if (!await IsUserOnlineAsync(userIdentifier))
-        {
-            return clients;
-        }
-
         var database = GetDatabase();
 
         var userClientsValue = await database.HashGetAsync(_userStoreKey, userIdentifier.ToUserIdentifierString());
         if (!userClientsValue.HasValue)
         {
-            return clients;
+            return ImmutableList<IOnlineClient>.Empty;
         }
 
-        var userClients = JsonSerializer.Deserialize<HashSet<string>>(userClientsValue);
-        foreach (var connectionId in userClients)
+        var connectionIds = JsonSerializer.Deserialize<HashSet<string>>(userClientsValue);
+        if (connectionIds == null || !connectionIds.Any())
         {
-            var clientValue = await database.HashGetAsync(_clientStoreKey, connectionId);
-            if (clientValue.IsNullOrEmpty)
-            {
-                continue;
-            }
-
-            clients.Add(JsonSerializer.Deserialize<OnlineClient>(clientValue));
+            return ImmutableList<IOnlineClient>.Empty;
         }
+
+        var redisKeys = connectionIds.Select(connectionId => (RedisValue)connectionId).ToArray();
+
+        var clientValues = await database.HashGetAsync(_clientStoreKey, redisKeys);
+
+        var clients = clientValues
+            .Where(clientValue => !clientValue.IsNullOrEmpty)
+            .Select(clientValue => JsonSerializer.Deserialize<OnlineClient>(clientValue))
+            .Cast<IOnlineClient>()
+            .ToImmutableList();
 
         return clients;
     }
@@ -215,11 +213,5 @@ public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
     private IDatabase GetDatabase()
     {
         return _database.GetDatabase();
-    }
-
-    private async Task<bool> IsUserOnlineAsync(UserIdentifier user)
-    {
-        var database = GetDatabase();
-        return await database.HashExistsAsync(_userStoreKey, user.ToUserIdentifierString());
     }
 }
