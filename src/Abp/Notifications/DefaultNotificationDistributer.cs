@@ -86,7 +86,7 @@ namespace Abp.Notifications
                             Logger.WarnFormat(ex, "Unable to determine notification delivery settings for user ({0}).", uid);
                             return false;
                         }
-                    }))
+                    })
                     .ToList();
             }
             else
