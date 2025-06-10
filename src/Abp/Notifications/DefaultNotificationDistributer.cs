@@ -72,7 +72,15 @@ namespace Abp.Notifications
                     .UserIds
                     .Split(",")
                     .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
-                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId))
+                    .WhereAsync(async (uid) => {
+                        try
+                        {
+                            return await SettingManager.GetSettingValueForUserAsync<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId);
+                        } catch(Exception ex) {
+                            Logger.WarnFormat(ex, "Unable to determine notification delivery settings for user ({0}).", uid);
+                            return false;
+                        }
+                    }))
                     .ToList();
             }
             else
@@ -155,7 +163,17 @@ namespace Abp.Notifications
                     .UserIds
                     .Split(",")
                     .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
-                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId))
+                    .Where((uid) => {
+                        try
+                        {
+                            return SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WarnFormat(ex, "Unable to determine notification delivery settings for user ({0}).", uid);
+                            return false;
+                        }
+                    })
                     .ToList();
             }
             else
@@ -333,5 +351,17 @@ namespace Abp.Notifications
         }
 
         #endregion
+    }
+}
+
+static class AsyncWhereExtension
+{
+    // Allows the use of an async predicate
+    public static async Task<IEnumerable<T>> WhereAsync<T>(
+            this IEnumerable<T> source,
+            Func<T, Task<bool>> predicate)
+    {
+        var results = await Task.WhenAll(source.Select(async x =>(x, await predicate(x))));
+        return results.Where(r => r.Item2).Select(r => r.Item1);
     }
 }
