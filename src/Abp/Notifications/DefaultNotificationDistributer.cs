@@ -74,7 +74,7 @@ namespace Abp.Notifications
             if (!notificationInfo.UserIds.IsNullOrEmpty())
             {
                 // Directly get from UserIds
-                userIds = notificationInfo
+                userIds = (await notificationInfo
                     .UserIds
                     .Split(",")
                     .Select(UserIdentifier.Parse)
@@ -86,7 +86,7 @@ namespace Abp.Notifications
                             Logger.WarnFormat(ex, "Unable to determine notification delivery settings for user ({0}).", uid);
                             return false;
                         }
-                    })
+                    }))
                     .ToList();
             }
             else
