@@ -16,288 +16,298 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
-namespace Abp.AspNetCore.Mvc.Conventions
+namespace Abp.AspNetCore.Mvc.Conventions;
+
+public class AbpAppServiceConvention : IApplicationModelConvention
 {
-    public class AbpAppServiceConvention : IApplicationModelConvention
+    private readonly Lazy<AbpAspNetCoreConfiguration> _configuration;
+
+    public AbpAppServiceConvention(IServiceCollection services)
     {
-        private readonly Lazy<AbpAspNetCoreConfiguration> _configuration;
-
-        public AbpAppServiceConvention(IServiceCollection services)
+        _configuration = new Lazy<AbpAspNetCoreConfiguration>(() =>
         {
-            _configuration = new Lazy<AbpAspNetCoreConfiguration>(() =>
-            {
-                return services
-                    .GetSingletonService<AbpBootstrapper>()
-                    .IocManager
-                    .Resolve<AbpAspNetCoreConfiguration>();
-            }, true);
-        }
+            return services
+                .GetSingletonService<AbpBootstrapper>()
+                .IocManager
+                .Resolve<AbpAspNetCoreConfiguration>();
+        }, true);
+    }
 
-        public void Apply(ApplicationModel application)
+    public void Apply(ApplicationModel application)
+    {
+        foreach (var controller in application.Controllers)
         {
-            foreach (var controller in application.Controllers)
-            {
-                var type = controller.ControllerType.AsType();
-                var configuration = GetControllerSettingOrNull(type);
+            var type = controller.ControllerType.AsType();
+            var configuration = GetControllerSettingOrNull(type);
 
-                if (typeof(IApplicationService).GetTypeInfo().IsAssignableFrom(type))
+            if (typeof(IApplicationService).GetTypeInfo().IsAssignableFrom(type))
+            {
+                controller.ControllerName = controller.ControllerName.RemovePostFix(ApplicationService.CommonPostfixes);
+                configuration?.ControllerModelConfigurer(controller);
+
+                ConfigureCacheControl(controller, _configuration.Value.DefaultResponseCacheAttributeForAppServices);
+                ConfigureArea(controller, configuration);
+                ConfigureRemoteService(controller, configuration);
+            }
+            else
+            {
+                var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type.GetTypeInfo());
+                if (remoteServiceAtt != null && remoteServiceAtt.IsEnabledFor(type))
                 {
-                    controller.ControllerName = controller.ControllerName.RemovePostFix(ApplicationService.CommonPostfixes);
-                    configuration?.ControllerModelConfigurer(controller);
-
-                    ConfigureCacheControl(controller, _configuration.Value.DefaultResponseCacheAttributeForAppServices);
-                    ConfigureArea(controller, configuration);
+                    ConfigureCacheControl(controller, _configuration.Value.DefaultResponseCacheAttributeForControllers);
                     ConfigureRemoteService(controller, configuration);
                 }
-                else
-                {
-                    var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(type.GetTypeInfo());
-                    if (remoteServiceAtt != null && remoteServiceAtt.IsEnabledFor(type))
-                    {
-                        ConfigureCacheControl(controller, _configuration.Value.DefaultResponseCacheAttributeForControllers);
-                        ConfigureRemoteService(controller, configuration);
-                    }
-                }
             }
         }
+    }
 
-        private void ConfigureCacheControl(ControllerModel controller, ResponseCacheAttribute responseCacheAttribute)
+    private void ConfigureCacheControl(ControllerModel controller, ResponseCacheAttribute responseCacheAttribute)
+    {
+        if (responseCacheAttribute == null)
         {
-            if (responseCacheAttribute == null)
-            {
-                return;
-            }
-
-            if (controller.Filters.Any(filter => typeof(ResponseCacheAttribute).IsAssignableFrom(filter.GetType())))
-            {
-                return;
-            }
-
-            controller.Filters.Add(responseCacheAttribute);
+            return;
         }
 
-        private void ConfigureArea(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+        if (controller.Filters.Any(filter => typeof(ResponseCacheAttribute).IsAssignableFrom(filter.GetType())))
         {
-            if (configuration == null)
-            {
-                return;
-            }
-
-            if (controller.RouteValues.ContainsKey("area"))
-            {
-                return;
-            }
-
-            controller.RouteValues["area"] = configuration.ModuleName;
+            return;
         }
 
-        private void ConfigureRemoteService(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+        controller.Filters.Add(responseCacheAttribute);
+    }
+
+    private void ConfigureArea(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        if (configuration == null)
         {
-            ConfigureApiExplorer(controller);
-            ConfigureSelector(controller, configuration);
-            ConfigureParameters(controller);
+            return;
         }
 
-        private void ConfigureParameters(ControllerModel controller)
+        if (controller.RouteValues.ContainsKey("area"))
         {
-            foreach (var action in controller.Actions)
-            {
-                foreach (var prm in action.Parameters)
-                {
-                    if (prm.BindingInfo != null)
-                    {
-                        continue;
-                    }
-
-                    if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
-                    {
-                        if (CanUseFormBodyBinding(action, prm))
-                        {
-                            prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
-                        }
-                    }
-                }
-            }
+            return;
         }
 
-        private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
-        {
-            if (_configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
-            {
-                return false;
-            }
+        controller.RouteValues["area"] = configuration.ModuleName;
+    }
 
-            foreach (var selector in action.Selectors)
+    private void ConfigureRemoteService(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        ConfigureApiExplorer(controller);
+        ConfigureSelector(controller, configuration);
+        ConfigureParameters(controller);
+    }
+
+    private void ConfigureParameters(ControllerModel controller)
+    {
+        foreach (var action in controller.Actions)
+        {
+            foreach (var prm in action.Parameters)
             {
-                if (selector.ActionConstraints == null)
+                if (prm.BindingInfo != null)
                 {
                     continue;
                 }
 
-                foreach (var actionConstraint in selector.ActionConstraints)
+                if (!TypeHelper.IsPrimitiveExtendedIncludingNullable(prm.ParameterInfo.ParameterType))
                 {
-                    var httpMethodActionConstraint = actionConstraint as HttpMethodActionConstraint;
-                    if (httpMethodActionConstraint == null)
+                    if (CanUseFormBodyBinding(action, prm))
                     {
-                        continue;
-                    }
-
-                    if (httpMethodActionConstraint.HttpMethods.All(hm => hm.IsIn("GET", "DELETE", "TRACE", "HEAD")))
-                    {
-                        return false;
+                        prm.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
                     }
                 }
             }
+        }
+    }
 
-            return true;
+    private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
+    {
+        if (_configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
+        {
+            return false;
         }
 
-        private void ConfigureApiExplorer(ControllerModel controller)
+        foreach (var selector in action.Selectors)
         {
-            if (controller.ApiExplorer.GroupName.IsNullOrEmpty())
+            if (selector.ActionConstraints == null)
             {
-                controller.ApiExplorer.GroupName = controller.ControllerName;
+                continue;
             }
 
-            if (controller.ApiExplorer.IsVisible == null)
+            foreach (var actionConstraint in selector.ActionConstraints)
             {
-                var controllerType = controller.ControllerType.AsType();
-                var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(controllerType.GetTypeInfo());
-                if (remoteServiceAtt != null)
+                var httpMethodActionConstraint = actionConstraint as HttpMethodActionConstraint;
+                if (httpMethodActionConstraint == null)
                 {
-                    controller.ApiExplorer.IsVisible =
-                        remoteServiceAtt.IsEnabledFor(controllerType) &&
-                        remoteServiceAtt.IsMetadataEnabledFor(controllerType);
+                    continue;
                 }
-                else
-                {
-                    controller.ApiExplorer.IsVisible = true;
-                }
-            }
 
-            foreach (var action in controller.Actions)
-            {
-                ConfigureApiExplorer(action);
-            }
-        }
-
-        private void ConfigureApiExplorer(ActionModel action)
-        {
-            if (action.ApiExplorer.IsVisible == null)
-            {
-                var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
-                if (remoteServiceAtt != null)
+                if (httpMethodActionConstraint.HttpMethods.All(hm => hm.IsIn("GET", "DELETE", "TRACE", "HEAD")))
                 {
-                    action.ApiExplorer.IsVisible =
-                        remoteServiceAtt.IsEnabledFor(action.ActionMethod) &&
-                        remoteServiceAtt.IsMetadataEnabledFor(action.ActionMethod);
+                    return false;
                 }
             }
         }
 
-        private void ConfigureSelector(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+        return true;
+    }
+
+    private void ConfigureApiExplorer(ControllerModel controller)
+    {
+        if (controller.ApiExplorer.GroupName.IsNullOrEmpty())
         {
-            RemoveEmptySelectors(controller.Selectors);
-
-            if (controller.Selectors.Any(selector => selector.AttributeRouteModel != null))
-            {
-                return;
-            }
-
-            var moduleName = GetModuleNameOrDefault(controller.ControllerType.AsType());
-
-            foreach (var action in controller.Actions)
-            {
-                ConfigureSelector(moduleName, controller.ControllerName, action, configuration);
-            }
+            controller.ApiExplorer.GroupName = controller.ControllerName;
         }
 
-        private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+        if (controller.ApiExplorer.IsVisible == null)
         {
-            RemoveEmptySelectors(action.Selectors);
-
-            var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
-            if (remoteServiceAtt != null && !remoteServiceAtt.IsEnabledFor(action.ActionMethod))
+            var controllerType = controller.ControllerType.AsType();
+            var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(controllerType.GetTypeInfo());
+            if (remoteServiceAtt != null)
             {
-                return;
-            }
-
-            if (!action.Selectors.Any())
-            {
-                AddAbpServiceSelector(moduleName, controllerName, action, configuration);
+                controller.ApiExplorer.IsVisible =
+                    remoteServiceAtt.IsEnabledFor(controllerType) &&
+                    remoteServiceAtt.IsMetadataEnabledFor(controllerType);
             }
             else
             {
-                NormalizeSelectorRoutes(moduleName, controllerName, action);
+                controller.ApiExplorer.IsVisible = true;
             }
         }
 
-        private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+        foreach (var action in controller.Actions)
         {
-            var abpServiceSelectorModel = new SelectorModel
-            {
-                AttributeRouteModel = CreateAbpServiceAttributeRouteModel(moduleName, controllerName, action)
-            };
-
-            var verb = configuration?.UseConventionalHttpVerbs == true
-                           ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
-                           : ProxyScriptingHelper.DefaultHttpVerb;
-
-            abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
-
-            action.Selectors.Add(abpServiceSelectorModel);
+            ConfigureApiExplorer(action);
         }
+    }
 
-        private static void NormalizeSelectorRoutes(string moduleName, string controllerName, ActionModel action)
+    private void ConfigureApiExplorer(ActionModel action)
+    {
+        if (action.ApiExplorer.IsVisible == null)
         {
-            foreach (var selector in action.Selectors)
+            var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
+            if (remoteServiceAtt != null)
             {
-                if (selector.AttributeRouteModel == null)
-                {
-                    selector.AttributeRouteModel = CreateAbpServiceAttributeRouteModel(
-                        moduleName,
-                        controllerName,
-                        action
-                    );
-                }
+                action.ApiExplorer.IsVisible =
+                    remoteServiceAtt.IsEnabledFor(action.ActionMethod) &&
+                    remoteServiceAtt.IsMetadataEnabledFor(action.ActionMethod);
             }
         }
+    }
 
-        private string GetModuleNameOrDefault(Type controllerType)
+    private void ConfigureSelector(ControllerModel controller, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        RemoveEmptySelectors(controller.Selectors);
+
+        if (controller.Selectors.Any(selector => selector.AttributeRouteModel != null))
         {
-            return GetControllerSettingOrNull(controllerType)?.ModuleName ??
-                   AbpControllerAssemblySetting.DefaultServiceModuleName;
+            return;
         }
 
-        [CanBeNull]
-        private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
+        var moduleName = GetModuleNameOrDefault(controller.ControllerType.AsType());
+
+        foreach (var action in controller.Actions)
         {
-            var settings = _configuration.Value.ControllerAssemblySettings.GetSettings(controllerType);
-            return settings.FirstOrDefault(setting => setting.TypePredicate(controllerType));
+            ConfigureSelector(moduleName, controller.ControllerName, action, configuration);
+        }
+    }
+
+    private void ConfigureSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        RemoveEmptySelectors(action.Selectors);
+
+        var remoteServiceAtt = ReflectionHelper.GetSingleAttributeOrDefault<RemoteServiceAttribute>(action.ActionMethod);
+        if (remoteServiceAtt != null && !remoteServiceAtt.IsEnabledFor(action.ActionMethod))
+        {
+            return;
         }
 
-        private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)
+        if (!action.Selectors.Any())
         {
-            return new AttributeRouteModel(
-                new RouteAttribute(
-                    $"api/services/{moduleName}/{controllerName}/{action.ActionName}"
-                )
-            );
+            AddAbpServiceSelector(moduleName, controllerName, action, configuration);
         }
+        else
+        {
+            NormalizeSelectorRoutes(moduleName, controllerName, action, configuration);
+        }
+    }
 
-        private static void RemoveEmptySelectors(IList<SelectorModel> selectors)
+    private void AddAbpServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        var abpServiceSelectorModel = new SelectorModel
         {
-            selectors
-                .Where(IsEmptySelector)
-                .ToList()
-                .ForEach(s => selectors.Remove(s));
-        }
+            AttributeRouteModel = CreateAbpServiceAttributeRouteModel(moduleName, controllerName, action)
+        };
 
-        private static bool IsEmptySelector(SelectorModel selector)
+        var httpMethod = SelectHttpMethod(action, configuration);
+
+        abpServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpMethod }));
+
+        action.Selectors.Add(abpServiceSelectorModel);
+    }
+
+    private string SelectHttpMethod(ActionModel action, AbpControllerAssemblySetting configuration)
+    {
+        return configuration?.UseConventionalHttpVerbs == true
+            ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
+            : ProxyScriptingHelper.DefaultHttpVerb;
+    }
+
+    private void NormalizeSelectorRoutes(string moduleName, string controllerName, ActionModel action, [CanBeNull] AbpControllerAssemblySetting configuration)
+    {
+        foreach (var selector in action.Selectors)
         {
-            return selector.AttributeRouteModel == null
-                   && selector.ActionConstraints.IsNullOrEmpty()
-                   && selector.EndpointMetadata.IsNullOrEmpty();
+            if (!selector.ActionConstraints.OfType<HttpMethodActionConstraint>().Any())
+            {
+                var httpMethod = SelectHttpMethod(action, configuration);
+                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { httpMethod }));
+            }
+
+            if (selector.AttributeRouteModel == null)
+            {
+                selector.AttributeRouteModel = CreateAbpServiceAttributeRouteModel(
+                    moduleName,
+                    controllerName,
+                    action
+                );
+            }
         }
+    }
+
+    private string GetModuleNameOrDefault(Type controllerType)
+    {
+        return GetControllerSettingOrNull(controllerType)?.ModuleName ??
+               AbpControllerAssemblySetting.DefaultServiceModuleName;
+    }
+
+    [CanBeNull]
+    private AbpControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
+    {
+        var settings = _configuration.Value.ControllerAssemblySettings.GetSettings(controllerType);
+        return settings.FirstOrDefault(setting => setting.TypePredicate(controllerType));
+    }
+
+    private static AttributeRouteModel CreateAbpServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)
+    {
+        return new AttributeRouteModel(
+            new RouteAttribute(
+                $"api/services/{moduleName}/{controllerName}/{action.ActionName}"
+            )
+        );
+    }
+
+    private static void RemoveEmptySelectors(IList<SelectorModel> selectors)
+    {
+        selectors
+            .Where(IsEmptySelector)
+            .ToList()
+            .ForEach(s => selectors.Remove(s));
+    }
+
+    private static bool IsEmptySelector(SelectorModel selector)
+    {
+        return selector.AttributeRouteModel == null
+               && selector.ActionConstraints.IsNullOrEmpty()
+               && selector.EndpointMetadata.IsNullOrEmpty();
     }
 }

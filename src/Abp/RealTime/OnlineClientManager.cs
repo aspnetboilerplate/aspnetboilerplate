@@ -1,20 +1,12 @@
+using Abp.Dependency;
+using Abp.Extensions;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Abp.Dependency;
-using JetBrains.Annotations;
+using System.Threading.Tasks;
 
 namespace Abp.RealTime
 {
-    public class OnlineClientManager<T> : OnlineClientManager, IOnlineClientManager<T>
-    {
-        public OnlineClientManager(IOnlineClientStore<T> store) : base(store)
-        {
-
-        }
-    }
-
     /// <summary>
     /// Implements <see cref="IOnlineClientManager"/>.
     /// </summary>
@@ -30,9 +22,6 @@ namespace Abp.RealTime
         /// </summary>
         protected IOnlineClientStore Store { get; }
 
-        //TODO:do we need SyncObj, default store is thread safe?
-        protected readonly object SyncObj = new object();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
         /// </summary>
@@ -41,83 +30,70 @@ namespace Abp.RealTime
             Store = store;
         }
 
-        public virtual void Add(IOnlineClient client)
+        public virtual async Task AddAsync(IOnlineClient client)
         {
-            lock (SyncObj)
+            var user = client.ToUserIdentifierOrNull();
+
+            if (user != null && !await this.IsOnlineAsync(user))
             {
-                var userWasAlreadyOnline = false;
+                UserConnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
+            }
+            
+            await Store.AddAsync(client);
+            ClientConnected.InvokeSafely(this, new OnlineClientEventArgs(client));
+        }
+
+        public virtual async Task<bool> RemoveAsync(string connectionId)
+        {
+            IOnlineClient client = default;
+            var result = await Store.TryRemoveAsync(connectionId, value => client = value);
+            if (!result)
+            {
+                return false;
+            }
+            
+            if (UserDisconnected != null)
+            {
                 var user = client.ToUserIdentifierOrNull();
 
-                if (user != null)
+                if (user != null && !await this.IsOnlineAsync(user))
                 {
-                    userWasAlreadyOnline = this.IsOnline(user);
-                }
-
-                Store.Add(client);
-
-                ClientConnected?.Invoke(this, new OnlineClientEventArgs(client));
-
-                if (user != null && !userWasAlreadyOnline)
-                {
-                    UserConnected?.Invoke(this, new OnlineUserEventArgs(user, client));
+                    UserDisconnected.InvokeSafely(this, new OnlineUserEventArgs(user, client));
                 }
             }
+
+            ClientDisconnected?.InvokeSafely(this, new OnlineClientEventArgs(client));
+
+            return true;
         }
 
-        public virtual bool Remove(string connectionId)
+        public virtual async Task<IOnlineClient> GetByConnectionIdOrNullAsync(string connectionId)
         {
-            lock (SyncObj)
+            IOnlineClient client = default;
+            if (await Store.TryGetAsync(connectionId, value => client = value))
             {
-                var result = Store.TryRemove(connectionId, out IOnlineClient client);
-                if (result)
-                {
-                    if (UserDisconnected != null)
-                    {
-                        var user = client.ToUserIdentifierOrNull();
-
-                        if (user != null && !this.IsOnline(user))
-                        {
-                            UserDisconnected.Invoke(this, new OnlineUserEventArgs(user, client));
-                        }
-                    }
-
-                    ClientDisconnected?.Invoke(this, new OnlineClientEventArgs(client));
-                }
-
-                return result;
+                return client;
             }
+
+            return null;
         }
 
-        public virtual IOnlineClient GetByConnectionIdOrNull(string connectionId)
+        public Task<IReadOnlyList<IOnlineClient>> GetAllClientsAsync()
         {
-            lock (SyncObj)
-            {
-                if (Store.TryGet(connectionId, out IOnlineClient client))
-                {
-                    return client;
-                } else
-                {
-                    return null;
-                }
-            }
+            return Store.GetAllAsync();
         }
-        
-        public virtual IReadOnlyList<IOnlineClient> GetAllClients()
-        {
-            lock (SyncObj)
-            {
-                return Store.GetAll();
-            }
-        }
+
 
         [NotNull]
-        public virtual IReadOnlyList<IOnlineClient> GetAllByUserId([NotNull] IUserIdentifier user)
+        public virtual async Task<IReadOnlyList<IOnlineClient>> GetAllByUserIdAsync([NotNull] IUserIdentifier user)
         {
             Check.NotNull(user, nameof(user));
 
-            return GetAllClients()
-                 .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
-                 .ToImmutableList();
+            var userIdentifier = new UserIdentifier(user.TenantId, user.UserId);
+            var clients = await Store.GetAllByUserIdAsync(userIdentifier);
+
+            return clients;
         }
+
     }
 }

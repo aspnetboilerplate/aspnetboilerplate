@@ -1,8 +1,10 @@
 ﻿using Abp.Dependency;
 using Abp.Json;
-using Newtonsoft.Json;
+using Abp.Json.SystemTextJson;
 using StackExchange.Redis;
 using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace Abp.Runtime.Caching.Redis
 {
@@ -16,13 +18,14 @@ namespace Abp.Runtime.Caching.Redis
         /// </summary>
         /// <param name="objbyte">String representation of the object from the Redis server.</param>
         /// <returns>Returns a newly constructed object.</returns>
-        /// <seealso cref="IRedisCacheSerializer.Serialize" />
+        /// <seealso cref="IRedisCacheSerializer{TSource, TDestination}.Serialize" />
         public virtual object Deserialize(RedisValue objbyte)
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.Converters.Insert(0, new AbpDateTimeConverter());
+            var serializerSettings = new JsonSerializerOptions();
+            serializerSettings.Converters.Insert(0, new Abp.Json.SystemTextJson.AbpDateTimeConverter());
+            serializerSettings.Converters.Add(new AbpJsonConverterForType());
 
-            AbpCacheData cacheData = AbpCacheData.Deserialize(objbyte);
+            var cacheData = AbpCacheData.Deserialize(objbyte);
 
             return cacheData.Payload.FromJsonString(
                 Type.GetType(cacheData.Type, true, true),
@@ -35,10 +38,14 @@ namespace Abp.Runtime.Caching.Redis
         /// <param name="value">Instance to serialize.</param>
         /// <param name="type">Type of the object.</param>
         /// <returns>Returns a string representing the object instance that can be placed into the Redis cache.</returns>
-        /// <seealso cref="IRedisCacheSerializer.Deserialize" />
+        /// <seealso cref="IRedisCacheSerializer{TSource, TDestination}.Deserialize" />
         public virtual RedisValue Serialize(object value, Type type)
         {
-            return JsonConvert.SerializeObject(AbpCacheData.Serialize(value));
+            var json = AbpCacheData.Serialize(value);
+            return JsonSerializer.Serialize(json, new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
         }
     }
 }

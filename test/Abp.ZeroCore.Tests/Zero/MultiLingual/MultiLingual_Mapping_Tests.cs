@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Configuration.Startup;
@@ -6,150 +6,178 @@ using Abp.ZeroCore.SampleApp.Application.Shop;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.MultiLingual
+namespace Abp.Zero.MultiLingual;
+
+public class MultiLingual_Mapping_Tests : AbpZeroTestBase
 {
-    public class MultiLingual_Mapping_Tests : AbpZeroTestBase
+    private readonly IProductAppService _productAppService;
+    private readonly IOrderAppService _orderAppService;
+    private readonly IOfficeAppService _officeAppService;
+
+    public MultiLingual_Mapping_Tests()
     {
-        private readonly IProductAppService _productAppService;
-        private readonly IOrderAppService _orderAppService;
+        _productAppService = Resolve<IProductAppService>();
+        _orderAppService = Resolve<IOrderAppService>();
+        _officeAppService = Resolve<IOfficeAppService>();
+        Resolve<IMultiTenancyConfig>().IsEnabled = true;
+    }
 
-        public MultiLingual_Mapping_Tests()
+    [Fact]
+    public async Task CreateMultiLingualMap_Tests()
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo("tr");
+
+        var products = await _productAppService.GetProducts();
+        products.ShouldNotBeNull();
+
+        products.Items.Count.ShouldBe(3);
+        var product1 = products.Items[0];
+        var product2 = products.Items[1];
+        var product3 = products.Items[2];
+
+        product1.Language.ShouldBe("tr");
+        product1.Name.ShouldBe("Saat");
+
+        product2.Language.ShouldBe("en");
+        product2.Name.ShouldBe("Bike");
+
+        product3.Language.ShouldBe("it");
+        product3.Name.ShouldBe("Giornale");
+
+        CultureInfo.CurrentUICulture = new CultureInfo("fr");
+
+        products = await _productAppService.GetProducts();
+        products.ShouldNotBeNull();
+
+        products.Items.Count.ShouldBe(3);
+        product1 = products.Items[0];
+        product2 = products.Items[1];
+        product3 = products.Items[2];
+
+        product1.Language.ShouldBe("en");
+        product1.Name.ShouldBe("Watch");
+
+        product2.Language.ShouldBe("fr");
+        product2.Name.ShouldBe("Bicyclette");
+
+        product3.Language.ShouldBe("it");
+        product3.Name.ShouldBe("Giornale");
+    }
+
+    [Fact]
+    public async Task CreateMultiLingualMap_RegionSpecificLanguage_ShouldFallbackToGlobalLanguage()
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo("en-GB");
+
+        var products = await _productAppService.GetProducts();
+        products.ShouldNotBeNull();
+
+        products.Items.Count.ShouldBe(3);
+        var product1 = products.Items[0];
+        var product2 = products.Items[1];
+        var product3 = products.Items[2];
+
+        product1.Language.ShouldBe("en");
+        product1.Name.ShouldBe("Watch");
+
+        product2.Language.ShouldBe("en");
+        product2.Name.ShouldBe("Bike");
+
+        product3.Language.ShouldBe("it");
+        product3.Name.ShouldBe("Giornale");
+    }
+
+    [Fact]
+    public async Task CreateMultiLingualMap_NoTranslations_ShouldStillMapObject()
+    {
+        /*
+         *  When no translation is available, it should still map the
+         */
+
+        UsingDbContext(context =>
         {
-            _productAppService = Resolve<IProductAppService>();
-            _orderAppService = Resolve<IOrderAppService>();
-            Resolve<IMultiTenancyConfig>().IsEnabled = true;
-        }
+            context.ProductTranslations.RemoveRange(context.ProductTranslations.ToList());
+        });
 
-        [Fact]
-        public async Task CreateMultiLingualMap_Tests()
-        {
-            CultureInfo.CurrentUICulture = new CultureInfo("tr");
+        CultureInfo.CurrentUICulture = new CultureInfo("en-GB");
 
-            var products = await _productAppService.GetProducts();
-            products.ShouldNotBeNull();
+        var products = await _productAppService.GetProducts();
+        products.ShouldNotBeNull();
 
-            products.Items.Count.ShouldBe(3);
-            var product1 = products.Items[0];
-            var product2 = products.Items[1];
-            var product3 = products.Items[2];
+        products.Items.Count.ShouldBe(3);
+        var product1 = products.Items[0];
+        var product2 = products.Items[1];
+        var product3 = products.Items[2];
 
-            product1.Language.ShouldBe("tr");
-            product1.Name.ShouldBe("Saat");
+        product1.Language.ShouldBe(null);
+        product1.Name.ShouldBe(null);
+        product1.Price.ShouldBe(10);
 
-            product2.Language.ShouldBe("en");
-            product2.Name.ShouldBe("Bike");
+        product2.Language.ShouldBe(null);
+        product2.Name.ShouldBe(null);
+        product2.Price.ShouldBe(99);
 
-            product3.Language.ShouldBe("it");
-            product3.Name.ShouldBe("Giornale");
+        product3.Language.ShouldBe(null);
+        product3.Name.ShouldBe(null);
+        product3.Price.ShouldBe(15);
+    }
 
-            CultureInfo.CurrentUICulture = new CultureInfo("fr");
+    [Fact]
+    public async Task CreateMultiLingualMap_Tests_Dont_Override_MultiLingual_Entity_Id()
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo("tr");
 
-            products = await _productAppService.GetProducts();
-            products.ShouldNotBeNull();
+        var products = await _productAppService.GetProducts();
+        products.ShouldNotBeNull();
 
-            products.Items.Count.ShouldBe(3);
-            product1 = products.Items[0];
-            product2 = products.Items[1];
-            product3 = products.Items[2];
+        var product1 = products.Items[0];
 
-            product1.Language.ShouldBe("en");
-            product1.Name.ShouldBe("Watch");
+        product1.Language.ShouldBe("tr");
+        product1.Name.ShouldBe("Saat");
+        product1.Id.ShouldBe(1);
+    }
 
-            product2.Language.ShouldBe("fr");
-            product2.Name.ShouldBe("Bicyclette");
+    [Fact]
+    public async Task Allow_Modifying_CreateMultiLingualMap_Mapping()
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo("fr");
 
-            product3.Language.ShouldBe("it");
-            product3.Name.ShouldBe("Giornale");
-        }
+        var orders = await _orderAppService.GetOrders();
 
-        [Fact]
-        public async Task CreateMultiLingualMap_RegionSpecificLanguage_ShouldFallbackToGlobalLanguage()
-        {
-            CultureInfo.CurrentUICulture = new CultureInfo("en-GB");
+        orders.Items.Count.ShouldBe(1);
 
-            var products = await _productAppService.GetProducts();
-            products.ShouldNotBeNull();
+        var testOrder = orders.Items.First();
 
-            products.Items.Count.ShouldBe(3);
-            var product1 = products.Items[0];
-            var product2 = products.Items[1];
-            var product3 = products.Items[2];
+        testOrder.Price.ShouldBe(100);
+        testOrder.Language.ShouldBe("fr");
+        testOrder.Name.ShouldBe("Tester");
+        testOrder.ProductCount.ShouldBe(3);
+    }
 
-            product1.Language.ShouldBe("en");
-            product1.Name.ShouldBe("Watch");
+    [Fact]
+    public async Task CreateMultiLingualMap_For_LongPK__Tests()
+    {
+        CultureInfo.CurrentUICulture = new CultureInfo("tr");
 
-            product2.Language.ShouldBe("en");
-            product2.Name.ShouldBe("Bike");
+        var offices = await _officeAppService.GetOffices();
+        offices.ShouldNotBeNull();
 
-            product3.Language.ShouldBe("it");
-            product3.Name.ShouldBe("Giornale");
-        }
+        offices.Items.Count.ShouldBe(1);
+        var volosoftOffice = offices.Items[0];
 
-        [Fact]
-        public async Task CreateMultiLingualMap_NoTranslations_ShouldStillMapObject()
-        {
-            /*
-             *  When no translation is available, it should still map the
-             */
 
-            UsingDbContext(context =>
-            {
-                context.ProductTranslations.RemoveRange(context.ProductTranslations.ToList());
-            });
+        volosoftOffice.Language.ShouldBe("tr");
+        volosoftOffice.Name.ShouldBe("Volosoft Ofisi");
 
-            CultureInfo.CurrentUICulture = new CultureInfo("en-GB");
+        CultureInfo.CurrentUICulture = new CultureInfo("fr");
 
-            var products = await _productAppService.GetProducts();
-            products.ShouldNotBeNull();
+        offices = await _officeAppService.GetOffices();
+        offices.ShouldNotBeNull();
 
-            products.Items.Count.ShouldBe(3);
-            var product1 = products.Items[0];
-            var product2 = products.Items[1];
-            var product3 = products.Items[2];
+        offices.Items.Count.ShouldBe(1);
+        volosoftOffice = offices.Items[0];
 
-            product1.Language.ShouldBe(null);
-            product1.Name.ShouldBe(null);
-            product1.Price.ShouldBe(10);
-
-            product2.Language.ShouldBe(null);
-            product2.Name.ShouldBe(null);
-            product2.Price.ShouldBe(99);
-
-            product3.Language.ShouldBe(null);
-            product3.Name.ShouldBe(null);
-            product3.Price.ShouldBe(15);
-        }
-
-        [Fact]
-        public async Task CreateMultiLingualMap_Tests_Dont_Override_MultiLingual_Entity_Id()
-        {
-            CultureInfo.CurrentUICulture = new CultureInfo("tr");
-
-            var products = await _productAppService.GetProducts();
-            products.ShouldNotBeNull();
-
-            var product1 = products.Items[0];
-
-            product1.Language.ShouldBe("tr");
-            product1.Name.ShouldBe("Saat");
-            product1.Id.ShouldBe(1);
-        }
-
-        [Fact]
-        public async Task Allow_Modifying_CreateMultiLingualMap_Mapping()
-        {
-            CultureInfo.CurrentUICulture = new CultureInfo("fr");
-
-            var orders = await _orderAppService.GetOrders();
-
-            orders.Items.Count.ShouldBe(1);
-
-            var testOrder = orders.Items.First();
-
-            testOrder.Price.ShouldBe(100);
-            testOrder.Language.ShouldBe("fr");
-            testOrder.Name.ShouldBe("Tester");
-            testOrder.ProductCount.ShouldBe(3);
-        }
+        volosoftOffice.Language.ShouldBe("en");
+        volosoftOffice.Name.ShouldBe("Volosoft Office");
     }
 }

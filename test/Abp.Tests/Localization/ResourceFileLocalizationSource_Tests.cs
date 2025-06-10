@@ -137,6 +137,13 @@ namespace Abp.Tests.Localization
             enStrings.ShouldContain(x => x == null);
             enStrings[2].ShouldBeNull(); //NotExist
         }
+        
+        [Fact]
+        public void Should_Get_Correct_Localization_Key()
+        {
+            _resourceFileLocalizationSource.FindKeyOrNull("Hello!", new CultureInfo("en")).ShouldBe("Hello");
+            _resourceFileLocalizationSource.FindKeyOrNull("Merhaba!", new CultureInfo("tr")).ShouldBe("Hello");
+        }
 
         [Fact(Skip = "Waiting for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1995")]
         public void Test_GetAllStrings()

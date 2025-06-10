@@ -27,7 +27,7 @@ namespace Abp.Auditing
         /// <summary>
         /// Maximum length of <see cref="Parameters"/> property.
         /// </summary>
-        public static int MaxParametersLength = 1024;
+        public static int MaxParametersLength = 4096;
 
         /// <summary>
         /// Maximum length of <see cref="ReturnValue"/> property.
@@ -166,7 +166,7 @@ namespace Abp.Auditing
                 ClientName = auditInfo.ClientName.TruncateWithPostfix(MaxClientNameLength),
                 BrowserInfo = auditInfo.BrowserInfo.TruncateWithPostfix(MaxBrowserInfoLength),
                 Exception = exceptionMessage.TruncateWithPostfix(MaxExceptionLength),
-                ExceptionMessage = auditInfo.Exception?.Message,
+                ExceptionMessage = auditInfo.Exception?.Message.TruncateWithPostfix(MaxExceptionMessageLength),
                 ImpersonatorUserId = auditInfo.ImpersonatorUserId,
                 ImpersonatorTenantId = auditInfo.ImpersonatorTenantId,
                 CustomData = auditInfo.CustomData.TruncateWithPostfix(MaxCustomDataLength)

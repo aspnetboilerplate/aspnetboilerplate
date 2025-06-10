@@ -28,6 +28,7 @@ namespace Abp.Domain.Entities.Caching
             : base(
                 cacheManager,
                 repository,
+                unitOfWorkManager,
                 cacheName)
         {
             _unitOfWorkManager = unitOfWorkManager;
@@ -42,7 +43,7 @@ namespace Abp.Domain.Entities.Caching
 
         public override Task<TCacheItem> GetAsync(TPrimaryKey id)
         {
-            return InternalCache.GetAsync(GetCacheKey(id), () => GetCacheItemFromDataSourceAsync(id));
+            return InternalCache.GetAsync(GetCacheKey(id), async () => await GetCacheItemFromDataSourceAsync(id));
         }
 
         public virtual void HandleEvent(EntityChangedEventData<TEntity> eventData)

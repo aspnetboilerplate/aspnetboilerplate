@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.Linq;
 using Abp.Timing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.BackgroundJobs
 {
@@ -14,78 +15,103 @@ namespace Abp.BackgroundJobs
     public class BackgroundJobStore : IBackgroundJobStore, ITransientDependency
     {
         private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-        public BackgroundJobStore(IRepository<BackgroundJobInfo, long> backgroundJobRepository)
+        public BackgroundJobStore(
+            IRepository<BackgroundJobInfo, long> backgroundJobRepository,
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _backgroundJobRepository = backgroundJobRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
-        public Task<BackgroundJobInfo> GetAsync(long jobId)
+        public async Task<BackgroundJobInfo> GetAsync(long jobId)
         {
-            return _backgroundJobRepository.GetAsync(jobId);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _backgroundJobRepository.GetAsync(jobId)
+            );
         }
 
         public BackgroundJobInfo Get(long jobId)
         {
-            return _backgroundJobRepository.Get(jobId);
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+                _backgroundJobRepository.Get(jobId)
+            );
         }
 
-        public Task InsertAsync(BackgroundJobInfo jobInfo)
+        public async Task InsertAsync(BackgroundJobInfo jobInfo)
         {
-            return _backgroundJobRepository.InsertAsync(jobInfo);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _backgroundJobRepository.InsertAsync(jobInfo)
+            );
         }
 
         public void Insert(BackgroundJobInfo jobInfo)
         {
-            _backgroundJobRepository.Insert(jobInfo);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _backgroundJobRepository.Insert(jobInfo);
+            });
         }
 
-        [UnitOfWork]
-        public virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
+        public virtual async Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = _backgroundJobRepository.GetAll()
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
-                .OrderByDescending(t => t.Priority)
-                .ThenBy(t => t.TryCount)
-                .ThenBy(t => t.NextTryTime)
-                .Take(maxResultCount)
-                .ToList();
-
-            return Task.FromResult(waitingJobs);
+            var waitingJobs = _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return _backgroundJobRepository.GetAll()
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .OrderByDescending(t => t.Priority)
+                    .ThenBy(t => t.TryCount)
+                    .ThenBy(t => t.NextTryTime)
+                    .Take(maxResultCount)
+                    .ToList();
+            });
+            
+            return await Task.FromResult(waitingJobs);
         }
 
-        [UnitOfWork]
         public virtual List<BackgroundJobInfo> GetWaitingJobs(int maxResultCount)
         {
-            var waitingJobs = _backgroundJobRepository.GetAll()
-                .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
-                .OrderByDescending(t => t.Priority)
-                .ThenBy(t => t.TryCount)
-                .ThenBy(t => t.NextTryTime)
-                .Take(maxResultCount)
-                .ToList();
-
-            return waitingJobs;
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return _backgroundJobRepository.GetAll()
+                    .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
+                    .OrderByDescending(t => t.Priority)
+                    .ThenBy(t => t.TryCount)
+                    .ThenBy(t => t.NextTryTime)
+                    .Take(maxResultCount)
+                    .ToList();
+            });
         }
 
-        public Task DeleteAsync(BackgroundJobInfo jobInfo)
+        public async Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
-            return _backgroundJobRepository.DeleteAsync(jobInfo);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _backgroundJobRepository.DeleteAsync(jobInfo)
+            );
         }
 
         public void Delete(BackgroundJobInfo jobInfo)
         {
-            _backgroundJobRepository.Delete(jobInfo);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _backgroundJobRepository.Delete(jobInfo);
+            });
         }
 
-        public Task UpdateAsync(BackgroundJobInfo jobInfo)
+        public async Task UpdateAsync(BackgroundJobInfo jobInfo)
         {
-            return _backgroundJobRepository.UpdateAsync(jobInfo);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await _backgroundJobRepository.UpdateAsync(jobInfo)
+            );
         }
 
         public void Update(BackgroundJobInfo jobInfo)
         {
-            _backgroundJobRepository.Update(jobInfo);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                _backgroundJobRepository.Update(jobInfo);
+            });
         }
     }
 }

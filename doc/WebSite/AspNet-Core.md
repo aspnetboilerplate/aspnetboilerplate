@@ -30,7 +30,7 @@ Startup class:
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //...
-
+    
             //Configure Abp and Dependency Injection. Should be called last.
             return services.AddAbp<MyProjectWebModule>(options =>
             {
@@ -40,12 +40,12 @@ Startup class:
                 );
             });
         }
-
+    
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //Initializes ABP framework and all modules. Should be called first.
             app.UseAbp();
-
+    
             //...
         }
     }
@@ -185,7 +185,7 @@ controller actions. It **handles** and **logs** exceptions and returns a
     method defined in the Microsoft.AspNetCore.Diagnostics package to handle view exceptions.
 -   Exception handling and logging behaviour can be changed using the
     **WrapResult** and **DontWrapResult** attributes for methods and
-    classes.
+    classes. You can also create a custom result wrapping filter, see the WrapResultFilters section below.
 
 #### Result Filter
 
@@ -197,14 +197,103 @@ successfully executed.
     versions). If your action is returning a view or any other type of
     result, it will not be wrapped.
 -   The **WrapResult** and **DontWrapResult** attributes can be used for
-    methods and classes to enable/disable wrapping.
+    methods and classes to enable/disable wrapping. You can also create a custom result wrapping filter, see the WrapResultFilters section below.
 -   You can use a startup configuration to change the default behavior for
     result wrapping.
+
+#### WrapResultFilters
+
+You can also implement a custom ```IWrapResultFilter``` and decide result wrapping conditionally by the current request URL. A custom result wrapping filter must be added to ```WrapResultFilters``` as shown below;
+
+````c#
+Configuration.Modules.AbpWebCommon().WrapResultFilters.Add(new MyWrapResultFilter());
+````
+
+This approach can be useful if you don't have access the source code of the Controllers and can't used result wrapping attributes on the Controllers.
+
+### HTML Sanitization
+
+##### HTML Sanitizer Action Filter
+
+To prevent **XSS** attacks, it's important to **sanitize** HTML input of actions. ASP.NET Boilerplate provides **AbpHtmlSanitizerActionFilter** for this purpose.
+
+To get started, you'll need to **add** the [Abp.HtmlSanitizer](https://www.nuget.org/packages/Abp.HtmlSanitizer) NuGet package to your project. Then, you can enable **HTML sanitizer** by adding the following code to your **Startup.cs** file:
+
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    .
+    .
+
+    services.AddMvc(options =>
+    {
+        .
+        .
+
+        options.AddAbpHtmlSanitizer();
+    });
+}
+```
+
+You can use the **SanitizeHtmlAttribute** on methods, classes, properties or parameters to sanitize HTML input. This attribute has two parameters:
+
+* **IsDisabled**: If set to true, HTML sanitizer is disabled for the place used. The **default** value is **false**.
+
+* **KeepChildNodes**: If set to true, HTML sanitizer **keeps child nodes** of the sanitized HTML. The **default** value is **false**.
+
+* **Selectors**: You can add any method of any class to Selectors list to sanitize this method's parameters. This is mostly used for Application Service methods. For example, configuration below enables HTML sanitization for Register method of IAccountAppService.
+
+```csharp
+Configuration.Modules.AbpHtmlSanitizer().AddSelector<IAccountAppService>(x => nameof(x.Register));
+```
+
+Example usage: 
+
+```csharp
+[SanitizeHtml]
+[HttpPost("sanitizerTest/sanitizeHtmlTest")]
+public MyModel SanitizeHtml(MyModel myModel)
+{
+    return myModel;
+}
+```
+
+> More examples can be found in the [ASP.NET Core Demo](https://github.com/aspnetboilerplate/aspnetboilerplate/blob/dev/test/aspnet-core-demo/AbpAspNetCoreDemo/Controllers/SanitizerTestController.cs):
+
+##### HTML Sanitizer Middleware
+
+Instead of using HTML Sanitizer action filter, you can prefer to use HTML Sanitizer middleware. This middleware should be placed after the routing middleware as shown below. Since this middleware will work before model binding, it is the suggested approach.
+
+```csharp
+app.UseRouting();
+app.UseAbpHtmlSanitizer(); //Sanitize HTML inputs
+```
 
 ### Model Binders
 
 **AbpDateTimeModelBinder** is used to normalize DateTime (and
 Nullable&lt;DateTime&gt;) inputs using the **Clock.Normalize** method.
+
+#### JSON Converters
+
+ASP.NET Boilerplate provides two JsonConverter for Newtonsoft. 
+
+* **CultureInvariantDecimalConverter**: Used to convert a string value to a decimal value when converting JSON string to a object.
+* **CultureInvariantDoubleConverter**: Used to convert a string value to a double value when converting JSON string to a object.
+
+If you want to use one of these converters in your project, you can use them as shown below:
+
+```csharp
+public IServiceProvider ConfigureServices(IServiceCollection services)
+{
+	services.AddNewtonsoftJson(options =>
+	{
+		options.SerializerSettings.Converters.Add(new CultureInvariantDecimalConverter());
+		options.SerializerSettings.Converters.Add(new CultureInvariantDoubleConverter());
+	});
+}
+```
 
 ### Views
 

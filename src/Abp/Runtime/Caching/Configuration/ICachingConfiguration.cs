@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Abp.Configuration.Startup;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Abp.Runtime.Caching.Configuration
 {
@@ -18,6 +19,11 @@ namespace Abp.Runtime.Caching.Configuration
         /// List of all registered configurators.
         /// </summary>
         IReadOnlyList<ICacheConfigurator> Configurators { get; }
+
+        /// <summary>
+        /// Options for memory cache
+        /// </summary>
+        MemoryCacheOptions MemoryCacheOptions { get; set; }
 
         /// <summary>
         /// Used to configure all caches.

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net461;net5.0</TargetFrameworks>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <AssemblyName>Abp.Web.Common.Tests</AssemblyName>
     <PackageId>Abp.Web.Common.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -12,35 +11,28 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Abp.Web.Common\Abp.Web.Common.csproj" />
     <ProjectReference Include="..\..\src\Abp.TestBase\Abp.TestBase.csproj" />
     <ProjectReference Include="..\Abp.Tests\Abp.Tests.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TimeZoneConverter" Version="3.4.0" />
+    <PackageReference Include="TimeZoneConverter" Version="7.0.0" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="System.Runtime" Version="4.3.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

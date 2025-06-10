@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Abp.Tests.Json
 {
+    [Collection("Clock.Provider")]
     public class JsonExtensions_Tests
     {
         [Fact]

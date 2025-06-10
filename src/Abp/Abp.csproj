@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\..\common.props" />
   <Import Project="..\..\configureawait.props" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp</AssemblyName>
     <PackageId>Abp</PackageId>
@@ -17,6 +17,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	<Description>Abp</Description>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,30 +25,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.0.21-alpha" />
-    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.8" />
-    <PackageReference Include="Castle.LoggingFacility" Version="5.1.1" />
+    <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
+	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0">
+		<PrivateAssets>all</PrivateAssets>
+	</PackageReference>
+    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.5" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.4" />
+    <PackageReference Include="Castle.LoggingFacility" Version="6.0.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.7.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="9.0.5" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.0" />
-    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
-    <PackageReference Include="Castle.Core" Version="4.4.1" />
-    <PackageReference Include="TimeZoneConverter" Version="3.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
+    <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
+    <PackageReference Include="TimeZoneConverter" Version="7.0.0" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+    <PackageReference Update="Fody" Version="6.9.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

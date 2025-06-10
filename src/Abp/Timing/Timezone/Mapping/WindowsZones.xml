@@ -713,6 +713,7 @@ For terms of use, see http://www.unicode.org/copyright.html
       <mapZone other="Sao Tome Standard Time" territory="001" type="Africa/Sao_Tome"/>
       <mapZone other="Volgograd Standard Time" territory="001" type="Europe/Volgograd"/>
       <mapZone other="Yukon Standard Time" territory="001" type="Canada/Yukon"/>
+      <mapZone other="South Sudan Standard Time" territory="001" type="Africa/Juba"/>
     </mapTimezones>
   </windowsZones>
 </supplementalData>

@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json;
 
 namespace Abp.Json
 {
@@ -51,13 +50,7 @@ namespace Abp.Json
             var typeSeperatorIndex = serializedObj.IndexOf(TypeSeperator);
             var type = Type.GetType(serializedObj.Substring(0, typeSeperatorIndex));
             var serialized = serializedObj.Substring(typeSeperatorIndex + 1);
-
-            var options = new JsonSerializerSettings
-            {
-                ContractResolver = new AbpCamelCasePropertyNamesContractResolver()
-            };
-
-            return JsonConvert.DeserializeObject(serialized, type, options);
+            return serialized.FromJsonString(type, JsonExtensions.CreateJsonSerializerOptions());
         }
     }
 }

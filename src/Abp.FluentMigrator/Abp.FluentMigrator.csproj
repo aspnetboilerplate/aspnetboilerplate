@@ -4,7 +4,7 @@
   <Import Project="..\..\configureawait.props" />
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.FluentMigrator</AssemblyName>
     <PackageId>Abp.FluentMigrator</PackageId>
@@ -25,13 +25,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.15" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.15" />
+    <PackageReference Include="FluentMigrator" Version="7.1.0" />
+    <PackageReference Include="FluentMigrator.Runner" Version="7.1.0" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,222 @@
+<h1 id="using-masstransit-with-rabbitmq-in-asp-net-boilerplate">
+  Using MassTransit with RabbitMQ in ASP.NET Boilerplate
+</h1>
+<p>
+  MassTransit is a free, open-source distributed application framework for .NET.
+  MassTransit makes it easy to create applications and services that leverage
+  message-based, loosely-coupled asynchronous communication for higher
+  availability, reliability, and scalability.
+</p>
+<p>
+  You can check
+  <a href="https://masstransit-project.com/">MassTransit documentation</a> and
+  <a href="https://github.com/MassTransit/MassTransit">GitHub repository</a> for
+  more information.
+</p>
+<h2 id="install-rabbitmq">Install RabbitMQ</h2>
+<p>
+  We will use RabbitMQ with MassTransit. So, first thing we will do is
+  installing RabbitMQ. Go to
+  <a href="https://www.rabbitmq.com/install-windows.html"
+    >installation documentation</a
+  >
+  for Windows or select your operating system on the related page if you are not
+  using Windows. Then, install the RabbitMQ to your computer.
+</p>
+<h2 id="creating-a-project">Creating a project</h2>
+<p>
+  In order to integrate MassTransit, let&#39;s create a new project on
+  <a href="https://aspnetboilerplate.com/Templates"
+    >https://aspnetboilerplate.com/Templates</a
+  >
+  page. After creating the project, run the project by following the suggested
+  getting started document which will be displayed to you after project
+  creation. In order to use sample code in this article, you can use
+  <code>MassTransitSample</code> as the project name.
+</p>
+<h3 id="create-publisher-project">Create Publisher project</h3>
+<p>
+  In order to publish messages, we will create a separate web project. To do
+  that, add an empty web project to your solution named
+  <code>MassTransitSample.Web.Publisher</code>.
+</p>
+<p>After that, add packages below to created project;</p>
+<pre><code class="lang-xml">    &lt;PackageReference <span class="hljs-keyword">Include</span>=<span class="hljs-string">"MassTransit.RabbitMQ"</span> <span class="hljs-keyword">Version</span>=<span class="hljs-string">"8.0.6"</span> /&gt;
+    &lt;PackageReference <span class="hljs-keyword">Include</span>=<span class="hljs-string">"Swashbuckle.AspNetCore"</span> <span class="hljs-keyword">Version</span>=<span class="hljs-string">"6.2.3"</span> /&gt;
+</code></pre>
+<p>
+  Then, change the content of <code>Program.cs</code> file in the publisher
+  project as shown below;
+</p>
+<pre><code class="lang-csharp">using MassTransit<span class="hljs-comment">;</span>
+
+var <span class="hljs-keyword">builder </span>= WebApplication.CreateBuilder(args)<span class="hljs-comment">;</span>
+
+<span class="hljs-keyword">builder.Services.AddEndpointsApiExplorer();
+</span><span class="hljs-keyword">builder.Services.AddSwaggerGen();
+</span>
+<span class="hljs-keyword">builder.Services.AddMassTransit(mass </span>=&gt;
+{
+    mass.UsingRabbitMq((<span class="hljs-built_in">context</span>, cfg) =&gt;
+    {
+        cfg.Host(<span class="hljs-string">"localhost"</span>, <span class="hljs-string">"/"</span>, h =&gt;
+        {
+            h.Username(<span class="hljs-string">"guest"</span>)<span class="hljs-comment">;</span>
+            h.Password(<span class="hljs-string">"guest"</span>)<span class="hljs-comment">;</span>
+        })<span class="hljs-comment">;</span>
+
+        cfg.ConfigureEndpoints(<span class="hljs-built_in">context</span>)<span class="hljs-comment">;</span>
+    })<span class="hljs-comment">;</span>
+})<span class="hljs-comment">;</span>
+
+
+var app = <span class="hljs-keyword">builder.Build();
+</span>
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger()<span class="hljs-comment">;</span>
+    app.UseSwaggerUI()<span class="hljs-comment">;</span>
+}
+
+app.UseHttpsRedirection()<span class="hljs-comment">;</span>
+
+app.Run()<span class="hljs-comment">;</span>
+</code></pre>
+<p>
+  This will basically integrate Swagger and MassTransit to the publisher
+  project.
+</p>
+<p>
+  In order to publish a message, add line below to your
+  <code>Program.cs</code> right after <code>app.UseHttpsRedirection();</code>;
+</p>
+<pre><code class="lang-csharp">app.MapPost(<span class="hljs-string">"create-order"</span>, async (IBus <span class="hljs-keyword">bus, </span><span class="hljs-keyword">OrderDto </span><span class="hljs-keyword">order) </span>=&gt;
+{
+    await <span class="hljs-keyword">bus.Publish(order);
+</span>})<span class="hljs-comment">;</span>
+</code></pre>
+<h4 id="create-orderdto">Create OrderDto</h4>
+<p>
+  In our message, we will use a
+  <a href="https://aspnetboilerplate.com/Pages/Documents/Data-Transfer-Objects"
+    >DTO</a
+  >
+  class to send our message. So, let&#39;s first create
+  <code>Orders</code> folder, then <code>Dto</code> folder under Orders folder
+  in <code>MassTransitSample.Application</code> project and then create
+  <code>OrderDto</code> class as shown below under
+  <code>Orders/Dto</code> folder;
+</p>
+<pre><code class="lang-csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">OrderDto</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> OrderName { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">decimal</span> Price { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+}
+</code></pre>
+<p>
+  Finally, add a reference to <code>MassTransitSample.Application</code> in
+  <code>MassTransitSample.Web.Publisher</code> project, so we can use
+  <code>OrderDto</code> in publisher project.
+</p>
+<h3 id="configure-mvc-project">Configure MVC project</h3>
+<p>
+  We managed to publish messages from our Publisher project. So, now we need to
+  configure our consumer project to receive and handle messsages. In this
+  sample, we will configure <code>MassTransitSample.Web.Mvc</code> project but,
+  you can apply same configuration to <code>MassTransitSample.Web.Host</code> or
+  any other web project you will add to your solution.
+</p>
+<p>Add MassTransit NuGet package to your MVC project;</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">ItemGroup</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">PackageReference</span> <span class="hljs-attr">Include</span>=<span class="hljs-string">"MassTransit.RabbitMQ"</span> <span class="hljs-attr">Version</span>=<span class="hljs-string">"8.0.10"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ItemGroup</span>&gt;</span>
+</code></pre>
+<p>
+  Then, create a consumer to consume messages sent from Publisher project as
+  shown below;
+</p>
+<pre><code class="lang-csharp">using System.Threading.Tasks<span class="hljs-comment">;</span>
+using MassTransit<span class="hljs-comment">;</span>
+using MassTransitSample.<span class="hljs-keyword">Orders.Dto;
+</span>using Microsoft.<span class="hljs-keyword">Extensions.Logging;
+</span>
+namespace MassTransitSample.Web.<span class="hljs-keyword">Orders
+</span>{
+    public class <span class="hljs-keyword">OrderConsumer </span>: IConsumer&lt;<span class="hljs-keyword">OrderDto&gt;
+</span>    {
+        private readonly ILogger&lt;<span class="hljs-keyword">OrderDto&gt; </span>_logger<span class="hljs-comment">;</span>
+
+        public <span class="hljs-keyword">OrderConsumer(ILogger&lt;OrderDto&gt; </span>logger)
+        {
+            _logger = logger<span class="hljs-comment">;</span>
+        }
+
+        public async Task Consume(ConsumeContext&lt;<span class="hljs-keyword">OrderDto&gt; </span><span class="hljs-built_in">context</span>)
+        {
+            _logger.LogInformation(<span class="hljs-string">"Received order {code} with price {price}"</span>,
+                <span class="hljs-built_in">context</span>.Message.<span class="hljs-keyword">OrderName,
+</span>                <span class="hljs-built_in">context</span>.Message.Price
+            )<span class="hljs-comment">;</span>
+
+            await Task.CompletedTask<span class="hljs-comment">;</span>
+        }
+    }
+}
+</code></pre>
+<p>
+  Since ASP.NET Boilerplate uses Castle.Windsor for dependency injection, we
+  will configure MassTransit in a different way then the suggested approach in
+  its default documentation.
+</p>
+<p>
+  In order to inject any service to our consumer classes, we need to do this
+  registration in <code>PostInitialize</code> method so that it will be executed
+  after ASP.NET Boilerplate completes registration of classes to dependency
+  injection. To do this, go to <code>MassTransitSampleWebMvcModule</code> and
+  override <code>PostInitialize</code> method and change its content as shown
+  below;
+</p>
+<pre><code class="lang-csharp">public override void PostInitialize()
+{
+    IocManager.IocContainer.Register(Component.For&lt;<span class="hljs-keyword">OrderConsumer&gt;().LifestyleTransient());
+</span>
+    var <span class="hljs-keyword">busControl </span>= <span class="hljs-keyword">Bus.Factory.CreateUsingRabbitMq(config </span>=&gt;
+    {
+        <span class="hljs-built_in">config</span>.Host(new Uri(<span class="hljs-string">"rabbitmq://localhost/"</span>), host =&gt;
+        {
+            host.Username(<span class="hljs-string">"guest"</span>)<span class="hljs-comment">;</span>
+            host.Password(<span class="hljs-string">"guest"</span>)<span class="hljs-comment">;</span>
+        })<span class="hljs-comment">;</span>
+
+        <span class="hljs-built_in">config</span>.ReceiveEndpoint(queueName: <span class="hljs-string">"repro-service"</span>, endpoint =&gt;
+        {
+            endpoint.Handler&lt;<span class="hljs-keyword">OrderDto&gt;(async </span><span class="hljs-built_in">context</span> =&gt;
+            {
+                using (var consumer = IocManager.ResolveAsDisposable&lt;<span class="hljs-keyword">OrderConsumer&gt;(typeof(OrderConsumer)))
+</span>                {
+                    await consumer.Object.Consume(<span class="hljs-built_in">context</span>)<span class="hljs-comment">;</span>
+                }
+            })<span class="hljs-comment">;</span>
+        })<span class="hljs-comment">;</span>
+    })<span class="hljs-comment">;</span>
+
+    IocManager.IocContainer.Register(Component.For&lt;IBus, IBusControl&gt;().<span class="hljs-keyword">Instance(busControl));
+</span>
+    <span class="hljs-keyword">busControl.Start();
+</span>}
+</code></pre>
+<p>
+  After all, run the <code>MassTransit.Publisher</code> app and
+  <code>MassTransit.Web.Mvc</code> app. Then, open /swagger URL on publisher app
+  and send a message. This message will be handled by
+  <code>OrderConsumer</code> in MVC project.
+</p>
+<h2 id="source-code">Source Code</h2>
+<p>
+  You can access the sample project on
+  <a
+    href="https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/MassTransitSample"
+    >https://github.com/aspnetboilerplate/aspnetboilerplate-samples/tree/master/MassTransitSample</a
+  >.
+</p>

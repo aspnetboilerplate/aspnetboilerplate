@@ -1,20 +1,19 @@
-﻿namespace Abp.AspNetCore.App.Models
+namespace Abp.AspNetCore.App.Models;
+
+public class SimpleViewModel
 {
-    public class SimpleViewModel
+    public string StrValue { get; set; }
+
+    public int IntValue { get; set; }
+
+    public SimpleViewModel()
     {
-        public string StrValue { get; set; }
 
-        public int IntValue { get; set; }
+    }
 
-        public SimpleViewModel()
-        {
-            
-        }
-
-        public SimpleViewModel(string strValue, int intValue)
-        {
-            StrValue = strValue;
-            IntValue = intValue;
-        }
+    public SimpleViewModel(string strValue, int intValue)
+    {
+        StrValue = strValue;
+        IntValue = intValue;
     }
 }

@@ -1,32 +1,34 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using Abp.Configuration;
 using Microsoft.AspNetCore.Http;
 
-namespace Abp.AspNetCore.Mvc.Caching
+namespace Abp.AspNetCore.Mvc.Caching;
+
+public class GetScriptsResponsePerUserCacheMiddleware
 {
-    public class GetScriptsResponsePerUserCacheMiddleware
+    private readonly RequestDelegate _next;
+    private readonly IGetScriptsResponsePerUserConfiguration _configuration;
+
+    public GetScriptsResponsePerUserCacheMiddleware(RequestDelegate next,
+        IGetScriptsResponsePerUserConfiguration configuration)
     {
-        internal static TimeSpan? MaxAge = TimeSpan.FromMinutes(30);
-        private readonly RequestDelegate _next;
+        _next = next;
+        _configuration = configuration;
+    }
 
-        public GetScriptsResponsePerUserCacheMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        if (_configuration.IsEnabled && context.Request.Path == "/AbpScripts/GetScripts")
         {
-            _next = next;
+            context.Response.GetTypedHeaders().CacheControl =
+                new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                {
+                    Public = true,
+                    MaxAge = _configuration.MaxAge,
+                };
         }
 
-        public async Task Invoke(HttpContext context)
-        {
-            if (context.Request.Path == "/AbpScripts/GetScripts")
-            {
-                context.Response.GetTypedHeaders().CacheControl =
-                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
-                    {
-                        Public = true,
-                        MaxAge = MaxAge,
-                    };
-            }
-
-            await _next(context);
-        }
+        await _next(context);
     }
 }

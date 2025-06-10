@@ -34,5 +34,10 @@ namespace Abp.Zero.Ldap.Configuration
         /// Abp.Zero.Ldap.Password
         /// </summary>
         public const string Password = "Abp.Zero.Ldap.Password";
+        
+        /// <summary>
+        /// Abp.Zero.Ldap.UseSsl
+        /// </summary>
+        public const string UseSsl = "Abp.Zero.Ldap.UseSsl";
     }
 }

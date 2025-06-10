@@ -14,51 +14,14 @@ var abp = abp || {};
     abp.signalr.increaseReconnectTime = abp.signalr.increaseReconnectTime || function (time) {
         return time * 2;
     };
+    abp.signalr.withUrlOptions = abp.signalr.withUrlOptions || {};
 
     // Configure the connection for abp.signalr.hubs.common
     function configureConnection(connection) {
         // Set the common hub
         abp.signalr.hubs.common = connection;
 
-        let tries = 1;
         let reconnectTime = abp.signalr.reconnectTime;
-
-        // Reconnect loop
-        function tryReconnect() {
-            if (tries <= abp.signalr.maxTries) {
-                connection.start()
-                    .then(function () {
-                        reconnectTime = abp.signalr.reconnectTime;
-                        tries = 1;
-                        console.log('Reconnected to SignalR server!');
-                        abp.event.trigger('abp.signalr.reconnected');
-                    }).catch(function () {
-                    tries += 1;
-                    reconnectTime = abp.signalr.increaseReconnectTime(reconnectTime);
-                    setTimeout(function () {
-                            tryReconnect()
-                        },
-                        reconnectTime
-                    );
-                });
-            }
-        }
-
-        // Reconnect if hub disconnects
-        connection.onclose(function (e) {
-            if (e) {
-                abp.log.debug('Connection closed with error: ' + e);
-            } else {
-                abp.log.debug('Disconnected');
-            }
-
-            if (!abp.signalr.autoReconnect) {
-                return;
-            }
-            
-            abp.event.trigger('abp.signalr.disconnected');
-            tryReconnect();
-        });
 
         // Register to get notifications
         connection.on('getNotification', function (notification) {
@@ -101,8 +64,23 @@ var abp = abp || {};
 
         return function start(transport) {
             abp.log.debug('Starting connection using ' + signalR.HttpTransportType[transport] + ' transport');
+            abp.signalr.withUrlOptions.transport = transport;
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl(url, transport)
+                .withAutomaticReconnect({
+                    nextRetryDelayInMilliseconds: retryContext => {
+                        abp.log.debug('Retry to connect to SignalR');
+                        if (retryContext.previousRetryCount > abp.signalr.maxTries) {
+                            abp.log.debug('Max retries reached');
+                            return null;
+                        }
+                        
+                        var elapsedTime = retryContext.elapsedMilliseconds ?? abp.signalr.reconnectTime; 
+                        reconnectTime = abp.signalr.increaseReconnectTime(elapsedTime);
+                        abp.log.debug('Waiting ' + reconnectTime + 'ms before retrying');
+                        return reconnectTime;
+                    }
+                })
+                .withUrl(url, abp.signalr.withUrlOptions)
                 .build();
 
             if (configureConnection && typeof configureConnection === 'function') {

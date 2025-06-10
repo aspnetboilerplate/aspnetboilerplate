@@ -53,7 +53,7 @@ namespace Abp.FluentMigrator.Extensions
         public static ICreateTableColumnOptionOrWithColumnSyntax WithDeletionTimeColumn(this ICreateTableWithColumnSyntax table)
         {
             return table
-                .WithColumn("DeletionTime").AsDateTime().Nullable();
+                .WithColumn("DeletionTime").AsDateTime2().Nullable();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Abp.FluentMigrator.Extensions
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddDeletionTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
-                .AddColumn("DeletionTime").AsDateTime().Nullable();
+                .AddColumn("DeletionTime").AsDateTime2().Nullable();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Abp.FluentMigrator.Extensions
         public static ICreateTableColumnOptionOrWithColumnSyntax WithCreationTimeColumn(this ICreateTableWithColumnSyntax table)
         {
             return table
-                .WithColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+                .WithColumn("CreationTime").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Abp.FluentMigrator.Extensions
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddCreationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
-                .AddColumn("CreationTime").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
+                .AddColumn("CreationTime").AsDateTime2().NotNullable().WithDefault(SystemMethods.CurrentDateTime);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Abp.FluentMigrator.Extensions
         public static IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax AddLastModificationTimeColumn(this IAlterTableAddColumnOrAlterColumnSyntax table)
         {
             return table
-                .AddColumn("LastModificationTime").AsDateTime().Nullable();
+                .AddColumn("LastModificationTime").AsDateTime2().Nullable();
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Abp.FluentMigrator.Extensions
         public static ICreateTableColumnOptionOrWithColumnSyntax WithLastModificationTimeColumn(this ICreateTableWithColumnSyntax table, bool defaultValue = true)
         {
             return table
-                .WithColumn("LastModificationTime").AsDateTime().Nullable();
+                .WithColumn("LastModificationTime").AsDateTime2().Nullable();
         }
 
         /// <summary>

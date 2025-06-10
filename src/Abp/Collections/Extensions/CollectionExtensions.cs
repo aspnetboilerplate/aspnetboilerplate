@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Abp.Collections.Extensions
@@ -14,6 +15,11 @@ namespace Abp.Collections.Extensions
         public static bool IsNullOrEmpty<T>(this ICollection<T> source)
         {
             return source == null || source.Count <= 0;
+        }
+        
+        public static bool IsNullOrEmpty(this IEnumerable @this)
+        {
+            return @this == null || @this.GetEnumerator().MoveNext() == false;
         }
 
         /// <summary>

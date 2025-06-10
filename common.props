@@ -1,24 +1,22 @@
 <Project>
     <PropertyGroup>
-        <Version>6.4.0</Version>
+        <Version>10.3.0</Version>
         <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <PackageIcon>abp_nupkg.png</PackageIcon>
         <PackageIconUrl>http://www.aspnetboilerplate.com/images/abp_nupkg.png</PackageIconUrl>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <PackageProjectUrl>http://www.aspnetboilerplate.com/</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/aspnetboilerplate/aspnetboilerplate</RepositoryUrl>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
-    <PropertyGroup>
-        <!-- Include symbol files (*.pdb) in the built .nupkg -->
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    </PropertyGroup>
     <ItemGroup>
-        <!-- Add PackageReference specific for your source control provider (see below) -->
+        <None Include="../../LICENSE.md" Pack="true" PackagePath="/"/>
+        <None Include="../../nupkg/abp_nupkg.png" Pack="true" PackagePath="/"/>
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All"/>
+	<ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     </ItemGroup>
 </Project>

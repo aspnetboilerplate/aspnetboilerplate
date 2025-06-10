@@ -27,6 +27,11 @@ stages:
         strategy:
           parallel: 4
         steps:
+          - task: Cache@2
+            inputs:
+              key: $(Agent.OS) | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS)
+              path: ~/.nuget/packages
           - task: CmdLine@2
             inputs:
-              script: './build.cmd Restore Compile Test --skip --test-partition $(System.JobPositionInPhase)'
+              script: './build.cmd Restore Compile Test --skip --partition $(System.JobPositionInPhase)/4'

@@ -16,7 +16,8 @@
                 Notification = tenantNotification,
                 UserId = userNotificationInfo.UserId,
                 State = userNotificationInfo.State,
-                TenantId = userNotificationInfo.TenantId
+                TenantId = userNotificationInfo.TenantId,
+                TargetNotifiers = userNotificationInfo.TargetNotifiers
             };
         }
     }

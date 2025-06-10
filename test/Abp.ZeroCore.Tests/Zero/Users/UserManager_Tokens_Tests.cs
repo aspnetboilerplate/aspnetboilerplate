@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
@@ -8,77 +8,94 @@ using Abp.ZeroCore.SampleApp.Core;
 using Shouldly;
 using Xunit;
 
-namespace Abp.Zero.Users
+namespace Abp.Zero.Users;
+
+public class UserManager_Tokens_Tests : AbpZeroTestBase
 {
-    public class UserManager_Tokens_Tests : AbpZeroTestBase
+    private readonly AbpUserManager<Role, User> _abpUserManager;
+    private readonly IRepository<UserToken, long> _userTokenRepository;
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public UserManager_Tokens_Tests()
     {
-        private readonly AbpUserManager<Role, User> _abpUserManager;
-        private readonly IRepository<UserToken, long> _userTokenRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        _abpUserManager = Resolve<AbpUserManager<Role, User>>();
+        _userTokenRepository = Resolve<IRepository<UserToken, long>>();
+        _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+    }
 
-        public UserManager_Tokens_Tests()
+    [Fact]
+    public async Task Should_Valid_Non_Expired_TokenValidityKey()
+    {
+        using (var uow = Resolve<IUnitOfWorkManager>().Begin())
         {
-            _abpUserManager = Resolve<AbpUserManager<Role, User>>();
-            _userTokenRepository = Resolve<IRepository<UserToken, long>>();
-            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-        }
-
-        [Fact]
-        public async Task Should_Valid_Non_Expired_TokenValidityKey()
-        {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
-                var tokenValidityKey = Guid.NewGuid().ToString();
-                await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
-                var isTokenValidityKeyValid =
-                    await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
-
-                isTokenValidityKeyValid.ShouldBeTrue();
-            }
-        }
-
-        [Fact]
-        public async Task Should_Not_Valid_Expired_TokenValidityKey()
-        {
-            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
-            {
-                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
-                var tokenValidityKey = Guid.NewGuid().ToString();
-                await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow);
-                var isTokenValidityKeyValid =
-                    await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
-
-                isTokenValidityKeyValid.ShouldBeFalse();
-            }
-        }
-
-        [Fact]
-        public async Task Should_Remove_Given_Name_TokenValidityKey()
-        {
+            var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
             var tokenValidityKey = Guid.NewGuid().ToString();
+            await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
+            var isTokenValidityKeyValid =
+                await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
 
-            using (_unitOfWorkManager.Begin())
-            {
-                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+            isTokenValidityKeyValid.ShouldBeTrue();
+        }
+    }
 
-                await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
-                await _unitOfWorkManager.Current.SaveChangesAsync();
+    [Fact]
+    public async Task Should_Validate_Non_Expired_TokenValidityKey_Using_UserIdentifier()
+    {
+        using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+        {
+            var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+            var tokenValidityKey = Guid.NewGuid().ToString();
+            await _abpUserManager.AddTokenValidityKeyAsync(user.ToUserIdentifier(), tokenValidityKey, DateTime.UtcNow.AddDays(1));
+            var isTokenValidityKeyValid = await _abpUserManager.IsTokenValidityKeyValidAsync(
+                user,
+                tokenValidityKey
+            );
 
-                var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
-                allTokens.Count.ShouldBe(1);
-            }
+            isTokenValidityKeyValid.ShouldBeTrue();
+            await uow.CompleteAsync();
+        }
+    }
 
-            using (_unitOfWorkManager.Begin())
-            {
-                var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+    [Fact]
+    public async Task Should_Not_Valid_Expired_TokenValidityKey()
+    {
+        using (var uow = Resolve<IUnitOfWorkManager>().Begin())
+        {
+            var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+            var tokenValidityKey = Guid.NewGuid().ToString();
+            await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow);
+            var isTokenValidityKeyValid =
+                await _abpUserManager.IsTokenValidityKeyValidAsync(user, tokenValidityKey);
 
-                await _abpUserManager.RemoveTokenValidityKeyAsync(user, tokenValidityKey);
-                await _unitOfWorkManager.Current.SaveChangesAsync();
+            isTokenValidityKeyValid.ShouldBeFalse();
+        }
+    }
 
-                var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
-                allTokens.Count.ShouldBe(0);
-            }
+    [Fact]
+    public async Task Should_Remove_Given_Name_TokenValidityKey()
+    {
+        var tokenValidityKey = Guid.NewGuid().ToString();
+
+        using (_unitOfWorkManager.Begin())
+        {
+            var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+
+            await _abpUserManager.AddTokenValidityKeyAsync(user, tokenValidityKey, DateTime.UtcNow.AddDays(1));
+            await _unitOfWorkManager.Current.SaveChangesAsync();
+
+            var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
+            allTokens.Count.ShouldBe(1);
+        }
+
+        using (_unitOfWorkManager.Begin())
+        {
+            var user = await _abpUserManager.GetUserByIdAsync(AbpSession.GetUserId());
+
+            await _abpUserManager.RemoveTokenValidityKeyAsync(user, tokenValidityKey);
+            await _unitOfWorkManager.Current.SaveChangesAsync();
+
+            var allTokens = await _userTokenRepository.GetAllListAsync(t => t.UserId == user.Id);
+            allTokens.Count.ShouldBe(0);
         }
     }
 }

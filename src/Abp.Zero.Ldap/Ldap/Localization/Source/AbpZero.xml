@@ -7,5 +7,6 @@
     <text name="Ldap_Domain" value="Domain" />
     <text name="Ldap_UserName" value="User name" />
     <text name="Ldap_Password" value="Password" />
+    <text name="Ldap_UseSsl" value="Use SSL" />
   </texts>
 </localizationDictionary>

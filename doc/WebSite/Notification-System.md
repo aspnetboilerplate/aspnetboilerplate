@@ -56,7 +56,10 @@ persistence.
 ### Subscribe to Notifications
 
 The **INotificationSubscriptionManager** provides an API to **subscribe** to
-notifications. Examples:
+notifications. A User can subscribe to a specific notification, to a notification related to a specific entity. 
+A user can also select specific notifiers when subscribing to a notification. In this way, user will not be notified by other notifiers. Full type name of the notifier must be provided when selecting a target Notifier. It can be set using `new EmailRealTimeNotifier().GetType().FullName` and accepts comma separated multiple values. 
+
+Examples:
 
     public class MyService : ITransientDependency
     {
@@ -213,6 +216,14 @@ For example, you can implement an **EmailRealTimeNotifier**:
 ```c#
 public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
 {
+    /// <summary>
+    /// If true, this real time notifier will be used for sending real time notifications when it is requested. Otherwise it will not be used.
+    /// <para>
+    /// If false, this realtime notifier will notify any notifications.
+    /// </para>
+    /// </summary>
+    bool UseOnlyIfRequestedAsTarget => false;
+    
     private readonly IEmailSender _emailSender;
     private readonly UserManager _userManager;
 
@@ -244,11 +255,68 @@ public class EmailRealTimeNotifier : IRealTimeNotifier, ITransientDependency
 }
 ```
 
+```c#
+public class SMSRealTimeNotifier : IRealTimeNotifier, ITransientDependency
+{
+    /// <summary>
+    /// If true, this real time notifier will be used for sending real time notifications when it is requested. Otherwise it will not be used.
+    /// <para>
+    /// If false, this realtime notifier will notify any notifications.
+    /// </para>
+    /// </summary>
+    bool UseOnlyIfRequestedAsTarget => true;
+
+    private readonly IUserSMSSender _userSmsSender;
+
+    public SMSRealTimeNotifier(IUserSMSSender userSmsSender)
+    {
+        _userSmsSender = userSmsSender;
+    }
+
+    public async Task SendNotificationsAsync(UserNotification[] userNotifications)
+    {
+        foreach (var userNotification in userNotifications)
+        {
+            if (userNotification.Notification.Data is MessageNotificationData data)
+            {
+                 var user = await _userManager.GetUserByIdAsync(userNotification.UserId);
+                _userSmsSender.Send(user, data.Message);
+            }
+        }
+    }
+}
+```
+
 Add it in the **PreInitialize** method of your module:
 
 ```c#
 Configuration.Notifications.Notifiers.Add<EmailRealTimeNotifier>();
+Configuration.Notifications.Notifiers.Add<SMSRealTimeNotifier>();
 ```
+
+Now you can publish notifications using new realtime notifiers.
+
+```csharp
+public async Task Publish_NewUserCreatedNotification(long userId)
+{
+    var data = new LocalizableMessageNotificationData(new LocalizableString("NewUserCreated", "MyLocalizationSourceName"));
+
+    await _notificationPublisher.PublishAsync("System.NewUserCreated", data);    
+}
+```
+
+That notification will be sent to all subscribed users using `EmailRealTimeNotifier` and `SignalRRealTimeNotifier`(default notifier). Since `SMSRealTimeNotifier`'s `UseOnlyIfRequestedAsTarget` is true, you must define it as a target to send notifications using it.
+
+```csharp
+public async Task Publish_NewUserCreatedNotificationWithSms(long userId)
+{
+    var data = new LocalizableMessageNotificationData(new LocalizableString("NewUserCreated", "MyLocalizationSourceName"));
+
+    await _notificationPublisher.PublishAsync("System.NewUserCreated", data, targetNotifiers: new Type[]{typeof(SMSRealTimeNotifier)});    
+}
+```
+
+Now, it will be sent using only `SMSRealTimeNotifier`i
 
 #### Client-Side
 

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.Dependency;
@@ -6,60 +6,63 @@ using Abp.Domain.Uow;
 using Abp.Runtime.Session;
 using Castle.Core.Logging;
 
-namespace Abp.Authorization
+namespace Abp.Authorization;
+
+/// <summary>
+/// Application should inherit this class to implement <see cref="IPermissionChecker"/>.
+/// </summary>
+/// <typeparam name="TRole"></typeparam>
+/// <typeparam name="TUser"></typeparam>
+public class PermissionChecker<TRole, TUser> : IPermissionChecker, ITransientDependency, IIocManagerAccessor
+    where TRole : AbpRole<TUser>, new()
+    where TUser : AbpUser<TUser>
 {
+    private readonly AbpUserManager<TRole, TUser> _userManager;
+
+    public IIocManager IocManager { get; set; }
+
+    public ILogger Logger { get; set; }
+
+    public IAbpSession AbpSession { get; set; }
+
+    public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
+
+    public IUnitOfWorkManager UnitOfWorkManager { get; set; }
+
     /// <summary>
-    /// Application should inherit this class to implement <see cref="IPermissionChecker"/>.
+    /// Constructor.
     /// </summary>
-    /// <typeparam name="TRole"></typeparam>
-    /// <typeparam name="TUser"></typeparam>
-    public class PermissionChecker<TRole, TUser> : IPermissionChecker, ITransientDependency, IIocManagerAccessor
-        where TRole : AbpRole<TUser>, new()
-        where TUser : AbpUser<TUser>
+    public PermissionChecker(AbpUserManager<TRole, TUser> userManager)
     {
-        private readonly AbpUserManager<TRole, TUser> _userManager;
+        _userManager = userManager;
 
-        public IIocManager IocManager { get; set; }
+        Logger = NullLogger.Instance;
+        AbpSession = NullAbpSession.Instance;
+    }
 
-        public ILogger Logger { get; set; }
+    public virtual async Task<bool> IsGrantedAsync(string permissionName)
+    {
+        return AbpSession.UserId.HasValue && await IsGrantedAsync(AbpSession.UserId.Value, permissionName);
+    }
 
-        public IAbpSession AbpSession { get; set; }
+    public virtual bool IsGranted(string permissionName)
+    {
+        return AbpSession.UserId.HasValue && IsGranted(AbpSession.UserId.Value, permissionName);
+    }
 
-        public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
+    public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
+    {
+        return await _userManager.IsGrantedAsync(userId, permissionName);
+    }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public PermissionChecker(AbpUserManager<TRole, TUser> userManager)
-        {
-            _userManager = userManager;
+    public virtual bool IsGranted(long userId, string permissionName)
+    {
+        return _userManager.IsGranted(userId, permissionName);
+    }
 
-            Logger = NullLogger.Instance;
-            AbpSession = NullAbpSession.Instance;
-        }
-
-        public virtual async Task<bool> IsGrantedAsync(string permissionName)
-        {
-            return AbpSession.UserId.HasValue && await IsGrantedAsync(AbpSession.UserId.Value, permissionName);
-        }
-
-        public virtual bool IsGranted(string permissionName)
-        {
-            return AbpSession.UserId.HasValue && IsGranted(AbpSession.UserId.Value, permissionName);
-        }
-
-        public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
-        {
-            return await _userManager.IsGrantedAsync(userId, permissionName);
-        }
-
-        public virtual bool IsGranted(long userId, string permissionName)
-        {
-            return _userManager.IsGranted(userId, permissionName);
-        }
-
-        [UnitOfWork]
-        public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+    public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
+    {
+        return await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             if (CurrentUnitOfWorkProvider?.Current == null)
             {
@@ -70,10 +73,12 @@ namespace Abp.Authorization
             {
                 return await IsGrantedAsync(user.UserId, permissionName);
             }
-        }
+        });
+    }
 
-        [UnitOfWork]
-        public virtual bool IsGranted(UserIdentifier user, string permissionName)
+    public virtual bool IsGranted(UserIdentifier user, string permissionName)
+    {
+        return UnitOfWorkManager.WithUnitOfWork(() =>
         {
             if (CurrentUnitOfWorkProvider?.Current == null)
             {
@@ -84,6 +89,6 @@ namespace Abp.Authorization
             {
                 return IsGranted(user.UserId, permissionName);
             }
-        }
+        });
     }
 }

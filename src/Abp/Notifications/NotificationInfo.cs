@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Abp.Domain.Entities.Auditing;
+using Abp.Extensions;
+using Abp.MultiTenancy;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Abp.Domain.Entities.Auditing;
-using Abp.MultiTenancy;
+using System.Linq;
 
 namespace Abp.Notifications
 {
@@ -68,6 +71,13 @@ namespace Abp.Notifications
         /// Value: 131072 (128 KB).
         /// </summary>
         public const int MaxTenantIdsLength = 128 * 1024;
+
+        public const int MaxTargetNotifiersLength = 1024;
+        
+        /// <summary>
+        /// Notification target list separation character.
+        /// </summary>
+        public const char NotificationTargetSeparator = ',';
 
         /// <summary>
         /// Unique notification name.
@@ -138,9 +148,20 @@ namespace Abp.Notifications
         [StringLength(MaxTenantIdsLength)]
         public virtual string TenantIds { get; set; }
 
+        /// <summary>
+        /// which realtime notifiers should handle this notification
+        /// </summary>
+        [StringLength(MaxTargetNotifiersLength)]
+        public virtual string TargetNotifiers { get; set; }
+
+        [NotMapped]
+        public virtual List<string> TargetNotifiersList => TargetNotifiers.IsNullOrWhiteSpace()
+            ? new List<string>()
+            : TargetNotifiers.Split(NotificationTargetSeparator).ToList();
+
         public NotificationInfo()
         {
-            
+
         }
 
         /// <summary>
@@ -150,6 +171,11 @@ namespace Abp.Notifications
         {
             Id = id;
             Severity = NotificationSeverity.Info;
+        }
+
+        public virtual void SetTargetNotifiers(List<string> list)
+        {
+            TargetNotifiers = string.Join(NotificationTargetSeparator.ToString(), list);
         }
     }
 }

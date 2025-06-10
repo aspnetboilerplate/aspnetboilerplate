@@ -97,7 +97,10 @@ namespace Abp.EntityHistory
         {
             if (propertyChangesStackTreeDictionary.ContainsKey(entityPropertyChange.PropertyName))
             {
-                propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] += " -> " + entityPropertyChange.OriginalValue;
+                propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName] =
+                    entityPropertyChange.OriginalValue + 
+                    " -> " +
+                    propertyChangesStackTreeDictionary[entityPropertyChange.PropertyName];
             }
             else
             {
@@ -112,7 +115,7 @@ namespace Abp.EntityHistory
 
                 propertyChangesStackTreeDictionary.Add(
                     entityPropertyChange.PropertyName,
-                    propertyCurrentValue + " -> " + entityPropertyChange.OriginalValue
+                    entityPropertyChange.OriginalValue + " -> " + propertyCurrentValue
                 );
             }
         }

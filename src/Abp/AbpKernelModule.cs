@@ -69,9 +69,6 @@ namespace Abp
 
             IocManager.IocContainer.Install(new EventBusInstaller(IocManager));
 
-            IocManager.Register(typeof(IOnlineClientManager<>), typeof(OnlineClientManager<>), DependencyLifeStyle.Singleton);
-            IocManager.Register(typeof(IOnlineClientStore<>), typeof(InMemoryOnlineClientStore<>), DependencyLifeStyle.Singleton);
-
             IocManager.Register(typeof(EventTriggerAsyncBackgroundJob<>), DependencyLifeStyle.Transient);
 
             IocManager.RegisterAssemblyByConvention(typeof(AbpKernelModule).GetAssembly(),
@@ -130,9 +127,11 @@ namespace Abp
 
         private void AddUnitOfWorkAuditFieldConfiguration()
         {
-            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreationUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.CreatorUserId, true);
             Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModifierUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.LastModificationTime, true);
             Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.DeleterUserId, true);
+            Configuration.UnitOfWork.RegisterAuditFieldConfiguration(AbpAuditFields.DeletionTime, true);
         }
 
         private void AddSettingProviders()

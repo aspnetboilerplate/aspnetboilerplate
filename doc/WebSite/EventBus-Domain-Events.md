@@ -271,7 +271,7 @@ arguments:
 
 In this case, the event bus creates a new ActivityWriter for each event. It
 then calls the ActivityWriter.Dispose method if it's
-[disposable](http://msdn.microsoft.com/en-us/library/system.idisposable.aspx).
+[disposable](https://learn.microsoft.com/en-us/dotnet/api/system.idisposable?view=net-8.0).
 
 Lastly, you can register an **event handler factory** to handle the creation
 of handlers. A handler factory has two methods: **GetHandler** and

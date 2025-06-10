@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Abp.Configuration.Startup;
 using Abp.Data;
 using Abp.Domain.Entities;
+using Abp.MultiTenancy;
 using Abp.Reflection.Extensions;
 using StackExchange.Redis;
 
@@ -18,42 +20,60 @@ namespace Abp.Runtime.Caching.Redis
         private readonly IDatabase _database;
         private readonly IRedisCacheSerializer _serializer;
 
+        protected IAbpRedisCacheKeyNormalizer KeyNormalizer { get; }
+        protected IMultiTenancyConfig MultiTenancyConfig { get; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
         public AbpRedisCache(
             string name,
             IAbpRedisCacheDatabaseProvider redisCacheDatabaseProvider,
-            IRedisCacheSerializer redisCacheSerializer)
+            IRedisCacheSerializer redisCacheSerializer,
+            IAbpRedisCacheKeyNormalizer keyNormalizer,
+            IMultiTenancyConfig multiTenancyConfig)
             : base(name)
         {
             _database = redisCacheDatabaseProvider.GetDatabase();
             _serializer = redisCacheSerializer;
+            KeyNormalizer = keyNormalizer;
+            MultiTenancyConfig = multiTenancyConfig;
+        }
+
+        protected virtual RedisKey NormalizeKey(string key)
+        {
+            return KeyNormalizer.NormalizeKey(
+                new AbpRedisCacheKeyNormalizeArgs(
+                    key,
+                    Name,
+                    MultiTenancyConfig.IsEnabled
+                )
+            );
         }
 
         public override bool TryGetValue(string key, out object value)
         {
-            var redisValue = _database.StringGet(GetLocalizedRedisKey(key));
+            var redisValue = _database.StringGet(NormalizeKey(key));
             value = redisValue.HasValue ? Deserialize(redisValue) : null;
             return redisValue.HasValue;
         }
 
         public override ConditionalValue<object>[] TryGetValues(string[] keys)
         {
-            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            var redisKeys = keys.Select(NormalizeKey);
             var redisValues = _database.StringGet(redisKeys.ToArray());
             return redisValues.Select(CreateConditionalValue).ToArray();
         }
 
         public override async Task<ConditionalValue<object>> TryGetValueAsync(string key)
         {
-            var redisValue = await _database.StringGetAsync(GetLocalizedRedisKey(key));
+            var redisValue = await _database.StringGetAsync(NormalizeKey(key));
             return CreateConditionalValue(redisValue);
         }
 
         public override async Task<ConditionalValue<object>[]> TryGetValuesAsync(string[] keys)
         {
-            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            var redisKeys = keys.Select(NormalizeKey);
             var redisValues = await _database.StringGetAsync(redisKeys.ToArray());
             return redisValues.Select(CreateConditionalValue).ToArray();
         }
@@ -65,14 +85,14 @@ namespace Abp.Runtime.Caching.Redis
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            var redisKey = GetLocalizedRedisKey(key);
+            var redisKey = NormalizeKey(key);
             var redisValue = Serialize(value, GetSerializableType(value));
             if (absoluteExpireTime.HasValue)
             {
                 if (!_database.StringSet(redisKey, redisValue))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
-                } 
+                }
                 else if (!_database.KeyExpire(redisKey, absoluteExpireTime.Value.UtcDateTime))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, absoluteExpireTime.Value.UtcDateTime);
@@ -83,6 +103,17 @@ namespace Abp.Runtime.Caching.Redis
                 if (!_database.StringSet(redisKey, redisValue, slidingExpireTime.Value))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                if (!_database.StringSet(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} in Redis", redisKey, redisValue);
+                }
+                else if (!_database.KeyExpire(redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime);
                 }
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
@@ -112,7 +143,7 @@ namespace Abp.Runtime.Caching.Redis
                 throw new AbpException("Can not insert null values to the cache!");
             }
 
-            var redisKey = GetLocalizedRedisKey(key);
+            var redisKey = NormalizeKey(key);
             var redisValue = Serialize(value, GetSerializableType(value));
             if (absoluteExpireTime.HasValue)
             {
@@ -130,6 +161,17 @@ namespace Abp.Runtime.Caching.Redis
                 if (!await _database.StringSetAsync(redisKey, redisValue, slidingExpireTime.Value))
                 {
                     Logger.ErrorFormat("Unable to set key:{0} value:{1} to expire after {2:c} asynchronously in Redis", redisKey, redisValue, slidingExpireTime.Value);
+                }
+            }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                if (!await _database.StringSetAsync(redisKey, redisValue))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} value:{1} asynchronously in Redis", redisKey, redisValue);
+                }
+                else if (!await _database.KeyExpireAsync(redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime))
+                {
+                    Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", redisKey, DefaultAbsoluteExpireTimeFactory(key).UtcDateTime);
                 }
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
@@ -160,7 +202,7 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             var redisPairs = pairs.Select(p => {
-                var redisKey = GetLocalizedRedisKey(p.Key);
+                var redisKey = NormalizeKey(p.Key);
                 var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
                 return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
             }).ToList();
@@ -195,6 +237,16 @@ namespace Abp.Runtime.Caching.Redis
                     }
                 }
             }
+            else if (DefaultAbsoluteExpireTimeFactory != null)
+            {
+                foreach (var pair in redisPairs)
+                {
+                    if (!_database.KeyExpire(pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime))
+                    {
+                        Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} in Redis", pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime);
+                    }
+                }
+            }
             else if (DefaultAbsoluteExpireTime.HasValue)
             {
                 foreach (var pair in redisPairs)
@@ -225,7 +277,7 @@ namespace Abp.Runtime.Caching.Redis
             }
 
             var redisPairs = pairs.Select(p => {
-                var redisKey = GetLocalizedRedisKey(p.Key);
+                var redisKey = NormalizeKey(p.Key);
                 var redisValue = Serialize(p.Value, GetSerializableType(p.Value));
                 return new KeyValuePair<RedisKey, RedisValue>(redisKey, redisValue);
             });
@@ -259,6 +311,16 @@ namespace Abp.Runtime.Caching.Redis
                         }
                     }
                 }
+                else if (DefaultAbsoluteExpireTimeFactory != null)
+                {
+                    foreach (var pair in redisPairs)
+                    {
+                        if (!await _database.KeyExpireAsync(pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime))
+                        {
+                            Logger.ErrorFormat("Unable to set key:{0} to expire at {1:O} asynchronously in Redis", pair.Key, DefaultAbsoluteExpireTimeFactory(pair.Key).UtcDateTime);
+                        }
+                    }
+                }
                 else if (DefaultAbsoluteExpireTime.HasValue)
                 {
                     foreach (var pair in redisPairs)
@@ -284,31 +346,36 @@ namespace Abp.Runtime.Caching.Redis
 
         public override void Remove(string key)
         {
-            _database.KeyDelete(GetLocalizedRedisKey(key));
+            _database.KeyDelete(NormalizeKey(key));
         }
 
         public override async Task RemoveAsync(string key)
         {
-            await _database.KeyDeleteAsync(GetLocalizedRedisKey(key));
+            await _database.KeyDeleteAsync(NormalizeKey(key));
         }
 
         public override void Remove(string[] keys)
         {
-            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            var redisKeys = keys.Select(NormalizeKey);
             _database.KeyDelete(redisKeys.ToArray());
         }
 
         public override async Task RemoveAsync(string[] keys)
         {
-            var redisKeys = keys.Select(GetLocalizedRedisKey);
+            var redisKeys = keys.Select(NormalizeKey);
             await _database.KeyDeleteAsync(redisKeys.ToArray());
         }
 
         public override void Clear()
         {
-            _database.KeyDeleteWithPrefix(GetLocalizedRedisKey("*"));
+            ClearRedisCacheInternal();
         }
 
+        protected virtual void ClearRedisCacheInternal()
+        {
+            _database.KeyDeleteWithPrefix(NormalizeKey("*"));
+        }
+        
         protected virtual Type GetSerializableType(object value)
         {
             //TODO: This is a workaround for serialization problems of entities.
@@ -334,11 +401,6 @@ namespace Abp.Runtime.Caching.Redis
         protected virtual object Deserialize(RedisValue objbyte)
         {
             return _serializer.Deserialize(objbyte);
-        }
-
-        protected virtual RedisKey GetLocalizedRedisKey(string key)
-        {
-            return "n:" + Name + ",c:" + key;
         }
     }
 }

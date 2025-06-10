@@ -1,4 +1,4 @@
-name: .NET
+name: "build and test"
 
 on:
   pull_request:
@@ -8,6 +8,9 @@ on:
       - '**/*.csproj'
       - '**/*.razor'
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
@@ -16,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 9.0.100-rc.2.24474.11
     - name: Restore dependencies
       run: dotnet restore
     - name: Build

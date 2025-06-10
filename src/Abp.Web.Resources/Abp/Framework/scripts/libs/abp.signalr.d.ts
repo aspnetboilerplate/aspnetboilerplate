@@ -10,6 +10,8 @@
 
         let url: string;
 
+        let withUrlOptions: object;
+        
         function connect(): any;
 
         function startConnection(url: string, configureConnection: Function): Promise<any>;

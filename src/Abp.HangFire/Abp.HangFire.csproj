@@ -4,7 +4,7 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.HangFire</AssemblyName>
     <PackageId>Abp.HangFire</PackageId>
@@ -25,11 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.7.19" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.20" />
+    <PackageReference Update="ConfigureAwait.Fody" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" />
+    <PackageReference Update="Fody" Version="6.9.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

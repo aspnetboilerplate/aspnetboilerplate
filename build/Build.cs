@@ -14,7 +14,6 @@ using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
 [MSBuildVerbosityMapping]
 [AzurePipelines(
@@ -51,7 +50,7 @@ class Build : NukeBuild
                     "*/src/*/bin",
                     "*/test/*/obj",
                     "*/test/*/bin")
-                .ForEach(DeleteDirectory);
+                .ForEach(path => path.DeleteDirectory());
         });
 
     Target Restore => _ => _
@@ -89,20 +88,19 @@ class Build : NukeBuild
                         .SetProject(v)));
         });
 
-    [Partition(4)] readonly Partition TestPartition;
 
     AbsolutePath TestResultDirectory => RootDirectory / "output" / "test-results";
 
     Target Test => _ => _
         .DependsOn(Compile)
-        .Partition(() => TestPartition)
+        .Partition(4)
         .Executes(() =>
         {
             var allTestConfigurations =
-                from project in Solution.GetProjects("*Tests")
+                from project in Solution.GetAllProjects("*Tests")
                 from targetFramework in project.GetTargetFrameworks()
                 select (project, targetFramework);
-            var relevantTestConfigurations = TestPartition.GetCurrent(allTestConfigurations);
+            var relevantTestConfigurations = Partition.GetCurrent(allTestConfigurations);
 
             try
             {
@@ -113,7 +111,8 @@ class Build : NukeBuild
                         .CombineWith(relevantTestConfigurations, (_, v) => _
                             .SetProjectFile(v.project)
                             .SetFramework(v.targetFramework)
-                            .SetLogger($"trx;LogFileName={v.project.Name}.trx")),
+                            .SetLoggers($"trx;LogFileName={v.project.Name}.trx")
+                        ),
                     completeOnFailure: true);
             }
             finally

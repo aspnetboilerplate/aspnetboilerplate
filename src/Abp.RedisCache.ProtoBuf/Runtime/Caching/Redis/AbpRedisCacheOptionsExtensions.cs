@@ -9,6 +9,7 @@ namespace Abp.Runtime.Caching.Redis
         {
             options.AbpStartupConfiguration
                 .ReplaceService<IRedisCacheSerializer, ProtoBufRedisCacheSerializer>(DependencyLifeStyle.Transient);
+
         }
     }
 }

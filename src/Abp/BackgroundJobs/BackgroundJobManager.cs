@@ -28,6 +28,7 @@ namespace Abp.BackgroundJobs
 
         private readonly IIocResolver _iocResolver;
         private readonly IBackgroundJobStore _store;
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
 
         static BackgroundJobManager()
         {
@@ -40,10 +41,12 @@ namespace Abp.BackgroundJobs
         public BackgroundJobManager(
             IIocResolver iocResolver,
             IBackgroundJobStore store,
+            IBackgroundJobConfiguration backgroundJobConfiguration,
             AbpAsyncTimer timer)
             : base(timer)
         {
             _store = store;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
             _iocResolver = iocResolver;
 
             EventBus = NullEventBus.Instance;
@@ -51,50 +54,65 @@ namespace Abp.BackgroundJobs
             Timer.Period = JobPollPeriod;
         }
 
-        [UnitOfWork]
         public virtual async Task<string> EnqueueAsync<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
         {
-            var jobInfo = new BackgroundJobInfo
-            {
-                JobType = typeof(TJob).AssemblyQualifiedName,
-                JobArgs = args.ToJsonString(),
-                Priority = priority
-            };
+            string jobInfoId;
 
-            if (delay.HasValue)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                var jobInfo = new BackgroundJobInfo
+                {
+                    JobType = typeof(TJob).AssemblyQualifiedName,
+                    JobArgs = args.ToJsonString(),
+                    Priority = priority
+                };
+
+                if (delay.HasValue)
+                {
+                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                }
+
+                await _store.InsertAsync(jobInfo);
+                await CurrentUnitOfWork.SaveChangesAsync();
+
+                jobInfoId = jobInfo.Id.ToString();
+                await uow.CompleteAsync();
             }
 
-            await _store.InsertAsync(jobInfo);
-            await CurrentUnitOfWork.SaveChangesAsync();
-
-            return jobInfo.Id.ToString();
+            return jobInfoId;
         }
 
-        [UnitOfWork]
         public virtual string Enqueue<TJob, TArgs>(TArgs args,
             BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJobBase<TArgs>
         {
-            var jobInfo = new BackgroundJobInfo
-            {
-                JobType = typeof(TJob).AssemblyQualifiedName,
-                JobArgs = args.ToJsonString(),
-                Priority = priority
-            };
+            string jobInfoId;
 
-            if (delay.HasValue)
+            using (var uow = UnitOfWorkManager.Begin())
             {
-                jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                var jobInfo = new BackgroundJobInfo
+                {
+                    JobType = typeof(TJob).AssemblyQualifiedName,
+                    JobArgs = args.ToJsonString(),
+                    Priority = priority
+                };
+
+                if (delay.HasValue)
+                {
+                    jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
+                }
+
+                _store.Insert(jobInfo);
+                CurrentUnitOfWork.SaveChanges();
+
+                jobInfoId = jobInfo.Id.ToString();
+
+                uow.Complete();
             }
 
-            _store.Insert(jobInfo);
-            CurrentUnitOfWork.SaveChanges();
-
-            return jobInfo.Id.ToString();
+            return jobInfoId;
         }
 
         public async Task<bool> DeleteAsync(string jobId)
@@ -125,7 +143,7 @@ namespace Abp.BackgroundJobs
 
         protected override async Task DoWorkAsync()
         {
-            var waitingJobs = await _store.GetWaitingJobsAsync(1000);
+            var waitingJobs = await _store.GetWaitingJobsAsync(_backgroundJobConfiguration.MaxWaitingJobToProcessPerPeriod);
 
             foreach (var job in waitingJobs)
             {

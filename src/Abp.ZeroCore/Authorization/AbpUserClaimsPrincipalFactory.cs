@@ -9,23 +9,26 @@ using Abp.Runtime.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace Abp.Authorization
+namespace Abp.Authorization;
+
+public class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, IAbpUserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
+    where TRole : AbpRole<TUser>, new()
+    where TUser : AbpUser<TUser>
 {
-    public class AbpUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>, ITransientDependency
-        where TRole : AbpRole<TUser>, new()
-        where TUser : AbpUser<TUser>
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public AbpUserClaimsPrincipalFactory(
+        AbpUserManager<TRole, TUser> userManager,
+        AbpRoleManager<TRole, TUser> roleManager,
+        IOptions<IdentityOptions> optionsAccessor,
+        IUnitOfWorkManager unitOfWorkManager) : base(userManager, roleManager, optionsAccessor)
     {
-        public AbpUserClaimsPrincipalFactory(
-            AbpUserManager<TRole, TUser> userManager,
-            AbpRoleManager<TRole, TUser> roleManager,
-            IOptions<IdentityOptions> optionsAccessor
-            ) : base(userManager, roleManager, optionsAccessor)
-        {
+        _unitOfWorkManager = unitOfWorkManager;
+    }
 
-        }
-
-        [UnitOfWork]
-        public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
+    public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
+    {
+        return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             var principal = await base.CreateAsync(user);
 
@@ -35,6 +38,6 @@ namespace Abp.Authorization
             }
 
             return principal;
-        }
+        });
     }
 }

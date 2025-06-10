@@ -125,75 +125,12 @@ namespace Abp.NHibernate.Interceptors
                 }
             }
 
-            if (entity is ISoftDelete && entity.As<ISoftDelete>().IsDeleted)
-            {
-                //Is deleted before? Normally, a deleted entity should not be updated later but I preferred to check it.
-                var previousIsDeleted = false;
-                for (var i = 0; i < propertyNames.Length; i++)
-                {
-                    if (propertyNames[i] == "IsDeleted")
-                    {
-                        previousIsDeleted = (bool)previousState[i];
-                        break;
-                    }
-                }
-
-                if (!previousIsDeleted)
-                {
-                    //set DeletionTime
-                    if (entity is IHasDeletionTime)
-                    {
-                        for (var i = 0; i < propertyNames.Length; i++)
-                        {
-                            if (propertyNames[i] == "DeletionTime")
-                            {
-                                currentState[i] = (entity as IHasDeletionTime).DeletionTime = Clock.Now;
-                                updated = true;
-                            }
-                        }
-                    }
-
-                    //set DeleterUserId
-                    if (entity is IDeletionAudited && _abpSession.Value.UserId.HasValue)
-                    {
-                        for (var i = 0; i < propertyNames.Length; i++)
-                        {
-                            if (propertyNames[i] == "DeleterUserId")
-                            {
-                                currentState[i] = (entity as IDeletionAudited).DeleterUserId = _abpSession.Value.UserId;
-                                updated = true;
-                            }
-                        }
-                    }
-
-                    EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
-                    EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
-                }
-                else
-                {
-                    EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
-                    EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
-                }
-            }
-            else
-            {
-                EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
-                EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
-            }
+            EntityChangeEventHelper.TriggerEntityUpdatingEvent(entity);
+            EntityChangeEventHelper.TriggerEntityUpdatedEventOnUowCompleted(entity);
 
             TriggerDomainEvents(entity);
 
             return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types) || updated;
-        }
-
-        public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
-        {
-            EntityChangeEventHelper.TriggerEntityDeletingEvent(entity);
-            EntityChangeEventHelper.TriggerEntityDeletedEventOnUowCompleted(entity);
-
-            TriggerDomainEvents(entity);
-
-            base.OnDelete(entity, id, state, propertyNames, types);
         }
 
         protected virtual void TriggerDomainEvents(object entityAsObj)
@@ -306,7 +243,7 @@ namespace Abp.NHibernate.Interceptors
 
                 if (subProp.IsDefined(typeof(DisableDateTimeNormalizationAttribute), true))
                 {
-                    continue;    
+                    continue;
                 }
 
                 var dateTime = subProp.GetValue(componentObject) as DateTime?;

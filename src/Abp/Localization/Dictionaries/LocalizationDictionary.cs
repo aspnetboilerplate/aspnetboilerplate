@@ -38,6 +38,13 @@ namespace Abp.Localization.Dictionaries
         }
 
         /// <inheritdoc/>
+        public virtual string TryGetKey(string value)
+        {
+            var found = _dictionary.Values.FirstOrDefault(x => x.Value == value);
+            return found?.Name;
+        }
+
+        /// <inheritdoc/>
         public virtual LocalizedString GetOrNull(string name)
         {
             return _dictionary.TryGetValue(name, out var localizedString) ? localizedString : null;

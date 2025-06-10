@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
-using Abp.Application.Services;
 using Abp.Dependency;
-using Abp.Domain.Uow;
 using Castle.Core;
-using Castle.MicroKernel;
 
 namespace Abp.Runtime.Validation.Interception
 {
@@ -11,15 +8,22 @@ namespace Abp.Runtime.Validation.Interception
     {
         public static void Initialize(IIocManager iocManager)
         {
-            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
-        }
-
-        private static void Kernel_ComponentRegistered(string key, IHandler handler)
-        {
-            if (typeof(IApplicationService).GetTypeInfo().IsAssignableFrom(handler.ComponentModel.Implementation))
+            iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>)));
-            }
+                var implementationType = handler.ComponentModel.Implementation.GetTypeInfo();
+            
+                if (!iocManager.IsRegistered<IAbpValidationDefaultOptions>())
+                {
+                    return;
+                }
+                
+                var validationOptions = iocManager.Resolve<IAbpValidationDefaultOptions>();
+
+                if (validationOptions.IsConventionalValidationClass(implementationType.AsType()))
+                {
+                    handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AbpAsyncDeterminationInterceptor<ValidationInterceptor>)));
+                }
+            };
         }
     }
 }

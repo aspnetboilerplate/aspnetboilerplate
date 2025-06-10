@@ -1,55 +1,54 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Abp.Collections.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AbpAspNetCoreDemo.Controllers
+namespace AbpAspNetCoreDemo.Controllers;
+
+public class TestController : DemoControllerBase
 {
-    public class TestController : DemoControllerBase
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [Route("api/test/getArray")]
-        [HttpGet]
-        public string TestGetArray(TestGetArrayModel model)
-        {
-            return model.Names.Length + " -> " + model.Names.JoinAsString(" # ");
-        }
-        
-        [Route("api/person")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public string CreatePerson()
-        {
-            return "42!";
-        }
-
-        [HttpPost]
-        public JsonResult GetJsonValueWithEnum([FromBody] ValidationTestArgument2 arg2)
-        {
-            return Json(new ValidationTestArgument2
-            {
-                Value = arg2.Value
-            });
-        }
+        return View();
     }
 
-    public class TestGetArrayModel
+    [Route("api/test/getArray")]
+    [HttpGet]
+    public string TestGetArray(TestGetArrayModel model)
     {
-        public string[] Names { get; set; }
+        return model.Names.Length + " -> " + model.Names.JoinAsString(" # ");
     }
 
-    public class ValidationTestArgument2
+    [Route("api/person")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public string CreatePerson()
     {
-        [EnumDataType(typeof(ValidationTestEnum))]
-        public ValidationTestEnum Value { get; set; }
+        return "42!";
     }
 
-    public enum ValidationTestEnum
+    [HttpPost]
+    public JsonResult GetJsonValueWithEnum([FromBody] ValidationTestArgument2 arg2)
     {
-        Value1 = 1,
-        Value2 = 2
+        return Json(new ValidationTestArgument2
+        {
+            Value = arg2.Value
+        });
     }
+}
+
+public class TestGetArrayModel
+{
+    public string[] Names { get; set; }
+}
+
+public class ValidationTestArgument2
+{
+    [EnumDataType(typeof(ValidationTestEnum))]
+    public ValidationTestEnum Value { get; set; }
+}
+
+public enum ValidationTestEnum
+{
+    Value1 = 1,
+    Value2 = 2
 }

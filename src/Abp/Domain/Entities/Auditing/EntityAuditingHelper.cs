@@ -1,5 +1,4 @@
 ﻿using Abp.Timing;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Abp.Configuration.Startup;
@@ -13,7 +12,7 @@ namespace Abp.Domain.Entities.Auditing
     {
         public static void SetCreationAuditProperties(
             IMultiTenancyConfig multiTenancyConfig,
-            object entityAsObj, 
+            object entityAsObj,
             int? tenantId,
             long? userId,
             IReadOnlyList<AuditFieldConfiguration> auditFields)
@@ -65,12 +64,12 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
-            var creationUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreationUserId);
+            var creationUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.CreatorUserId);
             if (creationUserIdFilter != null && !creationUserIdFilter.IsSavingEnabled)
             {
                 return;
             }
-            
+
             //Finally, set CreatorUserId!
             entity.CreatorUserId = userId;
         }
@@ -84,7 +83,11 @@ namespace Abp.Domain.Entities.Auditing
         {
             if (entityAsObj is IHasModificationTime)
             {
-                entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+                var lastModificationTimeFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModificationTime);
+                if (lastModificationTimeFilter == null || lastModificationTimeFilter.IsSavingEnabled)
+                {
+                    entityAsObj.As<IHasModificationTime>().LastModificationTime = Clock.Now;
+                }
             }
 
             if (!(entityAsObj is IModificationAudited))
@@ -93,12 +96,16 @@ namespace Abp.Domain.Entities.Auditing
                 return;
             }
 
-            var entity = entityAsObj.As<IModificationAudited>();
-
-            if (userId == null)
+            var lastModifierUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
+            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsSavingEnabled)
             {
-                //Unknown user
-                entity.LastModifierUserId = null;
+                return;
+            }
+
+            var entity = entityAsObj.As<IModificationAudited>();
+            if (entity.LastModifierUserId != null)
+            {
+                // LastModifierUserId is already set
                 return;
             }
 
@@ -107,7 +114,7 @@ namespace Abp.Domain.Entities.Auditing
                 if (MultiTenancyHelper.IsMultiTenantEntity(entity) &&
                     !MultiTenancyHelper.IsTenantEntity(entity, tenantId))
                 {
-                    //A tenant entitiy is modified by host or a different tenant
+                    //A tenant entity is modified by host or a different tenant
                     entity.LastModifierUserId = null;
                     return;
                 }
@@ -120,20 +127,14 @@ namespace Abp.Domain.Entities.Auditing
                 }
             }
 
-            var lastModifierUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.LastModifierUserId);
-            if (lastModifierUserIdFilter != null && !lastModifierUserIdFilter.IsSavingEnabled)
-            {
-                return;
-            }
-            
             //Finally, set LastModifierUserId!
             entity.LastModifierUserId = userId;
         }
 
         public static void SetDeletionAuditProperties(
-            IMultiTenancyConfig multiTenancyConfig, 
-            object entityAsObj, 
-            int? tenantId, 
+            IMultiTenancyConfig multiTenancyConfig,
+            object entityAsObj,
+            int? tenantId,
             long? userId,
             IReadOnlyList<AuditFieldConfiguration> auditFields)
         {
@@ -143,7 +144,11 @@ namespace Abp.Domain.Entities.Auditing
 
                 if (entity.DeletionTime == null)
                 {
-                    entity.DeletionTime = Clock.Now;
+                    var deletionTimeFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeletionTime);
+                    if (deletionTimeFilter == null || deletionTimeFilter.IsSavingEnabled)
+                    {
+                        entityAsObj.As<IHasDeletionTime>().DeletionTime = Clock.Now;
+                    }
                 }
             }
 
@@ -162,12 +167,12 @@ namespace Abp.Domain.Entities.Auditing
                     return;
                 }
 
-                var deleterUserIdFilter = auditFields.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeleterUserId);
+                var deleterUserIdFilter = auditFields?.FirstOrDefault(e => e.FieldName == AbpAuditFields.DeleterUserId);
                 if (deleterUserIdFilter != null && !deleterUserIdFilter.IsSavingEnabled)
                 {
                     return;
                 }
-                
+
                 //Special check for multi-tenant entities
                 if (entity is IMayHaveTenant || entity is IMustHaveTenant)
                 {

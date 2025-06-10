@@ -206,19 +206,19 @@ class that implements them all.
 
 In some cases, soft-delete entities may be requested to be permanently deleted. In those cases, **IRepository.HardDelete** extension method can be used. This method is currently implemented for EntityFramework 6.x and Entity Framework Core.
 
-If you wish to undelete a soft-deleted entity, you can query the entity by [disabling SoftDelete filter](Pages/Documents/Data-Filters#disable-filters) then use **Abp.Domain.Entities.EntityExtensions.Undelete(entity)**.
+If you wish to undelete a soft-deleted entity, you can query the entity by [disabling SoftDelete filter](/Pages/Documents/Data-Filters#disable-filters) then use **Abp.Domain.Entities.EntityExtensions.Undelete(entity)**.
 
 ##### Disable Auditing Fields
 
-In some cases, you might want to programmatically create, update or delete some entities and don't want ASP.NET Boilerplate to automatically set CreatorUserId, LastModifierUserId or DeleterUserId. You can easily disable or enable automatic setting of those fields using the DisableAuditing or EnableAuditing methods on the active unit of work.
+In some cases, you might want to programmatically create, update or delete some entities and don't want ASP.NET Boilerplate to automatically set CreatorUserId, LastModifierUserId, DeleterUserId, LastModificationTime or DeletionTime. You can easily disable or enable automatic setting of those fields using the DisableAuditing or EnableAuditing methods on the active unit of work.
 
 ````c#
-using (_unitOfWorkManager.Current.DisableAuditing(AbpAuiditing.CreatorUserId))
+using (_unitOfWorkManager.Current.DisableAuditing(AbpAuditFields.CreatorUserId))
 {
     // CreatorUserId will not be set by ASP.NET Boilerplate automatically
 }
 
-using (_unitOfWorkManager.Current.EnableAuditing(AbpAuiditing.DeleterUserId))
+using (_unitOfWorkManager.Current.EnableAuditing(AbpAuditFields.DeleterUserId))
 {
     // DeleterUserId will be set by ASP.NET Boilerplate automatically
 }

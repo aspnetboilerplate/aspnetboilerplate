@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Abp.RealTime;
+using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using Abp.RealTime;
-using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Abp.Tests.RealTime
@@ -11,15 +12,16 @@ namespace Abp.Tests.RealTime
     public class InMemoryOnlineClientManager_Tests
     {
         private readonly IOnlineClientManager _clientManager;
-        private static readonly RNGCryptoServiceProvider KeyGenerator = new RNGCryptoServiceProvider();
+        private static readonly RandomNumberGenerator KeyGenerator = RandomNumberGenerator.Create();
 
         public InMemoryOnlineClientManager_Tests()
         {
+            
             _clientManager = new OnlineClientManager(new InMemoryOnlineClientStore());
         }
 
         [Fact]
-        public void Test_All()
+        public async Task Test_All()
         {
             int tenantId = 1;
 
@@ -32,18 +34,18 @@ namespace Abp.Tests.RealTime
 
             foreach (var pair in connections)
             {
-                _clientManager.Add(new OnlineClient(pair.Key, "127.0.0.1", tenantId, pair.Value));
+                await _clientManager.AddAsync(new OnlineClient(pair.Key, "127.0.0.1", tenantId, pair.Value));
             }
 
             var testId = connections.Keys.ToList()[5];
 
-            _clientManager.GetAllClients().Count.ShouldBe(connections.Count);
-            _clientManager.GetAllByUserId(new UserIdentifier(tenantId, connections[testId])).Count.ShouldBe(1);
-            _clientManager.GetByConnectionIdOrNull(testId).ShouldNotBeNull();
-            _clientManager.Remove(testId).ShouldBeTrue();
-            _clientManager.GetAllClients().Count.ShouldBe(connections.Count - 1);
-            _clientManager.GetByConnectionIdOrNull(testId).ShouldBeNull();
-            _clientManager.GetAllByUserId(new UserIdentifier(tenantId, connections[testId])).Count.ShouldBe(0);
+            (await _clientManager.GetAllClientsAsync()).Count.ShouldBe(connections.Count);
+            (await _clientManager.GetAllByUserIdAsync(new UserIdentifier(tenantId, connections[testId]))).Count.ShouldBe(1);
+            (await _clientManager.GetByConnectionIdOrNullAsync(testId)).ShouldNotBeNull();
+            (await _clientManager.RemoveAsync(testId)).ShouldBeTrue();
+            (await _clientManager.GetAllClientsAsync()).Count.ShouldBe(connections.Count - 1);
+            (await _clientManager.GetByConnectionIdOrNullAsync(testId)).ShouldBeNull();
+            (await _clientManager.GetAllByUserIdAsync(new UserIdentifier(tenantId, connections[testId]))).Count.ShouldBe(0);
         }
 
         private static string MakeNewConnectionId()

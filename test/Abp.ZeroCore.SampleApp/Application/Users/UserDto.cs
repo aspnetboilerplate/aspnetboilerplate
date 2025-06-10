@@ -2,11 +2,10 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.ZeroCore.SampleApp.Core;
 
-namespace Abp.ZeroCore.SampleApp.Application.Users
+namespace Abp.ZeroCore.SampleApp.Application.Users;
+
+[AutoMap(typeof(User))]
+public class UserDto : EntityDto<long>
 {
-    [AutoMap(typeof(User))]
-    public class UserDto : EntityDto<long>
-    {
-        public string UserName { get; set; }
-    }
+    public string UserName { get; set; }
 }

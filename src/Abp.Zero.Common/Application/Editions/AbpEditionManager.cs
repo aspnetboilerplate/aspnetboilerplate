@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Abp.Application.Features;
+﻿using Abp.Application.Features;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Abp.Application.Editions
 {
-    public class AbpEditionManager : IDomainService
+    public class AbpEditionManager : IAbpEditionManager, IDomainService
     {
         private readonly IAbpZeroFeatureValueStore _featureValueStore;
-
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        
         public IQueryable<Edition> Editions => EditionRepository.GetAll();
 
         public ICacheManager CacheManager { get; set; }
@@ -23,11 +25,16 @@ namespace Abp.Application.Editions
 
         public AbpEditionManager(
             IRepository<Edition> editionRepository,
-            IAbpZeroFeatureValueStore featureValueStore)
+            IAbpZeroFeatureValueStore featureValueStore, 
+            IUnitOfWorkManager unitOfWorkManager)
         {
             _featureValueStore = featureValueStore;
+            _unitOfWorkManager = unitOfWorkManager;
             EditionRepository = editionRepository;
         }
+
+        public Task<IQueryable<Edition>> GetEditionsAsync()
+            => EditionRepository.GetAllAsync();
 
         public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
         {
@@ -99,54 +106,74 @@ namespace Abp.Application.Editions
             }
         }
 
-        public virtual Task CreateAsync(Edition edition)
+        public virtual async Task CreateAsync(Edition edition)
         {
-            return EditionRepository.InsertAsync(edition);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await EditionRepository.InsertAsync(edition)
+            );
         }
 
         public virtual void Create(Edition edition)
         {
-            EditionRepository.Insert(edition);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                EditionRepository.Insert(edition);
+            });
         }
 
-        public virtual Task<Edition> FindByNameAsync(string name)
+        public virtual async Task<Edition> FindByNameAsync(string name)
         {
-            return EditionRepository.FirstOrDefaultAsync(edition => edition.Name == name);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+            {
+                return await EditionRepository.FirstOrDefaultAsync(edition => edition.Name == name);
+            });
         }
 
         public virtual Edition FindByName(string name)
         {
-            return EditionRepository.FirstOrDefault(edition => edition.Name == name);
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                return EditionRepository.FirstOrDefault(edition => edition.Name == name);
+            });
         }
 
-        public virtual Task<Edition> FindByIdAsync(int id)
+        public virtual async Task<Edition> FindByIdAsync(int id)
         {
-            return EditionRepository.FirstOrDefaultAsync(id);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await EditionRepository.FirstOrDefaultAsync(id)
+            );
         }
 
         public virtual Edition FindById(int id)
         {
-            return EditionRepository.FirstOrDefault(id);
+            return _unitOfWorkManager.WithUnitOfWork(() =>
+                EditionRepository.FirstOrDefault(id)
+            );
         }
 
-        public virtual Task<Edition> GetByIdAsync(int id)
+        public virtual async Task<Edition> GetByIdAsync(int id)
         {
-            return EditionRepository.GetAsync(id);
+            return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
+                await EditionRepository.GetAsync(id)
+            );
         }
 
         public virtual Edition GetById(int id)
         {
-            return EditionRepository.Get(id);
+            return _unitOfWorkManager.WithUnitOfWork(() => EditionRepository.Get(id));
         }
 
-        public virtual Task DeleteAsync(Edition edition)
+        public virtual async Task DeleteAsync(Edition edition)
         {
-            return EditionRepository.DeleteAsync(edition);
+            await _unitOfWorkManager.WithUnitOfWorkAsync(async () => await EditionRepository.DeleteAsync(edition));
         }
 
         public virtual void Delete(Edition edition)
         {
-            EditionRepository.Delete(edition);
+            _unitOfWorkManager.WithUnitOfWork(() =>
+            {
+                EditionRepository.Delete(edition);
+            });
         }
     }
 }

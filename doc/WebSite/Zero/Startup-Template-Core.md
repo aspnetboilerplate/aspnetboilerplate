@@ -13,9 +13,22 @@ The easiest way of starting a new project using ABP with **ASP.NET Core MVC** is
     to create your database (ensure that the Default project is selected as
     **.EntityFrameworkCore** in the Package Manager Console window).
     
-- Since it uses **libman**, go to **Web.Mvc** project. Right click to **libman.json** file. Then click to **Restore Client-Side Libraries**. 
+- To download and build the project’s client-side packages, we use **gulp**.
 
-  (If you are not using Visual Studio and/or you are on a mac you can use [Libman CLI](https://github.com/aspnet/LibraryManager/wiki/Using-LibMan-CLI) . After installing it while in **Web.Mvc** folder run `libman restore`)
+  - **For development**:  
+    Open a terminal in the **Web.Mvc** folder and run:  
+    ```bash
+    npm run create-bundles
+    ```
+
+  - **For production**:  
+    Open a terminal in the **Web.Mvc** folder and run:  
+    ```bash
+    npm run build
+    ```
+
+  These commands will download the required client-side packages and generate the necessary bundles for the application.
+
 
 -   Run the application.
 
@@ -119,6 +132,20 @@ under the .Test project. You can check them and write similar tests
 easily. They are actually integration tests rather than unit tests,
 since they test your code with all the ASP.NET Boilerplate infrastructure
 (including validation, authorization, unit of work...).
+
+### Running on Docker
+
+The startup template includes necesary files for building docker images and running those images in docker.
+
+#### Building Docker images
+
+In order to build docker image, open the command prompt, go to `aspnet-core/build` folder and run `build-mvc.ps1` script. This script will build `abp/mvc` docker image.
+The default image is designed to use your local SQL Server, so don't foget to set `ConnectionStrings__Default` in `aspnet-core/docker/mvc/docker-compose.yml` before building the docker image. In order to connect your local SQL Server, you need to use your local IP address in the connection string. 
+A sample connection string is `ConnectionStrings__Default: "Server=192.168.1.42; Database=AbpProjectNameDb; User=sa; Password=123qwe;TrustServerCertificate=True;"`
+
+#### Running the project
+
+After creating the docker image, you can go to `aspnet-core/docker/mvc` folder and run `up.ps1` script to run the docker image.
 
 ### Source Code
 

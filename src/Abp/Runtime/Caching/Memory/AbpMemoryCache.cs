@@ -11,15 +11,20 @@ namespace Abp.Runtime.Caching.Memory
     public class AbpMemoryCache : CacheBase
     {
         private MemoryCache _memoryCache;
+        private readonly MemoryCacheOptions _memoryCacheOptions;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="name">Unique name of the cache</param>
-        public AbpMemoryCache(string name)
+        /// <param name="memoryCacheOptions">MemoryCacheOptions</param>
+        public AbpMemoryCache(string name, MemoryCacheOptions memoryCacheOptions = null)
             : base(name)
         {
-            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
+            _memoryCacheOptions = memoryCacheOptions;
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(
+                memoryCacheOptions ?? new MemoryCacheOptions()
+            ));
         }
 
         public override bool TryGetValue(string key, out object value)
@@ -33,22 +38,36 @@ namespace Abp.Runtime.Caching.Memory
             {
                 throw new AbpException("Can not insert null values to the cache!");
             }
+            var cacheOptions = new MemoryCacheEntryOptions { Size = 1 };
 
-            if (absoluteExpireTime.HasValue)
+            if (absoluteExpireTime.HasValue || slidingExpireTime.HasValue)
             {
-                _memoryCache.Set(key, value, absoluteExpireTime.Value);
+                if (absoluteExpireTime.HasValue)
+                {
+                    cacheOptions.AbsoluteExpiration = absoluteExpireTime;
+                }
+
+                if (slidingExpireTime.HasValue)
+                {
+                    cacheOptions.SlidingExpiration = slidingExpireTime;
+                }
+
+                _memoryCache.Set(key, value, cacheOptions);
             }
-            else if (slidingExpireTime.HasValue)
+            else if (DefaultAbsoluteExpireTimeFactory != null)
             {
-                _memoryCache.Set(key, value, slidingExpireTime.Value);
+                cacheOptions.AbsoluteExpiration = DefaultAbsoluteExpireTimeFactory(key);
+                _memoryCache.Set(key, value, cacheOptions);
             }
             else if (DefaultAbsoluteExpireTime.HasValue)
             {
-                _memoryCache.Set(key, value, DefaultAbsoluteExpireTime.Value);
+                cacheOptions.AbsoluteExpiration = DefaultAbsoluteExpireTime.Value;
+                _memoryCache.Set(key, value, cacheOptions);
             }
             else
             {
-                _memoryCache.Set(key, value, DefaultSlidingExpireTime);
+                cacheOptions.SlidingExpiration = DefaultSlidingExpireTime;
+                _memoryCache.Set(key, value, cacheOptions);
             }
         }
 
@@ -60,7 +79,9 @@ namespace Abp.Runtime.Caching.Memory
         public override void Clear()
         {
             _memoryCache.Dispose();
-            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(
+                _memoryCacheOptions ?? new MemoryCacheOptions()
+            ));
         }
 
         public override void Dispose()

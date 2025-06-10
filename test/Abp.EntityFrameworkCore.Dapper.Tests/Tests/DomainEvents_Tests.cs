@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 using Abp.Dapper.Repositories;
 using Abp.Domain.Repositories;
@@ -10,62 +10,61 @@ using Shouldly;
 
 using Xunit;
 
-namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests
+namespace Abp.EntityFrameworkCore.Dapper.Tests.Tests;
+
+public class DomainEvents_Tests : AbpEfCoreDapperTestApplicationBase
 {
-    public class DomainEvents_Tests : AbpEfCoreDapperTestApplicationBase
+    private readonly IDapperRepository<Blog> _blogDapperRepository;
+    private readonly IRepository<Blog> _blogRepository;
+    private readonly IEventBus _eventBus;
+
+    public DomainEvents_Tests()
     {
-        private readonly IDapperRepository<Blog> _blogDapperRepository;
-        private readonly IRepository<Blog> _blogRepository;
-        private readonly IEventBus _eventBus;
+        _blogRepository = Resolve<IRepository<Blog>>();
+        _blogDapperRepository = Resolve<IDapperRepository<Blog>>();
+        _eventBus = Resolve<IEventBus>();
+    }
 
-        public DomainEvents_Tests()
+    [Fact]
+    public void Should_Trigger_Domain_Events_For_Aggregate_Root()
+    {
+        //Arrange
+
+        var isTriggered = false;
+
+        _eventBus.Register<BlogUrlChangedEventData>(data =>
         {
-            _blogRepository = Resolve<IRepository<Blog>>();
-            _blogDapperRepository = Resolve<IDapperRepository<Blog>>();
-            _eventBus = Resolve<IEventBus>();
-        }
+            data.OldUrl.ShouldBe("http://testblog1.myblogs.com");
+            isTriggered = true;
+        });
 
-        [Fact]
-        public void Should_Trigger_Domain_Events_For_Aggregate_Root()
-        {
-            //Arrange
+        //Act
 
-            var isTriggered = false;
+        Blog blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
+        blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
+        _blogRepository.Update(blog1);
 
-            _eventBus.Register<BlogUrlChangedEventData>(data =>
+
+        //Assert
+        _blogDapperRepository.Get(blog1.Id).ShouldNotBeNull();
+        isTriggered.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task should_trigger_event_on_inserted_with_dapper()
+    {
+        var triggerCount = 0;
+
+        Resolve<IEventBus>().Register<EntityCreatedEventData<Blog>>(
+            eventData =>
             {
-                data.OldUrl.ShouldBe("http://testblog1.myblogs.com");
-                isTriggered = true;
+                eventData.Entity.Name.ShouldBe("OnSoftware");
+                eventData.Entity.IsTransient().ShouldBe(false);
+                triggerCount++;
             });
 
-            //Act
+        await _blogDapperRepository.InsertAsync(new Blog("OnSoftware", "www.aspnetboilerplate.com"));
 
-            Blog blog1 = _blogRepository.Single(b => b.Name == "test-blog-1");
-            blog1.ChangeUrl("http://testblog1-changed.myblogs.com");
-            _blogRepository.Update(blog1);
-            
-
-            //Assert
-            _blogDapperRepository.Get(blog1.Id).ShouldNotBeNull();
-            isTriggered.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task should_trigger_event_on_inserted_with_dapper()
-        {
-            var triggerCount = 0;
-
-            Resolve<IEventBus>().Register<EntityCreatedEventData<Blog>>(
-                eventData =>
-                {
-                    eventData.Entity.Name.ShouldBe("OnSoftware");
-                    eventData.Entity.IsTransient().ShouldBe(false);
-                    triggerCount++;
-                });
-
-            await _blogDapperRepository.InsertAsync(new Blog("OnSoftware", "www.aspnetboilerplate.com"));
-
-            triggerCount.ShouldBe(1);
-        }
+        triggerCount.ShouldBe(1);
     }
 }

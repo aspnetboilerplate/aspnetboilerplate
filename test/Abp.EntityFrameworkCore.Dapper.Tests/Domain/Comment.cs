@@ -1,18 +1,17 @@
-﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities;
 
-namespace Abp.EntityFrameworkCore.Dapper.Tests.Domain
+namespace Abp.EntityFrameworkCore.Dapper.Tests.Domain;
+
+public class Comment : Entity<long>
 {
-    public class Comment : Entity<long>
+    protected Comment()
     {
-        protected Comment()
-        {
-        }
-
-        public Comment(string text) : this()
-        {
-            Text = text;
-        }
-
-        public string Text { get; set; }
     }
+
+    public Comment(string text) : this()
+    {
+        Text = text;
+    }
+
+    public string Text { get; set; }
 }
