@@ -4,7 +4,6 @@
   <Import Project="..\..\configureawait.props" />
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp</AssemblyName>
     <PackageId>Abp</PackageId>
@@ -29,12 +28,12 @@
 	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0">
 		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
-    <PackageReference Include="System.Text.Json" Version="9.0.8" />
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Collections.Immutable" Version="9.0.8" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.8" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.10" />
     <PackageReference Include="Castle.LoggingFacility" Version="6.0.0" />
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
@@ -42,14 +41,18 @@
     <PackageReference Include="System.Threading" Version="4.3.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.7.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="9.0.8" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Castle.Core" Version="5.2.1" />
-    <PackageReference Include="TimeZoneConverter" Version="7.0.0" />
+    <PackageReference Include="TimeZoneConverter" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 
 </Project>

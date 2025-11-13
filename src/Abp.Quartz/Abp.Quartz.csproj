@@ -4,7 +4,6 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.Quartz</AssemblyName>
     <PackageId>Abp.Quartz</PackageId>
@@ -25,7 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Quartz" Version="3.15.0" />
+    <PackageReference Include="Quartz" Version="3.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 
 </Project>

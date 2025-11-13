@@ -115,7 +115,7 @@ public class Startup
                 if (parentDirectory.Name == "test")
                 {
 #if DEBUG
-                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Debug", "net9.0", "AbpAspNetCoreDemo.PlugIn.dll");
+                        plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Debug", "net10.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #else
                         plugDllInPath = Path.Combine(parentDirectory.FullName, "aspnet-core-demo", "AbpAspNetCoreDemo.PlugIn", "bin", "Release", "net9.0", "AbpAspNetCoreDemo.PlugIn.dll");
 #endif

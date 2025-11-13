@@ -3,7 +3,6 @@
     <Import Project="..\..\common.props" />
     <Import Project="..\..\configureawait.props" />
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Abp.ZeroCore.OpenIddict.EntityFrameworkCore</AssemblyName>
         <PackageId>Abp.ZeroCore.OpenIddict.EntityFrameworkCore</PackageId>
@@ -23,6 +22,9 @@
         <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Fody" Version="6.9.3" />
     </ItemGroup>
 </Project>

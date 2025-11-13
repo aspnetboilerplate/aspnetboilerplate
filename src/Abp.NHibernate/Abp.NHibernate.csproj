@@ -4,7 +4,6 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.NHibernate</AssemblyName>
     <PackageId>Abp.NHibernate</PackageId>
@@ -26,7 +25,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="3.4.1" />
-    <PackageReference Include="NHibernate" Version="5.5.2" />
+    <PackageReference Include="NHibernate" Version="5.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 
 </Project>

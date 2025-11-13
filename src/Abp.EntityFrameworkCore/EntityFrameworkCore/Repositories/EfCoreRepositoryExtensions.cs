@@ -134,7 +134,7 @@ public static class EfCoreRepositoryExtensions
     /// <returns></returns>
     public static async Task<int> BatchUpdateAsync<TEntity, TPrimaryKey>(
         [NotNull] this IRepository<TEntity, TPrimaryKey> repository,
-        [NotNull] Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> updateExpression,
+        [NotNull] Action<UpdateSettersBuilder<TEntity>> updateExpression,
         [NotNull] Expression<Func<TEntity, bool>> predicate)
         where TEntity : Entity<TPrimaryKey>
     {
@@ -162,7 +162,7 @@ public static class EfCoreRepositoryExtensions
     /// <returns></returns>
     public static async Task<int> BatchUpdateAsync<TEntity>(
         [NotNull] this IRepository<TEntity> repository,
-        [NotNull] Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> updateExpression,
+        [NotNull] Action<UpdateSettersBuilder<TEntity>> updateExpression,
         [NotNull] Expression<Func<TEntity, bool>> predicate)
         where TEntity : Entity<int>
     {

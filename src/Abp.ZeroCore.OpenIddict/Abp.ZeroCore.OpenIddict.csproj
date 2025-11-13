@@ -3,7 +3,6 @@
     <Import Project="..\..\common.props" />
     <Import Project="..\..\configureawait.props" />
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Abp.ZeroCore.OpenIddict</AssemblyName>
         <PackageId>Abp.ZeroCore.OpenIddict</PackageId>
@@ -21,6 +20,9 @@
         <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.Core" Version="7.0.0" />
+        <PackageReference Include="OpenIddict.Core" Version="7.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="Fody" Version="6.9.3" />
     </ItemGroup>
 </Project>

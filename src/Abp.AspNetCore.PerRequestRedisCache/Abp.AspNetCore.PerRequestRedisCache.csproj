@@ -2,7 +2,6 @@
   <Import Project="..\..\common.props" />
   <Import Project="..\..\configureawait.props" />
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.AspNetCore.PerRequestRedisCache</AssemblyName>
     <PackageId>Abp.AspNetCore.PerRequestRedisCache</PackageId>
@@ -22,5 +21,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abp.RedisCache\Abp.RedisCache.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 </Project>

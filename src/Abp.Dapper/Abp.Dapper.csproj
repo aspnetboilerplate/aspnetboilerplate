@@ -4,7 +4,6 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <AssemblyName>Abp.Dapper</AssemblyName>
     <PackageId>Abp.Dapper</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;Dapper;ORM</PackageTags>
@@ -25,12 +24,16 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net461'">
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.9.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net461' and '$(OSTYPE)' != 'linux-gnu' and '$(OSTYPE)' != 'darwin18'">
     <PackageReference Include="Oracle.ManagedDataAccess" version="19.28.0" targetFramework="net461" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 
 </Project>

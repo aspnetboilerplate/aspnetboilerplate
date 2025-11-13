@@ -6,6 +6,7 @@ using Abp.Modules;
 using Abp.Reflection;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
+using Microsoft.Extensions.Logging;
 
 namespace Abp.AutoMapper;
 

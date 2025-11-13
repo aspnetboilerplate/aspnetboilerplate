@@ -4,7 +4,6 @@
   <Import Project="..\..\configureawait.props" />
   
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Abp.HangFire</AssemblyName>
     <PackageId>Abp.HangFire</PackageId>
@@ -25,7 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.Core" Version="1.8.21" />
+    <PackageReference Include="Hangfire.Core" Version="1.8.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Fody" Version="6.9.3" />
   </ItemGroup>
 
 </Project>

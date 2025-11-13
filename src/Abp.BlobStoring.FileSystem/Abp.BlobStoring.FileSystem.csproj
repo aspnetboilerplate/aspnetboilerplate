@@ -4,7 +4,6 @@
 	<Import Project="..\..\configureawait.props" />
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Abp.BlobStoring.FileSystem</AssemblyName>
 		<PackageId>Abp.BlobStoring.FileSystem</PackageId>
@@ -26,7 +25,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Polly" Version="8.6.2" />
+		<PackageReference Include="Polly" Version="8.6.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Fody" Version="6.9.3" />
 	</ItemGroup>
 
 </Project>
