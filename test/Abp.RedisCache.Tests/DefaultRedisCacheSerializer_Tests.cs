@@ -28,7 +28,7 @@ namespace Abp.RedisCache.Tests
             };
 
             var result = _redisCacheSerializer.Serialize(source, typeof(List<string>));
-            result.ToString().ShouldStartWith("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String,");
+            result.ToString().ShouldStartWith("{\"Payload\":\"[\\\"Stranger Things\\\",\\\"The OA\\\",\\\"Lost in Space\\\"]\",\"Type\":\"System.Collections.Generic.List`1[[System.String]]\"}");
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Abp.RedisCache.Tests
             };
 
             var result = _redisCacheSerializer.Serialize(source, typeof(MyTestClass));
-            result.ToString().ShouldBe("{\"Payload\":\"{\\\"Field1\\\":42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"}");
+            result.ToString().ShouldBe("{\"Payload\":\"{\\\"Field1\\\":42,\\\"Field2\\\":\\\"Stranger Things\\\"}\",\"Type\":\"Abp.RedisCache.Tests.DefaultRedisCacheSerializer_Tests+MyTestClass, Abp.RedisCache.Tests\"}");
         }
 
         [Fact]
