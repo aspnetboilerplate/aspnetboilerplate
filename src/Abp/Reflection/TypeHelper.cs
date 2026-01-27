@@ -94,7 +94,7 @@ namespace Abp.Reflection
                 return typeNameBuilder;
             }
 
-            var assemblyName = type.GetTypeInfo().Assembly.GetName().FullName;
+            var assemblyName = type.GetTypeInfo().Assembly.GetName().Name;
 
             if (!SystemAssemblyNames.Contains(assemblyName))
             {
