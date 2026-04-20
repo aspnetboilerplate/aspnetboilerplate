@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -42,7 +43,7 @@ public class DateTimeKind_Normalization_Tests : EntityFrameworkCoreModuleTestBas
             blog.CreationTime.Kind.ShouldBe(DateTimeKind.Utc);
             blog.DeletionTime.ShouldNotBe(null);
             blog.DeletionTime.Value.Kind.ShouldBe(DateTimeKind.Utc);
-            blog.DeletionTime.Value.ToString("yyy-MM-dd HH:mm:ss").ShouldBe("2019-01-01 00:00:00");
+            blog.DeletionTime.Value.ToString("yyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture).ShouldBe("2019-01-01 00:00:00");
             blog.BlogTime.LastAccessTime.Kind.ShouldBe(DateTimeKind.Utc);
             blog.BlogTime.LatestPosTime.Kind.ShouldNotBe(DateTimeKind.Utc);
         }
