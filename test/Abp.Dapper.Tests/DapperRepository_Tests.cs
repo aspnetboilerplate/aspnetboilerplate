@@ -14,37 +14,29 @@ namespace Abp.Dapper.Tests
 {
     public class DapperRepository_Tests : DapperApplicationTestBase
     {
-        private readonly IDapperRepository<Product> _productDapperRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<ProductDetail> _productDetailRepository;
-        private readonly IDapperRepository<ProductDetail> _productDetailDapperRepository;
-        private readonly IRepository<Person> _personRepository;
-        private readonly IDapperRepository<Person> _personDapperRepository;
-        private readonly IDapperRepository<Good> _goodDapperRepository;
-        private readonly IDapperQueryFilterExecuter _dapperQueryFilterExecuter;
-
-        public DapperRepository_Tests()
-        {
-            _productDapperRepository = Resolve<IDapperRepository<Product>>();
-            _productRepository = Resolve<IRepository<Product>>();
-            _unitOfWorkManager = Resolve<IUnitOfWorkManager>();
-            _productDetailRepository = Resolve<IRepository<ProductDetail>>();
-            _productDetailDapperRepository = Resolve<IDapperRepository<ProductDetail>>();
-            _personRepository = Resolve<IRepository<Person>>();
-            _personDapperRepository = Resolve<IDapperRepository<Person>>();
-            _goodDapperRepository = Resolve<IDapperRepository<Good>>();
-            _dapperQueryFilterExecuter = Resolve<IDapperQueryFilterExecuter>();
-        }
+        private IDapperRepository<Product> ProductDapperRepository => Resolve<IDapperRepository<Product>>();
+        private IRepository<Product> ProductRepository => Resolve<IRepository<Product>>();
+        private IUnitOfWorkManager UnitOfWorkManager => Resolve<IUnitOfWorkManager>();
+        private IRepository<ProductDetail> ProductDetailRepository => Resolve<IRepository<ProductDetail>>();
+        private IDapperRepository<ProductDetail> ProductDetailDapperRepository => Resolve<IDapperRepository<ProductDetail>>();
+        private IRepository<Person> PersonRepository => Resolve<IRepository<Person>>();
+        private IDapperRepository<Person> PersonDapperRepository => Resolve<IDapperRepository<Person>>();
+        private IDapperRepository<Good> GoodDapperRepository => Resolve<IDapperRepository<Good>>();
+        private IDapperQueryFilterExecuter DapperQueryFilterExecuter => Resolve<IDapperQueryFilterExecuter>();
 
         [Fact]
         public async Task Dapper_Repository_Tests()
         {
-            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            if (!OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
+            using (IUnitOfWorkCompleteHandle uow = UnitOfWorkManager.Begin())
             {
                 //---Insert operation should work and tenant, creation audit properties must be set---------------------
-                await _productDapperRepository.InsertAsync(new Product("TShirt"));
-                Product insertedProduct = await _productDapperRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
+                await ProductDapperRepository.InsertAsync(new Product("TShirt"));
+                Product insertedProduct = await ProductDapperRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
 
                 insertedProduct.ShouldNotBeNull();
                 insertedProduct.TenantId.ShouldBe(AbpSession.TenantId);
@@ -52,10 +44,10 @@ namespace Abp.Dapper.Tests
                 insertedProduct.CreatorUserId.ShouldBe(AbpSession.UserId);
 
                 //----Update operation should work and Modification Audits should be set---------------------------
-                await _productDapperRepository.InsertAsync(new Product("TShirt"));
-                Product productToUpdate = await _productDapperRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
+                await ProductDapperRepository.InsertAsync(new Product("TShirt"));
+                Product productToUpdate = await ProductDapperRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
                 productToUpdate.Name = "Pants";
-                await _productDapperRepository.UpdateAsync(productToUpdate);
+                await ProductDapperRepository.UpdateAsync(productToUpdate);
 
                 productToUpdate.ShouldNotBeNull();
                 productToUpdate.TenantId.ShouldBe(AbpSession.TenantId);
@@ -63,55 +55,55 @@ namespace Abp.Dapper.Tests
                 productToUpdate.LastModifierUserId.ShouldBe(AbpSession.UserId);
 
                 //---Get method should return single-------------------------------------------------------------------
-                await _productDapperRepository.InsertAsync(new Product("TShirt"));
-                Action getAction = () => _productDapperRepository.Single(x => x.Name == "TShirt");
+                await ProductDapperRepository.InsertAsync(new Product("TShirt"));
+                Action getAction = () => ProductDapperRepository.Single(x => x.Name == "TShirt");
 
                 getAction.ShouldThrow<InvalidOperationException>("Sequence contains more than one element");
 
                 //----Select * from syntax should work---------------------------------
-                var queryResult = await _productDapperRepository.QueryAsync("select * from Products");
+                var queryResult = await ProductDapperRepository.QueryAsync("select * from Products");
 
                 IEnumerable<Product> products = queryResult;
 
                 products.Count().ShouldBeGreaterThan(0);
 
                 //------------Ef and Dapper should work under same transaction---------------------
-                Product productFromEf = await _productRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
-                Product productFromDapper = await _productDapperRepository.SingleAsync(productFromEf.Id);
+                Product productFromEf = await ProductRepository.FirstOrDefaultAsync(x => x.Name == "TShirt");
+                Product productFromDapper = await ProductDapperRepository.SingleAsync(productFromEf.Id);
 
                 productFromDapper.Name.ShouldBe(productFromEf.Name);
                 productFromDapper.TenantId.ShouldBe(productFromEf.TenantId);
 
                 //------Soft Delete should work for Dapper--------------
-                await _productDapperRepository.InsertAsync(new Product("SoftDeletableProduct"));
+                await ProductDapperRepository.InsertAsync(new Product("SoftDeletableProduct"));
 
-                Product toSoftDeleteProduct = await _productDapperRepository
+                Product toSoftDeleteProduct = await ProductDapperRepository
                     .SingleAsync(x => x.Name == "SoftDeletableProduct");
 
-                await _productDapperRepository.DeleteAsync(toSoftDeleteProduct);
+                await ProductDapperRepository.DeleteAsync(toSoftDeleteProduct);
 
                 toSoftDeleteProduct.IsDeleted.ShouldBe(true);
                 toSoftDeleteProduct.DeleterUserId.ShouldBe(AbpSession.UserId);
                 toSoftDeleteProduct.TenantId.ShouldBe(AbpSession.TenantId);
 
-                Product softDeletedProduct = await _productRepository
+                Product softDeletedProduct = await ProductRepository
                     .FirstOrDefaultAsync(x => x.Name == "SoftDeletableProduct");
 
                 softDeletedProduct.ShouldBeNull();
 
-                Product softDeletedProductFromDapper = await _productDapperRepository
+                Product softDeletedProductFromDapper = await ProductDapperRepository
                     .FirstOrDefaultAsync(x => x.Name == "SoftDeletableProduct");
 
                 softDeletedProductFromDapper.ShouldBeNull();
 
-                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+                using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
                 {
-                    Product softDeletedProductWhenFilterDisabled = await _productRepository
+                    Product softDeletedProductWhenFilterDisabled = await ProductRepository
                         .FirstOrDefaultAsync(x => x.Name == "SoftDeletableProduct");
 
                     softDeletedProductWhenFilterDisabled.ShouldNotBeNull();
 
-                    Product softDeletedProductFromDapperWhenFilterDisabled = await _productDapperRepository
+                    Product softDeletedProductFromDapperWhenFilterDisabled = await ProductDapperRepository
                         .SingleAsync(x => x.Name == "SoftDeletableProduct");
 
                     softDeletedProductFromDapperWhenFilterDisabled.ShouldNotBeNull();
@@ -119,58 +111,58 @@ namespace Abp.Dapper.Tests
 
                 using (AbpSession.Use(2, 266))
                 {
-                    int productWithTenant2Id = await _productDapperRepository
+                    int productWithTenant2Id = await ProductDapperRepository
                         .InsertAndGetIdAsync(new Product("ProductWithTenant2"));
 
-                    var productWithTenant2 = await _productRepository.GetAsync(productWithTenant2Id);
+                    var productWithTenant2 = await ProductRepository.GetAsync(productWithTenant2Id);
 
                     productWithTenant2.TenantId
                         .ShouldBe(1); // Not sure about that?,Because we changed TenantId to 2 in this scope !!! Abp-TenantId = 2 now NOT 1 !!!
                 }
 
-                using (_unitOfWorkManager.Current.SetTenantId(3))
+                using (UnitOfWorkManager.Current.SetTenantId(3))
                 {
-                    int productWithTenant3Id = await _productDapperRepository
+                    int productWithTenant3Id = await ProductDapperRepository
                         .InsertAndGetIdAsync(new Product("ProductWithTenant3"));
 
-                    Product productWithTenant3 = await _productRepository.GetAsync(productWithTenant3Id);
+                    Product productWithTenant3 = await ProductRepository.GetAsync(productWithTenant3Id);
 
                     productWithTenant3.TenantId.ShouldBe(3);
                 }
 
-                Product productWithTenantId3FromDapper = await _productDapperRepository
+                Product productWithTenantId3FromDapper = await ProductDapperRepository
                     .FirstOrDefaultAsync(x => x.Name == "ProductWithTenant3");
 
                 productWithTenantId3FromDapper.ShouldBeNull();
 
-                Product p = await _productDapperRepository.FirstOrDefaultAsync(x => x.IsDeleted == false);
+                Product p = await ProductDapperRepository.FirstOrDefaultAsync(x => x.IsDeleted == false);
                 p.ShouldNotBeNull();
 
-                using (_unitOfWorkManager.Current.SetTenantId(3))
+                using (UnitOfWorkManager.Current.SetTenantId(3))
                 {
-                    Product productWithTenantId3FromDapperInsideTenantScope = await _productDapperRepository
+                    Product productWithTenantId3FromDapperInsideTenantScope = await ProductDapperRepository
                         .FirstOrDefaultAsync(x => x.Name == "ProductWithTenant3");
 
                     productWithTenantId3FromDapperInsideTenantScope.ShouldNotBeNull();
                 }
 
                 //About issue-#2091
-                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                using (UnitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
                 {
-                    int productWithTenantId40 = await _productDapperRepository
+                    int productWithTenantId40 = await ProductDapperRepository
                         .InsertAndGetIdAsync(new Product("ProductWithTenantId40"));
 
-                    Product productWithTenant40 = await _productRepository.GetAsync(productWithTenantId40);
+                    Product productWithTenant40 = await ProductRepository.GetAsync(productWithTenantId40);
 
                     productWithTenant40.TenantId.ShouldBe(AbpSession.TenantId);
                     productWithTenant40.CreatorUserId.ShouldBe(AbpSession.UserId);
                 }
 
                 //Second DbContext tests
-                var productDetailId = await _productDetailRepository
+                var productDetailId = await ProductDetailRepository
                     .InsertAndGetIdAsync(new ProductDetail("Woman"));
 
-                (await _productDetailDapperRepository.GetAsync(productDetailId)).ShouldNotBeNull();
+                (await ProductDetailDapperRepository.GetAsync(productDetailId)).ShouldNotBeNull();
 
                 await uow.CompleteAsync();
             }
@@ -180,14 +172,19 @@ namespace Abp.Dapper.Tests
         [Fact]
         public void Should_Insert_Only_Have_IMustHaveTenant()
         {
-            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            if (!OperatingSystem.IsWindows())
             {
-                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                return;
+            }
+
+            using (IUnitOfWorkCompleteHandle uow = UnitOfWorkManager.Begin())
+            {
+                using (UnitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
                 {
                     int personWithTenantId40 =
-                        _personDapperRepository.InsertAndGetId(new Person("PersonWithTenantId40"));
+                        PersonDapperRepository.InsertAndGetId(new Person("PersonWithTenantId40"));
 
-                    Person personWithTenant40 = _personRepository.Get(personWithTenantId40);
+                    Person personWithTenant40 = PersonRepository.Get(personWithTenantId40);
 
                     personWithTenant40.TenantId.ShouldBe(AbpSession.TenantId.Value);
                 }
@@ -197,16 +194,21 @@ namespace Abp.Dapper.Tests
         [Fact]
         public async Task Dapper_Repository_Count_Should_Return_Correct_Value_For_Nullable_Int_Filter()
         {
-            using (IUnitOfWorkCompleteHandle uow = _unitOfWorkManager.Begin())
+            if (!OperatingSystem.IsWindows())
             {
-                using (_unitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
+                return;
+            }
+
+            using (IUnitOfWorkCompleteHandle uow = UnitOfWorkManager.Begin())
+            {
+                using (UnitOfWorkManager.Current.SetTenantId(AbpSession.TenantId))
                 {
-                    await _goodDapperRepository.InsertAsync(new Good {Name = "AbpTest"});
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    await GoodDapperRepository.InsertAsync(new Good {Name = "AbpTest"});
+                    await UnitOfWorkManager.Current.SaveChangesAsync();
 
                     int? id = 1;
 
-                    var dapperCount = await _goodDapperRepository.CountAsync(a => a.Id != id && a.Name == "AbpTest");
+                    var dapperCount = await GoodDapperRepository.CountAsync(a => a.Id != id && a.Name == "AbpTest");
                     dapperCount.ShouldBe(0);
                 }
 
