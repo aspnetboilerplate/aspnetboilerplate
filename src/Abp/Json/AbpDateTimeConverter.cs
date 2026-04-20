@@ -67,14 +67,22 @@ namespace Abp.Json
             {
                 foreach (var format in InputDateTimeFormats)
                 {
-                    if (DateTime.TryParseExact(dateText, format, _culture, _dateTimeStyles, out var d1))
+                    if (DateTime.TryParseExact(dateText, format, CultureInfo.CurrentCulture, _dateTimeStyles, out var d1) ||
+                        DateTime.TryParseExact(dateText, format, _culture, _dateTimeStyles, out d1))
                     {
                         return Clock.Normalize(d1);
                     }
                 }
             }
 
-            var date = DateTime.Parse(dateText, _culture, _dateTimeStyles);
+            DateTime date;
+            if (DateTime.TryParse(dateText, CultureInfo.CurrentCulture, _dateTimeStyles, out date) ||
+                DateTime.TryParse(dateText, _culture, _dateTimeStyles, out date))
+            {
+                return Clock.Normalize(date);
+            }
+
+            date = DateTime.Parse(dateText, _culture, _dateTimeStyles);
 
             return Clock.Normalize(date);
         }

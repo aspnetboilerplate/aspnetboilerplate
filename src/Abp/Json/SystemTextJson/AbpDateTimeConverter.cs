@@ -14,6 +14,7 @@ namespace Abp.Json.SystemTextJson
     {
         protected List<string> InputDateTimeFormats { get; set; }
         protected string OutputDateTimeFormat { get; set; }
+        private readonly CultureInfo _culture = CultureInfo.InvariantCulture;
 
         public AbpDateTimeConverter(List<string> inputDateTimeFormats = null, string outputDateTimeFormat = null)
         {
@@ -30,7 +31,8 @@ namespace Abp.Json.SystemTextJson
                     var s = reader.GetString();
                     foreach (var format in InputDateTimeFormats)
                     {
-                        if (DateTime.TryParseExact(s, format, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var outDateTime))
+                        if (DateTime.TryParseExact(s, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out var outDateTime) ||
+                            DateTime.TryParseExact(s, format, _culture, DateTimeStyles.None, out outDateTime))
                         {
                             return Clock.Normalize(outDateTime);
                         }
@@ -43,7 +45,8 @@ namespace Abp.Json.SystemTextJson
             }
 
             var dateText = reader.GetString();
-            if (DateTime.TryParse(dateText, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var date))
+            if (DateTime.TryParse(dateText, CultureInfo.CurrentCulture, DateTimeStyles.None, out var date) ||
+                DateTime.TryParse(dateText, _culture, DateTimeStyles.None, out date))
             {
                 return Clock.Normalize(date);    
             }
@@ -59,7 +62,7 @@ namespace Abp.Json.SystemTextJson
             }
             else
             {
-                writer.WriteStringValue(Clock.Normalize(value).ToString(OutputDateTimeFormat, CultureInfo.CurrentUICulture));
+                writer.WriteStringValue(Clock.Normalize(value).ToString(OutputDateTimeFormat, _culture));
             }
         }
     }
@@ -68,6 +71,7 @@ namespace Abp.Json.SystemTextJson
     {
         protected List<string> InputDateTimeFormats { get; set; }
         protected string OutputDateTimeFormat { get; set; }
+        private readonly CultureInfo _culture = CultureInfo.InvariantCulture;
 
         public AbpNullableDateTimeConverter(List<string> inputDateTimeFormats = null, string outputDateTimeFormat = null)
         {
@@ -89,7 +93,8 @@ namespace Abp.Json.SystemTextJson
                     
                     foreach (var format in InputDateTimeFormats)
                     {
-                        if (DateTime.TryParseExact(s, format, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var outDateTime))
+                        if (DateTime.TryParseExact(s, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out var outDateTime) ||
+                            DateTime.TryParseExact(s, format, _culture, DateTimeStyles.None, out outDateTime))
                         {
                             return Clock.Normalize(outDateTime);
                         }
@@ -107,7 +112,8 @@ namespace Abp.Json.SystemTextJson
                 return null;
             }
 
-            if (DateTime.TryParse(dateText, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var date))
+            if (DateTime.TryParse(dateText, CultureInfo.CurrentCulture, DateTimeStyles.None, out var date) ||
+                DateTime.TryParse(dateText, _culture, DateTimeStyles.None, out date))
             {
                 return Clock.Normalize(date);    
             }
@@ -129,7 +135,7 @@ namespace Abp.Json.SystemTextJson
                 }
                 else
                 {
-                    writer.WriteStringValue(Clock.Normalize(value.Value).ToString(OutputDateTimeFormat, CultureInfo.CurrentUICulture));
+                    writer.WriteStringValue(Clock.Normalize(value.Value).ToString(OutputDateTimeFormat, _culture));
                 }
             }
         }
