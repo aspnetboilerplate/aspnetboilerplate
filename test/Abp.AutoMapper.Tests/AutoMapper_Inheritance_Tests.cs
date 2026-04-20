@@ -1,5 +1,6 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using Microsoft.Extensions.Logging.Abstractions;
 using Shouldly;
 using System.Collections.Generic;
 using Xunit;
@@ -23,7 +24,7 @@ public class AutoMapper_Inheritance_Tests
             configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass7));
             configuration.AddCollectionMappers();
             configuration.CreateMap<MyAutoMapKeyClass1, MyAutoMapKeyClass2>().EqualityComparison((x, y) => x.Id == y.Id);
-        });
+        }, NullLoggerFactory.Instance);
 
         _mapper = config.CreateMapper();
     }

@@ -85,7 +85,7 @@ public class RedisOnlineClientStore : IOnlineClientStore, ISingletonDependency
         var database = GetDatabase();
         var clientsEntries = await database.HashGetAllAsync(_clientStoreKey);
         return clientsEntries
-            .Select(entry => JsonSerializer.Deserialize<OnlineClient>(entry.Value))
+            .Select(entry => JsonSerializer.Deserialize<OnlineClient>(entry.Value.ToString()))
             .Cast<IOnlineClient>()
             .ToImmutableList();
     }

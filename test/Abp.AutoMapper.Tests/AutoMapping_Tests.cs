@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using Microsoft.Extensions.Logging.Abstractions;
 using Shouldly;
 using Xunit;
 
@@ -22,7 +23,7 @@ public class AutoMapping_Tests
             configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass1));
             configuration.CreateAutoAttributeMaps(typeof(MyAutoMapKeyClass2));
             configuration.AddCollectionMappers();
-        });
+        }, NullLoggerFactory.Instance);
 
         _mapper = config.CreateMapper();
     }
