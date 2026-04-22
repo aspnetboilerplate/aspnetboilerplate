@@ -21,6 +21,6 @@
         <ProjectReference Include="..\Abp.ZeroCore\Abp.ZeroCore.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.Core" Version="7.0.0" />
+        <PackageReference Include="OpenIddict.Core" Version="7.5.0" />
     </ItemGroup>
 </Project>
