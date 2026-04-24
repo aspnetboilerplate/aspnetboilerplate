@@ -25,6 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="HtmlSanitizer" Version="9.0.886" />
+      <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
     </ItemGroup>
 </Project>

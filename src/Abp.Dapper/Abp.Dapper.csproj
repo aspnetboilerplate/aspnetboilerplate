@@ -18,14 +18,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
-    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageReference Include="Slapper.AutoMapper" Version="2.0.5" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net461' and '$(TargetFramework)' != 'net461'">
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.9.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.200" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 

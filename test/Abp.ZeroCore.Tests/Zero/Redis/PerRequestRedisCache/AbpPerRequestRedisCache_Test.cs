@@ -88,13 +88,13 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
             return new MyCacheItem { Value = cacheValue };
         }
 
-        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<Expiration>()).Returns(true);
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
         var item = _normalRedisCache.Get(cacheKey, GetCacheValue);
         RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>()); //redis cache tries to get value two times if value not exists see AbpCacheBase<TKey, TValue>.Get(TKey key, Func<TKey, TValue> factory)
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
@@ -105,7 +105,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
         // Should still be one received calls
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         counter.ShouldBe(1);
         item.ShouldNotBe(null);
@@ -166,7 +166,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         _perRequestRedisCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
     }
@@ -187,7 +187,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
             return new MyCacheItem { Value = cacheValue };
         }
 
-        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<Expiration>()).Returns(true);
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
@@ -195,7 +195,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
 
         var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
         RedisDatabase.Received(1).StringGet(Arg.Any<RedisKey>());
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
@@ -208,7 +208,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         RedisDatabase.Received(3).StringGet(Arg.Any<RedisKey>());
 
         // Should still be one received calls
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         counter.ShouldBe(1);
         item.ShouldNotBe(null);
@@ -236,13 +236,13 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
             return new MyCacheItem { Value = cacheValue };
         }
 
-        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+        RedisDatabase.StringSet(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<Expiration>()).Returns(true);
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
         var item = _perRequestRedisCache.Get(cacheKey, GetCacheValue);
         RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         RedisDatabase.StringGet(Arg.Any<RedisKey>()).Returns(cachedObject);
 
@@ -253,7 +253,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         RedisDatabase.Received(4).StringGet(Arg.Any<RedisKey>());
 
         // Should still be one received calls
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         counter.ShouldBe(1);
         item.ShouldNotBe(null);
@@ -314,7 +314,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         (await _perRequestRedisCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
     }
@@ -335,7 +335,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
             return Task.FromResult(new MyCacheItem { Value = cacheValue });
         }
 
-        RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+        RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<Expiration>()).Returns(true);
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
@@ -343,7 +343,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
 
         var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
         await RedisDatabase.Received(1).StringGetAsync(Arg.Any<RedisKey>());
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
@@ -356,7 +356,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         await RedisDatabase.Received(3).StringGetAsync(Arg.Any<RedisKey>());
 
         // Should still be one received calls
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         counter.ShouldBe(1);
         item.ShouldNotBe(null);
@@ -384,13 +384,13 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
             return Task.FromResult(new MyCacheItem { Value = cacheValue });
         }
 
-        RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<TimeSpan>()).Returns(true);
+        RedisDatabase.StringSetAsync(Arg.Any<RedisKey>(), Arg.Any<RedisValue>(), Arg.Any<Expiration>()).Returns(true);
 
         var cachedObject = RedisSerializer.Serialize(new MyCacheItem { Value = cacheValue }, typeof(MyCacheItem));
 
         var item = await _perRequestRedisCache.GetAsync(cacheKey, GetCacheValue);
         await RedisDatabase.Received(2).StringGetAsync(Arg.Any<RedisKey>());
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         RedisDatabase.StringGetAsync(Arg.Any<RedisKey>()).Returns(Task.FromResult(cachedObject));
 
@@ -401,7 +401,7 @@ public class AbpPerRequestRedisCache_Test : PerRequestRedisCacheTestsBase<AbpPer
         await RedisDatabase.Received(4).StringGetAsync(Arg.Any<RedisKey>());
 
         // Should still be one received calls
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         counter.ShouldBe(1);
         item.ShouldNotBe(null);
