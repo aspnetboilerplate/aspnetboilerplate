@@ -23,5 +23,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Abp\Abp.csproj" />
   </ItemGroup>
-
 </Project>

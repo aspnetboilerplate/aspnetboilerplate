@@ -23,6 +23,6 @@
         <ProjectReference Include="..\Abp.Zero.Common\Abp.Zero.Common.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.5.0" />
     </ItemGroup>
 </Project>

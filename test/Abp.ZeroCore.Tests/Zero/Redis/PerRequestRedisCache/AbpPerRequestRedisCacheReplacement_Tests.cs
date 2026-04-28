@@ -43,7 +43,7 @@ public class
 
         var cachedObject =
             RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
-        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(1).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         _typedCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
 
@@ -80,7 +80,7 @@ public class
 
         var cachedObject =
             RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
-        RedisDatabase.Received(2).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(2).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         _typedCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
 
@@ -124,7 +124,7 @@ public class
         RedisDatabase.Received(2).StringGet(Arg.Any<RedisKey>());
 
         var cachedObject = RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
-        RedisDatabase.Received(2).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        RedisDatabase.Received(2).StringSet(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         _typedCache.GetOrDefault(cacheKey).Value.ShouldBe(cacheValue);
 
@@ -165,7 +165,7 @@ public class
 
         var cachedObject =
             RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
-        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(1).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         (await _typedCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
 
@@ -202,7 +202,7 @@ public class
 
         var cachedObject =
             RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
-        await RedisDatabase.Received(2).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(2).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         (await _typedCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
 
@@ -248,7 +248,7 @@ public class
         var cachedObject =
             RedisSerializer.Serialize(new TestCacheItem { Value = cacheValue }, typeof(TestCacheItem));
 
-        await RedisDatabase.Received(2).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<TimeSpan>());
+        await RedisDatabase.Received(2).StringSetAsync(Arg.Any<RedisKey>(), cachedObject, Arg.Any<Expiration>());
 
         (await _typedCache.GetOrDefaultAsync(cacheKey)).Value.ShouldBe(cacheValue);
 
