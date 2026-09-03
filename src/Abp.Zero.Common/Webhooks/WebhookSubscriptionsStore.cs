@@ -83,8 +83,11 @@ namespace Abp.Webhooks
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
-                    subscriptionInfo.TenantId == tenantId);
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
+                        subscriptionInfo.TenantId == tenantId);
+                }
             });
         }
 
@@ -92,8 +95,11 @@ namespace Abp.Webhooks
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
-                    subscriptionInfo.TenantId == tenantId);
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
+                        subscriptionInfo.TenantId == tenantId);
+                }
             });
         }
 
@@ -103,11 +109,14 @@ namespace Abp.Webhooks
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
-                    subscriptionInfo.TenantId == tenantId &&
-                    subscriptionInfo.IsActive &&
-                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                );
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
+                        subscriptionInfo.TenantId == tenantId &&
+                        subscriptionInfo.IsActive &&
+                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                    );
+                }
             });
         }
 
@@ -115,11 +124,14 @@ namespace Abp.Webhooks
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
-                    subscriptionInfo.TenantId == tenantId &&
-                    subscriptionInfo.IsActive &&
-                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                );
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
+                        subscriptionInfo.TenantId == tenantId &&
+                        subscriptionInfo.IsActive &&
+                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                    );
+                }
             });
         }
 
@@ -127,9 +139,12 @@ namespace Abp.Webhooks
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
-                    tenantIds.Contains(subscriptionInfo.TenantId)
-                );
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
+                        tenantIds.Contains(subscriptionInfo.TenantId)
+                    );
+                }
             });
         }
 
@@ -137,9 +152,12 @@ namespace Abp.Webhooks
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
-                    tenantIds.Contains(subscriptionInfo.TenantId)
-                );
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
+                        tenantIds.Contains(subscriptionInfo.TenantId)
+                    );
+                }
             });
         }
 
@@ -149,11 +167,14 @@ namespace Abp.Webhooks
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
-                    subscriptionInfo.IsActive &&
-                    tenantIds.Contains(subscriptionInfo.TenantId) &&
-                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                );
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return await _webhookSubscriptionRepository.GetAllListAsync(subscriptionInfo =>
+                        subscriptionInfo.IsActive &&
+                        tenantIds.Contains(subscriptionInfo.TenantId) &&
+                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                    );
+                }
             });
         }
 
@@ -161,11 +182,14 @@ namespace Abp.Webhooks
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
-                    subscriptionInfo.IsActive &&
-                    tenantIds.Contains(subscriptionInfo.TenantId) &&
-                    subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                );
+                using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
+                {
+                    return _webhookSubscriptionRepository.GetAllList(subscriptionInfo =>
+                        subscriptionInfo.IsActive &&
+                        tenantIds.Contains(subscriptionInfo.TenantId) &&
+                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                    );
+                }
             });
         }
 
@@ -173,12 +197,15 @@ namespace Abp.Webhooks
         {
             return await _unitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
-                return await AsyncQueryableExecuter.AnyAsync((await _webhookSubscriptionRepository.GetAllAsync())
-                    .Where(subscriptionInfo =>
-                        subscriptionInfo.TenantId == tenantId &&
-                        subscriptionInfo.IsActive &&
-                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                    ));
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return await AsyncQueryableExecuter.AnyAsync((await _webhookSubscriptionRepository.GetAllAsync())
+                        .Where(subscriptionInfo =>
+                            subscriptionInfo.TenantId == tenantId &&
+                            subscriptionInfo.IsActive &&
+                            subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                        ));
+                }
             });
         }
 
@@ -186,12 +213,15 @@ namespace Abp.Webhooks
         {
             return _unitOfWorkManager.WithUnitOfWork(() =>
             {
-                return _webhookSubscriptionRepository.GetAll()
-                    .Any(subscriptionInfo =>
-                        subscriptionInfo.TenantId == tenantId &&
-                        subscriptionInfo.IsActive &&
-                        subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
-                    );
+                using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+                {
+                    return _webhookSubscriptionRepository.GetAll()
+                        .Any(subscriptionInfo =>
+                            subscriptionInfo.TenantId == tenantId &&
+                            subscriptionInfo.IsActive &&
+                            subscriptionInfo.Webhooks.Contains("\"" + webhookName + "\"")
+                        );
+                }
             });
         }
     }
