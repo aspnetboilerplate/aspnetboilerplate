@@ -107,12 +107,18 @@ namespace Abp.Webhooks.BackgroundWorker
                 return false;
             }
 
-            using (var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Required))
+            using var uow = UnitOfWorkManager.Begin(TransactionScopeOption.Required);
+
+            // The subscription is looked up by id, which is tenant filtered. This job runs without an ambient
+            // tenant, so the tenant of the webhook has to be set explicitly.
+            using (UnitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 await _webhookSubscriptionManager.ActivateWebhookSubscriptionAsync(subscriptionId, false);
-                await uow.CompleteAsync();
-                return true;
             }
+
+            await uow.CompleteAsync();
+
+            return true;
         }
     }
 }
