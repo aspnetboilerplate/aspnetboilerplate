@@ -25,8 +25,4 @@
 		<ProjectReference Include="..\Abp.BlobStoring\Abp.BlobStoring.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Polly" Version="8.7.0" />
-	</ItemGroup>
-
 </Project>
