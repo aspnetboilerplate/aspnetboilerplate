@@ -70,9 +70,10 @@ public class AbpExceptionFilter : IExceptionFilter, ITransientDependency
     }
 
     /// <summary>
-    /// Returns true if the exception is thrown because the client has closed the connection.
-    /// Such exceptions are neither logged nor wrapped: they are left to ASP.NET Core, which
-    /// reports them as 499 (Client Closed Request) instead of an application error.
+    /// Returns true if the exception is thrown because the request was aborted (typically, the
+    /// client has closed the connection). Such exceptions are neither logged nor wrapped: they are
+    /// left to ASP.NET Core, which reports them as 499 (Client Closed Request) instead of an
+    /// application error.
     /// </summary>
     protected virtual bool IsClientCancellation(HttpContext httpContext, Exception exception)
     {

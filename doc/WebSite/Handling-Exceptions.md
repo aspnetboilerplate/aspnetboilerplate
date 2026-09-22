@@ -130,8 +130,10 @@ ASP.NET Boilerplate does not treat this as an application error: such an excepti
 logged nor wrapped into an error response. It is left to ASP.NET Core, which reports the request
 as **499 (Client Closed Request)** and logs it as a debug message.
 
-Cancellations of requests that are still connected (a server side timeout, for instance) are
-logged and wrapped as usual. If you need a different behavior, you can override the
+Cancellations that are not caused by an aborted request (for example, an `HttpClient` timeout)
+are logged and wrapped as usual. Note that ASP.NET Core's request timeouts middleware
+(`UseRequestTimeouts`) also aborts the request, so such timeouts are left to ASP.NET Core too,
+which returns **504 (Gateway Timeout)**. If you need a different behavior, you can override the
 **IsClientCancellation** method of `AbpExceptionFilter` and `AbpExceptionPageFilter`.
 
 ### Exception Event
