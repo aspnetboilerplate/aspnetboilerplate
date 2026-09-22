@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Abp.AspNetCore.Configuration;
@@ -14,6 +15,7 @@ using Abp.Runtime.Validation;
 using Abp.Web.Configuration;
 using Abp.Web.Models;
 using Castle.Core.Logging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -64,6 +66,11 @@ public class AbpExceptionPageFilter : IAsyncPageFilter, ITransientDependency
             return;
         }
 
+        if (IsClientCancellation(pageHandlerExecutedContext.HttpContext, pageHandlerExecutedContext.Exception))
+        {
+            return;
+        }
+
         var wrapResultAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
             context.HandlerMethod.MethodInfo,
             _configuration.DefaultWrapResultAttribute
@@ -75,6 +82,17 @@ public class AbpExceptionPageFilter : IAsyncPageFilter, ITransientDependency
         }
 
         HandleAndWrapException(pageHandlerExecutedContext, wrapResultAttribute);
+    }
+
+    /// <summary>
+    /// Returns true if the exception is thrown because the request was aborted (typically, the
+    /// client has closed the connection). Such exceptions are neither logged nor wrapped: they are
+    /// left to ASP.NET Core, which reports them as 499 (Client Closed Request) instead of an
+    /// application error.
+    /// </summary>
+    protected virtual bool IsClientCancellation(HttpContext httpContext, Exception exception)
+    {
+        return ClientCancellationHelper.IsClientCancellation(httpContext, exception);
     }
 
     protected virtual void HandleAndWrapException(PageHandlerExecutedContext context,
