@@ -121,6 +121,19 @@ error message to the user using the [message API](/Pages/Documents/Javascript-AP
 See the [AJAX API](/Pages/Documents/Javascript-API/AJAX) documentation for more
 information.
 
+### Canceled Requests
+
+If the client closes the connection before the request is completed (for example, the user
+navigates away from the page or an AJAX call is aborted), the action may throw an
+**OperationCanceledException** (or an **IOException** while the request body is being read).
+ASP.NET Boilerplate does not treat this as an application error: such an exception is neither
+logged nor wrapped into an error response. It is left to ASP.NET Core, which reports the request
+as **499 (Client Closed Request)** and logs it as a debug message.
+
+Cancellations of requests that are still connected (a server side timeout, for instance) are
+logged and wrapped as usual. If you need a different behavior, you can override the
+**IsClientCancellation** method of `AbpExceptionFilter` and `AbpExceptionPageFilter`.
+
 ### Exception Event
 
 When ASP.NET Boilerplare handles an exception, it triggers an
