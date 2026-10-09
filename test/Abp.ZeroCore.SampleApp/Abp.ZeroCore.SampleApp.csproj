@@ -19,5 +19,6 @@
     <ProjectReference Include="..\..\src\Abp.AutoMapper\Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Abp.ZeroCore.EntityFrameworkCore\Abp.ZeroCore.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Abp.ZeroCore\Abp.ZeroCore.csproj" />
+    <ProjectReference Include="..\..\src\Abp.ZeroCore.OpenIddict.EntityFrameworkCore\Abp.ZeroCore.OpenIddict.EntityFrameworkCore.csproj" />
   </ItemGroup>
 </Project>
