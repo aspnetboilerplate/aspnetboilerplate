@@ -6,6 +6,7 @@ using Abp.EntityFramework.Repositories;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Repositories;
 using Abp.Modules;
+using Abp.OpenIddict.EntityFrameworkCore;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
 using Abp.ZeroCore.SampleApp.Application;
@@ -19,7 +20,10 @@ using Castle.MicroKernel.Registration;
 
 namespace Abp.ZeroCore.SampleApp;
 
-[DependsOn(typeof(AbpZeroCoreEntityFrameworkCoreModule), typeof(AbpAutoMapperModule))]
+[DependsOn(
+    typeof(AbpZeroCoreEntityFrameworkCoreModule),
+    typeof(AbpZeroCoreOpenIddictEntityFrameworkCoreModule),
+    typeof(AbpAutoMapperModule))]
 public class AbpZeroCoreSampleAppModule : AbpModule
 {
     /* Used it tests to skip dbcontext registration, in order to use in-memory database of EF Core */

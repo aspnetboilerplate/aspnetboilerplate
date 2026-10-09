@@ -51,9 +51,14 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
     {
         Check.NotNull(authorization, nameof(authorization));
 
-        await Repository.InsertAsync(authorization.ToEntity());
+        await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+        {
+            await Repository.InsertAsync(authorization.ToEntity());
 
-        authorization = (await Repository.FindByIdAsync(authorization.Id, cancellationToken)).ToModel();
+            // Save immediately, so that the authorization can be queried by other stores
+            // (i.e. AbpOpenIddictTokenStore.SetAuthorizationIdAsync) within the same unit of work.
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+        });
     }
 
     public virtual async ValueTask DeleteAsync(OpenIddictAuthorizationModel authorization,
@@ -356,15 +361,18 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
     {
         Check.NotNull(authorization, nameof(authorization));
 
-        if (!string.IsNullOrEmpty(identifier))
+        await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
-            var application = await ApplicationRepository.GetAsync(Guid.Parse(identifier));
-            authorization.ApplicationId = application.Id;
-        }
-        else
-        {
-            authorization.ApplicationId = null;
-        }
+            if (!string.IsNullOrEmpty(identifier))
+            {
+                var application = await ApplicationRepository.GetAsync(Guid.Parse(identifier));
+                authorization.ApplicationId = application.Id;
+            }
+            else
+            {
+                authorization.ApplicationId = null;
+            }
+        });
     }
 
     public virtual ValueTask SetCreationDateAsync(OpenIddictAuthorizationModel authorization, DateTimeOffset? date,

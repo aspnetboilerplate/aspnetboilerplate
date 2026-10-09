@@ -40,9 +40,11 @@ public class AbpOpenIddictScopeStore : AbpOpenIddictStoreBase<IOpenIddictScopeRe
     {
         Check.NotNull(scope, nameof(scope));
 
-        await Repository.InsertAsync(scope.ToEntity());
-
-        scope = (await Repository.FindByIdAsync(scope.Id, cancellationToken: cancellationToken)).ToModel();
+        await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
+        {
+            await Repository.InsertAsync(scope.ToEntity());
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+        });
     }
 
     public virtual async ValueTask DeleteAsync(OpenIddictScopeModel scope, CancellationToken cancellationToken)

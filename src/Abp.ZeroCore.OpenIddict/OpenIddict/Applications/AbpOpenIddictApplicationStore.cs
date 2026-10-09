@@ -54,8 +54,7 @@ public class AbpOpenIddictApplicationStore : AbpOpenIddictStoreBase<IOpenIddictA
         await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             await Repository.InsertAsync(application.ToEntity());
-            application = (await Repository.FindByClientIdAsync(application.Id.ToString(), cancellationToken))
-                .ToModel();
+            await UnitOfWorkManager.Current.SaveChangesAsync();
         });
     }
 
