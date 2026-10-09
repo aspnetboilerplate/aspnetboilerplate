@@ -78,6 +78,51 @@ public class OpenIddictStore_UnitOfWork_Tests : AbpZeroTestBase
         await ShouldBeSavedAsync(authorizationId, tokenId);
     }
 
+    [Fact]
+    public async Task Should_Rollback_Ad_Hoc_Authorization_And_Token_When_Ambient_UnitOfWork_Is_Not_Completed()
+    {
+        Guid authorizationId, tokenId;
+
+        using (_unitOfWorkManager.Begin(new UnitOfWorkOptions { IsTransactional = true }))
+        {
+            (authorizationId, tokenId) = await CreateAdHocAuthorizationAndTokenAsync();
+        }
+
+        await UsingDbContextAsync(async context =>
+        {
+            (await context.Authorizations.AnyAsync(a => a.Id == authorizationId)).ShouldBeFalse();
+            (await context.Tokens.AnyAsync(t => t.Id == tokenId)).ShouldBeFalse();
+        });
+    }
+
+    [Fact]
+    public async Task Should_Not_Create_Authorization_When_Cancellation_Is_Requested()
+    {
+        var authorization = await _authorizationStore.InstantiateAsync(CancellationToken.None);
+
+        await Should.ThrowAsync<OperationCanceledException>(async () =>
+            await _authorizationStore.CreateAsync(authorization, new CancellationToken(canceled: true)));
+
+        await UsingDbContextAsync(async context =>
+        {
+            (await context.Authorizations.AnyAsync(a => a.Id == authorization.Id)).ShouldBeFalse();
+        });
+    }
+
+    [Fact]
+    public async Task Should_Not_Create_Token_When_Cancellation_Is_Requested()
+    {
+        var token = await _tokenStore.InstantiateAsync(CancellationToken.None);
+
+        await Should.ThrowAsync<OperationCanceledException>(async () =>
+            await _tokenStore.CreateAsync(token, new CancellationToken(canceled: true)));
+
+        await UsingDbContextAsync(async context =>
+        {
+            (await context.Tokens.AnyAsync(t => t.Id == token.Id)).ShouldBeFalse();
+        });
+    }
+
     /// <summary>
     /// Mimics what OpenIddict does on connect/token with reference access tokens:
     /// it creates an ad-hoc authorization, then creates a token entry that references it.

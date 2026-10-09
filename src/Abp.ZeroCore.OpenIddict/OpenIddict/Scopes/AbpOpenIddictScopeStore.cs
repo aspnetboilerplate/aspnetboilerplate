@@ -39,6 +39,7 @@ public class AbpOpenIddictScopeStore : AbpOpenIddictStoreBase<IOpenIddictScopeRe
     public virtual async ValueTask CreateAsync(OpenIddictScopeModel scope, CancellationToken cancellationToken)
     {
         Check.NotNull(scope, nameof(scope));
+        cancellationToken.ThrowIfCancellationRequested();
 
         await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {

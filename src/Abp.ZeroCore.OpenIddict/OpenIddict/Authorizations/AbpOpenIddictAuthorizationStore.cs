@@ -50,6 +50,7 @@ public class AbpOpenIddictAuthorizationStore : AbpOpenIddictStoreBase<IOpenIddic
         CancellationToken cancellationToken)
     {
         Check.NotNull(authorization, nameof(authorization));
+        cancellationToken.ThrowIfCancellationRequested();
 
         await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {

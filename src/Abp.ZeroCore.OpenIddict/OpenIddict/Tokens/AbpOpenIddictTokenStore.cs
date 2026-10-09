@@ -48,6 +48,7 @@ namespace Abp.OpenIddict.Tokens
         public virtual async ValueTask CreateAsync(OpenIddictTokenModel token, CancellationToken cancellationToken)
         {
             Check.NotNull(token, nameof(token));
+            cancellationToken.ThrowIfCancellationRequested();
 
             await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
