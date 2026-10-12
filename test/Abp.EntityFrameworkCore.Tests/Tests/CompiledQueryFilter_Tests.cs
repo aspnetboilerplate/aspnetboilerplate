@@ -17,6 +17,9 @@ namespace Abp.EntityFrameworkCore.Tests.Tests;
 
 // Regression tests for https://github.com/aspnetboilerplate/aspnetboilerplate/issues/7217.
 // EF.CompileQuery and EF.CompileAsyncQuery compile the query outside AbpEntityQueryProvider.
+// Each filter is tested on its own entity, so a failure of one translation cannot hide another:
+// TenantNote has SoftDelete and MayHaveTenant, TenantMemo has only MayHaveTenant and
+// TenantOrder has only MustHaveTenant.
 public class CompiledQueryFilter_WithoutAbpQueryCompiler_Tests
     : CompiledQueryFilter_Tests<CompiledQueryCacheWithoutAbpQueryCompilerTestModule>
 {
@@ -24,16 +27,22 @@ public class CompiledQueryFilter_WithoutAbpQueryCompiler_Tests
     [Fact]
     public void Should_Apply_Filters_To_Compiled_Query()
     {
-        RunNotes(1, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "tenant-1-note" });
-        RunNotes(2, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "tenant-2-note" });
-        RunNotes(null, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "host-note" });
+        Run(1, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "tenant-1-note" });
+        Run(2, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "tenant-2-note" });
+        Run(null, db => CompiledNotes(db).ToArray()).ShouldBe(new[] { "host-note" });
+
+        Run(1, db => CompiledMemos(db).ToArray()).ShouldBe(new[] { "tenant-1-memo" });
+        Run(null, db => CompiledMemos(db).ToArray()).ShouldBe(new[] { "host-memo" });
+
+        Run(1, db => CompiledOrders(db).ToArray()).ShouldBe(new[] { "tenant-1-order" });
+        Run(2, db => CompiledOrders(db).ToArray()).ShouldBe(new[] { "tenant-2-order" });
     }
 
     [Fact]
     public async Task Should_Apply_Filters_To_Compiled_Async_Query()
     {
-        (await RunNotesAsync(1, db => ToArrayAsync(CompiledNotesAsync(db)))).ShouldBe(new[] { "tenant-1-note" });
-        (await RunNotesAsync(2, db => ToArrayAsync(CompiledNotesAsync(db)))).ShouldBe(new[] { "tenant-2-note" });
+        (await RunAsync(1, db => ToArrayAsync(CompiledNotesAsync(db)))).ShouldBe(new[] { "tenant-1-note" });
+        (await RunAsync(2, db => ToArrayAsync(CompiledNotesAsync(db)))).ShouldBe(new[] { "tenant-2-note" });
     }
 }
 
@@ -42,23 +51,44 @@ public class CompiledQueryFilter_WithAbpQueryCompiler_Tests
 {
     // The filters cannot be applied, so the query must fail instead of returning all rows.
     [Fact]
-    public void Should_Not_Run_Compiled_Query_Without_Filters()
+    public void Should_Not_Run_Compiled_Query_Without_SoftDelete_Filter()
     {
-        Should.Throw<AbpException>(() => RunNotes(1, db => CompiledNotes(db).ToArray()));
-        Should.Throw<AbpException>(() => RunNotes(1, db => new[] { CompiledNoteCount(db).ToString() }));
+        ShouldThrowFilterException(() => Run(1, db => CompiledNotes(db).ToArray()));
+        ShouldThrowFilterException(() => Run(1, db => new[] { CompiledNoteCount(db).ToString() }));
+    }
+
+    [Fact]
+    public void Should_Not_Run_Compiled_Query_Without_MayHaveTenant_Filter()
+    {
+        ShouldThrowFilterException(() => Run(1, db => CompiledMemos(db).ToArray()));
+        ShouldThrowFilterException(() => Run(null, db => CompiledMemos(db).ToArray()));
+    }
+
+    [Fact]
+    public void Should_Not_Run_Compiled_Query_Without_MustHaveTenant_Filter()
+    {
+        ShouldThrowFilterException(() => Run(1, db => CompiledOrders(db).ToArray()));
     }
 
     [Fact]
     public async Task Should_Not_Run_Compiled_Async_Query_Without_Filters()
     {
-        await Should.ThrowAsync<AbpException>(() => RunNotesAsync(1, db => ToArrayAsync(CompiledNotesAsync(db))));
+        var exception = await Should.ThrowAsync<AbpException>(() => RunAsync(1, db => ToArrayAsync(CompiledNotesAsync(db))));
+        exception.Message.ShouldContain("AbpEntityQueryProvider");
     }
 
     [Fact]
     public void Should_Still_Apply_Filters_To_Normal_Queries()
     {
-        RunNotes(1, db => db.TenantNotes.Select(n => n.Title).ToArray()).ShouldBe(new[] { "tenant-1-note" });
-        RunNotes(null, db => db.TenantNotes.Select(n => n.Title).ToArray()).ShouldBe(new[] { "host-note" });
+        Run(1, db => db.TenantNotes.Select(n => n.Title).OrderBy(t => t).ToArray()).ShouldBe(new[] { "tenant-1-note" });
+        Run(null, db => db.TenantNotes.Select(n => n.Title).OrderBy(t => t).ToArray()).ShouldBe(new[] { "host-note" });
+        Run(1, db => db.TenantMemos.Select(m => m.Text).OrderBy(t => t).ToArray()).ShouldBe(new[] { "tenant-1-memo" });
+        Run(1, db => db.TenantOrders.Select(o => o.Number).OrderBy(n => n).ToArray()).ShouldBe(new[] { "tenant-1-order" });
+    }
+
+    private static void ShouldThrowFilterException(Action action)
+    {
+        Should.Throw<AbpException>(action).Message.ShouldContain("AbpEntityQueryProvider");
     }
 }
 
@@ -74,6 +104,12 @@ public abstract class CompiledQueryFilter_Tests<TStartupModule> : AbpIntegratedT
 
     protected static readonly Func<QueryCacheDbContext, IAsyncEnumerable<string>> CompiledNotesAsync =
         EF.CompileAsyncQuery((QueryCacheDbContext db) => db.TenantNotes.OrderBy(n => n.Title).Select(n => n.Title));
+
+    protected static readonly Func<QueryCacheDbContext, IEnumerable<string>> CompiledMemos =
+        EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.OrderBy(m => m.Text).Select(m => m.Text));
+
+    protected static readonly Func<QueryCacheDbContext, IEnumerable<string>> CompiledOrders =
+        EF.CompileQuery((QueryCacheDbContext db) => db.TenantOrders.OrderBy(o => o.Number).Select(o => o.Number));
 
     private readonly IUnitOfWorkManager _unitOfWorkManager;
     private readonly IRepository<TenantNote> _noteRepository;
@@ -92,11 +128,22 @@ public abstract class CompiledQueryFilter_Tests<TStartupModule> : AbpIntegratedT
                 new TenantNote { Title = "tenant-2-note", TenantId = 2 }
             );
 
+            context.TenantMemos.AddRange(
+                new TenantMemo { Text = "host-memo" },
+                new TenantMemo { Text = "tenant-1-memo", TenantId = 1 },
+                new TenantMemo { Text = "tenant-2-memo", TenantId = 2 }
+            );
+
+            context.TenantOrders.AddRange(
+                new TenantOrder { Number = "tenant-1-order", TenantId = 1 },
+                new TenantOrder { Number = "tenant-2-order", TenantId = 2 }
+            );
+
             context.SaveChanges();
         }
     }
 
-    protected string[] RunNotes(int? tenantId, Func<QueryCacheDbContext, string[]> query)
+    protected string[] Run(int? tenantId, Func<QueryCacheDbContext, string[]> query)
     {
         using (var uow = _unitOfWorkManager.Begin())
         using (_unitOfWorkManager.Current.SetTenantId(tenantId))
@@ -107,7 +154,7 @@ public abstract class CompiledQueryFilter_Tests<TStartupModule> : AbpIntegratedT
         }
     }
 
-    protected async Task<string[]> RunNotesAsync(int? tenantId, Func<QueryCacheDbContext, Task<string[]>> query)
+    protected async Task<string[]> RunAsync(int? tenantId, Func<QueryCacheDbContext, Task<string[]>> query)
     {
         using (var uow = _unitOfWorkManager.Begin())
         using (_unitOfWorkManager.Current.SetTenantId(tenantId))

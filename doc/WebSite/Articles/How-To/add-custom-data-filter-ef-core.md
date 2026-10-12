@@ -285,7 +285,7 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
             {
                 var abpEfCoreCurrentDbContext = this.GetService<AbpEfCoreCurrentDbContext>();
                 mayHaveOUFilter = e => MayHaveOrganizationUnitFilter(((IMayHaveOrganizationUnit)e).OrganizationUnitId, CurrentOUId, true);
-                modelBuilder.HasDbFunction(typeof(AbpProjectNameDbContext).GetMethod(nameof(MayHaveOrganizationUnitFilter), new []{ typeof(long?), typeof(long?), typeof(bool) })!)
+                modelBuilder.HasDbFunction(typeof(CustomFilterSampleDbContext).GetMethod(nameof(MayHaveOrganizationUnitFilter), new []{ typeof(long?), typeof(long?), typeof(bool) })!)
                     .HasTranslation(args =>
                     {
                         // (long? organizationUnitId, long? currentOUId, bool boolParam)
@@ -295,7 +295,7 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 
                         // The current DbContext is only available for queries that run through AbpEntityQueryProvider.
                         // Never treat a missing DbContext as "filter disabled", otherwise the query runs without the filter.
-                        var dbContext = abpEfCoreCurrentDbContext.Context?.As<AbpProjectNameDbContext>()
+                        var dbContext = abpEfCoreCurrentDbContext.Context?.As<CustomFilterSampleDbContext>()
                             ?? throw new AbpException("The data filter cannot be applied to a query that is compiled outside of AbpEntityQueryProvider.");
 
                         if (dbContext.IsOUFilterEnabled)
