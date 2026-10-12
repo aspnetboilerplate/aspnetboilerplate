@@ -285,7 +285,7 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
             {
                 var abpEfCoreCurrentDbContext = this.GetService<AbpEfCoreCurrentDbContext>();
                 mayHaveOUFilter = e => MayHaveOrganizationUnitFilter(((IMayHaveOrganizationUnit)e).OrganizationUnitId, CurrentOUId, true);
-                modelBuilder.HasDbFunction(typeof(AbpProjectNameDbContext).GetMethod(nameof(MayHaveOrganizationUnitFilter), new []{ typeof(long?), typeof(long?), typeof(bool) })!)
+                modelBuilder.HasDbFunction(typeof(CustomFilterSampleDbContext).GetMethod(nameof(MayHaveOrganizationUnitFilter), new []{ typeof(long?), typeof(long?), typeof(bool) })!)
                     .HasTranslation(args =>
                     {
                         // (long? organizationUnitId, long? currentOUId, bool boolParam)
@@ -293,7 +293,12 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
                         var currentOUId = args[1];
                         var boolParam = args[2];
 
-                        if (abpEfCoreCurrentDbContext.Context?.As<AbpProjectNameDbContext>().IsOUFilterEnabled == true)
+                        // The current DbContext is only available for queries that run through AbpEntityQueryProvider.
+                        // Never treat a missing DbContext as "filter disabled", otherwise the query runs without the filter.
+                        var dbContext = abpEfCoreCurrentDbContext.Context?.As<CustomFilterSampleDbContext>()
+                            ?? throw new AbpException("The data filter cannot be applied to a query that is compiled outside of AbpEntityQueryProvider.");
+
+                        if (dbContext.IsOUFilterEnabled)
                         {
                             // organizationUnitId == currentOUId
                             return new SqlBinaryExpression(
@@ -305,7 +310,7 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
                         }
 
                         // empty where sql
-                        return new SqlConstantExpression(Expression.Constant(true), boolParam.TypeMapping);
+                        return new SqlConstantExpression(true, boolParam.Type, boolParam.TypeMapping);
                     });
             }
 
@@ -322,7 +327,9 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
 
     public override string GetCompiledQueryCacheKey()
     {
-        return $"{base.GetCompiledQueryCacheKey()}:{CurrentOUId}:{IsOUFilterEnabled}";
+        // Only the filter state is inlined into the SQL. CurrentOUId is sent as a SQL parameter,
+        // so it must not be part of the key; otherwise the query is recompiled for every value.
+        return $"{base.GetCompiledQueryCacheKey()}:{IsOUFilterEnabled}";
     }
 	
     protected virtual int? GetCurrentUsersOuIdOrNull()
@@ -337,6 +344,17 @@ public class CustomFilterSampleDbContext : AbpZeroDbContext<Tenant, Role, User, 
     }
 }
 ````
+
+##### Limitations of User-defined function mapping
+
+When `UseAbpQueryCompiler` is enabled, the filter state is decided while EF Core translates the query. ABP can only do this for queries that run through `AbpEntityQueryProvider`, which is the case for normal LINQ queries, `ExecuteUpdate` and `ExecuteDelete`.
+
+The following are **not supported** and throw an `AbpException` instead of running without the data filters:
+
+- Compiled queries (`EF.CompileQuery` and `EF.CompileAsyncQuery`). EF Core translates a compiled query only once, so the filter state of the first run would be used for all later runs.
+- Queries that third-party libraries compile themselves, for example batched `Future()` queries and bulk update/delete operations of Entity Framework Plus and Entity Framework Extensions.
+
+If you need these, run them as normal LINQ queries or set `UseAbpQueryCompiler` to `false`. Custom filters that you add with `HasTranslation` must follow the same rule: throw when `AbpEfCoreCurrentDbContext.Context` is `null`, as shown in the example above.
 
 ##### Make User-defined function mapping compatible with [DevExtreme.AspNet.Data's](https://github.com/DevExpress/DevExtreme.AspNet.Data) `IAsyncAdapter`
 

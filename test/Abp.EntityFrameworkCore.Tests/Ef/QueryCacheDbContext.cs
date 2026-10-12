@@ -9,6 +9,8 @@ public class QueryCacheDbContext : AbpDbContext
 
     public DbSet<TenantOrder> TenantOrders { get; set; }
 
+    public DbSet<TenantMemo> TenantMemos { get; set; }
+
     public QueryCacheDbContext(DbContextOptions<QueryCacheDbContext> options)
         : base(options)
     {
