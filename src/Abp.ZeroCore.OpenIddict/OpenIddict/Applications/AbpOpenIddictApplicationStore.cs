@@ -50,12 +50,12 @@ public class AbpOpenIddictApplicationStore : AbpOpenIddictStoreBase<IOpenIddictA
     public virtual async ValueTask CreateAsync(OpenIddictApplicationModel application, CancellationToken cancellationToken)
     {
         Check.NotNull(application, nameof(application));
+        cancellationToken.ThrowIfCancellationRequested();
 
         await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
         {
             await Repository.InsertAsync(application.ToEntity());
-            application = (await Repository.FindByClientIdAsync(application.Id.ToString(), cancellationToken))
-                .ToModel();
+            await UnitOfWorkManager.Current.SaveChangesAsync();
         });
     }
 

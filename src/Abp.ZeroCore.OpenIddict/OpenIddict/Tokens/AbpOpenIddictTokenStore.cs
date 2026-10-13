@@ -48,11 +48,15 @@ namespace Abp.OpenIddict.Tokens
         public virtual async ValueTask CreateAsync(OpenIddictTokenModel token, CancellationToken cancellationToken)
         {
             Check.NotNull(token, nameof(token));
+            cancellationToken.ThrowIfCancellationRequested();
 
             await UnitOfWorkManager.WithUnitOfWorkAsync(async () =>
             {
                 await Repository.InsertAsync(token.ToEntity());
-                token = (await Repository.FindByIdAsync(token.Id, cancellationToken)).ToModel();
+
+                // Save immediately, so that the token can be queried (i.e. by UpdateAsync)
+                // within the same unit of work.
+                await UnitOfWorkManager.Current.SaveChangesAsync();
             });
         }
 

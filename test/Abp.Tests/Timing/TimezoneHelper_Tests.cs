@@ -24,6 +24,12 @@ namespace Abp.Tests.Timing
         [InlineData("Mauritius Standard Time", "Indian/Mauritius")]
         [InlineData("Malay Peninsula Standard Time", "Asia/Kuala_Lumpur")]
         [InlineData("Qyzylorda Standard Time", "Asia/Qyzylorda")]
+        [InlineData("UTC-11", "Etc/GMT+11")]
+        [InlineData("UTC-09", "Etc/GMT+9")]
+        [InlineData("UTC-08", "Etc/GMT+8")]
+        [InlineData("UTC-02", "Etc/GMT+2")]
+        [InlineData("UTC+12", "Etc/GMT-12")]
+        [InlineData("UTC+13", "Etc/GMT-13")]
         public void Windows_Timezone_Id_To_Iana_Tests(string windowsTimezoneId, string ianaTimezoneId)
         {
             TimezoneHelper.WindowsToIana(windowsTimezoneId).ShouldBe(ianaTimezoneId);
@@ -40,9 +46,33 @@ namespace Abp.Tests.Timing
         [InlineData("Asia/Amman", "Jordan Standard Time")]
         [InlineData("Europe/Zaporozhye", "FLE Standard Time")]
         [InlineData("Asia/Choibalsan", "Ulaanbaatar Standard Time")]
+        [InlineData("Etc/GMT+9", "UTC-09")]
+        [InlineData("Etc/GMT+8", "UTC-08")]
         public void Iana_Timezone_Id_To_Windows_Tests(string ianaTimezoneId, string windowsTimezoneId)
         {
             TimezoneHelper.IanaToWindows(ianaTimezoneId).ShouldBe(windowsTimezoneId);
+        }
+
+        /// <summary>
+        /// The sign of an <c>Etc/GMT±X</c> IANA zone is inverted compared to the UTC offset it represents,
+        /// so <c>UTC-09</c> must map to <c>Etc/GMT+9</c> and not to <c>Etc/GMT-9</c>.
+        /// </summary>
+        [Theory]
+        [InlineData("UTC-11", -11)]
+        [InlineData("UTC-09", -9)]
+        [InlineData("UTC-08", -8)]
+        [InlineData("UTC-02", -2)]
+        [InlineData("UTC+12", 12)]
+        [InlineData("UTC+13", 13)]
+        public void Windows_Utc_Offset_Timezones_Should_Map_To_Iana_Zones_With_The_Same_Offset(
+            string windowsTimezoneId,
+            int expectedOffsetInHours)
+        {
+            var ianaTimezoneId = TimezoneHelper.WindowsToIana(windowsTimezoneId);
+
+            TimezoneHelper.FindTimeZoneInfo(ianaTimezoneId)
+                .BaseUtcOffset
+                .ShouldBe(TimeSpan.FromHours(expectedOffsetInHours));
         }
 
         [Fact]

@@ -92,9 +92,34 @@ Setting encryption/decryption are done using ```SettingEncryptionConfiguration``
 ````c#
 Configuration.Settings.SettingEncryptionConfiguration.Keysize = 256;
 Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = "pass_phrase";
-Configuration.Settings.SettingEncryptionConfiguration.InitVectorBytes = Encoding.ASCII.GetBytes("your_secret_value");
-Configuration.Settings.SettingEncryptionConfiguration.DefaultSalt = Encoding.ASCII.GetBytes("your_secret_value");
+Configuration.Settings.SettingEncryptionConfiguration.InitVectorBytes = Encoding.ASCII.GetBytes("16_char_iv_value"); // must be exactly 16 bytes
+Configuration.Settings.SettingEncryptionConfiguration.DefaultSalt = Encoding.ASCII.GetBytes("your_secret_value"); // at least 8 bytes
 ````
+
+> **Important:** `SettingEncryptionConfiguration` is **independent** from the static
+> `SimpleStringCipher.DefaultPassPhrase`, `SimpleStringCipher.DefaultSalt` and
+> `SimpleStringCipher.DefaultInitVectorBytes` properties. Setting values are always encrypted
+> with the values in `SettingEncryptionConfiguration`, so changing `SimpleStringCipher.DefaultPassPhrase`
+> (for example, from the `Configuration:EncryptionPassPhrase` value in `appsettings.json`) has
+> **no effect** on encrypted settings. Both use the same built-in default values, which are
+> publicly known, so you should change both of them in your application.
+
+If you want to use the same pass phrase for both, you can set them together in the `Initialize`
+method of your module:
+
+````c#
+public override void Initialize()
+{
+    var passPhrase = _appConfiguration["Configuration:EncryptionPassPhrase"];
+
+    SimpleStringCipher.DefaultPassPhrase = passPhrase;
+    Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = passPhrase;
+}
+````
+
+> **Note:** Changing any of these values makes previously encrypted setting values
+> unreadable. If you already have encrypted settings stored in the database, decrypt them with the
+> old values and encrypt them again with the new values before switching.
 
 
 

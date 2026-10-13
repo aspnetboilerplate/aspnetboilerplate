@@ -218,9 +218,20 @@ public abstract class AbpDbContext : DbContext, ITransientDependency, IShouldIni
         return DbContextOptions?.FindExtension<AbpDbContextOptionsExtension>() != null && AbpEfCoreConfiguration.UseAbpQueryCompiler;
     }
 
+    /// <summary>
+    /// Returns a value that is appended to EF Core's compiled query cache key.
+    /// The current tenant id is always sent to the database as a SQL parameter, so it is not part of the key.
+    /// The filter states are part of the key only when <see cref="UseAbpQueryCompiler"/> is enabled,
+    /// because only then are they inlined into the generated SQL.
+    /// </summary>
     public virtual string GetCompiledQueryCacheKey()
     {
-        return $"{CurrentTenantId?.ToString() ?? "Null"}:{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
+        if (!UseAbpQueryCompiler())
+        {
+            return string.Empty;
+        }
+
+        return $"{IsSoftDeleteFilterEnabled}:{IsMayHaveTenantFilterEnabled}:{IsMustHaveTenantFilterEnabled}";
     }
 
     protected const string DbFunctionNotSupportedExceptionMessage = "Your EF Core database provider does not support 'User-defined function mapping'." +
