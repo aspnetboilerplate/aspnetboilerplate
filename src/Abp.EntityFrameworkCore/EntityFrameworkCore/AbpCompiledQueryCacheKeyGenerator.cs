@@ -23,7 +23,11 @@ public class AbpCompiledQueryCacheKeyGenerator : ICompiledQueryCacheKeyGenerator
         var cacheKey = InnerCompiledQueryCacheKeyGenerator.GenerateCacheKey(query, async);
         if (CurrentContext.Context is AbpDbContext abpDbContext)
         {
-            return new AbpCompiledQueryCacheKey(cacheKey, abpDbContext.GetCompiledQueryCacheKey());
+            var abpCacheKey = abpDbContext.GetCompiledQueryCacheKey();
+
+            abpDbContext.GetService<AbpEfCoreCurrentDbContext>().AuthorizeQueryCompilation(abpDbContext, query);
+
+            return new AbpCompiledQueryCacheKey(cacheKey, abpCacheKey);
         }
 
         return cacheKey;

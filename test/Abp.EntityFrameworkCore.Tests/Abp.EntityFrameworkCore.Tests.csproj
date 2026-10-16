@@ -28,6 +28,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.18" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.18" />
   </ItemGroup>
   <ItemGroup>

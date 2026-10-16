@@ -9,6 +9,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Configuration;
 using Abp.EntityFrameworkCore.Extensions;
+using Abp.EntityFrameworkCore.Repositories;
 using Abp.EntityFrameworkCore.Tests.Domain;
 using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.Modules;
@@ -17,6 +18,8 @@ using Castle.MicroKernel.Registration;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using Shouldly;
 using Xunit;
@@ -43,6 +46,77 @@ public class CompiledQueryCache_WithoutAbpQueryCompiler_Tests
 public class CompiledQueryCache_WithAbpQueryCompiler_Tests
     : CompiledQueryCache_Tests<CompiledQueryCacheWithAbpQueryCompilerTestModule>
 {
+}
+
+// ABP cannot wrap the EF Core services when its extension is added before the database provider.
+[Collection("Clock.Provider")]
+public class CompiledQueryCache_WithAbpExtensionFirst_Tests : AbpIntegratedTestBase<CompiledQueryCacheWithAbpExtensionFirstTestModule>
+{
+    [Fact]
+    public void Should_Not_Run_Query_Without_Filters()
+    {
+        var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+        var noteRepository = Resolve<IRepository<TenantNote>>();
+
+        using (var uow = unitOfWorkManager.Begin())
+        using (unitOfWorkManager.Current.SetTenantId(1))
+        {
+            Should.Throw<AbpException>(() => noteRepository.GetAllList()).Message.ShouldContain("AbpDbContextOptionsExtension");
+            uow.Complete();
+        }
+    }
+}
+
+// DefaultDbContextResolver adds the extension only when UseAbpQueryCompiler is enabled.
+[Collection("Clock.Provider")]
+public class CompiledQueryCache_WithExtensionAddedByResolver_Tests : AbpIntegratedTestBase<CompiledQueryCacheWithExtensionAddedByResolverTestModule>
+{
+    [Fact]
+    public void Should_Apply_Filters()
+    {
+        var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+        var noteRepository = Resolve<IRepository<TenantNote>>();
+        var countNotes = EF.CompileQuery((QueryCacheDbContext db) => db.TenantNotes.Count());
+
+        using (var uow = unitOfWorkManager.Begin())
+        using (unitOfWorkManager.Current.SetTenantId(1))
+        {
+            noteRepository.Insert(new TenantNote { Title = "tenant-1-note", TenantId = 1 });
+            noteRepository.Insert(new TenantNote { Title = "tenant-2-note", TenantId = 2 });
+            unitOfWorkManager.Current.SaveChanges();
+
+            var db = (QueryCacheDbContext)noteRepository.GetDbContext();
+            db.GetService<IDatabase>().ShouldBeOfType<AbpEfCoreDatabase>();
+            noteRepository.GetAllList().Select(n => n.Title).ShouldBe(new[] { "tenant-1-note" });
+            Should.Throw<AbpException>(() => countNotes(db)).Message.ShouldContain("EF.CompileQuery");
+            uow.Complete();
+        }
+    }
+}
+
+[Collection("Clock.Provider")]
+public class CompiledQueryCache_WithoutAbpQueryCompiler_WithCustomDatabase_Tests
+    : AbpIntegratedTestBase<CompiledQueryCacheWithoutAbpQueryCompilerWithCustomDatabaseTestModule>
+{
+    [Fact]
+    public void Should_Use_The_Custom_Database()
+    {
+        var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+        var noteRepository = Resolve<IRepository<TenantNote>>();
+
+        using (var uow = unitOfWorkManager.Begin())
+        using (unitOfWorkManager.Current.SetTenantId(1))
+        {
+            noteRepository.Insert(new TenantNote { Title = "tenant-1-note", TenantId = 1 });
+            noteRepository.Insert(new TenantNote { Title = "tenant-2-note", TenantId = 2 });
+            unitOfWorkManager.Current.SaveChanges();
+
+            var database = noteRepository.GetDbContext().GetService<IDatabase>().ShouldBeOfType<CompiledQueryTestDatabase>();
+            database.SaveChangesCount.ShouldBe(1);
+            noteRepository.GetAllList().Select(n => n.Title).ShouldBe(new[] { "tenant-1-note" });
+            uow.Complete();
+        }
+    }
 }
 
 [Collection("Clock.Provider")]
@@ -210,9 +284,46 @@ public class CompiledQueryCacheWithAbpQueryCompilerTestModule : CompiledQueryCac
     protected override bool UseAbpQueryCompiler => true;
 }
 
+[DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
+public class CompiledQueryCacheWithAbpExtensionFirstTestModule : CompiledQueryCacheTestModuleBase
+{
+    protected override bool UseAbpQueryCompiler => true;
+
+    protected override bool AddAbpExtensionBeforeDatabaseProvider => true;
+}
+
+[DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
+public class CompiledQueryCacheWithExtensionAddedByResolverTestModule : CompiledQueryCacheTestModuleBase
+{
+    protected override bool UseAbpQueryCompiler => true;
+
+    protected override bool AddAbpExtension => false;
+}
+
+[DependsOn(typeof(AbpEntityFrameworkCoreModule), typeof(AbpTestBaseModule))]
+public class CompiledQueryCacheWithoutAbpQueryCompilerWithCustomDatabaseTestModule : CompiledQueryCacheTestModuleBase
+{
+    protected override bool UseAbpQueryCompiler => false;
+
+    protected override bool AddAbpExtension => false;
+
+    protected override void ConfigureOptions(DbContextOptionsBuilder<QueryCacheDbContext> optionsBuilder)
+    {
+        optionsBuilder.ReplaceService<IDatabase, RelationalDatabase, CompiledQueryTestDatabase>();
+    }
+}
+
 public abstract class CompiledQueryCacheTestModuleBase : AbpModule
 {
     protected abstract bool UseAbpQueryCompiler { get; }
+
+    protected virtual bool AddAbpExtension => true;
+
+    protected virtual bool AddAbpExtensionBeforeDatabaseProvider => false;
+
+    protected virtual void ConfigureOptions(DbContextOptionsBuilder<QueryCacheDbContext> optionsBuilder)
+    {
+    }
 
     public override void PreInitialize()
     {
@@ -222,13 +333,35 @@ public abstract class CompiledQueryCacheTestModuleBase : AbpModule
 
         // A private memory cache gives every test its own EF Core service provider, so the
         // model (built for this filter mode) and the compiled query cache are not shared
-        // with other tests.
+        // with other tests. These service providers are expected, so EF Core must not fail
+        // when there are many of them.
+        var hooks = new CompiledQueryTestHooks();
+        IocManager.IocContainer.Register(
+            Component
+                .For<CompiledQueryTestHooks>()
+                .Instance(hooks)
+                .LifestyleSingleton()
+        );
+
         var inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-        var options = new DbContextOptionsBuilder<QueryCacheDbContext>()
+        var optionsBuilder = new DbContextOptionsBuilder<QueryCacheDbContext>();
+        if (AddAbpExtension && AddAbpExtensionBeforeDatabaseProvider)
+        {
+            optionsBuilder.AddAbpDbContextOptionsExtension();
+        }
+
+        optionsBuilder
             .UseSqlite(inMemorySqlite)
             .UseMemoryCache(new MemoryCache(new MemoryCacheOptions()))
-            .AddAbpDbContextOptionsExtension()
-            .Options;
+            .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning))
+            .AddInterceptors(new CompiledQueryTestInterceptor(hooks));
+        ConfigureOptions(optionsBuilder);
+        if (AddAbpExtension && !AddAbpExtensionBeforeDatabaseProvider)
+        {
+            optionsBuilder.AddAbpDbContextOptionsExtension();
+        }
+
+        var options = optionsBuilder.Options;
 
         IocManager.IocContainer.Register(
             Component
@@ -238,6 +371,13 @@ public abstract class CompiledQueryCacheTestModuleBase : AbpModule
         );
 
         inMemorySqlite.Open();
+
+        // The model is cached by the DbContext type, so create the database with the options of DefaultDbContextResolver.
+        if (UseAbpQueryCompiler && !AddAbpExtension)
+        {
+            options = (DbContextOptions<QueryCacheDbContext>)options.WithExtension(new AbpDbContextOptionsExtension());
+        }
+
         using (var context = new QueryCacheDbContext(options))
         {
             context.AbpEfCoreConfiguration = new AbpEfCoreConfiguration(IocManager) { UseAbpQueryCompiler = UseAbpQueryCompiler };
