@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Abp.Extensions;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -12,23 +13,31 @@ public class AbpDbContextOptionsExtension : IDbContextOptionsExtension
 {
     public void ApplyServices(IServiceCollection services)
     {
-        var serviceDescriptor = services.FirstOrDefault(x => x.ServiceType == typeof(ICompiledQueryCacheKeyGenerator));
-        if (serviceDescriptor != null && serviceDescriptor.ImplementationType != null)
+        services.Decorate<ICompiledQueryCacheKeyGenerator>((provider, inner) =>
+            ActivatorUtilities.CreateInstance<AbpCompiledQueryCacheKeyGenerator>(provider, inner));
+
+        // The user-defined functions are only translated by relational providers, and others, such as InMemory, cast IDatabase to their own type.
+        if (services.Any(x => x.ServiceType == typeof(IRelationalConnection)))
         {
-            services.Remove(serviceDescriptor);
-            services.AddScoped(serviceDescriptor.ImplementationType);
-            services.Add(ServiceDescriptor.Scoped<ICompiledQueryCacheKeyGenerator>(provider =>
-                ActivatorUtilities.CreateInstance<AbpCompiledQueryCacheKeyGenerator>(provider,
-                    provider.GetRequiredService(serviceDescriptor.ImplementationType)
-                        .As<ICompiledQueryCacheKeyGenerator>())));
+            services.Decorate<IDatabase>((provider, inner) =>
+                ActivatorUtilities.CreateInstance<AbpEfCoreDatabase>(provider, inner));
         }
 
         services.Replace(ServiceDescriptor.Scoped<IAsyncQueryProvider, AbpEntityQueryProvider>());
-        services.AddSingleton<AbpEfCoreCurrentDbContext>();
+        services.TryAddSingleton<AbpEfCoreCurrentDbContext>();
     }
 
     public void Validate(IDbContextOptions options)
     {
+        // EF Core applies ReplaceService after ApplyServices, so it would silently remove the wrappers.
+        var replacedServices = options.FindExtension<CoreOptionsExtension>()?.ReplacedServices;
+        if (replacedServices != null && replacedServices.Keys.Any(x => x.Item1 == typeof(ICompiledQueryCacheKeyGenerator) || x.Item1 == typeof(IDatabase)))
+        {
+            throw new AbpException(
+                "ICompiledQueryCacheKeyGenerator and IDatabase cannot be replaced with ReplaceService while AbpDbContextOptionsExtension is used, " +
+                "because ABP wraps them to apply the data filters. Remove the ReplaceService call, or set 'UseAbpQueryCompiler' of 'IAbpEfCoreConfiguration' to false " +
+                "and don't add AbpDbContextOptionsExtension yourself.");
+        }
     }
 
     public DbContextOptionsExtensionInfo Info => new AbpOptionsExtensionInfo(this);

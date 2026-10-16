@@ -93,14 +93,28 @@ public class DefaultDbContextResolver : IDbContextResolver, ITransientDependency
                 configurer.Object.Configure(configuration);
             }
 
-            return configuration.DbContextOptions.AddAbpDbContextOptionsExtension().Options;
+            if (UseAbpQueryCompiler())
+            {
+                configuration.DbContextOptions.AddAbpDbContextOptionsExtension();
+            }
+
+            return configuration.DbContextOptions.Options;
         }
 
         if (_iocResolver.IsRegistered<DbContextOptions<TDbContext>>())
         {
-            return _iocResolver.Resolve<DbContextOptions<TDbContext>>().WithExtension(new AbpDbContextOptionsExtension()).As<DbContextOptions<TDbContext>>(); ;
+            var options = _iocResolver.Resolve<DbContextOptions<TDbContext>>();
+            return UseAbpQueryCompiler()
+                ? options.WithExtension(new AbpDbContextOptionsExtension()).As<DbContextOptions<TDbContext>>()
+                : options;
         }
 
         throw new AbpException($"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");
+    }
+
+    // AbpDbContextOptionsExtension wraps EF Core services, which is only needed when the data filters are translated by ABP.
+    protected virtual bool UseAbpQueryCompiler()
+    {
+        return _iocResolver.Resolve<IAbpEfCoreConfiguration>().UseAbpQueryCompiler;
     }
 }

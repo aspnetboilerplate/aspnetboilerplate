@@ -10,6 +10,10 @@ using Abp.EntityFrameworkCore.Tests.Ef;
 using Abp.Modules;
 using Abp.TestBase;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Storage;
 using Shouldly;
 using Xunit;
 
@@ -74,7 +78,7 @@ public class CompiledQueryFilter_WithAbpQueryCompiler_Tests
     public async Task Should_Not_Run_Compiled_Async_Query_Without_Filters()
     {
         var exception = await Should.ThrowAsync<AbpException>(() => RunAsync(1, db => ToArrayAsync(CompiledNotesAsync(db))));
-        exception.Message.ShouldContain("AbpEntityQueryProvider");
+        exception.Message.ShouldContain("EF.CompileQuery");
     }
 
     [Fact]
@@ -86,9 +90,211 @@ public class CompiledQueryFilter_WithAbpQueryCompiler_Tests
         Run(1, db => db.TenantOrders.Select(o => o.Number).OrderBy(n => n).ToArray()).ShouldBe(new[] { "tenant-1-order" });
     }
 
+    // The compiled query first runs while EF Core evaluates the parameters of the outer query.
+    // EF Core wraps the exceptions thrown while it evaluates the parameters of the outer query.
+    [Fact]
+    public void Should_Not_Run_Compiled_Query_First_Run_Inside_Another_Query_Without_Filters()
+    {
+        var countMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+
+        var exception = Should.Throw<InvalidOperationException>(() =>
+            Run(1, db => db.TenantNotes.Where(n => n.Title.Length > countMemos(db)).Select(n => n.Title).ToArray()));
+        exception.InnerException.ShouldBeOfType<AbpException>();
+
+        ShouldThrowFilterException(() => Run(1, db => new[] { countMemos(db).ToString() }));
+    }
+
+    [Fact]
+    public void Should_Not_Run_Compiled_Async_Query_First_Run_Inside_Another_Query_Without_Filters()
+    {
+        var countMemosAsync = EF.CompileAsyncQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+
+        var exception = Should.Throw<InvalidOperationException>(() =>
+            Run(1, db => db.TenantNotes.Where(n => n.Title.Length > countMemosAsync(db).GetAwaiter().GetResult()).Select(n => n.Title).ToArray()));
+        exception.InnerException.ShouldBeOfType<AbpException>();
+
+        ShouldThrowFilterException(() => Run(1, db => new[] { countMemosAsync(db).GetAwaiter().GetResult().ToString() }));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Should_Not_Run_Compiled_Query_First_Run_Inside_Another_Query_With_Disabled_Filters(bool asyncCompiledQuery)
+    {
+        var countMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+        var countMemosAsync = EF.CompileAsyncQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+        var unitOfWorkManager = Resolve<IUnitOfWorkManager>();
+
+        var exception = Should.Throw<InvalidOperationException>(() => Run(1, db =>
+        {
+            using (unitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete, AbpDataFilters.MayHaveTenant, AbpDataFilters.MustHaveTenant))
+            {
+                return asyncCompiledQuery
+                    ? db.TenantNotes.Where(n => n.Title.Length > countMemosAsync(db).GetAwaiter().GetResult()).Select(n => n.Title).ToArray()
+                    : db.TenantNotes.Where(n => n.Title.Length > countMemos(db)).Select(n => n.Title).ToArray();
+            }
+        }));
+        exception.InnerException.ShouldBeOfType<AbpException>();
+
+        ShouldThrowFilterException(() => Run(1, db =>
+            new[] { (asyncCompiledQuery ? countMemosAsync(db).GetAwaiter().GetResult() : countMemos(db)).ToString() }));
+    }
+
+    [Fact]
+    public void Should_Not_Run_Compiled_Query_First_Run_While_Another_Query_Is_Compiled_Without_Filters()
+    {
+        var countMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+        var countMemosAsync = EF.CompileAsyncQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+        var hooks = Resolve<CompiledQueryTestHooks>();
+
+        hooks.OnQueryCompilationStarting = db =>
+        {
+            hooks.OnQueryCompilationStarting = null;
+            countMemos(db);
+        };
+        ShouldThrowFilterException(() => Run(1, db => db.TenantNotes.TagWith(Guid.NewGuid().ToString()).Select(n => n.Title).ToArray()));
+
+        hooks.OnQueryCompilationStarting = db =>
+        {
+            hooks.OnQueryCompilationStarting = null;
+            countMemosAsync(db).GetAwaiter().GetResult();
+        };
+        ShouldThrowFilterException(() => Run(1, db => db.TenantNotes.TagWith(Guid.NewGuid().ToString()).Select(n => n.Title).ToArray()));
+
+        ShouldThrowFilterException(() => Run(1, db => new[] { countMemos(db).ToString() }));
+    }
+
+    [Fact]
+    public void Should_Not_Run_Compiled_Query_First_Run_While_Cache_Key_Is_Generated_Without_Filters()
+    {
+        var countMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+        var hooks = Resolve<CompiledQueryTestHooks>();
+
+        ShouldThrowFilterException(() => Run(1, db =>
+        {
+            hooks.OnGetCompiledQueryCacheKey = () =>
+            {
+                hooks.OnGetCompiledQueryCacheKey = null;
+                countMemos(db);
+            };
+
+            return db.TenantNotes.TagWith(Guid.NewGuid().ToString()).Select(n => n.Title).ToArray();
+        }));
+
+        ShouldThrowFilterException(() => Run(1, db => new[] { countMemos(db).ToString() }));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Should_Not_Precompile_Query_While_Cache_Key_Is_Generated_Without_Filters(bool async)
+    {
+        var hooks = Resolve<CompiledQueryTestHooks>();
+
+        ShouldThrowFilterException(() => Run(1, db =>
+        {
+            hooks.OnGetCompiledQueryCacheKey = () =>
+            {
+                hooks.OnGetCompiledQueryCacheKey = null;
+#pragma warning disable EF1001, EF9100
+                var queryCompiler = db.GetService<IQueryCompiler>();
+                var query = db.TenantMemos.Select(m => m.Text).Expression;
+                if (async)
+                {
+                    queryCompiler.PrecompileQuery<IAsyncEnumerable<string>>(query, true);
+                }
+                else
+                {
+                    queryCompiler.PrecompileQuery<IEnumerable<string>>(query, false);
+                }
+#pragma warning restore EF1001, EF9100
+            };
+
+            return db.TenantNotes.TagWith(Guid.NewGuid().ToString()).Select(n => n.Title).ToArray();
+        }));
+    }
+
+    [Fact]
+    public void Should_Provide_Current_DbContext_While_Cache_Key_Is_Generated()
+    {
+        var hooks = Resolve<CompiledQueryTestHooks>();
+
+        Run(1, db =>
+        {
+            var currentDbContext = db.GetService<AbpEfCoreCurrentDbContext>();
+            var contexts = new List<AbpDbContext>();
+            hooks.OnGetCompiledQueryCacheKey = () => contexts.Add(currentDbContext.Context);
+            try
+            {
+                db.TenantNotes.Select(n => n.Title).ToArray();
+                db.TenantNotes.Select(n => n.Title).ToListAsync().GetAwaiter().GetResult();
+            }
+            finally
+            {
+                hooks.OnGetCompiledQueryCacheKey = null;
+            }
+
+            contexts.Count.ShouldBe(2);
+            contexts.ShouldAllBe(context => context == db);
+            return Array.Empty<string>();
+        });
+    }
+
+    [Fact]
+    public void Should_Run_Compiled_Query_That_Ignores_Filters()
+    {
+        var countAllMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.IgnoreQueryFilters().Count());
+
+        Run(1, db => new[] { countAllMemos(db).ToString() }).ShouldBe(new[] { "3" });
+    }
+
+    [Fact]
+    public void Should_Not_Compile_Query_With_Cache_Key_Generated_Outside_Of_Query_Provider()
+    {
+        ShouldThrowFilterException(() => Run(1, db =>
+        {
+            var expression = ((IQueryable<TenantMemo>)db.TenantMemos).Expression;
+            db.GetService<ICompiledQueryCacheKeyGenerator>().GenerateCacheKey(expression, false);
+            db.GetService<IDatabase>().CompileQuery<IEnumerable<TenantMemo>>(expression, false);
+            return Array.Empty<string>();
+        }));
+    }
+
+    [Fact]
+    public void Should_Apply_Filters_To_Normal_Query_After_Compiled_Query_Failed()
+    {
+        var countMemos = EF.CompileQuery((QueryCacheDbContext db) => db.TenantMemos.Count());
+
+        Should.Throw<InvalidOperationException>(() =>
+            Run(1, db => db.TenantNotes.Where(n => n.Title.Length > countMemos(db)).Select(n => n.Title).ToArray()));
+
+        Run(1, db => db.TenantMemos.Select(m => m.Text).OrderBy(t => t).ToArray()).ShouldBe(new[] { "tenant-1-memo" });
+
+        Run(1, db =>
+        {
+            Should.Throw<InvalidOperationException>(() => db.TenantNotes.Where(n => n.Title.Length > countMemos(db)).Select(n => n.Title).ToArray());
+            return db.TenantMemos.Select(m => m.Text).OrderBy(t => t).ToArray();
+        }).ShouldBe(new[] { "tenant-1-memo" });
+    }
+
+    // A library can also compile a query itself through IDatabase while the outer query is executed.
+    [Fact]
+    public void Should_Not_Compile_Query_Inside_Another_Query_Without_Filters()
+    {
+        var exception = Should.Throw<InvalidOperationException>(() =>
+            Run(1, db => db.TenantNotes.Where(n => n.Title.Length > CompileMemosQuery(db)).Select(n => n.Title).ToArray()));
+        exception.InnerException.ShouldBeOfType<AbpException>();
+    }
+
+    private static int CompileMemosQuery(QueryCacheDbContext db)
+    {
+        db.GetService<IDatabase>().CompileQuery<IEnumerable<TenantMemo>>(((IQueryable<TenantMemo>)db.TenantMemos).Expression, false);
+        return 0;
+    }
+
     private static void ShouldThrowFilterException(Action action)
     {
-        Should.Throw<AbpException>(action).Message.ShouldContain("AbpEntityQueryProvider");
+        Should.Throw<AbpException>(action).Message.ShouldContain("EF.CompileQuery");
     }
 }
 
@@ -141,6 +347,25 @@ public abstract class CompiledQueryFilter_Tests<TStartupModule> : AbpIntegratedT
 
             context.SaveChanges();
         }
+    }
+
+    [Fact]
+    public void Should_Apply_Filters_To_Other_Query_Entry_Points()
+    {
+        Run(1, db =>
+        {
+            db.TenantNotes.IgnoreQueryFilters().Count().ShouldBe(4);
+            db.TenantNotes.Select(n => n.Title).ToQueryString().ShouldContain("IsDeleted");
+
+            db.TenantNotes.Where(n => n.Title == "tenant-2-note").ExecuteUpdate(s => s.SetProperty(n => n.Title, "tenant-2-updated")).ShouldBe(0);
+            db.TenantNotes.Where(n => n.Title == "tenant-1-note").ExecuteUpdate(s => s.SetProperty(n => n.Title, "tenant-1-updated")).ShouldBe(1);
+
+            var note = db.TenantNotes.Single();
+            note.Title = "tenant-1-saved";
+            db.SaveChanges();
+
+            return db.TenantNotes.AsNoTracking().Select(n => n.Title).ToArray();
+        }).ShouldBe(new[] { "tenant-1-saved" });
     }
 
     protected string[] Run(int? tenantId, Func<QueryCacheDbContext, string[]> query)

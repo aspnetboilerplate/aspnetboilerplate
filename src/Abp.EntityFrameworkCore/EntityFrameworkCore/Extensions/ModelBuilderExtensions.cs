@@ -16,13 +16,13 @@ public static class ModelBuilderExtensions
                 var isDeleted = args[0];
                 var boolParam = args[1];
 
-                if (GetCurrentDbContext(abpEfCoreCurrentDbContext).IsSoftDeleteFilterEnabled)
+                if (abpEfCoreCurrentDbContext.GetRequiredContext().IsSoftDeleteFilterEnabled)
                 {
-                    // IsDeleted == false
+                    // IsDeleted == false. Use the column's TypeMapping so any ValueConverter is applied to the literal.
                     return new SqlBinaryExpression(
                         ExpressionType.Equal,
                         isDeleted,
-                        new SqlConstantExpression(false, boolParam.TypeMapping),
+                        new SqlConstantExpression(false, typeof(bool), isDeleted.TypeMapping ?? boolParam.TypeMapping),
                         boolParam.Type,
                         boolParam.TypeMapping);
                 }
@@ -44,7 +44,7 @@ public static class ModelBuilderExtensions
                 var currentTenantId = args[1];
                 var boolParam = args[2];
 
-                if (GetCurrentDbContext(abpEfCoreCurrentDbContext).IsMayHaveTenantFilterEnabled)
+                if (abpEfCoreCurrentDbContext.GetRequiredContext().IsMayHaveTenantFilterEnabled)
                 {
                     // TenantId == CurrentTenantId
                     return new SqlBinaryExpression(
@@ -72,7 +72,7 @@ public static class ModelBuilderExtensions
                 var currentTenantId = args[1];
                 var boolParam = args[2];
 
-                if (GetCurrentDbContext(abpEfCoreCurrentDbContext).IsMustHaveTenantFilterEnabled)
+                if (abpEfCoreCurrentDbContext.GetRequiredContext().IsMustHaveTenantFilterEnabled)
                 {
                     // TenantId == CurrentTenantId
                     return new SqlBinaryExpression(
@@ -88,24 +88,5 @@ public static class ModelBuilderExtensions
             });
 
         return modelBuilder;
-    }
-
-    // The filter state is read while the query is translated. AbpEntityQueryProvider sets the current
-    // DbContext for that, but some queries are compiled without it (EF.CompileQuery, EF.CompileAsyncQuery
-    // and third-party libraries such as EF Plus batches and bulk operations). Such queries must fail
-    // instead of running without the data filters.
-    private static AbpDbContext GetCurrentDbContext(AbpEfCoreCurrentDbContext abpEfCoreCurrentDbContext)
-    {
-        var context = abpEfCoreCurrentDbContext.Context;
-        if (context == null)
-        {
-            throw new AbpException(
-                "ABP cannot apply the data filters to a query that is compiled outside of AbpEntityQueryProvider " +
-                "(for example EF.CompileQuery, EF.CompileAsyncQuery, or batch/bulk operations of third-party libraries). " +
-                "UseAbpQueryCompiler does not support this kind of query. " +
-                "Run the query as a normal LINQ query or set 'UseAbpQueryCompiler' of 'IAbpEfCoreConfiguration' to false.");
-        }
-
-        return context;
     }
 }
